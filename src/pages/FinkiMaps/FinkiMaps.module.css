@@ -1,0 +1,32 @@
+/* FinkiMaps css (parent) */
+.toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.left {
+  max-width: 95%;
+  padding-left: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  flex-wrap: nowrap;
+  gap: 20px;
+}
+
+.right {
+  position: absolute;
+  top: 40px;
+  right: 50px;
+}
+
+@media (max-width: 1000px) {
+  .left {
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 80%;
+  }
+}

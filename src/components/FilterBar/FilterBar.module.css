@@ -1,0 +1,33 @@
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  /* flex-wrap: wrap; */
+  gap: 10px;
+}
+
+.buttonValue {
+  border: 2px solid #6759ff;
+  padding: 0.5em 1.5em;
+  border-radius: 3em;
+  background-color: transparent;
+  color: #6759ff;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  white-space: nowrap;
+}
+
+.buttonValue:hover,
+.buttonValue:focus {
+  background-color: #6759ff;
+  color: #ffffff;
+}
+
+.active {
+  background-color: #6759ff;
+  color: #ffffff;
+}
