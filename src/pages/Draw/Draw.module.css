@@ -9,6 +9,15 @@
   height: 90vh;
 }
 
+.dropdownContent label{
+  display: flex;
+  padding: 10px;
+}
+.dropdownContent{
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
 .panel {
   display: flex;
   padding: 20px;

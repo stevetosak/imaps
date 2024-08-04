@@ -385,6 +385,7 @@ function Draw() {
 
     objectTypeSelection() {
       const dropdown = document.getElementById("dropdownOptions");
+      console.log(dropdown.options.length);
       if (dropdown.options.length === 0) {
         const options = ["Entrance", "Wall", "Room", "Hallway", "Stairs"];
         options.forEach((option) => {
@@ -393,21 +394,22 @@ function Draw() {
           optionElement.text = option;
           dropdown.add(optionElement);
         });
+      } else {
+        const dropdownContainer = document.getElementById("dropdown");
+        dropdownContainer.style.display =
+          dropdownContainer.style.display === "none" || dropdownContainer.style.display === ""
+            ? "block"
+            : "none";
       }
 
-      const dropdownContainer = document.getElementById("dropdown");
-      dropdownContainer.style.display =
-        dropdownContainer.style.display === "none" || dropdownContainer.style.display === ""
-          ? "block"
-          : "none";
     }
 
     handleSelectionChange() {
       const dropdown = document.getElementById("dropdownOptions");
       const selected = dropdown.value;
+      console.log(dropdown.value);
       document.getElementById("selectedOption").innerText = `${selected}`;
       this.startDrawing(`${selected}`);
-      dropdown.selectedIndex = -1;
     }
 
     handleDelete(e) {
@@ -518,11 +520,12 @@ function Draw() {
         <div id="container" className={styles.cont}></div>
         <div className={styles.panel}>
           <button id="add">Add Room</button>
+          <div id="dropdown" className={styles.dropdownContent}>
+            <select id="dropdownOptions" multiple></select>
+          </div>
           <div id="selectedOption"></div>
         </div>
-        <div id="dropdown">
-          <select id="dropdownOptions" multiple></select>
-        </div>
+        
       </div>
     </>
   );
