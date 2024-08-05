@@ -27,6 +27,7 @@ function Draw() {
     
       this.on('transformend',() => {
         this.snapToGrid();
+        
         // this.width(Math.round( ((this.width() * this.scaleX()) / this.blockSize)) * this.blockSize);
         // this.height(Math.round( ((this.height() * this.scaleY()) / this.blockSize)) * this.blockSize);
         //TODO
