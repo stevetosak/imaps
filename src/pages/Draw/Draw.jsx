@@ -17,10 +17,11 @@ function Draw() {
           <select id="dropdownOptions" multiple></select>
         </div>
         <div className={styles.panel}>
-          <button id="add">Add Room</button>
-          <div id="dropdown" className={styles.dropdownContent}>
-            <select id="dropdownOptions" multiple></select>
-          </div>
+          <ul className={styles.shapeOptions} id="shapeOptions">
+            <li data-info="Entrance" className={styles.shapeOption}></li>
+            <li data-info="Wall" className={styles.shapeOption}></li>
+            <li data-info="Room" className={styles.shapeOption}></li>
+          </ul>
           <div id="selectedOption"></div>
         </div>
       </div>

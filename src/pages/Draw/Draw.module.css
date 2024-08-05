@@ -2,12 +2,14 @@
   width: 100vw;
   height: 100vh;
   display: flex;
+  background-color: rgba(0, 0, 0, 0.885);
 }
 
 .cont {
   width: 85vw;
   height: 90vh;
-  border: 2px solid black;
+  background-color:rgba(22, 22, 22, 0);
+  border: 1px solid gray
 }
 .bodyWrap{
   width: 100vw;
@@ -38,4 +40,43 @@
   height: 200px;
   margin: 10px;
   padding: 10px;
+}
+
+
+.shapeOptions{
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.shapeOption {
+  display: block;
+  padding: 10px 20px;
+  width: 10vh; 
+  height: 10vh;
+  margin: 5px 0;
+  border: 2px solid #804047;
+  border-radius: 5px;
+  background-color: #3a3a3a;
+  color: white;
+  font-size: px;
+  font-weight: bold;
+  text-align: center;
+  background-image: url('./shapeImages/imaps-wall-1.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+.shapeOption:hover {
+  background-color: #94183b;
+  border-color: #94183b;
+}
+.shapeOption:active {
+  background-color: #94183b;
+  border-color: #94183b;
+}
+
+#dropdownOptions option :first-child{
+  display: none;
 }
