@@ -7,6 +7,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Signup from "./pages/Signup/Signup";
 import IMaps from "./pages/IMaps/IMaps";
 import Draw from "./pages/Draw/Draw";
+import Error from "./pages/Error/Error";
+import "./App.css";
 
 function App() {
   return (
@@ -19,32 +21,8 @@ function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/Signup" element={<Signup />} />
           <Route path="/Maps/FinkiMaps/Draw" element={<Draw />} />
+          <Route path="*" element={<Error />} />
         </Routes>
-        <br />
-        <br />
-        <hr />
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home (IMaps)</Link>
-            </li>
-            <li>
-              <Link to="/Maps/FinkiMaps">FinkiMaps</Link>
-            </li>
-            <li>
-              <Link to="/Maps">Maps</Link>
-            </li>
-            <li>
-              <Link to="/Login">Login</Link>
-            </li>
-            <li>
-              <Link to="/Signup">Signup</Link>
-            </li>
-            <li>
-              <Link to="/Maps/FinkiMaps/Draw">Draw</Link>
-            </li>
-          </ul>
-        </nav>
       </div>
     </Router>
   );

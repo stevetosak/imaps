@@ -9,7 +9,7 @@ function FilterBar() {
 
   return (
     <div className={styles.wrapper}>
-      <div>
+      <div className={styles.scrollableContainer}>
         <button className={styles.buttonValue} onClick={() => filterLocation("all")}>
           All
         </button>

@@ -1,13 +1,22 @@
+/* FilterBar.module.css */
 * {
   font-family: "Poppins", sans-serif;
 }
 
 .wrapper {
-  width: 100%;
   display: flex;
-  justify-content: flex-start;
-  /* flex-wrap: wrap; */
+  justify-content: center; /* Centers the scrollable container */
+  width: 100%; /* Ensures the container takes full width */
+  overflow-x: hidden; /* Prevents the wrapper from overflowing */
+}
+
+.scrollableContainer {
+  display: flex;
   gap: 10px;
+  overflow-x: auto; /* Allows horizontal scrolling */
+  white-space: nowrap; /* Prevents buttons from wrapping */
+  padding: 0px 0; /* Adds some space around the buttons */
+  width: 100%;
 }
 
 .buttonValue {
@@ -18,7 +27,7 @@
   color: #6759ff;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
-  white-space: nowrap;
+  white-space: nowrap; /* Ensures the text does not wrap */
 }
 
 .buttonValue:hover,
@@ -30,4 +39,13 @@
 .active {
   background-color: #6759ff;
   color: #ffffff;
+}
+
+.scrollableContainer::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scrollableContainer::-webkit-scrollbar-thumb {
+  background-color: #6759ff;
+  border-radius: 3px;
 }

@@ -1,8 +1,20 @@
-.customSearch {
-  max-width: 400px;
-  margin-bottom: 10px;
-}
-
 button img {
   width: 24px;
+}
+button {
+  border: 1px solid blueviolet;
+}
+
+.hide {
+  visibility: hidden;
+}
+
+.wideButton {
+  width: 100%;
+}
+
+.customSearch {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }

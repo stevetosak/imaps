@@ -325,7 +325,6 @@ function Draw() {
             ? "block"
             : "none";
       }
-
     }
 
     handleSelectionChange() {
@@ -449,6 +448,9 @@ function Draw() {
     <div className={styles.bodyWrap}>
       <div className={styles.wrapper}>
         <div id="container" className={styles.cont}></div>
+        <div id="dropdown">
+          <select id="dropdownOptions" multiple></select>
+        </div>
         <div className={styles.panel}>
           <button id="add">Add Room</button>
           <div id="dropdown" className={styles.dropdownContent}>
@@ -456,7 +458,6 @@ function Draw() {
           </div>
           <div id="selectedOption"></div>
         </div>
-        
       </div>
     </div>
   );

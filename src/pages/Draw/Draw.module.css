@@ -1,4 +1,6 @@
 .wrapper {
+  width: 100vw;
+  height: 100vh;
   display: flex;
 }
 
@@ -28,6 +30,12 @@
 }
 
 .panel button {
-  width: 20vh;
-  height: 10vh;
+  width: 120px;
+  height: 80px;
+}
+
+#dropdownOptions {
+  height: 200px;
+  margin: 10px;
+  padding: 10px;
 }
