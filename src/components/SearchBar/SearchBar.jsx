@@ -47,8 +47,18 @@ function SearchBar() {
           <img src={closeIcon} alt="Close Icon" />
         </button>
       </div>
-      <input type="text" className="form-control rounded" placeholder="To" aria-label="To" />
-      <button type="button" className={`btn btn-outline-primary `} data-mdb-ripple-init>
+      <div className="input-group">
+        <input type="text" className="form-control rounded" placeholder="To" aria-label="To" />
+        <button
+          type="button"
+          className={`btn btn-outline-primary ${(styles.customButton, styles.hide)}`}
+          data-mdb-ripple-init
+          onClick={toggleExpanded}
+        >
+          <img src={closeIcon} alt="Close Icon" />
+        </button>
+      </div>
+      <button type="button" className={`btn btn-outline-primary`} data-mdb-ripple-init>
         <img src={searchIcon} alt="Search Icon" />
       </button>
     </div>

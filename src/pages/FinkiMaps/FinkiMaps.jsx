@@ -4,6 +4,7 @@ import FilterBar from "../../components/FilterBar/FilterBar";
 import Profile from "../../components/Profile/Profile";
 import styles from "./FinkiMaps.module.css";
 import SideBar from "../../components/SideBar/SideBar";
+import Draw from "../../pages/Draw/Draw";
 
 function FinkiMaps() {
   return (

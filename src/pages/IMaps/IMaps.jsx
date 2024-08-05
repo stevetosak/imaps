@@ -7,8 +7,10 @@ import Home from "./components/pages/Home";
 function IMaps() {
   return (
     <>
-      <Navbar></Navbar>
-      <Home></Home>
+      <div className={styles.home}>
+        <Navbar></Navbar>
+        <Home></Home>
+      </div>
     </>
   );
 }

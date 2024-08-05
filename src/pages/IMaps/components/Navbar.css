@@ -10,12 +10,15 @@
   z-index: 999;
 }
 
+.pad-bot {
+  padding-bottom: 1.5rem;
+}
+
 .navbar-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80px;
-  max-width: 1500px;
+  width: 100%;
 }
 
 .navbar-logo {
@@ -40,7 +43,7 @@
   grid-gap: 10px;
   list-style: none;
   text-align: center;
-  width: 60vw;
+  width: 70vw;
   justify-content: end;
   margin-right: 2rem;
 }
