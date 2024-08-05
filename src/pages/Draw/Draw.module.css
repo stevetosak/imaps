@@ -2,14 +2,15 @@
   width: 100vw;
   height: 100vh;
   display: flex;
-  background-color: rgba(0, 0, 0, 0.885);
+  background: #141414f6;
 }
 
 .cont {
   width: 85vw;
   height: 90vh;
   background-color:rgba(22, 22, 22, 0);
-  border: 1px solid gray
+  border: 1px solid gray;
+  margin: 1% 1%
 }
 .bodyWrap{
   width: 100vw;
@@ -58,15 +59,17 @@
   border-radius: 5px;
   background-color: #3a3a3a;
   color: white;
-  font-size: px;
+  font-size: 10px;
   font-weight: bold;
-  text-align: center;
-  background-image: url('./shapeImages/imaps-wall-1.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
   transition: background-color 0.3s, border-color 0.3s;
+}
+
+.test{
+  background-color: #ff2735;
 }
 .shapeOption:hover {
   background-color: #94183b;
@@ -77,6 +80,12 @@
   border-color: #94183b;
 }
 
-#dropdownOptions option :first-child{
-  display: none;
+.entrance{
+  background-image: url('./shapeImages/imaps-entrance.png');
+}
+.wall{
+  background-image: url('./shapeImages/imaps-wall-1.png');
+}
+.room{
+  background-image: url('./shapeImages/imaps-room.png');
 }

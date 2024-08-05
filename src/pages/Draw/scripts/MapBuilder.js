@@ -1,4 +1,5 @@
 import { Entrance, Room, Wall } from "./Shapes";
+import InfoNode from "./InfoNode";
 import Konva from "konva";
 export class MapBuilder {
   constructor(containerId) {
@@ -57,7 +58,7 @@ export class MapBuilder {
   }
 
   initTransformer(oldPos, newPos, e) {
-    const snapDistance = 5;
+    const snapDistance = 8;
 
     if (this.tr.getActiveAnchor() === "rotater") {
       return newPos;
@@ -134,11 +135,17 @@ export class MapBuilder {
       this.handleResize();
     });
     window.addEventListener("wheel", this.handleWheel.bind(this));
+    this.stage.on('contextmenu', (event) => {
+      event.evt.preventDefault();
+      const mousePos = this.stage.getPointerPosition();
+      this.createInfoNode(mousePos);
+    });
     this.stage.on("mousedown touchstart", this.handleMouseDown.bind(this));
     this.stage.on("mousemove touchmove", this.handleMouseMove.bind(this));
     this.stage.on("mouseup touchend", this.handleMouseUp.bind(this));
     this.stage.on("click tap", this.handleStageClick.bind(this));
   }
+
 
   setupGrid() {
     this.gridLayer.destroyChildren();
@@ -170,6 +177,7 @@ export class MapBuilder {
       );
     }
     this.stage.add(this.gridLayer);
+    this.mainLayer.moveToTop();
   }
 
   createShape(mousePos, rotation) {
@@ -183,6 +191,33 @@ export class MapBuilder {
       default:
         return null;
     }
+  }
+
+  createInfoNode(mousePos){
+
+    // console.log(mousePos.x,mousePos.y);
+    // let node = new InfoNode({
+    //   x: mousePos.x,
+    //   y: mousePos.y,
+    //   radius: 20,
+    //   fill: 'red',
+    //   stroke: 'black',
+    //   strokeWidth: 1,
+    // })
+
+    // // let node = new Konva.Rect({
+    // //   x:mousePos.x,
+    // //   y:mousePos.y,
+    // //   width: 50,
+    // //   height: 50,
+    // //   stroke: 'black',
+    // //   fill: 'red'
+    // // });
+    // this.shapes.push(node);
+    // this.mainLayer.add(node);
+    // this.mainLayer.batchDraw();
+
+    // console.log(node.x(),node.y());
   }
 
   clickHandler() {
@@ -262,6 +297,7 @@ export class MapBuilder {
       });
       this.tr.nodes([]);
       this.mainLayer.batchDraw();
+      console.log(this.shapes.length);
     }
   }
 
