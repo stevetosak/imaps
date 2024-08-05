@@ -1,12 +1,15 @@
 .wrapper {
-  width: 100vh;
-  height: 100vh;
   display: flex;
 }
 
 .cont {
-  width: 100%;
+  width: 85vw;
   height: 90vh;
+  border: 2px solid black;
+}
+.bodyWrap{
+  width: 100vw;
+  height: 100vh;
 }
 
 .dropdownContent label{
@@ -20,6 +23,7 @@
 
 .panel {
   display: flex;
+  flex-direction: column;
   padding: 20px;
 }
 

@@ -21,75 +21,36 @@ function Draw() {
           .find("Transformer")
           .forEach((t) => t.moveToTop());
       });
-      this.on("dragstart", () => {
-        this.showDragShadow();
-      });
-      this.on("dragmove", () => {
-        this.moveDragShadow();
-      });
       this.on("dragend", () => {
         this.snapToGrid();
-        this.hideDragShadow();
       });
+    
+      this.on('transformend',() => {
+        this.snapToGrid();
+        // this.width(Math.round( ((this.width() * this.scaleX()) / this.blockSize)) * this.blockSize);
+        // this.height(Math.round( ((this.height() * this.scaleY()) / this.blockSize)) * this.blockSize);
+        //TODO
+      })
     }
 
-    createShadowObj() {
-      throw new Error("Abstract method 'createShadowObj' must be implemented in subclass.");
-    }
-
-    showDragShadow() {
-      if (this.shadowObj !== null) {
-        this.shadowObj.show();
-        this.layer.add(this.shadowObj);
-        this.shadowObj.moveToTop();
-        this.moveToTop();
-      } else {
-        console.log("shadowObj null");
-      }
-    }
-
-    moveDragShadow() {
-      if (this.shadowObj !== null) {
-        this.shadowObj.position({
-          x: Math.round(this.x() / this.blockSize) * this.blockSize,
-          y: Math.round(this.y() / this.blockSize) * this.blockSize,
-        });
-        this.layer.batchDraw();
-      } else {
-        console.log("shadowObj null");
-      }
-    }
-
-    hideDragShadow() {
-      if (this.shadowObj !== null) {
-        this.position({
-          x: Math.round(this.x() / this.blockSize) * this.blockSize,
-          y: Math.round(this.y() / this.blockSize) * this.blockSize,
-        });
-        this.layer.batchDraw();
-        this.shadowObj.hide();
-      } else {
-        console.log("shadowObj null");
-      }
-    }
-
-    snapToGrid() {
+    snapToGrid(){
       this.position({
         x: Math.round(this.x() / this.blockSize) * this.blockSize, // TODO TUKA BLOCK SIZE
-        y: Math.round(this.y() / this.blockSize) * this.blockSize,
-      });
+        y: Math.round(this.y() / this.blockSize) * this.blockSize
+    });
     }
+  
   }
 
   class LineEntrance extends MapShape {
-    constructor(mousePos, blockSize, layer) {
+    constructor(mousePos, blockSize, layer,rotation) {
       super(
         {
           x: mousePos.x,
           y: mousePos.y,
           width: blockSize,
           height: blockSize * 2,
-          fill: "#35637c",
+          fill: "white",
           stroke: "darkgrey",
           strokeWidth: 1,
           shadowColor: "black",
@@ -98,24 +59,11 @@ function Draw() {
           shadowOpacity: 0.4,
           name: "mapObj",
           draggable: true,
+          rotation: rotation,
         },
         layer,
         blockSize
       );
-    }
-
-    createShadowObj() {
-      this.shadowObj = new Konva.Rect({
-        x: 0,
-        y: 0,
-        width: this.blockSize,
-        height: this.blockSize * 2,
-        fill: "purple",
-        opacity: 0.6,
-        stroke: "purple",
-        strokeWidth: 3,
-        dash: [20, 2],
-      });
     }
   }
 
@@ -137,24 +85,10 @@ function Draw() {
         blockSize
       );
     }
-
-    createShadowObj() {
-      this.shadowObj = new Konva.Rect({
-        x: 0,
-        y: 0,
-        width: this.blockSize * 5,
-        height: this.blockSize * 3,
-        fill: "purple",
-        opacity: 0.6,
-        stroke: "purple",
-        strokeWidth: 3,
-        dash: [20, 2],
-      });
-    }
   }
 
   class LineWall extends MapShape {
-    constructor(mousePos, blockSize, layer) {
+    constructor(mousePos, blockSize, layer,rotation) {
       super(
         {
           x: mousePos.x,
@@ -166,24 +100,11 @@ function Draw() {
           strokeWidth: 1,
           name: "mapObj",
           draggable: true,
+          rotation: rotation,
         },
         layer,
         blockSize
       );
-    }
-
-    createShadowObj() {
-      this.shadowObj = new Konva.Rect({
-        x: 0,
-        y: 0,
-        width: this.blockSize,
-        height: this.blockSize * 8,
-        fill: "purple",
-        opacity: 0.6,
-        stroke: "darkgrey",
-        strokeWidth: 3,
-        dash: [20, 2],
-      });
     }
   }
 
@@ -202,7 +123,7 @@ function Draw() {
       this.gridLayer.listening(false);
       this.mainLayer.moveToTop();
       this.isDrawing = false;
-      this.blockSize = 30;
+      this.blockSize = 20;
       this.shapes = [];
       this.currentType = "";
       this.tr = new Konva.Transformer({
@@ -245,6 +166,7 @@ function Draw() {
       const containerHeight = this.container.offsetHeight;
       const scaleX = containerWidth / this.stage.width();
       const scaleY = containerHeight / this.stage.height();
+      console.log(this.stage.width(),this.stage.height());
       const scale = Math.min(scaleX, scaleY);
       this.stage.width(containerWidth);
       this.stage.height(containerHeight);
@@ -280,14 +202,23 @@ function Draw() {
       this.stage.on("click tap", this.handleStageClick.bind(this));
     }
 
-    createShape(mousePos) {
+    handleTransform(){
+      this.tr.nodes().forEach(node => {
+        node.shadowObj.rotation(node.rotation());
+        node.shadowObj.width(node.width() * node.scaleX());
+        node.shadowObj.height(node.height() ( node.scaleY()));
+      }
+      )
+    }
+
+    createShape(mousePos,rotation) {
       switch (this.currentType) {
         case "Entrance":
-          return new LineEntrance(mousePos, this.blockSize, this.dragLayer);
+          return new LineEntrance(mousePos, this.blockSize, this.dragLayer, rotation);
         case "Room":
-          return new RectRoom(mousePos, this.blockSize, this.dragLayer);
+          return new RectRoom(mousePos, this.blockSize, this.dragLayer, rotation);
         case "Wall":
-          return new LineWall(mousePos, this.blockSize, this.dragLayer);
+          return new LineWall(mousePos, this.blockSize, this.dragLayer, rotation);
         default:
           return null;
       }
@@ -297,17 +228,10 @@ function Draw() {
       return () => {
         if (this.isDrawing) {
           const mousePos = this.stage.getPointerPosition();
-          const placedObj = this.createShape(mousePos);
+          const placedObj = this.createShape(mousePos,this.hoverObj.rotation());
           if (placedObj) {
             console.log("STATS:" + placedObj.x(), placedObj.y(), placedObj.width(), placedObj.height());
-            placedObj.createShadowObj();
-            console.log(
-              "SHADOW " + placedObj.shadowObj.x(),
-              placedObj.shadowObj.y(),
-              placedObj.shadowObj.width(),
-              placedObj.shadowObj.height()
-            );
-            console.log("BLOCK SIZE: " + placedObj.shadowObj.blockSize);
+
             this.mainLayer.add(placedObj);
             this.shapes.push(placedObj);
             this.tr.nodes([placedObj]);
@@ -360,7 +284,6 @@ function Draw() {
     }
 
     createHoverObject(type) {
-      // mozda hover vo dr layer
       switch (type) {
         case "Entrance":
           return new LineEntrance({ x: 0, y: 0 }, this.blockSize, this.gridLayer);
@@ -396,6 +319,7 @@ function Draw() {
         });
       } else {
         const dropdownContainer = document.getElementById("dropdown");
+        console.log(dropdownContainer.style.display)
         dropdownContainer.style.display =
           dropdownContainer.style.display === "none" || dropdownContainer.style.display === ""
             ? "block"
@@ -415,7 +339,10 @@ function Draw() {
     handleDelete(e) {
       if (e.key === "Delete") {
         const selectedNodes = this.tr.nodes();
-        selectedNodes.forEach((node) => node.remove());
+        selectedNodes.forEach((node) => {
+          node.remove();
+          this.shapes.splice(this.shapes.indexOf(node),1)
+        });
         this.tr.nodes([]);
         this.mainLayer.batchDraw();
       }
@@ -513,9 +440,13 @@ function Draw() {
   }
   useEffect(() => {
     const app = new MapBuilder("container");
+
+    document.body.style.height = '100vh';
+    document.body.style.width = '100vw';
+    
   }, []);
   return (
-    <>
+    <div className={styles.bodyWrap}>
       <div className={styles.wrapper}>
         <div id="container" className={styles.cont}></div>
         <div className={styles.panel}>
@@ -527,7 +458,7 @@ function Draw() {
         </div>
         
       </div>
-    </>
+    </div>
   );
 }
 
