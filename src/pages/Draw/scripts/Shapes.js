@@ -41,7 +41,7 @@ export class Entrance extends MapShape {
         y: mousePos.y,
         width: blockSize,
         height: blockSize * 2,
-        fill: "#70ddfbd8",
+        fill: "#0051ff",
         stroke: "grey",
         strokeWidth: 1,
         opacity: 0.7,

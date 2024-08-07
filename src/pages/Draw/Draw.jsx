@@ -6,12 +6,15 @@ import InfoNode from './scripts/InfoNode'
 function Draw() {
   useEffect(() => {
     const app = new MapBuilder("container");
-    document.body.style.height = "100vh";
-    document.body.style.width = "100vw";
   }, []);
   return (
-    <div className={styles.wrapper}>
-        <div id="container" className={styles.cont}></div>
+    <div className={styles.wrapper} id="wrapper">
+      <div id="container" className={styles.cont}></div>
+        {/* <div id='nodeOptions' className={styles.nodeOptions}>
+          <input type="text" placeholder="Room Name:"></input>
+          <input type="text" placeholder="Room Type"></input>
+          <input type="text" placeholder="Description"></input>
+        </div> */}
         <div className={styles.panel}>
           <ul className={styles.shapeOptions} id="shapeOptions">
             <li data-info="Entrance"  className={`${styles.shapeOption} ${styles.entrance}`} >Entrance</li>
@@ -20,7 +23,6 @@ function Draw() {
           </ul>
           <div id="selectedOption"></div>
         </div>
-      
     </div>
   );
 }

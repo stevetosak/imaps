@@ -1,26 +1,82 @@
-import Konva from 'konva'
-export default class InfoNode extends Konva.Shape{
-    constructor(config) {
-        super(config);
-        this.className = 'NavigationPin';
-      }
-      _sceneFunc(context,shape) {
+import Konva from "konva";
+import styles from "../Draw.module.css";
+export default class InfoNode extends Konva.Shape {
+  constructor(config) {
+    super(config);
+    this.className = "InfoPin";
+    this.infoBox = this.createInfoBox();
+    this.isDisplayingBox = false;
 
-        const { x, y, radius } = this.attrs;
+    this.on("mouseover", () => {
+      this.fill("yellow");
+    });
+    this.on("mouseout", () => {
+      this.fill("red");
+    });
+  }
+  _sceneFunc(context, shape) {
+    const { x, y, radiusX, radiusY, tailHeight, fill, stroke, strokeWidth } =
+      this.attrs;
 
-        // Draw a circle part
-        context.beginPath();
-        context.arc(x, y, radius, 0, Math.PI * 2, false);
-        context.closePath();
-        context.fillStrokeShape(shape);
+    context.beginPath();
+    context.ellipse(0, 0, radiusX, radiusY, 0, 0, Math.PI * 2);
+    context.closePath();
+    context.fillStrokeShape(shape);
 
-        // Draw the tail part
-        context.beginPath();
-        context.moveTo(x, y + radius);
-        context.lineTo(x - radius / 2, y + radius * 2);
-        context.lineTo(x + radius / 2, y + radius * 2);
-        context.closePath();
-        context.translate(x,y);
-        context.fillStrokeShape(shape);
-      }
+    context.beginPath();
+    context.moveTo(-radiusX, radiusY);
+    context.lineTo(0, radiusY + tailHeight);
+    context.lineTo(radiusX, radiusY);
+    context.closePath();
+
+    context.fillStrokeShape(shape);
+  }
+
+  displayInfoBox(stage) {
+    if(this.isDisplayingBox){
+      this.isDisplayingBox = false;
+      this.infoBox.style.display = 'none';
+    } else {
+      const shapePos = this.getClientRect();
+      const stagePos = stage.container().getBoundingClientRect();
+      this.infoBox.style.display = "block";
+  
+      const optionsBoxX = stagePos.left + shapePos.x + shapePos.width / 2;
+      const optionsBoxY = stagePos.top + shapePos.y - this.infoBox.offsetHeight;
+  
+      this.infoBox.style.left = `${optionsBoxX}px`;
+      this.infoBox.style.top = `${optionsBoxY}px`;
+      this.isDisplayingBox = true;
+    }
+   
+  }
+
+  createInfoBox() {
+    let cont = document.createElement("div");
+    cont.setAttribute("id", "nodeOptions");
+    cont.className = styles.nodeOptions;
+
+    //<input type="text" placeholder="Description"></input>
+
+    // ova e preshit ama privremeno
+
+    let input = document.createElement("input");
+    input.setAttribute("type", "text");
+    input.setAttribute("placeholder", "Room Name");
+    cont.appendChild(input);
+
+    let input1 = document.createElement("input");
+    input1.setAttribute("type", "text");
+    input.setAttribute("placeholder", "Room Type");
+    cont.appendChild(input1);
+
+    let input2 = document.createElement("input");
+    input2.setAttribute("type", "text");
+    input2.setAttribute("placeholder", "Description");
+    cont.appendChild(input2);
+
+    document.getElementById("wrapper").appendChild(cont);
+
+    return cont;
+  }
 }

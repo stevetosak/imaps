@@ -16,11 +16,12 @@ export class MapBuilder {
     this.gridLayer.listening(false);
 
     this.shapes = [];
+    this.selectedShapes = [];
     this.blockSize = 20;
     this.isDrawing = false;
     this.currentType = "";
 
-    this.tr = new Konva.Transformer({
+    this.mainTransformer = new Konva.Transformer({
       centeredScaling: false,
       rotationSnaps: [0, 90, 180, 270],
       anchorSize: 5,
@@ -32,6 +33,10 @@ export class MapBuilder {
 
       anchorDragBoundFunc: this.initTransformer.bind(this),
     });
+
+    this.infoNodeTransformer = new Konva.Transformer({
+      enabledAnchors: []
+    })
 
     this.selectionRectangle = new Konva.Rect({
       fill: "rgba(200,0,255,0.5)",
@@ -50,7 +55,7 @@ export class MapBuilder {
 
   initialize() {
     this.setupGrid();
-    this.mainLayer.add(this.tr);
+    this.mainLayer.add(this.mainTransformer);
     this.mainLayer.add(this.selectionRectangle);
     this.stage.add(this.dragLayer);
     this.stage.add(this.mainLayer);
@@ -60,7 +65,7 @@ export class MapBuilder {
   initTransformer(oldPos, newPos, e) {
     const snapDistance = 8;
 
-    if (this.tr.getActiveAnchor() === "rotater") {
+    if (this.mainTransformer.getActiveAnchor() === "rotater") {
       return newPos;
     }
 
@@ -106,7 +111,6 @@ export class MapBuilder {
     const containerHeight = this.container.offsetHeight;
     const scaleX = containerWidth / this.stage.width();
     const scaleY = containerHeight / this.stage.height();
-    console.log(this.stage.width(), this.stage.height());
     const scale = Math.min(scaleX, scaleY);
     this.stage.width(containerWidth);
     this.stage.height(containerHeight);
@@ -135,15 +139,11 @@ export class MapBuilder {
       this.handleResize();
     });
     window.addEventListener("wheel", this.handleWheel.bind(this));
-    this.stage.on('contextmenu', (event) => {
-      event.evt.preventDefault();
-      const mousePos = this.stage.getPointerPosition();
-      this.createInfoNode(mousePos);
-    });
     this.stage.on("mousedown touchstart", this.handleMouseDown.bind(this));
     this.stage.on("mousemove touchmove", this.handleMouseMove.bind(this));
     this.stage.on("mouseup touchend", this.handleMouseUp.bind(this));
     this.stage.on("click tap", this.handleStageClick.bind(this));
+    this.stage.on("contextmenu", this.createInfoNode.bind(this));
   }
 
 
@@ -193,31 +193,52 @@ export class MapBuilder {
     }
   }
 
-  createInfoNode(mousePos){
+  positionNodeOptionsBox(node){
+    const options = document.getElementById('nodeOptions');
+    const shapePos = node.getClientRect();
+    const stagePos = this.stage.container().getBoundingClientRect();
+    options.style.display = 'block';
 
-    // console.log(mousePos.x,mousePos.y);
-    // let node = new InfoNode({
-    //   x: mousePos.x,
-    //   y: mousePos.y,
-    //   radius: 20,
-    //   fill: 'red',
-    //   stroke: 'black',
-    //   strokeWidth: 1,
-    // })
+    const optionsBoxX = stagePos.left + shapePos.x + (shapePos.width / 2);
+    const optionsBoxY = stagePos.top + shapePos.y - options.offsetHeight;
 
-    // // let node = new Konva.Rect({
-    // //   x:mousePos.x,
-    // //   y:mousePos.y,
-    // //   width: 50,
-    // //   height: 50,
-    // //   stroke: 'black',
-    // //   fill: 'red'
-    // // });
-    // this.shapes.push(node);
-    // this.mainLayer.add(node);
-    // this.mainLayer.batchDraw();
+    options.style.left = `${optionsBoxX}px`
+    options.style.top = `${optionsBoxY}px`
+  }
 
-    // console.log(node.x(),node.y());
+  createInfoNode(e){
+
+    //TREBIT DA SA SREDIT SO BRISENJE VAKVI NODES, NE E UBO
+    e.evt.preventDefault();
+    let mousePos = this.stage.getPointerPosition();
+    let infoPin = new InfoNode({
+      x: mousePos.x,
+      y: mousePos.y,
+      radiusX: 5,
+      radiusY: 7,
+      tailHeight: 10,
+      fill: '#d70113',
+      stroke: '#1b1b1b',
+      strokeWidth: 0,
+      draggable: true,
+      name: 'mapObj',
+    });
+
+    infoPin.createInfoBox();
+
+    infoPin.on('dblclick', () => {
+      infoPin.displayInfoBox(this.stage);
+    })
+  
+
+    infoPin.on('dragend', () => {
+      infoPin.displayInfoBox(this.stage);
+    })
+
+    this.shapes.push(infoPin);
+    this.mainLayer.add(infoPin);
+    this.mainLayer.batchDraw();
+
   }
 
   clickHandler() {
@@ -235,7 +256,7 @@ export class MapBuilder {
 
           this.mainLayer.add(placedObj);
           this.shapes.push(placedObj);
-          this.tr.nodes([placedObj]);
+          this.mainTransformer.nodes([placedObj]);
           this.mainLayer.draw();
           this.isDrawing = false;
           this.hoverObj.remove();
@@ -290,12 +311,11 @@ export class MapBuilder {
 
   handleDelete(e) {
     if (e.key === "Delete") {
-      const selectedNodes = this.tr.nodes();
-      selectedNodes.forEach((node) => {
+      this.mainTransformer.nodes().forEach((node) => {
         node.remove();
         this.shapes.splice(this.shapes.indexOf(node), 1);
       });
-      this.tr.nodes([]);
+      this.mainTransformer.nodes([]);
       this.mainLayer.batchDraw();
       console.log(this.shapes.length);
     }
@@ -361,16 +381,18 @@ export class MapBuilder {
     const selected = shapes.filter((shape) =>
       Konva.Util.haveIntersection(box, shape.getClientRect())
     );
-    this.tr.nodes(selected);
+    this.selectedShapes.push(selected);
+    this.mainTransformer.nodes(selected);
   }
 
   handleStageClick(e) {
+
     if (this.selectionRectangle.visible()) {
       return;
     }
 
     if (e.target === this.stage) {
-      this.tr.nodes([]);
+      this.mainTransformer.nodes([]);
       return;
     }
 
@@ -379,17 +401,17 @@ export class MapBuilder {
     }
 
     const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-    const isSelected = this.tr.nodes().indexOf(e.target) >= 0;
+    const isSelected = this.mainTransformer.nodes().indexOf(e.target) >= 0;
 
     if (!metaPressed && !isSelected) {
-      this.tr.nodes([e.target]);
+      this.mainTransformer.nodes([e.target]);
     } else if (metaPressed && isSelected) {
-      const nodes = this.tr.nodes().slice();
+      const nodes = this.mainTransformer.nodes().slice();
       nodes.splice(nodes.indexOf(e.target), 1);
-      this.tr.nodes(nodes);
+      this.mainTransformer.nodes(nodes);
     } else if (metaPressed && !isSelected) {
-      const nodes = this.tr.nodes().concat([e.target]);
-      this.tr.nodes(nodes);
+      const nodes = this.mainTransformer.nodes().concat([e.target]);
+      this.mainTransformer.nodes(nodes);
     }
   }
 }

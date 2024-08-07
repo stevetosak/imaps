@@ -69,7 +69,7 @@
 }
 
 .test{
-  background-color: #ff2735;
+  background-color: #d70113;
 }
 .shapeOption:hover {
   background-color: #94183b;
@@ -78,6 +78,28 @@
 .shapeOption:active {
   background-color: #94183b;
   border-color: #94183b;
+}
+.nodeOptions{
+  display: none;
+  position: absolute;
+  border: 1px solid #ccc;
+  background-color: white;
+  width: 7%;
+  height: fit-content;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  opacity: 0.8;
+  max-width: 200px;
+  box-sizing: border-box;
+}
+
+.nodeOptions input{
+  display: block;
+  width: 100%; /* Make input fields take the full width of the container */
+  margin-bottom: 5px;
+  padding: 1px;
+  font-size: 7px;
+  box-sizing: border-box; 
 }
 
 .entrance{
