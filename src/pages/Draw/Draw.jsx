@@ -2,10 +2,13 @@ import { useEffect } from "react";
 import { MapBuilder } from "./scripts/MapBuilder";
 import styles from "./Draw.module.css";
 import InfoNode from './scripts/InfoNode'
+import { refreshLoop } from "./scripts/FpsCounter";
 
 function Draw() {
   useEffect(() => {
     const app = new MapBuilder("container");
+  
+    refreshLoop();
   }, []);
   return (
     <div className={styles.wrapper} id="wrapper">
@@ -21,7 +24,9 @@ function Draw() {
             <li data-info="Wall" className={`${styles.shapeOption} ${styles.wall}`} id="wall">Wall</li>
             <li data-info="Room"  className={`${styles.shapeOption} ${styles.room}`} id="room">Room</li>
           </ul>
-          <div id="selectedOption"></div>
+          <div id="fpscont" className={styles.fpscounter}>
+            <p id="fpsCounter"></p>
+          </div>
         </div>
     </div>
   );

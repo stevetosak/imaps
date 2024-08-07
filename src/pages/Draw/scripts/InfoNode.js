@@ -15,7 +15,7 @@ export default class InfoNode extends Konva.Shape {
     });
   }
   _sceneFunc(context, shape) {
-    const { x, y, radiusX, radiusY, tailHeight, fill, stroke, strokeWidth } =
+    const { radiusX, radiusY, tailHeight } =
       this.attrs;
 
     context.beginPath();
@@ -32,8 +32,9 @@ export default class InfoNode extends Konva.Shape {
     context.fillStrokeShape(shape);
   }
 
-  displayInfoBox(stage) {
-    if(this.isDisplayingBox){
+  displayInfoBox(stage,showWhenDrag) {
+
+    if(this.isDisplayingBox && !showWhenDrag){
       this.isDisplayingBox = false;
       this.infoBox.style.display = 'none';
     } else {
@@ -67,7 +68,7 @@ export default class InfoNode extends Konva.Shape {
 
     let input1 = document.createElement("input");
     input1.setAttribute("type", "text");
-    input.setAttribute("placeholder", "Room Type");
+    input1.setAttribute("placeholder", "Room Type");
     cont.appendChild(input1);
 
     let input2 = document.createElement("input");

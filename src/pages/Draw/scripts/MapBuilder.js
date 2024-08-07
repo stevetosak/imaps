@@ -13,6 +13,7 @@ export class MapBuilder {
     this.gridLayer = new Konva.Layer();
     this.dragLayer = new Konva.Layer();
     this.mainLayer = new Konva.Layer();
+    this.prioLayer = new Konva.Layer();
     this.gridLayer.listening(false);
 
     this.shapes = [];
@@ -33,10 +34,6 @@ export class MapBuilder {
 
       anchorDragBoundFunc: this.initTransformer.bind(this),
     });
-
-    this.infoNodeTransformer = new Konva.Transformer({
-      enabledAnchors: []
-    })
 
     this.selectionRectangle = new Konva.Rect({
       fill: "rgba(200,0,255,0.5)",
@@ -59,6 +56,7 @@ export class MapBuilder {
     this.mainLayer.add(this.selectionRectangle);
     this.stage.add(this.dragLayer);
     this.stage.add(this.mainLayer);
+    this.stage.add(this.prioLayer)
     this.setupEventListeners();
   }
 
@@ -219,7 +217,7 @@ export class MapBuilder {
       tailHeight: 10,
       fill: '#d70113',
       stroke: '#1b1b1b',
-      strokeWidth: 0,
+      strokeWidth: 0.2,
       draggable: true,
       name: 'mapObj',
     });
@@ -227,17 +225,21 @@ export class MapBuilder {
     infoPin.createInfoBox();
 
     infoPin.on('dblclick', () => {
-      infoPin.displayInfoBox(this.stage);
+      infoPin.displayInfoBox(this.stage,false);
+      infoPin.moveToTop();
     })
   
 
     infoPin.on('dragend', () => {
-      infoPin.displayInfoBox(this.stage);
+      if(infoPin.isDisplayingBox){
+        infoPin.displayInfoBox(this.stage,true);
+      }
+      
     })
 
     this.shapes.push(infoPin);
-    this.mainLayer.add(infoPin);
-    this.mainLayer.batchDraw();
+    this.prioLayer.add(infoPin);
+    this.prioLayer.batchDraw();
 
   }
 
@@ -304,7 +306,6 @@ export class MapBuilder {
   selectShape(event) {
     if (event.target.tagName === "LI") {
       const shape = event.target.getAttribute("data-info");
-      document.getElementById("selectedOption").innerText = `${shape}`;
       this.startDrawing(shape)
     }
   }

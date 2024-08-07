@@ -67,7 +67,6 @@ export class Room extends MapShape {
         fill: "#DDE0F8",
         stroke: "grey",
         strokeWidth: 1,
-        opacity: 0.95,
         name: "mapObj",
         rotation: rotation,
         draggable: true,
