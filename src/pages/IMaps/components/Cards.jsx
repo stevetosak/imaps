@@ -10,40 +10,40 @@ import img8 from "../images/img-8.jpg";
 function Cards() {
   return (
     <div className="cards">
-      <h1>Check out my portfolios!</h1>
+      <h1>iMaps offers:</h1>
       <div className="cards__container">
         <div className="cards__wrapper">
           <ul className="cards__items">
             <CardItem
               src={img9}
-              text="Explore my dribbble profile where underlying are my illustrations and more"
-              label="Adventure"
-              path="https://dribbble.com/NayanPachori"
+              text="Create intricate floor plans for your building with precision and ease."
+              label="Create"
+              path="/services"
             />
             <CardItem
               src={img2}
-              text="Travel through the Islands of Bali in a Private Cruise"
-              label="Luxury"
+              text="Explore and navigate through complex building layouts seamlessly."
+              label="Explore"
               path="/services"
             />
           </ul>
           <ul className="cards__items">
             <CardItem
               src={img3}
-              text="Set Sail in the Atlantic Ocean visiting Uncharted Waters"
-              label="Mystery"
+              text="Add custom icons, labels, and markers to personalize your indoor maps."
+              label="Customize"
               path="/services"
             />
             <CardItem
               src={img4}
-              text="Experience Football on Top of the Himilayan Mountains"
-              label="Adventure"
+              text="Ensure accessibility by mapping out routes and facilities for all users."
+              label="Accessibility"
               path="/products"
             />
             <CardItem
               src={img8}
-              text="Ride through the Sahara Desert on a guided camel tour"
-              label="Adrenaline"
+              text="Share your maps with others and collaborate in real-time for efficient space planning."
+              label="Collaboration"
               path="/sign-up"
             />
           </ul>

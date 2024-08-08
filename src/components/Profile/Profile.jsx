@@ -25,19 +25,20 @@ function Profile() {
   }, []);
 
   return (
-    <div className="flex h-screen justify-center bg-gray-200 pt-16">
-      <div className="relative">
+    <div className={styles.profileContainer}>
+      <div className={styles.profileWrapper}>
         <img
           onClick={() => setOpen(!open)}
           src={profile}
           alt="profile"
-          className="h-20 w-20 cursor-pointer rounded-full border-4 border-gray-300 object-cover "
+          className={styles.profileImage}
+          ref={imgRef}
         />
         {open && (
-          <div ref={menuRef} className="absolute -left-14 top-24 w-52 bg-white p-4 shadow-lg">
+          <div ref={menuRef} className={styles.dropdownMenu}>
             <ul className={styles.menuList}>
               {menus.map((menu) => (
-                <li key={menu} onClick={() => setOpen(false)} className={`${styles.menuItem}`}>
+                <li key={menu} onClick={() => setOpen(false)} className={styles.menuItem}>
                   {menu}
                 </li>
               ))}

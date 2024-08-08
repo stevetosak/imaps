@@ -3,27 +3,43 @@ import styles from "./Maps.module.css";
 import "react-tiles-dnd/esm/index.css";
 import { TilesContainer } from "react-tiles-dnd";
 import { Link } from "react-router-dom";
+import card from "../../assets/card-map.png";
 
 const tiles = [
-  { text: "Tile 1", cols: 1, rows: 1 },
-  { text: "Tile 2", cols: 1, rows: 1 },
-  { text: "Tile 3", cols: 1, rows: 1 },
-  { text: "Tile 4", cols: 1, rows: 1 },
-  { text: "Tile 5", cols: 1, rows: 1 },
-  { text: "Tile 6", cols: 1, rows: 1 },
-  { text: "Tile 7", cols: 1, rows: 1 },
-  { text: "Tile 8", cols: 1, rows: 1 },
-  { text: "Tile 9", cols: 1, rows: 1 },
+  { text: "FINKI", cols: 1, rows: 1 },
+  { text: "TMF", cols: 1, rows: 1 },
+  { text: "HOSPITAL", cols: 1, rows: 1 },
+  { text: "POLICE", cols: 1, rows: 1 },
+  { text: "LIBRARY", cols: 1, rows: 1 },
+  { text: "PENTAGON", cols: 1, rows: 1 },
+  { text: "WHITE HOUSE", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "HOME", cols: 1, rows: 1 },
+  { text: "PRESPATEKS", cols: 1, rows: 1 },
 ];
 
 const renderTile = ({ data, isDragging }) => (
   <div style={{ padding: "1rem", width: "100%" }}>
-    <Link to="/Maps/FinkiMaps">
+    <Link to="/Maps/FinkiMaps" className={styles.linkStyle}>
       <div
         className={`${styles.tile} ${isDragging ? styles.dragging : ""}`}
         style={{ width: "100%", height: "100%" }}
       >
-        {data.text} {isDragging ? "DRAGGING" : null}
+        <img src={card} className={styles.imgStyle} alt="Map Thumbnail" />
+        <div>
+          {data.text} {isDragging ? "DRAGGING" : null}
+        </div>
       </div>
     </Link>
   </div>
@@ -37,8 +53,8 @@ const tileSize = (tile) => ({
 export default function Maps() {
   return (
     <div className={styles.container}>
-      <h1>Fixed tile width, variable columns</h1>
-      <p>Try to enlarge/reduce the screen, and the container will adapt</p>
+      <h1>Explore maps</h1>
+
       <TilesContainer
         data={tiles}
         renderTile={renderTile}

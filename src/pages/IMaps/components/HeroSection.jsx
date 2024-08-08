@@ -7,12 +7,12 @@ import { Link } from "react-router-dom";
 function HeroSection() {
   return (
     <div className="hero-container">
-      <h1>Passionate Professional</h1>
-      <p>What are you waiting for?</p>
+      <h1>Map Your World</h1>
+      <p>Create and explore detailed indoor maps.</p>
       <div className="hero-btns">
         <Link to="/Maps/FinkiMaps/Draw">
           <Button className="btns" buttonStyle="btn--outline" buttonSize="btn--large">
-            CREATE A MAP
+            Get Started
           </Button>
         </Link>
         <Link to="/Maps">
@@ -22,7 +22,7 @@ function HeroSection() {
             buttonSize="btn--large"
             onClick={console.log("hey")}
           >
-            EXPLORE MAPS <i className="far fa-play-circle" />
+            Browse Maps <i className="far fa-play-circle" />
           </Button>
         </Link>
       </div>

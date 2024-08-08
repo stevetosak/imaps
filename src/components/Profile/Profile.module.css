@@ -1,12 +1,5 @@
-img {
-  width: 48px;
-}
-
-img:hover {
-  cursor: pointer;
-}
-
-ul li:hover {
+img:hover,
+.menuItem:hover {
   cursor: pointer;
 }
 
@@ -17,8 +10,43 @@ ul li:hover {
   text-align: center;
 }
 
+.profileContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.profileWrapper {
+  position: relative;
+}
+
+.profileImage {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  /* border: 4px solid #d1d5db; */
+  object-fit: cover;
+}
+
+/* Dropdown Menu */
+.dropdownMenu {
+  position: absolute;
+  top: 50px; /* Adjust according to image size and spacing */
+  left: 50%;
+  transform: translateX(-50%); /* Center the menu below the image */
+  width: 13rem;
+  background-color: white;
+  padding: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Menu List and Items */
+.menuList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
 .menuItem {
-  cursor: pointer;
   padding: 10px;
   text-align: center;
   border-radius: 5px;

@@ -18,3 +18,20 @@ button {
   flex-wrap: nowrap;
   overflow: hidden;
 }
+
+.expanded {
+  border: 1px solid hsla(0, 0%, 50%, 0.8);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.expandedSection {
+  display: flex;
+  align-items: center;
+}
+
+.customButton {
+  width: 100%;
+  display: block; /* Makes the image a block-level element */
+  margin: 0 auto;
+}

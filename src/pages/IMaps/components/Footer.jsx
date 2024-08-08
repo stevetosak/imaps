@@ -1,22 +1,11 @@
 import React from "react";
 import "./Footer.css";
 import { Button } from "./Button";
+import logo from "../../../assets/logo_icon.png";
 
 function Footer() {
   return (
     <div className="footer-container">
-      <section className="footer-subscription">
-        <p className="footer-subscription-heading">
-          To get the info about all the latest portfolio of mine, subscribe
-        </p>
-        <p className="footer-subscription-text">You can unsubscribe at any time.</p>
-        <div className="input-areas">
-          <form>
-            <input className="footer-input" name="email" type="email" placeholder="Your Email" />
-            <Button buttonStyle="btn--outline">Subscribe</Button>
-          </form>
-        </div>
-      </section>
       <div className="footer-links">
         <div className="footer-link-wrapper">
           <div className="footer-link-items">
@@ -41,7 +30,7 @@ function Footer() {
         <div className="social-media-wrap">
           <div className="footer-logo">
             <a href="#" className="social-logo">
-              NAYAN PACHORI
+              iMaps
             </a>
           </div>
           <small className="website-rights">iMaps © {2024}</small>
