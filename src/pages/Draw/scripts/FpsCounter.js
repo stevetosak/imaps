@@ -1,7 +1,7 @@
 const times = [];
 let fps;
 
-export function refreshLoop() {
+export function fpsCounterLoop() {
   window.requestAnimationFrame(() => {
     let cont = document.getElementById("fpsCounter");
     const now = performance.now();
@@ -12,6 +12,6 @@ export function refreshLoop() {
     fps = times.length;
     cont.innerText = `FPS: ${fps}`;
     //console.log("FPS: " + fps)
-    refreshLoop();
+    fpsCounterLoop();
   });
 }

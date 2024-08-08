@@ -1,6 +1,6 @@
 .wrapper {
   width: 100vw;
-  height: 100vh;
+  height: fit-content;
   display: flex;
   background: #141414f6;
 }
@@ -10,7 +10,8 @@
   height: 90vh;
   background-color:rgba(22, 22, 22, 0);
   border: 1px solid gray;
-  margin: 1% 1%
+  margin: 1% 1%;
+  flex-shrink: 0;
 }
 .bodyWrap{
   width: 100vw;
@@ -26,7 +27,7 @@
   margin-left: 20px;
 }
 
-.panel {
+.panel{
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -86,6 +87,12 @@
   max-width: 200px;
   box-sizing: border-box;
   border-radius: 5px;
+}
+
+.info{
+  margin-top: 10px;
+  color: rgb(248, 248, 248);
+  font-size:small;
 }
 
 .fpscounter{
