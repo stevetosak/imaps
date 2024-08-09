@@ -41,7 +41,7 @@ export default class InfoNode extends Konva.Shape {
       const stagePos = stage.container().getBoundingClientRect();
       this.infoBox.style.display = "block";
 
-      const optionsBoxX = stagePos.left + shapePos.x + shapePos.width / 2;
+      const optionsBoxX = stagePos.left + shapePos.x;
       const optionsBoxY = stagePos.top + shapePos.y - this.infoBox.offsetHeight;
 
       this.infoBox.style.left = `${optionsBoxX}px`;
@@ -68,14 +68,23 @@ export default class InfoNode extends Konva.Shape {
 
     // ova e preshit ama privremeno
 
+    let h1 = document.createElement('h1');
+    h1.innerText = 'Add Info'
+    h1.style.textAlign = 'center'
+    h1.style.fontSize = '8px'
+    h1.style.fontWeight = 'bold';
+    h1.style.color = "#141414f6"
+
+    cont.appendChild(h1);
+
     let input = document.createElement("input");
     input.setAttribute("type", "text");
-    input.setAttribute("placeholder", "Room Name");
+    input.setAttribute("placeholder", "Name");
     cont.appendChild(input);
 
     let input1 = document.createElement("input");
     input1.setAttribute("type", "text");
-    input1.setAttribute("placeholder", "Room Type");
+    input1.setAttribute("placeholder", "Type");
     cont.appendChild(input1);
 
     let input2 = document.createElement("input");
