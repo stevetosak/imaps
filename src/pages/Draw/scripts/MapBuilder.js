@@ -19,8 +19,10 @@ export class MapBuilder {
     this.shapes = [];
     this.infoNodes = [];
     this.selectedShapes = [];
-    this.blockSize = 20;
+    this.blockSize = 15;
     this.isDrawing = false;
+
+    this.pinCount = 0;
 
     this.mainTransformer = new Konva.Transformer({
       centeredScaling: false,
@@ -212,7 +214,7 @@ export class MapBuilder {
       name: 'mapObj',
     });
     
-    infoPin.createInfoBox();
+    infoPin.createInfoBox(this.pinCount++);
     
     infoPin.on('dblclick', () => {
       infoPin.displayInfoBox(this.stage,false);
