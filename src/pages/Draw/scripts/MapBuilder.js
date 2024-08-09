@@ -13,27 +13,28 @@ export class MapBuilder {
     this.gridLayer = new Konva.Layer();
     this.dragLayer = new Konva.Layer();
     this.mainLayer = new Konva.Layer();
-    this.prioLayer = new Konva.Layer();
+    this.infoPinLayer = new Konva.Layer();
     this.gridLayer.listening(false);
 
     this.shapes = [];
+    this.infoNodes = [];
     this.selectedShapes = [];
     this.blockSize = 20;
     this.isDrawing = false;
-    this.currentType = "";
 
     this.mainTransformer = new Konva.Transformer({
       centeredScaling: false,
       rotationSnaps: [0, 90, 180, 270],
       anchorSize: 5,
+      padding:2,
       anchorFill: "yellow",
       borderStroke: "black",
       anchorStroke: "black",
       cornerRadius: 20,
-      padding: 5,
-
+      anchorCornerRadius: 10,
       anchorDragBoundFunc: this.initTransformer.bind(this),
     });
+
 
     this.selectionRectangle = new Konva.Rect({
       fill: "rgba(200,0,255,0.5)",
@@ -54,13 +55,14 @@ export class MapBuilder {
     this.setupGrid();
     this.mainLayer.add(this.mainTransformer);
     this.mainLayer.add(this.selectionRectangle);
+    this.stage.add(this.gridLayer);
     this.stage.add(this.dragLayer);
     this.stage.add(this.mainLayer);
-    this.stage.add(this.prioLayer)
+    this.stage.add(this.infoPinLayer)
     this.setupEventListeners();
   }
 
-  initTransformer(oldPos, newPos, e) {
+  initTransformer(oldPos, newPos) {
     const snapDistance = 8;
 
     if (this.mainTransformer.getActiveAnchor() === "rotater") {
@@ -141,7 +143,7 @@ export class MapBuilder {
     this.stage.on("mousemove touchmove", this.handleMouseMove.bind(this));
     this.stage.on("mouseup touchend", this.handleMouseUp.bind(this));
     this.stage.on("click tap", this.handleStageClick.bind(this));
-    this.stage.on("contextmenu", this.createInfoNode.bind(this));
+    this.stage.on("contextmenu", this.addInfoPin.bind(this));
   }
 
 
@@ -149,7 +151,7 @@ export class MapBuilder {
     this.gridLayer.destroyChildren();
     let padding = this.blockSize;
     let width = this.container.clientWidth;
-    let height = this.container.clientHeight;
+    let height = this.container.clientHeight
 
     for (let i = 0; i < width / padding; i++) {
       this.gridLayer.add(
@@ -170,43 +172,31 @@ export class MapBuilder {
         new Konva.Line({
           points: [0, Math.round(j * padding), width, Math.round(j * padding)],
           stroke: "grey",
-          strokeWidth: 0.5,
+          strokeWidth: 1,
         })
       );
     }
-    this.stage.add(this.gridLayer);
     this.mainLayer.moveToTop();
+    this.infoPinLayer.moveToTop();
+   
   }
 
-  createShape(mousePos, rotation) {
-    switch (this.currentType) {
-      case "Entrance":
-        return new Entrance(mousePos, this.blockSize, this.dragLayer, rotation);
-      case "Room":
-        return new Room(mousePos, this.blockSize, this.dragLayer, rotation);
-      case "Wall":
-        return new Wall(mousePos, this.blockSize, this.dragLayer, rotation);
-      default:
-        return null;
-    }
-  }
-
-  positionNodeOptionsBox(node){
+  
+  positionInfoPinMenu(node){
     const options = document.getElementById('nodeOptions');
     const shapePos = node.getClientRect();
     const stagePos = this.stage.container().getBoundingClientRect();
     options.style.display = 'block';
-
+    
     const optionsBoxX = stagePos.left + shapePos.x + (shapePos.width / 2);
     const optionsBoxY = stagePos.top + shapePos.y - options.offsetHeight;
-
+    
     options.style.left = `${optionsBoxX}px`
     options.style.top = `${optionsBoxY}px`
   }
-
-  createInfoNode(e){
-
-    //TREBIT DA SA SREDIT SO BRISENJE VAKVI NODES, NE E UBO
+  
+  addInfoPin(e){
+    
     e.evt.preventDefault();
     let mousePos = this.stage.getPointerPosition();
     let infoPin = new InfoNode({
@@ -221,73 +211,64 @@ export class MapBuilder {
       draggable: true,
       name: 'mapObj',
     });
-
+    
     infoPin.createInfoBox();
-
+    
     infoPin.on('dblclick', () => {
       infoPin.displayInfoBox(this.stage,false);
       infoPin.moveToTop();
     })
-  
-
+    
     infoPin.on('dragend', () => {
       if(infoPin.isDisplayingBox){
         infoPin.displayInfoBox(this.stage,true);
       }
-      
     })
-
+    
     this.shapes.push(infoPin);
-    this.prioLayer.add(infoPin);
-    this.prioLayer.batchDraw();
-
+    this.infoPinLayer.add(infoPin);
+    this.infoPinLayer.batchDraw();  
   }
-
+  
   clickHandler() {
     return () => {
       if (this.isDrawing) {
         const mousePos = this.stage.getPointerPosition();
-        const placedObj = this.createShape(mousePos, this.hoverObj.rotation());
+        const placedObj = this.createShape(this.hoverObj.type,mousePos,this.hoverObj.rotation(),this.mainLayer);
         if (placedObj) {
-          console.log(
-            "STATS:" + placedObj.x(),
-            placedObj.y(),
-            placedObj.width(),
-            placedObj.height()
-          );
-
           this.mainLayer.add(placedObj);
           this.shapes.push(placedObj);
-          this.mainTransformer.nodes([placedObj]);
+          //this.mainTransformer.nodes([placedObj]);
           this.mainLayer.draw();
           this.isDrawing = false;
           this.hoverObj.remove();
+          this.dragLayer.removeChildren();
           this.stage.off("mousemove", this.mouseMoveHandler());
           this.stage.off("click", this.clickHandler());
         }
       }
     };
   }
-
+  
   mouseMoveHandler() {
     return () => {
       if (this.isDrawing) {
         const mousePos = this.stage.getPointerPosition();
         this.hoverObj.position({ x: mousePos.x, y: mousePos.y });
         this.hoverObj.visible(true);
-        this.mainLayer.batchDraw();
+        this.dragLayer.batchDraw();
       }
     };
   }
-
-  createHoverObject(type) {
-    switch (type) {
+  
+  createShape(objType,position,rotation,layer) {
+    switch (objType) {
       case "Entrance":
-        return new Entrance({ x: 0, y: 0 }, this.blockSize, this.gridLayer);
+        return new Entrance(position, this.blockSize, layer, rotation);
       case "Room":
-        return new Room({ x: 0, y: 0 }, this.blockSize, this.gridLayer);
+        return new Room(position, this.blockSize, layer, rotation);
       case "Wall":
-        return new Wall({ x: 0, y: 0 }, this.blockSize, this.gridLayer);
+        return new Wall(position, this.blockSize, layer, rotation);
       default:
         return null;
     }
@@ -295,17 +276,16 @@ export class MapBuilder {
 
   startDrawing(shapeType) {
     this.isDrawing = true;
-    this.currentType = shapeType;
-    this.hoverObj = this.createHoverObject(shapeType);
+    this.hoverObj = this.createShape(shapeType,{x:0,y:0},0,this.dragLayer)
     this.hoverObj.visible(false);
-    this.mainLayer.add(this.hoverObj);
+    this.dragLayer.add(this.hoverObj);
     this.stage.on("mousemove", this.mouseMoveHandler());
     this.stage.on("click", this.clickHandler());
   }
 
-  selectShape(event) {
-    if (event.target.tagName === "LI") {
-      const shape = event.target.getAttribute("data-info");
+  selectShape(e) {
+    if (e.target.tagName === "LI") {
+      const shape = e.target.getAttribute("data-info");
       this.startDrawing(shape)
     }
   }
@@ -315,6 +295,9 @@ export class MapBuilder {
       this.mainTransformer.nodes().forEach((node) => {
         node.remove();
         this.shapes.splice(this.shapes.indexOf(node), 1);
+        if(node.className === 'InfoPin'){
+          node.destroySelf();
+        }
       });
       this.mainTransformer.nodes([]);
       this.mainLayer.batchDraw();
@@ -334,7 +317,7 @@ export class MapBuilder {
   handleWheel() {
     if (this.hoverObj) {
       this.hoverObj.rotate(90);
-      this.mainLayer.batchDraw();
+      this.dragLayer.batchDraw();
     }
   }
 
@@ -382,7 +365,6 @@ export class MapBuilder {
     const selected = shapes.filter((shape) =>
       Konva.Util.haveIntersection(box, shape.getClientRect())
     );
-    this.selectedShapes.push(selected);
     this.mainTransformer.nodes(selected);
   }
 

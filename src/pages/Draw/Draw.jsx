@@ -26,7 +26,7 @@ function Draw() {
             <ul>
               <li>InfoPin sa klavat so desen klik</li>
               <li>So double click na nekoj pin go prikazvis/kries menito za informacii</li>
-              <li>TODO: KO KE SA BRISAT INFOPINS I MENIJAVA DA SA BRISAT</li>
+              <li>TODO:EDINSTVEN ID ZA SEKOE OD MENIJATA</li>
               <li>TODO: Informaciite od infopin menijata da sa cuvat vnatre vo sekoj pin, valjda ubo ke e ko ke go hidenis menito,ili da imat save kopce idk</li>
               <li><strong>BUG: RESIZE NA INFO PINS NE TREBIT DA IMAT, AKO PROBAS RESIZE NA DIJAGONALA SA BUGVIT CELOTO</strong></li>
             </ul>

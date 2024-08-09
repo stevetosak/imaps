@@ -7,7 +7,7 @@ export class MapShape extends Konva.Rect {
     super(config);
     this.layer = layer;
     this.blockSize = blockSize;
-    this.shadowObj = null;
+    this._type = "";
     this.shadowForStrokeEnabled(false);
     this.on("mouseover", () => (document.body.style.cursor = "pointer"));
     this.on("mouseout", () => (document.body.style.cursor = "default"));
@@ -29,6 +29,14 @@ export class MapShape extends Konva.Rect {
       const scaleY = this.scaleY();
       this.strokeWidth(1 / Math.max(scaleX, scaleY));
     });
+  }
+
+  get type(){
+    return this._type;
+  }
+
+  set type(type){
+    this._type = type
   }
   
 }
@@ -53,6 +61,7 @@ export class Entrance extends MapShape {
       layer,
       blockSize
     );
+    this.type = "Entrance";
   }
 }
 
@@ -74,6 +83,8 @@ export class Room extends MapShape {
       layer,
       blockSize
     );
+
+    this.type = "Room";
   }
 }
 
@@ -96,5 +107,7 @@ export class Wall extends MapShape {
       layer,
       blockSize
     );
+
+    this.type = "Wall";
   }
 }

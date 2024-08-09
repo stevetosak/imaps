@@ -4,7 +4,7 @@ export default class InfoNode extends Konva.Shape {
   constructor(config) {
     super(config);
     this.className = "InfoPin";
-    this.infoBox = this.createInfoBox();
+    this.infoBox;
     this.isDisplayingBox = false;
 
     this.on("mouseover", () => {
@@ -57,7 +57,6 @@ export default class InfoNode extends Konva.Shape {
     cont.setAttribute("id", "nodeOptions");
     cont.className = styles.nodeOptions;
 
-    //<input type="text" placeholder="Description"></input>
 
     // ova e preshit ama privremeno
 
@@ -78,6 +77,11 @@ export default class InfoNode extends Konva.Shape {
 
     document.getElementById("wrapper").appendChild(cont);
 
-    return cont;
+    this.infoBox = cont;
+  }
+
+
+  destroySelf(){
+    this.infoBox.remove();
   }
 }
