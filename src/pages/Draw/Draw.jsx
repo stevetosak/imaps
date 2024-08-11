@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { MapBuilder } from "./scripts/MapBuilder";
 import styles from "./Draw.module.css";
-import InfoNode from './scripts/InfoNode'
-import { fpsCounterLoop } from "./scripts/FpsCounter.js";
+import { fpsCounterLoop } from "./scripts/util/FpsCounter.js";
 
 function Draw() {
   useEffect(() => {

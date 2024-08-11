@@ -1,5 +1,8 @@
-import { Entrance, Room, Wall } from "./Shapes";
-import InfoNode from "./InfoNode";
+import Entrance from "./shapes/Entrance";
+import Wall from "./shapes/Wall";
+import Room from "./shapes/Room";
+import InfoPin from "./shapes/InfoPin";
+import Factory from "./util/Factory";
 import Konva from "konva";
 export class MapBuilder {
   constructor(containerId) {
@@ -18,25 +21,21 @@ export class MapBuilder {
 
     this.shapes = [];
     this.infoNodes = [];
-    this.selectedShapes = [];
     this.blockSize = 15;
     this.isDrawing = false;
-
-    this.pinCount = 0;
 
     this.mainTransformer = new Konva.Transformer({
       centeredScaling: false,
       rotationSnaps: [0, 90, 180, 270],
       anchorSize: 5,
-      padding:2,
+      padding: 2,
       anchorFill: "yellow",
       borderStroke: "black",
       anchorStroke: "black",
       cornerRadius: 20,
       anchorCornerRadius: 10,
-      anchorDragBoundFunc: this.initTransformer.bind(this),
+      anchorDragBoundFunc: this.transformerSnapFunc(),
     });
-
 
     this.selectionRectangle = new Konva.Rect({
       fill: "rgba(200,0,255,0.5)",
@@ -60,52 +59,75 @@ export class MapBuilder {
     this.stage.add(this.gridLayer);
     this.stage.add(this.dragLayer);
     this.stage.add(this.mainLayer);
-    this.stage.add(this.infoPinLayer)
+    this.stage.add(this.infoPinLayer);
     this.setupEventListeners();
   }
 
-  initTransformer(oldPos, newPos) {
-    const snapDistance = 8;
+  setupEventListeners() {
+    document
+      .getElementById("shapeOptions")
+      .addEventListener("click", this.selectShape.bind(this));
+    window.addEventListener("keydown", this.handleDelete.bind(this));
+    window.addEventListener("keydown", this.handleExitSelection.bind(this));
+    window.addEventListener("keydown", InfoPin.hideMenus.bind(this));
+    window.addEventListener("resize", () => {
+      this.stage.width(this.container.clientWidth);
+      this.stage.height(this.container.clientHeight);
+      this.handleResize();
+    });
+    window.addEventListener("wheel", this.handleWheel.bind(this));
+    window.addEventListener("wheel", this.rotateShapesBy90.bind(this));
+    this.stage.on("mousedown touchstart", this.handleMouseDown.bind(this));
+    this.stage.on("mousemove touchmove", this.handleMouseMove.bind(this));
+    this.stage.on("mouseup touchend", this.handleMouseUp.bind(this));
+    this.stage.on("click tap", this.handleStageClick.bind(this));
+    this.stage.on("contextmenu", this.addInfoPin.bind(this));
+  }
 
-    if (this.mainTransformer.getActiveAnchor() === "rotater") {
+  transformerSnapFunc() {
+    return (oldPos, newPos) => {
+      const snapDistance = 8;
+
+      if (this.mainTransformer.getActiveAnchor() === "rotater") {
+        return newPos;
+      }
+
+      const distance = Math.sqrt(
+        Math.pow(newPos.x - oldPos.x, 2) + Math.pow(newPos.y - oldPos.y, 2)
+      );
+
+      if (distance > snapDistance) {
+        return newPos;
+      }
+
+      const nextX = Math.round(newPos.x / this.blockSize) * this.blockSize;
+      const diffX = Math.abs(newPos.x - nextX);
+
+      const nextY = Math.round(newPos.y / this.blockSize) * this.blockSize;
+      const diffY = Math.abs(newPos.y - nextY);
+
+      const snapToX = diffX < snapDistance;
+      const snapToY = diffY < snapDistance;
+
+      if (snapToX && !snapToY) {
+        return {
+          x: nextX,
+          y: oldPos.y,
+        };
+      } else if (!snapToX && snapToY) {
+        return {
+          x: oldPos.x,
+          y: nextY,
+        };
+      } else if (snapToX && snapToY) {
+        return {
+          x: nextX,
+          y: nextY,
+        };
+      }
+
       return newPos;
-    }
-
-    const distance = Math.sqrt(
-      Math.pow(newPos.x - oldPos.x, 2) + Math.pow(newPos.y - oldPos.y, 2)
-    );
-
-    if (distance > snapDistance) {
-      return newPos;
-    }
-
-    const nextX = Math.round(newPos.x / this.blockSize) * this.blockSize;
-    const diffX = Math.abs(newPos.x - nextX);
-
-    const nextY = Math.round(newPos.y / this.blockSize) * this.blockSize;
-    const diffY = Math.abs(newPos.y - nextY);
-
-    const snapToX = diffX < snapDistance;
-    const snapToY = diffY < snapDistance;
-
-    if (snapToX && !snapToY) {
-      return {
-        x: nextX,
-        y: oldPos.y,
-      };
-    } else if (!snapToX && snapToY) {
-      return {
-        x: oldPos.x,
-        y: nextY,
-      };
-    } else if (snapToX && snapToY) {
-      return {
-        x: nextX,
-        y: nextY,
-      };
-    }
-
-    return newPos;
+    };
   }
 
   handleResize() {
@@ -129,35 +151,13 @@ export class MapBuilder {
     });
   }
 
-  setupEventListeners() {
-    document
-      .getElementById("shapeOptions")
-      .addEventListener("click",this.selectShape.bind(this));
-    window.addEventListener("keydown", this.handleDelete.bind(this));
-    window.addEventListener("keydown", this.handleExitSelection.bind(this));
-    window.addEventListener("resize", () => {
-      this.stage.width(this.container.clientWidth);
-      this.stage.height(this.container.clientHeight);
-      this.handleResize();
-    });
-    window.addEventListener("wheel", this.handleWheel.bind(this));
-    this.stage.on("mousedown touchstart", this.handleMouseDown.bind(this));
-    this.stage.on("mousemove touchmove", this.handleMouseMove.bind(this));
-    this.stage.on("mouseup touchend", this.handleMouseUp.bind(this));
-    this.stage.on("click tap", this.handleStageClick.bind(this));
-    this.stage.on("contextmenu", this.addInfoPin.bind(this));
-  }
-
-
   setupGrid() {
     this.gridLayer.destroyChildren();
     let width = this.container.clientWidth;
-    let height = this.container.clientHeight
+    let height = this.container.clientHeight;
 
     let columns = Math.ceil(width / this.blockSize);
     let rows = Math.ceil(height / this.blockSize);
-
-
 
     for (let i = 0; i <= columns; i++) {
       this.gridLayer.add(
@@ -165,7 +165,7 @@ export class MapBuilder {
           points: [
             i * this.blockSize + 0.5,
             0,
-            i * this.blockSize  + 0.5,
+            i * this.blockSize + 0.5,
             height,
           ],
           stroke: "grey",
@@ -176,7 +176,12 @@ export class MapBuilder {
     for (let j = 0; j <= rows; j++) {
       this.gridLayer.add(
         new Konva.Line({
-          points: [0, j * this.blockSize + 0.5, width, j * this.blockSize + 0.5],
+          points: [
+            0,
+            j * this.blockSize + 0.5,
+            width,
+            j * this.blockSize + 0.5,
+          ],
           stroke: "grey",
           strokeWidth: 1,
         })
@@ -184,62 +189,39 @@ export class MapBuilder {
     }
     this.mainLayer.moveToTop();
     this.infoPinLayer.moveToTop();
-   
   }
 
-  positionInfoPinMenu(node){
-    const options = document.getElementById('nodeOptions');
-    const shapePos = node.getClientRect();
-    const stagePos = this.stage.container().getBoundingClientRect();
-    options.style.display = 'block';
-    
-    const optionsBoxX = stagePos.left + shapePos.x + (shapePos.width / 2);
-    const optionsBoxY = stagePos.top + shapePos.y - options.offsetHeight;
-    
-    options.style.left = `${optionsBoxX}px`
-    options.style.top = `${optionsBoxY}px`
-  }
-  
-  addInfoPin(e){
-    
+  addInfoPin(e) {
     e.evt.preventDefault();
     let mousePos = this.stage.getPointerPosition();
-    let infoPin = new InfoNode({
-      x: mousePos.x,
-      y: mousePos.y,
-      radiusX: 5,
-      radiusY: 7,
-      tailHeight: 10,
-      fill: '#d70113',
-      stroke: '#1b1b1b',
-      strokeWidth: 0.2,
-      draggable: true,
-      name: 'mapObj',
-    });
-    
-    infoPin.createInfoBox(this.pinCount++);
-    
-    infoPin.on('dblclick', () => {
-      infoPin.displayInfoBox(this.stage,false);
-      infoPin.moveToTop();
-    })
-    
-    infoPin.on('dragend', () => {
-      if(infoPin.isDisplayingBox){
-        infoPin.displayInfoBox(this.stage,true);
-      }
-    })
-    
+    let infoPin = Factory.createShape(
+      "InfoPin",
+      mousePos,
+      this.blockSize,
+      this.infoPinLayer,
+      0
+    );
+
+    let stagePos = this.stage.container().getBoundingClientRect();
+    infoPin.init(stagePos);
+
     this.shapes.push(infoPin);
     this.infoPinLayer.add(infoPin);
-    this.infoPinLayer.batchDraw();  
+    this.infoPinLayer.batchDraw();
   }
-  
+
   clickHandler() {
     return () => {
       if (this.isDrawing) {
         const mousePos = this.stage.getPointerPosition();
-        const placedObj = this.createShape(this.hoverObj.type,mousePos,this.hoverObj.rotation(),this.mainLayer);
+        const placedObj = Factory.createShape(
+          this.hoverObj.type,
+          mousePos,
+          this.blockSize,
+          this.mainLayer,
+          this.hoverObj.rotation()
+        );
+
         if (placedObj) {
           this.mainLayer.add(placedObj);
           this.shapes.push(placedObj);
@@ -255,7 +237,7 @@ export class MapBuilder {
       }
     };
   }
-  
+
   mouseMoveHandler() {
     return () => {
       if (this.isDrawing) {
@@ -266,25 +248,17 @@ export class MapBuilder {
       }
     };
   }
-  
-  createShape(objType,position,rotation,layer) {
-    switch (objType) {
-      case "Entrance":
-        return new Entrance(position, this.blockSize, layer, rotation);
-      case "Room":
-        return new Room(position, this.blockSize, layer, rotation);
-      case "Wall":
-        return new Wall(position, this.blockSize, layer, rotation);
-      default:
-        return null;
-    }
-  }
-
-  // todo: escape za da sa zatvorat menijata na infopins
 
   startDrawing(shapeType) {
     this.isDrawing = true;
-    this.hoverObj = this.createShape(shapeType,{x:0,y:0},0,this.dragLayer)
+    let pos = { x: 0, y: 0 };
+    this.hoverObj = Factory.createShape(
+      shapeType,
+      pos,
+      this.blockSize,
+      this.dragLayer,
+      0
+    );
     this.hoverObj.visible(false);
     this.dragLayer.add(this.hoverObj);
     this.dragLayer.moveToTop();
@@ -295,8 +269,14 @@ export class MapBuilder {
   selectShape(e) {
     if (e.target.tagName === "LI") {
       const shape = e.target.getAttribute("data-info");
-      this.startDrawing(shape)
+      this.startDrawing(shape);
     }
+  }
+
+  rotateShapesBy90() {
+    this.mainTransformer.nodes().forEach((node) => {
+      node.rotate(90);
+    });
   }
 
   handleDelete(e) {
@@ -304,7 +284,7 @@ export class MapBuilder {
       this.mainTransformer.nodes().forEach((node) => {
         node.remove();
         this.shapes.splice(this.shapes.indexOf(node), 1);
-        if(node.className === 'InfoPin'){
+        if (node.className === "InfoPin") {
           node.destroySelf();
         }
       });
@@ -378,7 +358,6 @@ export class MapBuilder {
   }
 
   handleStageClick(e) {
-
     if (this.selectionRectangle.visible()) {
       return;
     }
