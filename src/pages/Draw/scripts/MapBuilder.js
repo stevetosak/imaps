@@ -11,8 +11,8 @@ export class MapBuilder {
     });
 
     this.gridLayer = new Konva.Layer();
-    this.dragLayer = new Konva.Layer();
     this.mainLayer = new Konva.Layer();
+    this.dragLayer = new Konva.Layer();
     this.infoPinLayer = new Konva.Layer();
     this.gridLayer.listening(false);
 
@@ -151,17 +151,21 @@ export class MapBuilder {
 
   setupGrid() {
     this.gridLayer.destroyChildren();
-    let padding = this.blockSize;
     let width = this.container.clientWidth;
     let height = this.container.clientHeight
 
-    for (let i = 0; i < width / padding; i++) {
+    let columns = Math.ceil(width / this.blockSize);
+    let rows = Math.ceil(height / this.blockSize);
+
+
+
+    for (let i = 0; i <= columns; i++) {
       this.gridLayer.add(
         new Konva.Line({
           points: [
-            Math.round(i * padding) + 0.5,
+            i * this.blockSize + 0.5,
             0,
-            Math.round(i * padding) + 0.5,
+            i * this.blockSize  + 0.5,
             height,
           ],
           stroke: "grey",
@@ -169,10 +173,10 @@ export class MapBuilder {
         })
       );
     }
-    for (let j = 0; j < height / padding; j++) {
+    for (let j = 0; j <= rows; j++) {
       this.gridLayer.add(
         new Konva.Line({
-          points: [0, Math.round(j * padding), width, Math.round(j * padding)],
+          points: [0, j * this.blockSize + 0.5, width, j * this.blockSize + 0.5],
           stroke: "grey",
           strokeWidth: 1,
         })
@@ -183,7 +187,6 @@ export class MapBuilder {
    
   }
 
-  
   positionInfoPinMenu(node){
     const options = document.getElementById('nodeOptions');
     const shapePos = node.getClientRect();
@@ -240,6 +243,7 @@ export class MapBuilder {
         if (placedObj) {
           this.mainLayer.add(placedObj);
           this.shapes.push(placedObj);
+          placedObj.snapToGrid();
           //this.mainTransformer.nodes([placedObj]);
           this.mainLayer.draw();
           this.isDrawing = false;
@@ -276,11 +280,14 @@ export class MapBuilder {
     }
   }
 
+  // todo: escape za da sa zatvorat menijata na infopins
+
   startDrawing(shapeType) {
     this.isDrawing = true;
     this.hoverObj = this.createShape(shapeType,{x:0,y:0},0,this.dragLayer)
     this.hoverObj.visible(false);
     this.dragLayer.add(this.hoverObj);
+    this.dragLayer.moveToTop();
     this.stage.on("mousemove", this.mouseMoveHandler());
     this.stage.on("click", this.clickHandler());
   }

@@ -17,18 +17,22 @@ export class MapShape extends Konva.Rect {
         .find("Transformer")
         .forEach((t) => t.moveToTop());
     });
-    this.on("dragend", () => {
-      this.position({
-        x: Math.round(this.x() / this.blockSize) * this.blockSize,
-        y: Math.round(this.y() / this.blockSize) * this.blockSize,
-      });
-    });
+    this.on("dragend",this.snapToGrid.bind(this));
 
     this.on("transform", () => {
       const scaleX = this.scaleX();
       const scaleY = this.scaleY();
       this.strokeWidth(1 / Math.max(scaleX, scaleY));
     });
+
+    this.on('dblclick',this.snapToGrid.bind(this))
+  }
+
+  snapToGrid(){
+      this.position({
+        x: Math.round(this.x() / this.blockSize) * this.blockSize,
+        y: Math.round(this.y() / this.blockSize) * this.blockSize,
+      });
   }
 
   get type(){
