@@ -285,7 +285,7 @@ export class MapBuilder {
         node.remove();
         this.shapes.splice(this.shapes.indexOf(node), 1);
         if (node.className === "InfoPin") {
-          node.destroySelf();
+          node.infoBox.remove();
         }
       });
       this.mainTransformer.nodes([]);

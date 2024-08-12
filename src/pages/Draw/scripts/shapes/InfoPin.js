@@ -24,6 +24,7 @@ export default class InfoPin extends MapShape {
     this.className = "InfoPin";
     this.boxID = id;
     this.infoBox;
+    this.stagePos;
     this.isDisplayingBox = false;
 
     this.on("mouseover", () => {
@@ -52,100 +53,28 @@ export default class InfoPin extends MapShape {
   }
 
   init(stagePos){
-    this.createInfoBox();
+    this.stagePos = stagePos;
+    this.infoBox = Factory.createInfoBox(this.boxID,this.updateBox.bind(this)); // html element e ova
     this.on('dblclick', () => {
-      this.displayInfoBox(stagePos,true);
+      this.displayInfoBox(true);
       this.moveToTop();
     })
     this.on('dragend', () => {
       if(this.isDisplayingBox){
-        this.displayInfoBox(stagePos,false);
+        this.displayInfoBox(false);
       }
     })
   }
 
-  createInfoBox() {
-    let id = this.boxID;
-    let cont = document.createElement("div");
-    cont.setAttribute("id", "InfoPinMenu".concat("-" + id));
-    cont.className = styles.nodeOptions;
-
-    // ova e preshit ama privremeno
-
-    let h1 = document.createElement("h1");
-    h1.innerText = "Add Info";
-    h1.style.textAlign = "center";
-    h1.style.fontSize = "8px";
-    h1.style.fontWeight = "bold";
-    h1.style.color = "#141414f6";
-
-    cont.appendChild(h1);
-
-    let input = document.createElement("input");
-    input.setAttribute("type", "text");
-    input.setAttribute("placeholder", "Name");
-    cont.appendChild(input);
-
-    let input1 = document.createElement("input");
-    input1.setAttribute("type", "text");
-    input1.setAttribute("placeholder", "Type");
-    cont.appendChild(input1);
-
-    let input2 = document.createElement("input");
-    input2.setAttribute("type", "text");
-    input2.setAttribute("placeholder", "Description");
-    cont.appendChild(input2);
-
-    let connectorCheckBoxInput = document.createElement("input");
-    connectorCheckBoxInput.setAttribute("type", "checkbox");
-    connectorCheckBoxInput.setAttribute("id", "checkbox-" + id);
-    connectorCheckBoxInput.addEventListener(
-      "change",
-      this.updateBox.bind(this)
-    );
-
-    let labelForCheckBox = document.createElement("label");
-    labelForCheckBox.innerText = "Connector";
-    labelForCheckBox.setAttribute("for", "checkbox-" + id);
-
-    let checkboxContainer = document.createElement("div");
-    checkboxContainer.className = styles.checkboxCont;
-    checkboxContainer.appendChild(labelForCheckBox);
-    checkboxContainer.appendChild(connectorCheckBoxInput);
-
-    cont.appendChild(checkboxContainer);
-
-    let entranceDiv = document.createElement("div");
-    entranceDiv.setAttribute("id", "entranceOptions-".concat(id));
-    entranceDiv.style.display = "none";
-
-    let entranceFrom = document.createElement("input");
-    entranceFrom.setAttribute("type", "text");
-    entranceFrom.setAttribute("placeholder", "From");
-
-    let entranceTo = document.createElement("input");
-    entranceTo.setAttribute("type", "text");
-    entranceTo.setAttribute("placeholder", "To");
-
-    entranceDiv.appendChild(entranceFrom);
-    entranceDiv.appendChild(entranceTo);
-
-    cont.appendChild(entranceDiv);
-
-    document.getElementById("wrapper").appendChild(cont);
-
-    this.infoBox = cont;
-  }
-
-  displayInfoBox(stagePos, hide) {
+  displayInfoBox(hide) {
     if (this.isDisplayingBox && hide) {
       this.isDisplayingBox = false;
       this.infoBox.style.display = "none";
     } else {
       const shapePos = this.getClientRect();
       this.infoBox.style.display = "block";
-      const optionsBoxX = stagePos.left + shapePos.x;
-      const optionsBoxY = stagePos.top + shapePos.y - this.infoBox.offsetHeight;
+      const optionsBoxX = this.stagePos.left + shapePos.x;
+      const optionsBoxY = this.stagePos.top + shapePos.y - this.infoBox.offsetHeight;
 
       this.infoBox.style.left = `${optionsBoxX}px`;
       this.infoBox.style.top = `${optionsBoxY}px`;
@@ -161,11 +90,12 @@ export default class InfoPin extends MapShape {
     } else {
       div.style.display = "none";
     }
+    this.displayInfoBox(false);
   }
 
   static hideMenus(e) {
     if (e.key === "Escape") {
-      for (let i = 0; i < Factory.count; i++) {
+      for (let i = 0; i < Factory.infoPinCount; i++) {
         let menu = document.getElementById("InfoPinMenu-" + i);
         if (menu !== null && menu !== undefined) {
           menu.style.display = "none";
@@ -174,8 +104,4 @@ export default class InfoPin extends MapShape {
     }
   }
 
-  
-  destroySelf() {
-    this.infoBox.remove();
-  }
 }
