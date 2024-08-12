@@ -25,8 +25,8 @@ function Draw() {
             <ul>
               <li>InfoPin sa klavat so desen klik</li>
               <li>So double click na nekoj pin go prikazvis/kries menito za informacii</li>
-              <li>TODO:EDINSTVEN ID ZA SEKOE OD MENIJATA</li>
-              <li>TODO: Informaciite od infopin menijata da sa cuvat vnatre vo sekoj pin, valjda ubo ke e ko ke go hidenis menito,ili da imat save kopce idk</li>
+              <li>Ako sakas da obelezis vrata go klikvis checkbox i kazvis pomegju koi 2 prostorii e vratata</li>
+              <li>So ESC gi kries otvorenite menija na site pins</li>
               <li><strong>BUG: RESIZE NA INFO PINS NE TREBIT DA IMAT, AKO PROBAS RESIZE NA DIJAGONALA SA BUGVIT CELOTO</strong></li>
             </ul>
             <h3><b>Info Za Canvas</b></h3>
