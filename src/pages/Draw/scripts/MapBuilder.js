@@ -19,8 +19,13 @@ export class MapBuilder {
     this.infoPinLayer = new Konva.Layer();
     this.gridLayer.listening(false);
 
+    this.originalWidth = this.container.clientWidth;
+    this.originalHeight = this.container.clientHeight;
+    this.previousWidth = this.originalWidth;
+    this.previousHeight = this.originalHeight;
+
     this.shapes = [];
-    this.infoNodes = [];
+    this.infoNodes = []; // unused
     this.blockSize = 15;
     this.isDrawing = false;
 
@@ -67,9 +72,12 @@ export class MapBuilder {
     document
       .getElementById("shapeOptions")
       .addEventListener("click", this.selectShape.bind(this));
+    document
+    .getElementById("render-button")
+    .addEventListener("click",this.Serialize.bind(this));
     window.addEventListener("keydown", this.handleDelete.bind(this));
     window.addEventListener("keydown", this.handleExitSelection.bind(this));
-    window.addEventListener("keydown", InfoPin.hideMenus.bind(this));
+    window.addEventListener("keydown", this.hideInfoPinMenus.bind(this));
     window.addEventListener("resize", () => {
       this.stage.width(this.container.clientWidth);
       this.stage.height(this.container.clientHeight);
@@ -133,15 +141,24 @@ export class MapBuilder {
   handleResize() {
     const containerWidth = this.container.offsetWidth;
     const containerHeight = this.container.offsetHeight;
+    
     const scaleX = containerWidth / this.stage.width();
     const scaleY = containerHeight / this.stage.height();
+
     const scale = Math.min(scaleX, scaleY);
     this.stage.width(containerWidth);
     this.stage.height(containerHeight);
     this.stage.scale({ x: scale, y: scale });
+
     this.scaleShapes(scale);
-    this.setupGrid();
-    this.stage.draw();
+    if(this.previousWidth !== containerWidth || this.previousHeight !== containerHeight){
+      this.setupGrid();
+      this.previousWidth = containerWidth;
+      this.previousHeight = containerHeight
+      console.log("resized")
+    }
+   
+    this.stage.batchDraw();
   }
 
   scaleShapes(scale) {
@@ -189,6 +206,14 @@ export class MapBuilder {
     }
     this.mainLayer.moveToTop();
     this.infoPinLayer.moveToTop();
+  }
+
+  hideInfoPinMenus(e){
+    InfoPin.hideMenus(e,false,this.getInfoPins());
+  }
+
+  getInfoPins(){
+    return this.shapes.filter(shape => shape.className === 'InfoPin');
   }
 
   addInfoPin(e) {
@@ -357,6 +382,10 @@ export class MapBuilder {
     this.mainTransformer.nodes(selected);
   }
 
+  Serialize(){
+    this.shapes.forEach(shape => console.log(shape.toJSON()))
+  }
+
   handleStageClick(e) {
     if (this.selectionRectangle.visible()) {
       return;
@@ -364,6 +393,7 @@ export class MapBuilder {
 
     if (e.target === this.stage) {
       this.mainTransformer.nodes([]);
+      InfoPin.hideMenus(e,true,this.getInfoPins());
       return;
     }
 

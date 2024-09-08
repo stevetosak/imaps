@@ -42,16 +42,19 @@ export default class Factory {
     let input = document.createElement("input");
     input.setAttribute("type", "text");
     input.setAttribute("placeholder", "Name");
+    input.setAttribute("id","room-name");
     menu.appendChild(input);
 
     let input1 = document.createElement("input");
     input1.setAttribute("type", "text");
     input1.setAttribute("placeholder", "Type");
+    input1.setAttribute("id","type")
     menu.appendChild(input1);
 
     let input2 = document.createElement("input");
     input2.setAttribute("type", "text");
     input2.setAttribute("placeholder", "Description");
+    input2.setAttribute("id","description");
     menu.appendChild(input2);
 
     let connectorCheckBoxInput = document.createElement("input");
@@ -80,10 +83,12 @@ export default class Factory {
     let entranceFrom = document.createElement("input");
     entranceFrom.setAttribute("type", "text");
     entranceFrom.setAttribute("placeholder", "From");
+    entranceFrom.setAttribute("id","from");
 
     let entranceTo = document.createElement("input");
     entranceTo.setAttribute("type", "text");
     entranceTo.setAttribute("placeholder", "To");
+    entranceTo.setAttribute("id", "to");
 
     entranceDiv.appendChild(entranceFrom);
     entranceDiv.appendChild(entranceTo);

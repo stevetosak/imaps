@@ -1,5 +1,6 @@
 import Konva from "konva";
 import MapShape from "./MapShape";
+import { _registerNode } from 'konva/lib/Global';
 export default class Wall extends MapShape {
     constructor(mousePos, blockSize, layer, rotation,snap) {
       super(
@@ -24,3 +25,6 @@ export default class Wall extends MapShape {
       this.type = "Wall";
     }
   }
+
+  Wall.prototype.className = 'Wall'
+  _registerNode(Wall);

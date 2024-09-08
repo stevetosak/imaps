@@ -20,6 +20,9 @@ function Draw() {
           <div id="fpscont" className={styles.fpscounter}>
             <p id="fpsCounter"></p>
           </div>
+          <div id="render">
+              <button id="render-button">Render</button>
+            </div>
           <div id='info' className={styles.info}>
             <h3><b>InfoPins:</b></h3>
             <ul>

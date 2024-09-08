@@ -2,6 +2,7 @@ import Konva from "konva";
 import styles from "../../Draw.module.css"
 import MapShape from "./MapShape";
 import Factory from "../util/Factory";
+import { _registerNode } from 'konva/lib/Global';
 export default class InfoPin extends MapShape {
   constructor(mousePos,blockSize,layer,snappable,id) {
     super(
@@ -21,11 +22,14 @@ export default class InfoPin extends MapShape {
       blockSize,
       snappable
     );
-    this.className = "InfoPin";
     this.boxID = id;
     this.infoBox;
     this.stagePos;
     this.isDisplayingBox = false;
+    this.setAttr("name",undefined);
+    this.setAttr("type",undefined);
+    this.setAttr("description",undefined);
+    this.setAttr("isConnector",false);
 
     this.on("mouseover", () => {
       this.fill("yellow");
@@ -66,10 +70,36 @@ export default class InfoPin extends MapShape {
     })
   }
 
+  updateInfo(){
+    let roomName = this.infoBox.querySelector("#room-name").value;
+    console.log(roomName + "testroom");
+    let type = this.infoBox.querySelector("#type").value;
+    let description = this.infoBox.querySelector("#description").value;
+    let isConnector = document.getElementById("checkbox-" + this.boxID).checked;
+    this.setAttr("room-name",roomName);
+    this.setAttr("room-type",type);
+    this.setAttr("description",description);
+    this.setAttr("isConnector",isConnector);
+
+    if(isConnector){
+      // ova da sa koregirat ne globalno
+      let connectorOptions = document.getElementById("entranceOptions-" + this.boxID)
+      let from = connectorOptions.querySelector("#from").value;
+      let to = connectorOptions.querySelector("#to").value;
+      this.setAttr("from-room",from);
+      this.setAttr("to-room",to);
+    } else {
+      this.setAttr("from-room",undefined);
+      this.setAttr("to-room",undefined);
+    }
+  }
+
+
   displayInfoBox(hide) {
     if (this.isDisplayingBox && hide) {
       this.isDisplayingBox = false;
       this.infoBox.style.display = "none";
+      this.updateInfo();
     } else {
       const shapePos = this.getClientRect();
       this.infoBox.style.display = "block";
@@ -93,8 +123,13 @@ export default class InfoPin extends MapShape {
     this.displayInfoBox(false);
   }
 
-  static hideMenus(e) {
-    if (e.key === "Escape") {
+  static hideMenus(e,clear,pins) {
+    if (e.key === "Escape" || clear) {
+
+      pins.forEach(pin => {
+        pin.updateInfo();
+      });
+
       for (let i = 0; i < Factory.infoPinCount; i++) {
         let menu = document.getElementById("InfoPinMenu-" + i);
         if (menu !== null && menu !== undefined) {
@@ -103,5 +138,7 @@ export default class InfoPin extends MapShape {
       }
     }
   }
-
 }
+
+InfoPin.prototype.className = 'InfoPin'
+_registerNode(InfoPin);
