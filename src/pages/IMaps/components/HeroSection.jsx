@@ -12,7 +12,7 @@ function HeroSection() {
       <div className="hero-btns">
         <Link to="/Maps/FinkiMaps/Draw">
           <Button className="btns" buttonStyle="btn--outline" buttonSize="btn--large">
-            Get Started
+            Create maps
           </Button>
         </Link>
         <Link to="/Maps">

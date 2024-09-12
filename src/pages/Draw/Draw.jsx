@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { MapBuilder } from "./scripts/MapBuilder";
 import styles from "./Draw.module.css";
-import InfoNode from './scripts/InfoNode'
-import { fpsCounterLoop } from "./scripts/FpsCounter.js";
+import { fpsCounterLoop } from "./scripts/util/FpsCounter.js";
 
 function Draw() {
   useEffect(() => {
@@ -21,13 +20,16 @@ function Draw() {
           <div id="fpscont" className={styles.fpscounter}>
             <p id="fpsCounter"></p>
           </div>
+          <div id="render">
+              <button id="render-button">Render</button>
+            </div>
           <div id='info' className={styles.info}>
             <h3><b>InfoPins:</b></h3>
             <ul>
               <li>InfoPin sa klavat so desen klik</li>
               <li>So double click na nekoj pin go prikazvis/kries menito za informacii</li>
-              <li>TODO: KO KE SA BRISAT INFOPINS I MENIJAVA DA SA BRISAT</li>
-              <li>TODO: Informaciite od infopin menijata da sa cuvat vnatre vo sekoj pin, valjda ubo ke e ko ke go hidenis menito,ili da imat save kopce idk</li>
+              <li>Ako sakas da obelezis vrata go klikvis checkbox i kazvis pomegju koi 2 prostorii e vratata</li>
+              <li>So ESC gi kries otvorenite menija na site pins</li>
               <li><strong>BUG: RESIZE NA INFO PINS NE TREBIT DA IMAT, AKO PROBAS RESIZE NA DIJAGONALA SA BUGVIT CELOTO</strong></li>
             </ul>
             <h3><b>Info Za Canvas</b></h3>
