@@ -8,16 +8,19 @@ import Draw from "../../pages/Draw/Draw";
 
 function FinkiMaps() {
   return (
-    <div className={styles.toolbar}>
-      <div className={styles.left}>
-        <SearchBar />
-        <FilterBar />
+    <>
+      <div className={styles.toolbar}>
+        <div className={styles.left}>
+          <SearchBar />
+          <FilterBar />
+        </div>
+        <SideBar />
+        <div className={styles.right}>
+          <Profile />
+        </div>
       </div>
-      <SideBar />
-      <div className={styles.right}>
-        <Profile />
-      </div>
-    </div>
+      <Draw></Draw>
+    </>
   );
 }
 
