@@ -21,7 +21,7 @@ function Draw() {
             <p id="fpsCounter"></p>
           </div>
           <div id="render">
-              <button id="render-button">Render</button>
+              <button id="render-button" type="button">Render</button>
             </div>
           <div id='info' className={styles.info}>
             <h3><b>InfoPins:</b></h3>

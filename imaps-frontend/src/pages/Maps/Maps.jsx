@@ -31,7 +31,7 @@ const tiles = [
 
 const renderTile = ({ data, isDragging }) => (
   <div style={{ padding: "1rem", width: "100%" }}>
-    <Link to="/Maps/FinkiMaps" className={styles.linkStyle}>
+    <Link to="/Maps/FinkiMaps/View" className={styles.linkStyle}>
       <div
         className={`${styles.tile} ${isDragging ? styles.dragging : ""}`}
         style={{ width: "100%", height: "100%" }}

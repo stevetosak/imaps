@@ -1,5 +1,6 @@
 import Konva from "konva";
 import MapShape from "./MapShape";
+import { _registerNode } from 'konva/lib/Global';
 export default class Room extends MapShape {
     constructor(mousePos,blockSize,layer,rotation,snap) {
       super(
@@ -23,3 +24,6 @@ export default class Room extends MapShape {
       this.type = "Room";
     }
   }
+
+  Room.prototype.className = 'Room'
+  _registerNode(Room);

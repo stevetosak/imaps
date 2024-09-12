@@ -74,7 +74,7 @@ export class MapBuilder {
       .addEventListener("click", this.selectShape.bind(this));
     document
     .getElementById("render-button")
-    .addEventListener("click",this.Serialize.bind(this));
+    .addEventListener("click",this.render.bind(this));
     window.addEventListener("keydown", this.handleDelete.bind(this));
     window.addEventListener("keydown", this.handleExitSelection.bind(this));
     window.addEventListener("keydown", this.hideInfoPinMenus.bind(this));
@@ -233,6 +233,7 @@ export class MapBuilder {
     this.shapes.push(infoPin);
     this.infoPinLayer.add(infoPin);
     this.infoPinLayer.batchDraw();
+    console.log(infoPin.name())
   }
 
   clickHandler() {
@@ -380,10 +381,55 @@ export class MapBuilder {
       Konva.Util.haveIntersection(box, shape.getClientRect())
     );
     this.mainTransformer.nodes(selected);
+    console.log(this.mainTransformer.nodes());
   }
 
-  Serialize(){
-    this.shapes.forEach(shape => console.log(shape.toJSON()))
+  async render(){
+    var json = {
+      attrs: {
+        width: this.container.clientWidth,
+        height: this.container.clientHeight
+      },
+      className: "Stage",
+      Layer: [
+        {
+          attrs: {},
+          className: "Layer",
+          children: []
+        }
+      ]
+    };
+
+    json.Layer[0].children.push(this.shapes);
+
+    try{
+
+      var mapId = window.location.pathname.split("/")[2]
+      const response = await fetch("http://localhost:8080/api/render",{
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Sender-Url': window.location.pathname
+        },
+        body: JSON.stringify(json)
+      });
+    
+
+      if(!response.ok){
+        console.log("ERROR VO PUSTANJE");
+      }
+
+
+      const result = await response.json();
+
+      console.log("RESPONSE FROM BACKEND: " + JSON.stringify(result));
+
+
+    } catch(error){
+
+    }
+    
+    //this.shapes.forEach(shape => console.log(shape.toJSON()))
   }
 
   handleStageClick(e) {
@@ -393,11 +439,12 @@ export class MapBuilder {
 
     if (e.target === this.stage) {
       this.mainTransformer.nodes([]);
-      InfoPin.hideMenus(e,true,this.getInfoPins());
+      InfoPin.hideMenus(e,true,this.getInfoPins()); // ne na sekoe
       return;
     }
 
     if (!e.target.hasName("mapObj")) {
+      console.log("vleze")
       return;
     }
 

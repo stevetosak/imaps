@@ -16,7 +16,7 @@ function App() {
       <div>
         <Routes>
           <Route path="/" element={<IMaps />} />
-          <Route path="/Maps/FinkiMaps" element={<FinkiMaps />} />
+          <Route path="/Maps/FinkiMaps/View" element={<FinkiMaps />} />
           <Route path="/Maps" element={<Maps />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Signup" element={<Signup />} />

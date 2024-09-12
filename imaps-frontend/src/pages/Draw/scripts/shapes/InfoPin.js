@@ -9,7 +9,7 @@ export default class InfoPin extends MapShape {
       {
         x: mousePos.x,
         y: mousePos.y,
-        radiusX: blockSize/3,
+        radiusX: blockSize / 3,
         radiusY: blockSize * 0.45,
         tailHeight: blockSize * 0.8,
         fill: "#d70113",
@@ -26,9 +26,9 @@ export default class InfoPin extends MapShape {
     this.infoBox;
     this.stagePos;
     this.isDisplayingBox = false;
-    this.setAttr("name",undefined);
-    this.setAttr("type",undefined);
-    this.setAttr("description",undefined);
+    this.setAttr("room-name",undefined);
+    this.setAttr("room-type",undefined);
+    this.setAttr("room-description",undefined);
     this.setAttr("isConnector",false);
 
     this.on("mouseover", () => {
