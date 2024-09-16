@@ -2,28 +2,40 @@ import { useEffect } from "react";
 import { MapBuilder } from "./scripts/MapBuilder";
 import styles from "./Draw.module.css";
 import { fpsCounterLoop } from "./scripts/util/FpsCounter.js";
+import Modal from "../../components/Modal/Modal.jsx";
 
 function Draw() {
   useEffect(() => {
-    const app = new MapBuilder("container"); 
+    const app = new MapBuilder("container");
     fpsCounterLoop();
   }, []);
   return (
     <div className={styles.wrapper} id="wrapper">
       <div id="container" className={styles.cont}></div>
-        <div className={styles.panel}>
-          <ul className={styles.shapeOptions} id="shapeOptions">
-            <li data-info="Entrance"  className={`${styles.shapeOption} ${styles.entrance}`} >Entrance</li>
-            <li data-info="Wall" className={`${styles.shapeOption} ${styles.wall}`} id="wall">Wall</li>
-            <li data-info="Room"  className={`${styles.shapeOption} ${styles.room}`} id="room">Room</li>
-          </ul>
-          <div id="fpscont" className={styles.fpscounter}>
-            <p id="fpsCounter"></p>
-          </div>
-          <div id="render">
-              <button id="render-button" type="button">Render</button>
-            </div>
-          <div id='info' className={styles.info}>
+      <div className={styles.panel}>
+        <h1>Welcome, User</h1>
+        <div id="fpscont" className={styles.fpscounter}>
+          <p id="fpsCounter"></p>
+        </div>
+        <h2>Shapes:</h2>
+        <ul className={styles.shapeOptions} id="shapeOptions">
+          <li data-info="Entrance" className={`${styles.shapeOption} ${styles.entrance}`}>
+            Entrance
+          </li>
+          <li data-info="Wall" className={`${styles.shapeOption} ${styles.wall}`} id="wall">
+            Wall
+          </li>
+          <li data-info="Room" className={`${styles.shapeOption} ${styles.room}`} id="room">
+            Room
+          </li>
+        </ul>
+        <Modal></Modal>
+        <div id="render" className={styles.buttonContainer}>
+          <button id="render-button" type="button" className={styles.renderButton}>
+            Render
+          </button>
+        </div>
+        {/* <div id='info' className={styles.info}>
             <h3><b>InfoPins:</b></h3>
             <ul>
               <li>InfoPin sa klavat so desen klik</li>
@@ -43,8 +55,8 @@ function Draw() {
               <li>Imat snapping za pomestuvanje i za resize.(za resize najubo funkcionirat na pocetok, ko ke go selektiras element)</li>
               <li>So zoom in/out ili resize na prozorceto, canvasot si pret resize dinamicki, iako mozit malku da potkocit(todo)</li>
             </ul>
-          </div>
-        </div>
+          </div> */}
+      </div>
     </div>
   );
 }
