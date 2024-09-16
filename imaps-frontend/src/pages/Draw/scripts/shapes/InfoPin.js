@@ -123,8 +123,8 @@ export default class InfoPin extends MapShape {
     this.displayInfoBox(false);
   }
 
-  static hideMenus(e,clear,pins) {
-    if (e.key === "Escape" || clear) {
+  static hideMenus(e = null,clear,pins) {
+    if (clear || e.key === "Escape") {
 
       pins.forEach(pin => {
         pin.updateInfo();

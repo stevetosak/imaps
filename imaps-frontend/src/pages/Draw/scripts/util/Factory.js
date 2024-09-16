@@ -3,6 +3,7 @@ import Wall from "../shapes/Wall";
 import Room from "../shapes/Room";
 import InfoPin from "../shapes/InfoPin";
 import styles from "../../Draw.module.css"
+import Konva from "konva";
 export default class Factory {
 
   static infoPinCount = 0;
@@ -20,6 +21,52 @@ export default class Factory {
         return new Wall(position, blockSize, layer, rotation,true);
       case "InfoPin":
         return new InfoPin(position, blockSize, layer, false,this.infoPinCount++);
+      default:
+        throw new Error("Invalid shape type.");
+    }
+  }
+
+  static createRenderedShape(shapeType,attrs){
+    switch (shapeType) {
+      case "Entrance":
+        return new Konva.Rect({
+          x: attrs.x,
+          y: attrs.y,
+          width: attrs.width,
+          height: attrs.height,
+          fill: 'blue',
+          stroke: 'black',
+          strokeWidth: 1,
+          draggable: false,
+          rotation: attrs.rotation,
+          cornerRadius:3
+        });
+      case "Room":
+        return new Konva.Rect({
+          x: attrs.x,
+          y: attrs.y,
+          width: attrs.width,
+          height: attrs.height,
+          fill: 'white',
+          stroke: 'black',
+          strokeWidth: 1,
+          draggable: false,
+          rotation: attrs.rotation,
+          cornerRadius:3
+        });
+      case "Wall":
+        return new Konva.Rect({
+          x: attrs.x,
+          y: attrs.y,
+          width: attrs.width,
+          height: attrs.height,
+          fill: 'grey',
+          stroke: 'black',
+          strokeWidth: 1,
+          draggable: false,
+          rotation: attrs.rotation,
+          cornerRadius:3
+        });
       default:
         throw new Error("Invalid shape type.");
     }

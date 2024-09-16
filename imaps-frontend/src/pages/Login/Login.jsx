@@ -1,13 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Login.module.css";
 import illustration from "../../assets/illustration_img.png";
+import axios from "axios";
 
-const preventRefresh = (e) => {
-  e.preventDefault();
-};
 
-function Login() {
+
+const LoginPage = () => {
+  const [username,setUsername] = useState('');
+  const [password,setPassword] = useState('');
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    axios.post('http://localhost:8080/login',{username,password})
+    .then(response => {
+      localStorage.setItem('token',response.data.token)
+    })
+    .catch(error => {
+      console.error('Login failed', error);
+    })
+  }
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.illustration}>
@@ -15,16 +28,26 @@ function Login() {
       </div>
       <div className={styles.form}>
         <div className={styles.heading}>LOGIN</div>
-        <form>
+        <form onSubmit={handleLogin}>
           <div>
-            <label htmlFor="name">Name</label>
-            <input type="text" id="name" placeholder="Enter your name" />
+            <label htmlFor="username">Username</label>
+            <input type="text" 
+            id="name" 
+            placeholder="Enter your username" 
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+            />
           </div>
           <div>
-            <label htmlFor="email">E-Mail</label>
-            <input type="email" id="email" placeholder="Enter your mail" />
+            <label htmlFor="password">Password</label>
+            <input type="password" 
+            id="password" 
+            placeholder="Enter your password" 
+            onChange={(e) => setPassword(e.target.value)} 
+            value={password}
+            />
           </div>
-          <button type="submit" onClick={preventRefresh}>
+          <button type="submit">
             Submit
           </button>
         </form>
@@ -35,4 +58,4 @@ function Login() {
     </div>
   );
 }
-export default Login;
+export default LoginPage;
