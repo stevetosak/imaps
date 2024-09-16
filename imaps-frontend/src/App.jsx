@@ -9,6 +9,7 @@ import IMaps from "./pages/IMaps/IMaps";
 import Draw from "./pages/Draw/Draw";
 import Error from "./pages/Error/Error";
 import "./App.css";
+import LoginPage from "./pages/Login/Login";
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
           <Route path="/" element={<IMaps />} />
           <Route path="/Maps/FinkiMaps/View" element={<FinkiMaps />} />
           <Route path="/Maps" element={<Maps />} />
-          <Route path="/Login" element={<Login />} />
+          <Route path="/Login" element={<LoginPage/>} />
           <Route path="/Signup" element={<Signup />} />
           <Route path="/Maps/FinkiMaps/Draw" element={<Draw />} />
           <Route path="*" element={<Error />} />

@@ -26,7 +26,7 @@ export class MapBuilder {
 
     this.shapes = [];
     this.infoNodes = []; // unused
-    this.blockSize = 15;
+    this.blockSize = 10;
     this.isDrawing = false;
 
     this.mainTransformer = new Konva.Transformer({
@@ -187,6 +187,7 @@ export class MapBuilder {
           ],
           stroke: "grey",
           strokeWidth: 1,
+          opacity: 0.3,
         })
       );
     }
@@ -201,6 +202,7 @@ export class MapBuilder {
           ],
           stroke: "grey",
           strokeWidth: 1,
+          opacity: 0.3,
         })
       );
     }
@@ -296,6 +298,7 @@ export class MapBuilder {
     if (e.target.tagName === "LI") {
       const shape = e.target.getAttribute("data-info");
       this.startDrawing(shape);
+      this.mainTransformer.nodes([]);
     }
   }
 
@@ -385,6 +388,7 @@ export class MapBuilder {
   }
 
   async render(){
+    InfoPin.hideMenus(null,true,this.getInfoPins());
     var json = {
       attrs: {
         width: this.container.clientWidth,

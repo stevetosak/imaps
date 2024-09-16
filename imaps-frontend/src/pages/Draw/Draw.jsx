@@ -42,6 +42,8 @@ function Draw() {
               <li>Selektiran shape (hover), go rotiras za 90 stepeni so scroll</li>
               <li>Imat snapping za pomestuvanje i za resize.(za resize najubo funkcionirat na pocetok, ko ke go selektiras element)</li>
               <li>So zoom in/out ili resize na prozorceto, canvasot si pret resize dinamicki, iako mozit malku da potkocit(todo)</li>
+              <li>TODO: grid snapping na toggle</li>
+              <li>Za hover na rooms valjda ke trebit da sa impl ko outline shape sho ke e child na info node</li>
             </ul>
           </div>
         </div>
