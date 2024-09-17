@@ -2,80 +2,74 @@ import React, { useState } from "react";
 import searchIcon from "../../assets/search_icon.png";
 import routeIcon from "../../assets/route_icon.png";
 import closeIcon from "../../assets/close_icon.png";
-import navIcon from "../../assets/step_into_icon.png";
 import styles from "./SearchBar.module.css";
 
 function SearchBar() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
 
+  // Toggle dropdown for directions
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
 
-  const initial = (
-    <div className={` ${styles.customSearch}`}>
-      <input
-        type="search"
-        className="form-control rounded"
-        placeholder="Search"
-        aria-label="Search"
-        aria-describedby="search-addon"
-      />
-      <button type="button" className={`btn btn-outline-primary`} data-mdb-ripple-init>
-        <img src={searchIcon} alt="Search Icon" />
-      </button>
-      <button
-        type="button"
-        className={`btn btn-outline-primary`}
-        data-mdb-ripple-init
-        onClick={toggleExpanded}
-      >
-        <img src={routeIcon} alt="Route Icon" />
-      </button>
-    </div>
-  );
-
-  const expanded = (
-    <div>
-      <div className={styles.expandedSection}>
-        <div className={styles.left}>
-          <img src={navIcon} alt="" />
-        </div>
-        <div className={styles.right}>
-          <div className={styles.customSearch}>
-            <input type="text" className="form-control rounded" placeholder="From" aria-label="From" />
-            <button
-              type="button"
-              className={`btn btn-outline-primary`}
-              data-mdb-ripple-init
-              onClick={toggleExpanded}
-            >
-              <img src={closeIcon} alt="Close Icon" />
-            </button>
-          </div>
-          <div className={styles.customSearch}>
-            <input type="text" className="form-control rounded" placeholder="To" aria-label="To" />
-            <button
-              type="button"
-              className={`btn btn-outline-primary ${styles.hide}`}
-              data-mdb-ripple-init
-              onClick={toggleExpanded}
-            >
-              <img src={closeIcon} alt="Close Icon" />
-            </button>
-          </div>
-        </div>
-        <hr />
-      </div>
-      <button type="button" className={`btn btn-outline-primary ${styles.customButton}`} data-mdb-ripple-init>
-        <img src={searchIcon} alt="Search Icon" />
-      </button>
-    </div>
-  );
+  // Handle submission of directions
+  const handleDirectionsSubmit = () => {
+    console.log(`From: ${from}, To: ${to}`);
+  };
 
   return (
     <div className={styles.wrapper}>
-      <div className={isExpanded ? styles.expanded : styles.collapsed}>{isExpanded ? expanded : initial}</div>
+      {/* Regular search bar */}
+      {!isExpanded ? (
+        <div className={styles.searchBar}>
+          <input
+            type="search"
+            className={styles.inputField}
+            placeholder="Search location"
+            aria-label="Search"
+          />
+          <div className={styles.buttons}>
+            <button type="button" className={styles.iconButton}>
+              <img src={searchIcon} alt="Search Icon" />
+            </button>
+            <button type="button" className={styles.iconButton} onClick={toggleExpanded}>
+              <img src={routeIcon} alt="Route Icon" />
+            </button>
+          </div>
+        </div>
+      ) : (
+        /* Expanded view for directions */
+        <div className={styles.directionsContainer}>
+          <div className={styles.directionsInputs}>
+            <input
+              type="text"
+              placeholder="From"
+              aria-label="From"
+              value={from}
+              onChange={(e) => setFrom(e.target.value)}
+              className={styles.inputField}
+            />
+            <input
+              type="text"
+              placeholder="To"
+              aria-label="To"
+              value={to}
+              onChange={(e) => setTo(e.target.value)}
+              className={styles.inputField}
+            />
+          </div>
+          <div className={styles.buttons}>
+            <button type="button" className={styles.iconButton} onClick={handleDirectionsSubmit}>
+              <img src={searchIcon} alt="Submit Directions" />
+            </button>
+            <button type="button" className={styles.iconButton} onClick={toggleExpanded}>
+              <img src={closeIcon} alt="Close Icon" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

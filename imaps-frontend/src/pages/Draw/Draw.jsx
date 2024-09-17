@@ -3,6 +3,7 @@ import { MapBuilder } from "./scripts/MapBuilder";
 import styles from "./Draw.module.css";
 import { fpsCounterLoop } from "./scripts/util/FpsCounter.js";
 import Modal from "../../components/Modal/Modal.jsx";
+import SideBar from "../../components/SideBar/SideBar.jsx";
 
 function Draw() {
   useEffect(() => {
@@ -11,6 +12,7 @@ function Draw() {
   }, []);
   return (
     <div className={styles.wrapper} id="wrapper">
+      <SideBar></SideBar>
       <div id="container" className={styles.cont}></div>
       <div className={styles.panel}>
         <h1>Welcome, User</h1>

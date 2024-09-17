@@ -14,17 +14,17 @@ function FinkiMaps() {
   }, []);
   return (
     <div id="main" className={styles.main}>
+      <div id="map" className={styles.mapContainer}></div>
       <div className={styles.toolbar}>
+        <SideBar />
         <div className={styles.left}>
           <SearchBar />
           <FilterBar />
         </div>
-        <SideBar />
         <div className={styles.right}>
           <Profile />
         </div>
       </div>
-      <div id="map" className={styles.mapContainer}></div>
     </div>
   );
 }

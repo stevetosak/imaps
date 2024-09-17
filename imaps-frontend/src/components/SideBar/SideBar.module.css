@@ -1,14 +1,19 @@
 .sidebar {
   position: fixed;
-  left: 0;
   top: 0;
-  bottom: 0;
+  left: 0;
+  height: 100vh;
   width: 250px;
   background-color: #333;
   color: white;
   transition: transform 0.3s ease;
   transform: translateX(-100%);
   z-index: 1000; /* Ensure sidebar is above other content */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content at the top */
+  align-items: flex-start;
+  padding-top: 6vh; /* Aligns with the height of the toolbar */
 }
 
 .sidebar.open {
@@ -17,7 +22,7 @@
 
 .toggleBtn {
   position: absolute;
-  top: 6vh;
+  top: 10px;
   left: 250px;
   background-color: transparent;
   color: white;
@@ -34,6 +39,8 @@
   width: 36px;
   height: 36px;
   object-fit: contain;
+  border-radius: 10px;
+  background-color: hsla(0, 0%, 100%, 1);
 }
 
 .sidebarContent {
@@ -67,9 +74,4 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 900;
-}
-
-.toggleBtn img {
-  border-radius: 10px;
-  background-color: hsla(0, 0%, 100%, 1);
 }
