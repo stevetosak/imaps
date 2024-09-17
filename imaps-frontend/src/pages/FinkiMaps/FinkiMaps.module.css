@@ -40,7 +40,7 @@
 
 .mapContainer {
   position: absolute;
-  top: 0;
+  top: 80px;
   left: 0;
   width: 100vw; /* Make the map fill the entire width of the screen */
   height: 100vh; /* Make the map fill the entire height of the screen */

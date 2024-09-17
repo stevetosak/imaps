@@ -9,12 +9,7 @@ export default class MapShape extends Konva.Shape {
     this.blockSize = blockSize;
     this._type = "";
     this.snappable = snap;
-    this._info = {
-      name: '',
-      type: '',
-      floor: '',
-      decsription: ''
-    };
+    this._info = {};
 
     this.shadowForStrokeEnabled(false);
     this.on("mouseover", () => (document.body.style.cursor = "pointer"));
@@ -52,6 +47,10 @@ export default class MapShape extends Konva.Shape {
         x: Math.round(this.x() / this.blockSize) * this.blockSize,
         y: Math.round(this.y() / this.blockSize) * this.blockSize,
       });
+  }
+
+  saveShapeDetails(){
+    console.log("This shape does not contain information");
   }
 
   get info(){

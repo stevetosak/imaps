@@ -12,6 +12,7 @@ export default function RoomModal() {
   });
 
   const toggleModal = () => {
+    if(modal) room.info = formData;
     setModal(!modal);
   };
 
@@ -19,10 +20,13 @@ export default function RoomModal() {
     if (room) {
       room.info = formData;
       toggleModal();
+      console.log(room.info);
     }
-  };
+  }
+  // impl da sa gledat dali ti e zacuvana formava
 
   const handleInputChange = (e) => {
+    
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -43,10 +47,10 @@ export default function RoomModal() {
       toggleModal(true);
     };
 
-    window.addEventListener("openModalEvent", openModalHandler);
+    window.addEventListener("openRoomModalEvent", openModalHandler);
 
     return () => {
-      window.removeEventListener("openModalEvent", openModalHandler);
+      window.removeEventListener("openRoomModalEvent", openModalHandler);
     };
   }, []);
 

@@ -9,8 +9,8 @@ export class MapDisplay{
           this.containerId = containerId;
           this.stage = new Konva.Stage({
           container: containerId,
-          width: 1600,
-          height: 900
+          width: window.innerWidth,
+          height: window.innerHeight
         });
 
         this.shapes = [];
@@ -20,8 +20,8 @@ export class MapDisplay{
 
         this.json = {
             attrs: {
-              width: this.container.clientWidth,
-              height: 1800
+              width: window.innerWidth,
+              height: window.innerHeight
 
             },
             className: "Stage",

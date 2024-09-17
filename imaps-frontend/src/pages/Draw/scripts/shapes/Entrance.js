@@ -23,6 +23,26 @@ export default class Entrance extends MapShape {
         snap
       );
       this.type = "Entrance";
+
+      this.on("dblclick", () => {
+        const event = new CustomEvent('openEntranceModalEvent',{detail: this});
+        window.dispatchEvent(event);
+
+      })
+
+      this._info = {
+        from: '',
+        to: '',
+        description: '',
+        isMainEntrance: false
+      };
+    }
+
+    saveShapeDetails(){
+      this.setAttr("from",this.info.from);
+      this.setAttr("to",this.info.to);
+      this.setAttr("description",this.info.description)
+      this.setAttr("is_main_entrance",this.info.isMainEntrance);
     }
   }
 

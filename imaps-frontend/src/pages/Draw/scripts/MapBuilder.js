@@ -254,7 +254,7 @@ export class MapBuilder {
           this.mainLayer.add(placedObj);
           this.shapes.push(placedObj);
           placedObj.snapToGrid();
-          //this.mainTransformer.nodes([placedObj]);
+          this.mainTransformer.nodes([placedObj]);
           this.mainLayer.draw();
           this.isDrawing = false;
           this.hoverObj.remove();
@@ -387,8 +387,15 @@ export class MapBuilder {
     console.log(this.mainTransformer.nodes());
   }
 
+  saveShapeDetails(){
+    this.shapes
+    .filter(shape => shape.className === 'Room')
+    .forEach(room => room.saveShapeDetails());
+  }
+
   async render(){
     InfoPin.hideMenus(null,true,this.getInfoPins());
+    this.saveShapeDetails();
     var json = {
       attrs: {
         width: this.container.clientWidth,

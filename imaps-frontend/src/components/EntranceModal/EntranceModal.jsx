@@ -5,14 +5,14 @@ export default function EntranceModal() {
   const [modal, setModal] = useState(false);
   const [room, setRoom] = useState(null);
   const [formData, setFormData] = useState({
-    name: "",
-    type: "",
-    floor: "",
+    from: "",
+    to: "",
     description: "",
-    isMainEntrance: false, // Add the main entrance field
+    isMainEntrance: false,
   });
 
   const toggleModal = () => {
+    if(modal) room.info = formData;
     setModal(!modal);
   };
 
@@ -36,19 +36,19 @@ export default function EntranceModal() {
       const roomObj = event.detail;
       setRoom(roomObj);
       setFormData({
-        name: roomObj.info.name,
-        type: roomObj.info.type,
-        floor: roomObj.info.floor,
+        from: roomObj.info.from,
+        to: roomObj.info.to,
         description: roomObj.info.description,
         isMainEntrance: roomObj.info.isMainEntrance || false,
       });
       toggleModal(true);
+      console.log(formData);
     };
 
-    window.addEventListener("openModalEvent", openModalHandler);
+    window.addEventListener("openEntranceModalEvent", openModalHandler);
 
     return () => {
-      window.removeEventListener("openModalEvent", openModalHandler);
+      window.removeEventListener("openEntranceModalEvent", openModalHandler);
     };
   }, []);
 
@@ -71,19 +71,19 @@ export default function EntranceModal() {
             <h2>Enter Entrance Details</h2>
             <form className={styles.form}>
               <div className={styles.formGroup}>
-                <label htmlFor="name">From:</label>
+                <label htmlFor="from">From:</label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
+                  id="from"
+                  name="from"
+                  value={formData.from}
                   onChange={handleInputChange}
                   required
                 />
               </div>
               <div className={styles.formGroup}>
-                <label htmlFor="type">To:</label>
-                <select id="type" name="type" onChange={handleInputChange} value={formData.type} required>
+                <label htmlFor="to">To:</label>
+                <select id="to" name="to" onChange={handleInputChange} value={formData.to} required>
                   <option value="">Select Type</option>
                   <option value="office">Office</option>
                   <option value="classroom">Classroom</option>

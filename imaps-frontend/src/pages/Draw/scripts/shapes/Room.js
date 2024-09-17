@@ -23,18 +23,25 @@ export default class Room extends MapShape {
   
       this.type = "Room";
 
+      this._info = {
+        name: '',
+        type: '',
+        description: ''
+      }
+
       this.on("dblclick", () => {
-        const event = new CustomEvent('openModalEvent',{detail: this});
+        const event = new CustomEvent('openRoomModalEvent',{detail: this});
         window.dispatchEvent(event);
 
       })
-
-
     }
 
 
-    addRoomDetails(){
-      console.log("added room details")
+    saveShapeDetails(){
+      this.setAttr("room_name",this.info.name);
+      this.setAttr("room_type",this.info.type);
+      this.setAttr("floor",this.info.floor)
+      this.setAttr("description",this.info.description);
     }
    
   }
