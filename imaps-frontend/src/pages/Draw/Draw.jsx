@@ -2,8 +2,10 @@ import { useEffect } from "react";
 import { MapBuilder } from "./scripts/MapBuilder";
 import styles from "./Draw.module.css";
 import { fpsCounterLoop } from "./scripts/util/FpsCounter.js";
-import Modal from "../../components/Modal/Modal.jsx";
+import RoomModal from "../../components/RoomModal/RoomModal.jsx";
 import SideBar from "../../components/SideBar/SideBar.jsx";
+import EntranceModal from "../../components/EntranceModal/EntranceModal.jsx";
+import DrawGuide from "../../components/DrawGuide/DrawGuide.jsx";
 
 function Draw() {
   useEffect(() => {
@@ -31,7 +33,9 @@ function Draw() {
             Room
           </li>
         </ul>
-        <Modal></Modal>
+        <RoomModal></RoomModal>
+        <EntranceModal></EntranceModal>
+        <DrawGuide></DrawGuide>
         <div id="render" className={styles.buttonContainer}>
           <button id="render-button" type="button" className={styles.renderButton}>
             Render
