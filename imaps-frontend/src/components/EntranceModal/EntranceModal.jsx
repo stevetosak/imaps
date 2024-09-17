@@ -16,6 +16,42 @@ export default function EntranceModal() {
     setModal(!modal);
   };
 
+  const saveDetails = () => {
+    if (room) {
+      room.info = formData;
+      toggleModal();
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  useEffect(() => {
+    const openModalHandler = (event) => {
+      const roomObj = event.detail;
+      setRoom(roomObj);
+      setFormData({
+        name: roomObj.info.name,
+        type: roomObj.info.type,
+        floor: roomObj.info.floor,
+        description: roomObj.info.description,
+        isMainEntrance: roomObj.info.isMainEntrance || false,
+      });
+      toggleModal(true);
+    };
+
+    window.addEventListener("openModalEvent", openModalHandler);
+
+    return () => {
+      window.removeEventListener("openModalEvent", openModalHandler);
+    };
+  }, []);
+
   if (modal) {
     document.body.classList.add(styles.activeModal);
   } else {
@@ -25,7 +61,7 @@ export default function EntranceModal() {
   return (
     <>
       <button onClick={toggleModal} className={styles.btnModal}>
-        EntranceModal
+        Entrance Modal
       </button>
 
       {modal && (
