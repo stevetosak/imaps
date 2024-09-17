@@ -4,21 +4,21 @@ import { Ring } from "konva/lib/shapes/Ring";
 
 export default function Modal() {
   const [modal, setModal] = useState(false);
-  const [room,setRoom] = useState(null);
-  const [formData,setFormData] = useState({
-    name: '',
-    type: '',
-    floor: '',
-    description: '',
-  })
-  
+  const [room, setRoom] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    type: "",
+    floor: "",
+    description: "",
+  });
+
   const toggleModal = () => {
     setModal(!modal);
   };
 
   const saveDetails = () => {
-    if(room){
-      //room.info = formData
+    if (room) {
+      room.info = formData;
       toggleModal();
       console.log(room.info);
     }
@@ -30,35 +30,30 @@ export default function Modal() {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
     room.info = formData
   };
 
-
   useEffect(() => {
     const openModalHandler = (event) => {
-      const roomObj = event.detail; 
+      const roomObj = event.detail;
       setRoom(roomObj);
       setFormData({
         name: roomObj.info.name,
         type: roomObj.info.type,
         floor: roomObj.info.floor,
-        description: roomObj.info.description
-      })
+        description: roomObj.info.description,
+      });
       toggleModal(true);
-      
     };
 
-   
     window.addEventListener("openModalEvent", openModalHandler);
 
     return () => {
       window.removeEventListener("openModalEvent", openModalHandler);
     };
-  }, []); 
-
- 
+  }, []);
 
   if (modal) {
     document.body.classList.add(styles.activeModal);
@@ -80,7 +75,14 @@ export default function Modal() {
             <form className={styles.form}>
               <div className={styles.formGroup}>
                 <label htmlFor="name">Name:</label>
-                <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} required />
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
               <div className={styles.formGroup}>
                 <label htmlFor="type">Type:</label>
@@ -93,14 +95,32 @@ export default function Modal() {
               </div>
               <div className={styles.formGroup}>
                 <label htmlFor="floor">Floor:</label>
-                <input type="number" id="floor" name="floor" value={formData.floor} onChange={handleInputChange} required />
+                <input
+                  type="number"
+                  id="floor"
+                  name="floor"
+                  value={formData.floor}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
               <div className={styles.formGroup}>
                 <label htmlFor="description">Description:</label>
-                <textarea id="description" name="description" value={formData.description} onChange={handleInputChange} rows="3" />
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  rows="3"
+                />
               </div>
               <div className={styles.formGroup}>
-                <button type="button" id="submit-details" onClick={saveDetails} className={styles.submitButton}>
+                <button
+                  type="button"
+                  id="submit-details"
+                  onClick={saveDetails}
+                  className={styles.submitButton}
+                >
                   Save
                 </button>
               </div>

@@ -1,11 +1,22 @@
+.main {
+  position: relative;
+  width: 100vw;
+  height: 100vh; /* Full screen height */
+  overflow: hidden; /* Prevent scrolling */
+}
+
 .toolbar {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   padding: 10px;
-  margin-top: 6vh;
-  max-width: 80%;
+  position: absolute;
+  top: 0; /* Position toolbar at the top */
+  z-index: 10; /* Ensure the toolbar is above the map */
+  background-color: rgba(255, 255, 255, 0.8); /* Optional: translucent background */
+  backdrop-filter: blur(5px); /* Optional: blur effect */
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
 }
 
 .left {
@@ -13,42 +24,58 @@
   padding-left: 10vw;
   display: flex;
   flex-direction: row;
-  align-items: start;
+  align-items: flex-end; /* Align items at the bottom */
   flex-wrap: nowrap;
   gap: 20px;
-}
-
-.main{
-  width: 100vw;
-  height: 90vh;
+  padding-right: 100px;
+  height: 100%; /* Ensure the .left container takes full height of the parent */
 }
 
 .right {
   position: absolute;
-  top: 6vh;
+  top: 1.5em; /* Positioned at the top-right in desktop */
   right: 50px;
+  z-index: 10; /* Ensure the profile is floating over the map */
 }
-.mapContainer{
-  width: 80vw;
-  height: 90vh;
-  background-color:beige;
+
+.mapContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Make the map fill the entire width of the screen */
+  height: 100vh; /* Make the map fill the entire height of the screen */
+  z-index: 1; /* Ensure the map is behind the toolbar */
+  background-color: beige; /* Set your map's background color */
 }
 
 @media (max-width: 768px) {
   .toolbar {
-    flex-direction: column;
+    flex-direction: column; /* Stack elements vertically */
     align-items: center;
     max-width: 100%;
+    padding: 20px 20px;
+    position: relative;
   }
 
   .left {
-    width: 100%; 
-    max-width: 80%;
+    width: 100%;
+    max-width: 100%; /* Take full width */
     flex-direction: column;
-    justify-content: center;
-    align-items: center; 
+    justify-content: flex-start;
+    align-items: center;
     padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Profile floating above Search and Filter */
+  .right {
+    position: absolute; /* Keep it floating */
+    top: 0; /* Make sure it's above the search */
+    right: 20px;
+    z-index: 11; /* Ensure it's on top */
+  }
+
+  .left {
+    margin-top: 40px; /* Push the Search and Filter below the Profile */
   }
 }
-
-
