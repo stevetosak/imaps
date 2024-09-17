@@ -387,8 +387,15 @@ export class MapBuilder {
     console.log(this.mainTransformer.nodes());
   }
 
+  saveShapeDetails(){
+    this.shapes
+    .filter(shape => shape.className = 'Room')
+    .forEach(room => room.saveShapeDetails());
+  }
+
   async render(){
     InfoPin.hideMenus(null,true,this.getInfoPins());
+    this.saveShapeDetails();
     var json = {
       attrs: {
         width: this.container.clientWidth,

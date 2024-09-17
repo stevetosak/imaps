@@ -18,17 +18,21 @@ export default function Modal() {
 
   const saveDetails = () => {
     if(room){
-      room.info = formData
+      //room.info = formData
       toggleModal();
+      console.log(room.info);
     }
   }
+  // impl da sa gledat dali ti e zacuvana formava
 
   const handleInputChange = (e) => {
+    
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === 'checkbox' ? checked : value,
     }));
+    room.info = formData
   };
 
 

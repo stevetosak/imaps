@@ -13,7 +13,7 @@ export default class MapShape extends Konva.Shape {
       name: '',
       type: '',
       floor: '',
-      decsription: ''
+      description: ''
     };
 
     this.shadowForStrokeEnabled(false);
@@ -52,6 +52,10 @@ export default class MapShape extends Konva.Shape {
         x: Math.round(this.x() / this.blockSize) * this.blockSize,
         y: Math.round(this.y() / this.blockSize) * this.blockSize,
       });
+  }
+
+  saveShapeDetails(){
+    throw new Error("This is an abstract method.")
   }
 
   get info(){

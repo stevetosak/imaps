@@ -15,9 +15,16 @@ export default class RenderedRoom extends Konva.Rect{
             rotation: attrs.rotation,
             cornerRadius:3
         });
+
+        this.roomName = attrs.room_name;
+        this.roomType = attrs.room_type;
+        this.floor = attrs.floor;
+        this.description = attrs.description;
     
         this.on("mouseenter",() => {
         console.log("HOVER ROOM IN", this.x());
+        console.log(this.roomName);
+
         })
         this.on("mouseleave", () => {
             console.log("HOVER ROOM OUT");
