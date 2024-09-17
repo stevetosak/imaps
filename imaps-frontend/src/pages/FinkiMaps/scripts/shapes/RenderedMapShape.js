@@ -10,13 +10,13 @@ export default class RenderedMapShape extends Konva.Shape{
 
     }
 
-    _sceneFunc(context){
-        let width = this.width();
-        let height = this.height();
-        context.beginPath();
-        context.rect(0,0,width,height)
-        context.closePath();
-        context.fillStrokeShape(this);  
-      }
+     _sceneFunc(context){
+      let width = this.width();
+      let height = this.height();
+      context.beginPath();
+      context.rect(0,0,width,height)
+      context.closePath();
+      context.fillStrokeShape(this);  
+    }
     
 }

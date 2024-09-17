@@ -4,6 +4,7 @@ import Room from "../shapes/Room";
 import InfoPin from "../shapes/InfoPin";
 import styles from "../../Draw.module.css"
 import Konva from "konva";
+import RenderedRoom from "../../../FinkiMaps/scripts/shapes/RenderedRoom";
 export default class Factory {
 
   static infoPinCount = 0;
@@ -16,7 +17,7 @@ export default class Factory {
       case "Entrance":
         return new Entrance(position, blockSize, layer, rotation,true);
       case "Room":
-        return new Room(position, blockSize, layer, rotation,true);
+        return new Room(position, blockSize, layer, rotation,true, this.roomCount++);
       case "Wall":
         return new Wall(position, blockSize, layer, rotation,true);
       case "InfoPin":
@@ -42,18 +43,7 @@ export default class Factory {
           cornerRadius:3
         });
       case "Room":
-        return new Konva.Rect({
-          x: attrs.x,
-          y: attrs.y,
-          width: attrs.width,
-          height: attrs.height,
-          fill: 'white',
-          stroke: 'black',
-          strokeWidth: 1,
-          draggable: false,
-          rotation: attrs.rotation,
-          cornerRadius:3
-        });
+        return new RenderedRoom(attrs);
       case "Wall":
         return new Konva.Rect({
           x: attrs.x,

@@ -28,6 +28,7 @@ export class MapBuilder {
     this.infoNodes = []; // unused
     this.blockSize = 10;
     this.isDrawing = false;
+    this.stageRect = this.stage.container().getBoundingClientRect();
 
     this.mainTransformer = new Konva.Transformer({
       centeredScaling: false,
@@ -229,8 +230,7 @@ export class MapBuilder {
       0
     );
 
-    let stagePos = this.stage.container().getBoundingClientRect();
-    infoPin.init(stagePos);
+    infoPin.init(this.stageRect);
 
     this.shapes.push(infoPin);
     this.infoPinLayer.add(infoPin);

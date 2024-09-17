@@ -2,7 +2,7 @@ import Konva from "konva";
 import MapShape from "./MapShape";
 import { _registerNode } from 'konva/lib/Global';
 export default class Room extends MapShape {
-    constructor(mousePos,blockSize,layer,rotation,snap) {
+    constructor(mousePos,blockSize,layer,rotation,snap,id) {
       super(
         {
           x: mousePos.x,
@@ -22,7 +22,21 @@ export default class Room extends MapShape {
       );
   
       this.type = "Room";
+
+      this.on("dblclick", () => {
+        const event = new CustomEvent('openModalEvent',{detail: this});
+        window.dispatchEvent(event);
+
+      })
+
+
     }
+
+
+    addRoomDetails(){
+      console.log("added room details")
+    }
+   
   }
 
   Room.prototype.className = 'Room'
