@@ -24,16 +24,16 @@
   padding-left: 10vw;
   display: flex;
   flex-direction: row;
-  align-items: start;
+  align-items: flex-end; /* Align items at the bottom */
   flex-wrap: nowrap;
   gap: 20px;
   padding-right: 100px;
-  justify-content: flex-start; /* Ensure that content stays aligned to the left */
+  height: 100%; /* Ensure the .left container takes full height of the parent */
 }
 
 .right {
   position: absolute;
-  top: 10px; /* Positioned at the top-right in desktop */
+  top: 1.5em; /* Positioned at the top-right in desktop */
   right: 50px;
   z-index: 10; /* Ensure the profile is floating over the map */
 }
