@@ -55,7 +55,7 @@ export default class MapShape extends Konva.Shape {
   }
 
   saveShapeDetails(){
-    throw new Error("This is an abstract method.")
+    console.log("This shape does not contain information");
   }
 
   get info(){

@@ -254,7 +254,7 @@ export class MapBuilder {
           this.mainLayer.add(placedObj);
           this.shapes.push(placedObj);
           placedObj.snapToGrid();
-          //this.mainTransformer.nodes([placedObj]);
+          this.mainTransformer.nodes([placedObj]);
           this.mainLayer.draw();
           this.isDrawing = false;
           this.hoverObj.remove();
@@ -389,7 +389,7 @@ export class MapBuilder {
 
   saveShapeDetails(){
     this.shapes
-    .filter(shape => shape.className = 'Room')
+    .filter(shape => shape.className === 'Room')
     .forEach(room => room.saveShapeDetails());
   }
 

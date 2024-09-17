@@ -28,11 +28,9 @@ export default class Room extends MapShape {
         window.dispatchEvent(event);
 
       })
-
-
     }
 
-
+    
     saveShapeDetails(){
       this.setAttr("room_name",this.info.name);
       this.setAttr("room_type",this.info.type);

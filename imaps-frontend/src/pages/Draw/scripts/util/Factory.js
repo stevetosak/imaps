@@ -28,13 +28,15 @@ export default class Factory {
   }
 
   static createRenderedShape(shapeType,attrs){
+    let scaleX = (attrs.scaleX ? parseFloat(attrs.scaleX) : 1);
+    let scaleY =  (attrs.scaleY ? parseFloat(attrs.scaleY) : 1);
     switch (shapeType) {
       case "Entrance":
         return new Konva.Rect({
           x: attrs.x,
           y: attrs.y,
-          width: attrs.width,
-          height: attrs.height,
+          width: attrs.width * scaleX,
+          height: attrs.height * scaleY,
           fill: 'blue',
           stroke: 'black',
           strokeWidth: 1,
@@ -43,13 +45,13 @@ export default class Factory {
           cornerRadius:3
         });
       case "Room":
-        return new RenderedRoom(attrs);
+        return new RenderedRoom(attrs,scaleX,scaleY);
       case "Wall":
         return new Konva.Rect({
           x: attrs.x,
           y: attrs.y,
-          width: attrs.width,
-          height: attrs.height,
+          width: attrs.width * scaleX,
+          height: attrs.height * scaleY,
           fill: 'grey',
           stroke: 'black',
           strokeWidth: 1,
