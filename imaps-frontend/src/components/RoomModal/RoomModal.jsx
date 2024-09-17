@@ -8,11 +8,11 @@ export default function RoomModal() {
   const [formData, setFormData] = useState({
     name: "",
     type: "",
-    floor: "",
     description: "",
   });
 
   const toggleModal = () => {
+    if(modal) room.info = formData;
     setModal(!modal);
   };
 
@@ -32,7 +32,6 @@ export default function RoomModal() {
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
-    room.info = formData
   };
 
   useEffect(() => {
@@ -42,16 +41,15 @@ export default function RoomModal() {
       setFormData({
         name: roomObj.info.name,
         type: roomObj.info.type,
-        floor: roomObj.info.floor,
         description: roomObj.info.description,
       });
       toggleModal(true);
     };
 
-    window.addEventListener("openModalEvent", openModalHandler);
+    window.addEventListener("openRoomModalEvent", openModalHandler);
 
     return () => {
-      window.removeEventListener("openModalEvent", openModalHandler);
+      window.removeEventListener("openRoomModalEvent", openModalHandler);
     };
   }, []);
 

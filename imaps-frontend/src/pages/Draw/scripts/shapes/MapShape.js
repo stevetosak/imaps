@@ -9,12 +9,7 @@ export default class MapShape extends Konva.Shape {
     this.blockSize = blockSize;
     this._type = "";
     this.snappable = snap;
-    this._info = {
-      name: '',
-      type: '',
-      floor: '',
-      description: ''
-    };
+    this._info = {};
 
     this.shadowForStrokeEnabled(false);
     this.on("mouseover", () => (document.body.style.cursor = "pointer"));
