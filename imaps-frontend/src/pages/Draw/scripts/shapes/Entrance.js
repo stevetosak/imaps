@@ -39,8 +39,8 @@ export default class Entrance extends MapShape {
     }
 
     saveShapeDetails(){
-      this.setAttr("from",this.info.from);
-      this.setAttr("to",this.info.to);
+      this.setAttr("room_from",this.info.from);
+      this.setAttr("room_to",this.info.to);
       this.setAttr("description",this.info.description)
       this.setAttr("is_main_entrance",this.info.isMainEntrance);
     }

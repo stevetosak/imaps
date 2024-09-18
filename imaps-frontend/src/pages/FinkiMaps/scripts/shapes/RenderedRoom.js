@@ -13,7 +13,8 @@ export default class RenderedRoom extends Konva.Rect{
             strokeWidth: 1,
             draggable: false,
             rotation: attrs.rotation,
-            cornerRadius:3
+            cornerRadius:3,
+            zIndex: 0
         });
 
         this.roomName = attrs.room_name;

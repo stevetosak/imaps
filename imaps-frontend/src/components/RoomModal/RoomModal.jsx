@@ -91,17 +91,6 @@ export default function RoomModal() {
                   <option value="lab">Lab</option>
                 </select>
               </div>
-              {/* <div className={styles.formGroup}>
-                <label htmlFor="floor">Floor:</label>
-                <input
-                  type="number"
-                  id="floor"
-                  name="floor"
-                  value={formData.floor}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div> */}
               <div className={styles.formGroup}>
                 <label htmlFor="description">Description:</label>
                 <textarea
