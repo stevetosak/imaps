@@ -12,7 +12,10 @@ export default function EntranceModal() {
   });
 
   const toggleModal = () => {
-    if(modal) room.info = formData;
+    if(modal) {
+      room.info = formData;
+      console.log(room.info);
+    }
     setModal(!modal);
   };
 

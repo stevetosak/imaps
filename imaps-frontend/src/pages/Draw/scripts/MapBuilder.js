@@ -389,8 +389,11 @@ export class MapBuilder {
 
   saveShapeDetails(){
     this.shapes
-    .filter(shape => shape.className === 'Room')
-    .forEach(room => room.saveShapeDetails());
+    .filter(shape => shape.className === 'Room' || shape.className === 'Entrance')
+    .forEach(room => {
+      room.saveShapeDetails();
+      console.log(room.info);
+    });
   }
 
   async render(){
@@ -437,7 +440,7 @@ export class MapBuilder {
 
 
     } catch(error){
-
+      console.log('ERROR', error)
     }
     
     //this.shapes.forEach(shape => console.log(shape.toJSON()))

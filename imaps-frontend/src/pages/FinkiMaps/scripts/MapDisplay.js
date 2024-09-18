@@ -41,7 +41,7 @@ export class MapDisplay {
     window.addEventListener("load", () => {
       const loadResources = async () => {
         try {
-          if (this.loaded) return;
+          //if (loaded) return;
 
           let response = await fetch("http://localhost:8080/api/mapData");
           let data = await response.json();

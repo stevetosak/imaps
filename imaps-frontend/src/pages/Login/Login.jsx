@@ -12,13 +12,20 @@ const LoginPage = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8080/login',{username,password})
-    .then(response => {
-      localStorage.setItem('token',response.data.token)
+    fetch('http://localhost:8080/login',{
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({username,password}),
+    })
+    .then(data => {
+      localStorage.setItem('token', data.token);
+      console.log('Login successful:', data);
     })
     .catch(error => {
       console.error('Login failed', error);
-    })
+    });
   }
 
   return (
