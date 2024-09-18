@@ -14,29 +14,54 @@ public class Map {
             strategy = GenerationType.SEQUENCE,
             generator = "map_id_seq"
     )
-    private Long id;
+    private int id;
     private String name;
-    private String email;
-    private String password;
 
+    private String mapData; //json
+
+    private String graphData; //json
+
+    private boolean isPublic;
+    private String url;
+
+
+    public Map(String name, String mapData, boolean isPublic, String url) {
+        this.name = name;
+        this.mapData = mapData;
+        this.isPublic = isPublic;
+        this.url = url;
+    }
 
     public Map() {
 
     }
-    public Map(Long id, String name, String email, String password) {
+
+    public Map(int id, String name, String mapData, boolean isPublic, String url) {
         this.id = id;
         this.name = name;
-        this.email = email;
-        this.password = password;
+        this.mapData = mapData;
+        this.isPublic = isPublic;
+        this.url = url;
     }
 
-    public Map(String name, String email, String password) {
+    public Map(int id, String name, String mapData, String graphData, boolean isPublic, String url) {
+        this.id = id;
         this.name = name;
-        this.email = email;
-        this.password = password;
+        this.mapData = mapData;
+        this.graphData = graphData;
+        this.isPublic = isPublic;
+        this.url = url;
     }
 
-    public Long getId() {
+    public Map(String name, String mapData, String graphData, boolean isPublic, String url) {
+        this.name = name;
+        this.mapData = mapData;
+        this.graphData = graphData;
+        this.isPublic = isPublic;
+        this.url = url;
+    }
+
+    public int getId() {
         return id;
     }
 
@@ -44,20 +69,40 @@ public class Map {
         return name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMapData() {
+        return mapData;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getGraphData() {
+        return graphData;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMapData(String mapData) {
+        this.mapData = mapData;
+    }
+
+    public void setGraphData(String graphData) {
+        this.graphData = graphData;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override
@@ -65,7 +110,10 @@ public class Map {
         return "Map{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
+                ", mapData='" + mapData + '\'' +
+                ", graphData='" + graphData + '\'' +
+                ", isPublic=" + isPublic +
+                ", url='" + url + '\'' +
                 '}';
     }
 }

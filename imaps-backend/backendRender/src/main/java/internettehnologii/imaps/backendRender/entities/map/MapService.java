@@ -22,13 +22,9 @@ public class MapService {
     }
 
     public void addNewMap(Map map) {
-        Optional<Map> studentOptional = mapRepository.findMapByEmail(map.getEmail());
-        if(studentOptional.isPresent()){
-            throw new IllegalStateException("email taken");
-        }
-
         mapRepository.save(map);
     }
+
 
     public void deleteMap(Long mapId) {
         boolean exists = mapRepository.existsById(mapId);
@@ -36,22 +32,19 @@ public class MapService {
             throw new IllegalStateException("Map with id: " + mapId + " does not exist");
         }
         mapRepository.deleteById(mapId);
+
     }
 
+    public Optional<Map> getMapById(Long id){
+        return mapRepository.findById(id);
+    }
+
+
     @Transactional
-    public void updateMap(Long mapId, String name, String email) {
+    public void updateMap(Long mapId, String name) {
         Map map = mapRepository.findById(mapId).orElseThrow(() -> new IllegalStateException("map with id " + mapId + " does not exist"));
         if(name != null && name.length() > 0 && !Objects.equals(map.getName(), name)){
             map.setName(name);
-        }
-
-        if(email != null && email.length() > 0 && !Objects.equals(map.getEmail(), email)){
-            Optional<Map> mapOptional = mapRepository.findMapByEmail(email);
-            if(mapOptional.isPresent()){
-                throw new IllegalStateException("email taken");
-            }
-
-            map.setEmail(email);
         }
     }
 }

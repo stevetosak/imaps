@@ -13,8 +13,8 @@ public class MapConfig {
     @Bean
     CommandLineRunner commandLineRunner(MapRepository repository){
         return args -> {
-            Map martin = new Map("Martin", "martindjakov03@gmail.com", "martin4e");
-            Map stefan = new Map( "Stefan", "stefantoskovski03@gmail.com", "stef4e");
+            Map martin = new Map("MARTINCE", "json1", true, "url");
+            Map stefan = new Map("STEFCE", "json1", true, "url");
             repository.saveAll(
                     List.of(martin, stefan)
             );

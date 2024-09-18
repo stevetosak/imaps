@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @PutMapping(path = "{userId}")
-    public void updateStudent(
+    public void updateUser(
             @PathVariable("userId") Long userId,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email){

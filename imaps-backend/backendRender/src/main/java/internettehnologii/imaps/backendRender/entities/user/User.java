@@ -14,7 +14,7 @@ public class User {
             strategy = GenerationType.SEQUENCE,
             generator = "users_id_seq"
     )
-    private int id;
+    private Long id;
     private String name;
     private String email;
     private String password;
@@ -23,7 +23,7 @@ public class User {
     public User() {
 
     }
-    public User(int id, String name, String email, String password) {
+    public User(Long id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -36,7 +36,7 @@ public class User {
         this.password = password;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -48,7 +48,7 @@ public class User {
         return email;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
