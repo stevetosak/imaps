@@ -19,11 +19,7 @@ body {
   height: 100vh;
   background-color: #16161600;
   border: 1px solid gray;
-<<<<<<< HEAD
-  margin: 50px; /* Remove unnecessary margins */
-=======
   margin: 0;
->>>>>>> 9c7611f6226fa080bee49d0421c3fe70f5856ca2
 }
 
 .panel {
