@@ -6,31 +6,34 @@ import jakarta.persistence.*;
 public class User {
     @Id
     @SequenceGenerator(
-            name = "student_sequence",
-            sequenceName = "student_sequence",
+            name = "user_id_seq",
+            sequenceName = "user_id_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "student_sequence"
+            generator = "user_id_seq"
     )
     private Long id;
     private String name;
     private String email;
+    private String password;
 
-    public User(String name, String email) {
-        this.name = name;
-        this.email = email;
-    }
-
-    public User(Long id, String name, String email) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-    }
 
     public User() {
 
+    }
+    public User(Long id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
