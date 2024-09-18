@@ -2,19 +2,19 @@ package internettehnologii.imaps.backendRender.entities.user;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name = "users")
 public class User {
     @Id
     @SequenceGenerator(
-            name = "user_id_seq",
-            sequenceName = "user_id_seq",
+            name = "users_id_seq",
+            sequenceName = "users_id_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "user_id_seq"
+            generator = "users_id_seq"
     )
-    private Long id;
+    private int id;
     private String name;
     private String email;
     private String password;
@@ -23,7 +23,7 @@ public class User {
     public User() {
 
     }
-    public User(Long id, String name, String email, String password) {
+    public User(int id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -36,7 +36,7 @@ public class User {
         this.password = password;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
@@ -48,7 +48,7 @@ public class User {
         return email;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
