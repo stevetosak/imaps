@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./SideBar.module.css";
 import menu_closed from "../../assets/menu_closed_icon.png";
 import menu_opened from "../../assets/menu_opened_icon.png";
+import { Link } from "react-router-dom";
 
 function SideBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,17 +20,17 @@ function SideBar() {
         <div className={styles.sidebarContent}>
           <ul>
             <li>
-              <a href="#home">Home</a>
+              <Link to="/">Home</Link>
             </li>
             <li>
-              <a href="#about">About</a>
+              <Link to="/">Maps</Link>
             </li>
-            <li>
-              <a href="#services">Services</a>
+            {/* <li>
+              <a href="#services">Create a map</a>
             </li>
             <li>
               <a href="#contact">Contact</a>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

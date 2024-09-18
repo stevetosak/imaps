@@ -15,6 +15,7 @@ function Draw() {
   return (
     <div className={styles.wrapper} id="wrapper">
       <SideBar></SideBar>
+      {/* <h1>FINKI</h1> */}
       <div id="container" className={styles.cont}></div>
       <div className={styles.panel}>
         <h1>Welcome, User</h1>

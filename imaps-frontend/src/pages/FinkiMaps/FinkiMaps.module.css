@@ -20,6 +20,7 @@
 }
 
 .left {
+  width: 100%;
   max-width: 100%;
   padding-left: 10vw;
   display: flex;
@@ -33,7 +34,7 @@
 
 .right {
   position: absolute;
-  top: 1.5em; /* Positioned at the top-right in desktop */
+  top: 1.2em; /* Positioned at the top-right in desktop */
   right: 50px;
   z-index: 10; /* Ensure the profile is floating over the map */
 }
@@ -70,7 +71,7 @@
   /* Profile floating above Search and Filter */
   .right {
     position: absolute; /* Keep it floating */
-    top: 0; /* Make sure it's above the search */
+    top: 0.8em; /* Make sure it's above the search */
     right: 20px;
     z-index: 11; /* Ensure it's on top */
   }

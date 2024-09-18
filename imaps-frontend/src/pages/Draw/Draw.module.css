@@ -20,7 +20,7 @@ body {
   height: 100vh; /* Ensure the container fills the viewport */
   background-color: #16161600;
   border: 1px solid gray;
-  margin: 0; /* Remove unnecessary margins */
+  margin: 50px; /* Remove unnecessary margins */
 }
 
 .panel {
