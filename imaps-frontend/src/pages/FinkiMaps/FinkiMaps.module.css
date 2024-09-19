@@ -8,7 +8,6 @@
 .toolbar {
   width: 100%;
   display: flex;
-  /* justify-content: space-between; */
   align-items: center;
   padding: 10px;
   position: absolute;
@@ -49,6 +48,13 @@
   background-color: beige; /* Set your map's background color */
 }
 
+.mapControlsContainer {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10; /* Ensure the map controls are above the map */
+}
+
 @media (max-width: 768px) {
   .toolbar {
     flex-direction: column; /* Stack elements vertically */
@@ -78,5 +84,10 @@
 
   .left {
     margin-top: 40px; /* Push the Search and Filter below the Profile */
+  }
+
+  .mapControlsContainer {
+    bottom: 10px;
+    right: 10px;
   }
 }

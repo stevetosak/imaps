@@ -2,16 +2,30 @@ import React, { useEffect } from "react";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import FilterBar from "../../components/FilterBar/FilterBar";
 import Profile from "../../components/Profile/Profile";
-import styles from "./FinkiMaps.module.css";
 import SideBar from "../../components/SideBar/SideBar";
 import Draw from "../../pages/Draw/Draw";
 import { MapDisplay } from "./scripts/MapDisplay";
+import MapControls from "../../components/MapControls/MapControls";
+import styles from "./FinkiMaps.module.css";
 
 function FinkiMaps() {
   useEffect(() => {
     const app = new MapDisplay("map");
     app.loadMap();
   }, []);
+
+  const handleZoomIn = () => {
+    console.log("Zooming in");
+  };
+
+  const handleZoomOut = () => {
+    console.log("Zooming out");
+  };
+
+  const handleFloorChange = (floor) => {
+    console.log(`Switched to floor ${floor}`);
+  };
+
   return (
     <div id="main" className={styles.main}>
       <div id="map" className={styles.mapContainer}></div>
@@ -24,6 +38,10 @@ function FinkiMaps() {
         <div className={styles.right}>
           <Profile />
         </div>
+      </div>
+
+      <div className={styles.mapControlsContainer}>
+        <MapControls onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} onFloorChange={handleFloorChange} />
       </div>
     </div>
   );

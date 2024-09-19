@@ -1,0 +1,57 @@
+.mapControl {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background-color: hsla(214, 7%, 19%, 0.87);
+  padding: 8px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  width: fit-content;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.zoomControls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.zoomButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+}
+
+.zoomButton img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.floorSelector {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.floorIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.floorDropdown {
+  padding: 4px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+}
