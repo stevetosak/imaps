@@ -1,5 +1,8 @@
 package internettehnologii.imaps.backendRender.entities.map;
+import com.fasterxml.jackson.databind.JsonNode;
+import internettehnologii.imaps.backendRender.util.JsonNodeConverter;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table
@@ -14,18 +17,22 @@ public class Map {
             strategy = GenerationType.SEQUENCE,
             generator = "map_id_seq"
     )
-    private int id;
+    private Integer id;
     private String name;
 
-    private String mapData; //json
+    @Column(name = "map_data", columnDefinition = "jsonb")
+    @Convert(converter = JsonNodeConverter.class)
+    private JsonNode mapData; //json
 
-    private String graphData; //json
+    @Column(name = "graph_data", columnDefinition = "jsonb")
+    @Convert(converter = JsonNodeConverter.class)
+    private JsonNode graphData; //json
 
     private boolean isPublic;
     private String url;
 
 
-    public Map(String name, String mapData, boolean isPublic, String url) {
+    public Map(String name, JsonNode mapData, boolean isPublic, String url) {
         this.name = name;
         this.mapData = mapData;
         this.isPublic = isPublic;
@@ -36,7 +43,7 @@ public class Map {
 
     }
 
-    public Map(int id, String name, String mapData, boolean isPublic, String url) {
+    public Map(Integer id, String name, JsonNode mapData, boolean isPublic, String url) {
         this.id = id;
         this.name = name;
         this.mapData = mapData;
@@ -44,7 +51,7 @@ public class Map {
         this.url = url;
     }
 
-    public Map(int id, String name, String mapData, String graphData, boolean isPublic, String url) {
+    public Map(Integer id, String name, JsonNode mapData, JsonNode graphData, boolean isPublic, String url) {
         this.id = id;
         this.name = name;
         this.mapData = mapData;
@@ -53,7 +60,7 @@ public class Map {
         this.url = url;
     }
 
-    public Map(String name, String mapData, String graphData, boolean isPublic, String url) {
+    public Map(String name, JsonNode mapData, JsonNode graphData, boolean isPublic, String url) {
         this.name = name;
         this.mapData = mapData;
         this.graphData = graphData;
@@ -61,7 +68,7 @@ public class Map {
         this.url = url;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -69,11 +76,11 @@ public class Map {
         return name;
     }
 
-    public String getMapData() {
+    public JsonNode getMapData() {
         return mapData;
     }
 
-    public String getGraphData() {
+    public JsonNode getGraphData() {
         return graphData;
     }
 
@@ -89,11 +96,11 @@ public class Map {
         this.name = name;
     }
 
-    public void setMapData(String mapData) {
+    public void setMapData(JsonNode mapData) {
         this.mapData = mapData;
     }
 
-    public void setGraphData(String graphData) {
+    public void setGraphData(JsonNode graphData) {
         this.graphData = graphData;
     }
 

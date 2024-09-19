@@ -34,7 +34,7 @@ public class MapController {
     @PutMapping(path = "{mapId}")
     public void updateMap(
             @PathVariable("mapId") Long mapId,
-            @RequestParam(required = false) String name{
+            @RequestParam(required = false) String name) {
         mapService.updateMap(mapId, name);
     }
 }
