@@ -1,36 +1,38 @@
+/* Ensure no scrolling and remove white background */
 html,
 body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden;
-  background-color: #141414f6;
+  overflow: hidden; /* Prevent scrolling */
+  background-color: #141414f6; /* Set background to prevent any white areas */
 }
 
 .wrapper {
   display: flex;
-  height: 100vh;
+  height: 100vh; /* Ensure the wrapper takes full viewport height */
   background-color: #141414f6;
+  overflow: hidden;
 }
 
 .cont {
   flex-grow: 1;
-  width: 85vw;
-  height: 100vh;
+  width: 85vw; /* Adjust the drawing area width */
+  height: 100vh; /* Ensure the container fills the viewport */
   background-color: #16161600;
   border: 1px solid gray;
-  margin: 0;
+  margin: 50px; /* Remove unnecessary margins */
 }
 
 .panel {
-  width: 15vw;
-  height: 100vh;
+  width: 15vw; /* Adjust width of the panel */
+  height: 100vh; /* Make sure panel takes full height of viewport */
   display: flex;
   flex-direction: column;
   padding: 20px;
-  background-color: #1c1c1c;
+  background-color: #1c1c1c; /* Darker background for contrast */
   color: white;
-  overflow-y: auto;
+  overflow-y: auto; /* Allow content to scroll if it exceeds panel height */
   box-sizing: border-box;
 }
 
@@ -77,9 +79,9 @@ body {
   padding: 0;
   margin: 20px 0;
   display: flex;
-  flex-direction: column; 
-  gap: 10px;
-  align-items: center; 
+  flex-direction: column; /* Stack items vertically */
+  gap: 10px; /* Add space between items */
+  align-items: center; /* Center the shapes horizontally */
 }
 
 .shapeOption {
@@ -120,6 +122,35 @@ body {
   font-weight: bold;
   margin: 2px 3px;
   text-align: center;
+}
+
+.floorSelector {
+  margin-bottom: 20px; /* Add space between elements */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: white;
+}
+
+.floorSelector label {
+  font-size: 14px;
+  color: #fff; /* Ensure text is visible on dark background */
+}
+
+.floorDropdown {
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #3a3a3a;
+  color: #fff;
+  cursor: pointer;
+  width: 100%; /* Make it fill the available space */
+}
+
+.floorDropdown:focus {
+  outline: none;
+  border-color: #1e90ff; /* Highlight on focus */
 }
 
 .nodeOptions {
