@@ -1,8 +1,13 @@
 package internettehnologii.imaps.backendRender.entities.map;
 import com.fasterxml.jackson.databind.JsonNode;
 import internettehnologii.imaps.backendRender.util.JsonNodeConverter;
+import internettehnologii.imaps.backendRender.util.json.DataJson;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
+
+import javax.xml.crypto.Data;
 
 @Entity
 @Table
@@ -20,19 +25,17 @@ public class Map {
     private Integer id;
     private String name;
 
-    @Column(name = "map_data", columnDefinition = "jsonb")
-    @Convert(converter = JsonNodeConverter.class)
-    private JsonNode mapData; //json
+    @JdbcTypeCode(SqlTypes.JSON)
+    private DataJson mapData; //json
 
-    @Column(name = "graph_data", columnDefinition = "jsonb")
-    @Convert(converter = JsonNodeConverter.class)
-    private JsonNode graphData; //json
+    @JdbcTypeCode(SqlTypes.JSON)
+    private DataJson graphData; //json
 
     private boolean isPublic;
     private String url;
 
 
-    public Map(String name, JsonNode mapData, boolean isPublic, String url) {
+    public Map(String name, DataJson mapData, boolean isPublic, String url) {
         this.name = name;
         this.mapData = mapData;
         this.isPublic = isPublic;
@@ -43,7 +46,7 @@ public class Map {
 
     }
 
-    public Map(Integer id, String name, JsonNode mapData, boolean isPublic, String url) {
+    public Map(Integer id, String name, DataJson mapData, boolean isPublic, String url) {
         this.id = id;
         this.name = name;
         this.mapData = mapData;
@@ -51,7 +54,7 @@ public class Map {
         this.url = url;
     }
 
-    public Map(Integer id, String name, JsonNode mapData, JsonNode graphData, boolean isPublic, String url) {
+    public Map(Integer id, String name, DataJson mapData, DataJson graphData, boolean isPublic, String url) {
         this.id = id;
         this.name = name;
         this.mapData = mapData;
@@ -60,7 +63,7 @@ public class Map {
         this.url = url;
     }
 
-    public Map(String name, JsonNode mapData, JsonNode graphData, boolean isPublic, String url) {
+    public Map(String name, DataJson mapData, DataJson graphData, boolean isPublic, String url) {
         this.name = name;
         this.mapData = mapData;
         this.graphData = graphData;
@@ -76,11 +79,11 @@ public class Map {
         return name;
     }
 
-    public JsonNode getMapData() {
+    public DataJson getMapData() {
         return mapData;
     }
 
-    public JsonNode getGraphData() {
+    public DataJson getGraphData() {
         return graphData;
     }
 
@@ -96,11 +99,11 @@ public class Map {
         this.name = name;
     }
 
-    public void setMapData(JsonNode mapData) {
+    public void setMapData(DataJson mapData) {
         this.mapData = mapData;
     }
 
-    public void setGraphData(JsonNode graphData) {
+    public void setGraphData(DataJson graphData) {
         this.graphData = graphData;
     }
 

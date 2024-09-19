@@ -1,6 +1,7 @@
 package internettehnologii.imaps.backendRender.entities.map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import internettehnologii.imaps.backendRender.util.json.DataJson;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +10,6 @@ import java.util.List;
 
 @Configuration
 public class MapConfig {
-    ObjectMapper mapper = new ObjectMapper();
     String jsonTest1 = "{\n" +
             "  \"id\": 1,\n" +
             "  \"name\": \"Sample Map\",\n" +
@@ -32,14 +32,14 @@ public class MapConfig {
             "  \"isPublic\": true,\n" +
             "  \"url\": \"http://example.com/map\"\n" +
             "}\n";
-//    @Bean
-//    CommandLineRunner mapCmdLineRunner(MapRepository repository){
-//        return args -> {
-//            Map martin = new Map("MARTINCE", mapper.readTree(jsonTest1), true, "url");
-//            Map stefan = new Map("STEFCE", mapper.readTree(jsonTest1), true, "url");
-//            repository.saveAll(
-//                    List.of(martin, stefan)
-//            );
-//        };
-//    };
+    @Bean
+    CommandLineRunner mapCmdLineRunner(MapRepository repository){
+        return args -> {
+            Map martin = new Map("MARTINCE",new DataJson(jsonTest1),true, "url");
+            Map stefan = new Map("STEFCE", new DataJson(jsonTest1), true, "url");
+            repository.saveAll(
+                    List.of(martin, stefan)
+            );
+        };
+    };
 }
