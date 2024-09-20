@@ -1,32 +1,39 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 import illustration from "../../assets/illustration_img.png";
-import axios from "axios";
-
-
 
 const LoginPage = () => {
-  const [username,setUsername] = useState('');
-  const [password,setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    fetch('http://localhost:8080/login',{
+
+    fetch("http://localhost:8080/login", {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({username,password}),
+      body: JSON.stringify({ username, password }),
     })
-    .then(data => {
-      localStorage.setItem('token', data.token);
-      console.log('Login successful:', data);
-    })
-    .catch(error => {
-      console.error('Login failed', error);
-    });
-  }
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+          console.log("Login successful:", data);
+          navigate("/Maps/FinkiMaps/Draw");
+        } else {
+          setError("Invalid username or password.");
+        }
+      })
+      .catch((error) => {
+        console.error("Login failed", error);
+        setError("Login failed. Please try again.");
+      });
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -38,25 +45,28 @@ const LoginPage = () => {
         <form onSubmit={handleLogin}>
           <div>
             <label htmlFor="username">Username</label>
-            <input type="text" 
-            id="name" 
-            placeholder="Enter your username" 
-            onChange={(e) => setUsername(e.target.value)}
-            value={username}
+            <input
+              type="text"
+              id="name"
+              placeholder="Enter your username"
+              onChange={(e) => setUsername(e.target.value)}
+              value={username}
+              required
             />
           </div>
           <div>
             <label htmlFor="password">Password</label>
-            <input type="password" 
-            id="password" 
-            placeholder="Enter your password" 
-            onChange={(e) => setPassword(e.target.value)} 
-            value={password}
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              required
             />
           </div>
-          <button type="submit">
-            Submit
-          </button>
+          {error && <p className={styles.error}>{error}</p>}
+          <button type="submit">Submit</button>
         </form>
         <p>
           Don't have an account? <Link to="/Signup"> Sign Up </Link>
@@ -64,5 +74,6 @@ const LoginPage = () => {
       </div>
     </div>
   );
-}
+};
+
 export default LoginPage;

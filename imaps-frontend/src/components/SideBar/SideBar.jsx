@@ -23,14 +23,11 @@ function SideBar() {
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/">Maps</Link>
-            </li>
-            {/* <li>
-              <a href="#services">Create a map</a>
+              <Link to="/Maps">Maps</Link>
             </li>
             <li>
-              <a href="#contact">Contact</a>
-            </li> */}
+              <Link to="/Maps/FinkiMaps/Draw">Draw</Link>
+            </li>
           </ul>
         </div>
       </div>

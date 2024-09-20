@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MapBuilder } from "./scripts/MapBuilder";
 import styles from "./Draw.module.css";
 import { fpsCounterLoop } from "./scripts/util/FpsCounter.js";
@@ -6,21 +6,46 @@ import RoomModal from "../../components/RoomModal/RoomModal.jsx";
 import SideBar from "../../components/SideBar/SideBar.jsx";
 import EntranceModal from "../../components/EntranceModal/EntranceModal.jsx";
 import DrawGuide from "../../components/DrawGuide/DrawGuide.jsx";
+import RoomTypeModal from "../../components/RoomTypeModal/RoomTypeModal.jsx";
 
 function Draw() {
+  const [selectedFloor, setSelectedFloor] = useState(1); // Track the selected floor
+
   useEffect(() => {
     const app = new MapBuilder("container");
     fpsCounterLoop();
   }, []);
+
+  const handleFloorChange = (event) => {
+    setSelectedFloor(event.target.value);
+    console.log(`Floor changed to: ${event.target.value}`);
+    // You can trigger additional actions here, like changing the displayed floor
+  };
+
   return (
     <div className={styles.wrapper} id="wrapper">
       <SideBar></SideBar>
-      {/* <h1>FINKI</h1> */}
       <div id="container" className={styles.cont}></div>
       <div className={styles.panel}>
         <h1>Welcome, User</h1>
+
         <div id="fpscont" className={styles.fpscounter}>
           <p id="fpsCounter"></p>
+        </div>
+        <div className={styles.floorSelector}>
+          <label htmlFor="floorSelect">Select Floor:</label>
+          <select
+            id="floorSelect"
+            value={selectedFloor}
+            onChange={handleFloorChange}
+            className={styles.floorDropdown}
+          >
+            <option value={1}>1st Floor</option>
+            <option value={2}>2nd Floor</option>
+            <option value={3}>3rd Floor</option>
+            <option value={4}>4th Floor</option>
+            {/* Add more floors as needed */}
+          </select>
         </div>
         <h2>Shapes:</h2>
         <ul className={styles.shapeOptions} id="shapeOptions">
@@ -37,34 +62,12 @@ function Draw() {
         <RoomModal></RoomModal>
         <EntranceModal></EntranceModal>
         <DrawGuide></DrawGuide>
+        <RoomTypeModal></RoomTypeModal>
         <div id="render" className={styles.buttonContainer}>
           <button id="render-button" type="button" className={styles.renderButton}>
             Render
           </button>
         </div>
-        {/* <div id='info' className={styles.info}>
-            <h3><b>InfoPins:</b></h3>
-            <ul>
-              <li>InfoPin sa klavat so desen klik</li>
-              <li>So double click na nekoj pin go prikazvis/kries menito za informacii</li>
-              <li>Ako sakas da obelezis vrata go klikvis checkbox i kazvis pomegju koi 2 prostorii e vratata</li>
-              <li>So ESC gi kries otvorenite menija na site pins</li>
-              <li><strong>BUG: RESIZE NA INFO PINS NE TREBIT DA IMAT, AKO PROBAS RESIZE NA DIJAGONALA SA BUGVIT CELOTO</strong></li>
-            </ul>
-            <h3><b>Info Za Canvas</b></h3>
-            <ul>
-              <li>So <i>double click</i> na nekoj shape, go klavas vo najgorniot sloj, so znacit ke e nad drugite elementi.
-              <strong>VAZNO: elementi ko ke klavas na canvasot, vo nekoj sloj,sa klavaat vo obraten red od ko so vlegle vo toj sloj(LIFO), to znacit deka ako klajs shape1,pa shape2, shape 2 ke e nad shape1</strong></li>
-              <li>So delete kopceto sa brisit selektiran shape</li>
-              <li>Ako selektiras pojke shapes so drzenje na klik, site mozis da gi izbrisis</li>
-              <li>Selektiran shape (hover) mozis da stegnis escape za da ne ti e pojke selected</li>
-              <li>Selektiran shape (hover), go rotiras za 90 stepeni so scroll</li>
-              <li>Imat snapping za pomestuvanje i za resize.(za resize najubo funkcionirat na pocetok, ko ke go selektiras element)</li>
-              <li>So zoom in/out ili resize na prozorceto, canvasot si pret resize dinamicki, iako mozit malku da potkocit(todo)</li>
-              <li>TODO: grid snapping na toggle</li>
-              <li>Za hover na rooms valjda ke trebit da sa impl ko outline shape sho ke e child na info node</li>
-            </ul>
-          </div> */}
       </div>
     </div>
   );

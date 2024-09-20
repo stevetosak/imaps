@@ -36,7 +36,7 @@
   z-index: 1000; /* Ensure the modal appears above the overlay */
 }
 
-/* Heading styles */
+/* Modal heading */
 h2,
 h3 {
   margin-bottom: 15px;
@@ -83,6 +83,7 @@ h3 {
   flex-direction: column;
 }
 
+/* Form group: margin between form elements */
 .formGroup {
   margin-bottom: 15px;
 }
@@ -111,14 +112,13 @@ h3 {
   color: #888888; /* Slightly lighter color for placeholder text */
 }
 
-/* Checkbox alignment fix */
-.formGroupCheckbox {
-  display: flex;
-  align-items: center; /* Vertical alignment */
-  color: #ffffff;
+/* Checkbox style adjustment */
+.formGroup input[type="checkbox"] {
+  width: auto;
+  margin-right: 10px;
 }
 
-/* Add button */
+/* Add button for adding room types */
 .addButton {
   background-color: #28a745;
   color: white;
@@ -133,31 +133,15 @@ h3 {
   background-color: #218838;
 }
 
-/* Save button styling */
-.submitButton {
-  background-color: #28a745;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 15px;
-}
-
-.submitButton:hover {
-  background-color: #218838;
-}
-
-/* Pin list */
-.pinList {
+/* Dynamic room type list */
+.roomTypeList {
   list-style-type: none;
   padding: 0;
   margin-top: 15px;
 }
 
-/* Individual pin item */
-.pinItem {
+/* Individual room type item */
+.roomTypeItem {
   background-color: #444;
   padding: 8px;
   margin-bottom: 5px;
