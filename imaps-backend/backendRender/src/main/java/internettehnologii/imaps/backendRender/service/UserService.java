@@ -1,5 +1,7 @@
-package internettehnologii.imaps.backendRender.entities.user;
+package internettehnologii.imaps.backendRender.service;
 
+import internettehnologii.imaps.backendRender.entities.user.IMapsUser;
+import internettehnologii.imaps.backendRender.entities.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,24 +12,24 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    private final  UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 
-    public List<User> getUsers(){
+    public List<IMapsUser> getUsers(){
         return userRepository.findAll();
     }
 
-    public void addNewUser(User user) {
-        Optional<User> studentOptional = userRepository.findUserByEmail(user.getEmail());
-        if(studentOptional.isPresent()){
+    public IMapsUser register(IMapsUser user) {
+        Optional<IMapsUser> usrOptional = userRepository.findUserByEmail(user.getEmail());
+        if(usrOptional.isPresent()){
             throw new IllegalStateException("email taken");
         }
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public void deleteUser(Long userId) {
@@ -40,13 +42,13 @@ public class UserService {
 
     @Transactional
     public void updateUser(Long userId, String name, String email) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("user with id " + userId + " does not exist"));
-        if(name != null && name.length() > 0 && !Objects.equals(user.getName(), name)){
-            user.setName(name);
+        IMapsUser user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("user with id " + userId + " does not exist"));
+        if(name != null && !name.isEmpty() && !Objects.equals(user.getUsername(), name)){
+            user.setUsername(name);
         }
 
         if(email != null && email.length() > 0 && !Objects.equals(user.getEmail(), email)){
-            Optional<User> userOptional = userRepository.findUserByEmail(email);
+            Optional<IMapsUser> userOptional = userRepository.findUserByEmail(email);
             if(userOptional.isPresent()){
                 throw new IllegalStateException("email taken");
             }

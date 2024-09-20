@@ -399,6 +399,8 @@ export class MapBuilder {
   async render(){
     InfoPin.hideMenus(null,true,this.getInfoPins());
     this.saveShapeDetails();
+
+
     var json = {
       attrs: {
         width: this.container.clientWidth,
@@ -416,34 +418,20 @@ export class MapBuilder {
 
     json.Layer[0].children.push(this.shapes);
 
-    try{
 
       var mapId = window.location.pathname.split("/")[2]
-      const response = await fetch("http://localhost:8080/api/render",{
+      const response = await fetch("http://localhost:8080/api/protected/render",{
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
           'Sender-Url': window.location.pathname
         },
         body: JSON.stringify(json)
-      });
-    
+      })
+      .then(response => response.json())
+      .catch(error => console.log(error))
+      .then(data => console.log("RESPONSE: : " + JSON.stringify(data)));
 
-      if(!response.ok){
-        console.log("ERROR VO PUSTANJE");
-      }
-
-
-      const result = await response.json();
-
-      console.log("RESPONSE FROM BACKEND: " + JSON.stringify(result));
-
-
-    } catch(error){
-      console.log('ERROR', error)
-    }
-    
-    //this.shapes.forEach(shape => console.log(shape.toJSON()))
   }
 
   handleStageClick(e) {
@@ -458,7 +446,6 @@ export class MapBuilder {
     }
 
     if (!e.target.hasName("mapObj")) {
-      console.log("vleze")
       return;
     }
 

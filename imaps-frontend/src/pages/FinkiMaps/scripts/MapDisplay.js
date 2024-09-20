@@ -43,7 +43,7 @@ export class MapDisplay {
         try {
           //if (loaded) return;
 
-          let response = await fetch("http://localhost:8080/api/mapData");
+          let response = await fetch("http://localhost:8080/api/protected/mapData");
           let data = await response.json();
           this.parseJson(JSON.stringify(data));
           console.log("Load: " + JSON.stringify(data));

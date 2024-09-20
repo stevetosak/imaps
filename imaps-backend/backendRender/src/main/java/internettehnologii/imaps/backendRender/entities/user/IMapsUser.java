@@ -1,9 +1,12 @@
 package internettehnologii.imaps.backendRender.entities.user;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 @Entity
 @Table(name = "users")
-public class User {
+public class IMapsUser {
     @Id
     @SequenceGenerator(
             name = "users_id_seq",
@@ -15,56 +18,36 @@ public class User {
             generator = "users_id_seq"
     )
     private int id;
-    private String name;
+    @Setter
+    @Column(name = "name")
+    private String username;
+    @Setter
     private String email;
     private String password;
 
 
-    public User() {}
+    public IMapsUser() {}
 
-    public User(int id, String name, String email, String password) {
+    public IMapsUser(int id, String name, String email, String password) {
         this.id = id;
-        this.name = name;
+        this.username = name;
         this.email = email;
         this.password = password;
     }
 
-    public User(String name, String email, String password) {
-        this.name = name;
+    public IMapsUser(String name, String email, String password) {
+        this.username = name;
         this.email = email;
         this.password = password;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }
+
 }

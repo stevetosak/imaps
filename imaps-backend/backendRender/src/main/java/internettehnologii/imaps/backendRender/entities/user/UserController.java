@@ -1,10 +1,13 @@
 package internettehnologii.imaps.backendRender.entities.user;
 
+import internettehnologii.imaps.backendRender.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+//test klasa
 @RestController
 @RequestMapping(path = "api/v1/user")
 public class UserController {
@@ -16,15 +19,10 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers(){
+    public List<IMapsUser> getUsers(){
         return userService.getUsers();
     }
 
-    @PostMapping
-    public void registerNewUser(@RequestBody User user){
-        userService.addNewUser(user);
-
-    }
 
     @DeleteMapping(path = "{userId}")
     public void deleteUser(@PathVariable("userId") Long userId){
