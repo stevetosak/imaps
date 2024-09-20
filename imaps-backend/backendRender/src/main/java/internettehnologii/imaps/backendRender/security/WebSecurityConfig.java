@@ -28,7 +28,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
          http.csrf(csrf -> csrf.disable());
-         http.authorizeHttpRequests(request -> request.requestMatchers("/api/auth/register").permitAll()
+         http.authorizeHttpRequests(request -> request.requestMatchers("/api/auth/register","api/protected/*").permitAll()
                  .anyRequest().authenticated());
          //http.formLogin(Customizer.withDefaults());
          http.httpBasic(Customizer.withDefaults());
@@ -37,6 +37,8 @@ public class WebSecurityConfig {
 
         return http.build();
     }
+
+    //TODO password encoding
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
