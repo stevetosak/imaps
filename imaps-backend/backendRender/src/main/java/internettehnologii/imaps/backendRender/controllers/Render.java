@@ -9,7 +9,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/protected")
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = "http://localhost:5173/",allowedHeaders = {"Authorization"})
 public class Render {
 
     private Map<String,Object> jsonData = new HashMap<>();

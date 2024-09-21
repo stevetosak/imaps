@@ -9,17 +9,27 @@ const LoginPage = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const payload = {
+    username: username,
+    password: password
+  };
+
   const handleLogin = (e) => {
     e.preventDefault();
 
-    fetch("http://localhost:8080/login", {
+    fetch("http://localhost:8080/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify(payload),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Login failed2"); 
+        }
+        return response.json();
+      })
       .then((data) => {
         if (data.token) {
           localStorage.setItem("token", data.token);
@@ -33,6 +43,7 @@ const LoginPage = () => {
         console.error("Login failed", error);
         setError("Login failed. Please try again.");
       });
+    
   };
 
   return (

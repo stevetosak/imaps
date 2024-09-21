@@ -400,6 +400,8 @@ export class MapBuilder {
     InfoPin.hideMenus(null,true,this.getInfoPins());
     this.saveShapeDetails();
 
+    const token = localStorage.getItem("token");
+
 
     var json = {
       attrs: {
@@ -418,12 +420,15 @@ export class MapBuilder {
 
     json.Layer[0].children.push(this.shapes);
 
+    console.log("tok",token)
+
 
       var mapId = window.location.pathname.split("/")[2]
       const response = await fetch("http://localhost:8080/api/protected/render",{
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
           'Sender-Url': window.location.pathname
         },
         body: JSON.stringify(json)
@@ -431,6 +436,9 @@ export class MapBuilder {
       .then(response => response.json())
       .catch(error => console.log(error))
       .then(data => console.log("RESPONSE: : " + JSON.stringify(data)));
+
+      console.log(token);
+
 
   }
 

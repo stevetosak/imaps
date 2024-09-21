@@ -23,6 +23,7 @@ public class IMapsUser {
     private String username;
     @Setter
     private String email;
+    @Getter @Setter
     private String password;
 
 

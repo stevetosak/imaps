@@ -4,6 +4,10 @@ import internettehnologii.imaps.backendRender.entities.user.IMapsUser;
 import internettehnologii.imaps.backendRender.entities.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +16,16 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+
+    @Autowired
     private final UserRepository userRepository;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
+    @Autowired
+    private JWTService jwtService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     public UserService(UserRepository userRepository){
@@ -29,6 +42,7 @@ public class UserService {
             throw new IllegalStateException("email taken");
         }
 
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -56,4 +70,17 @@ public class UserService {
             user.setEmail(email);
         }
     }
+
+    public String verify(IMapsUser user) {
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+
+        if(authentication.isAuthenticated()){
+            return jwtService.generateToken(user.getUsername());
+        }
+
+        return "Auth failed";
+    }
+
 }

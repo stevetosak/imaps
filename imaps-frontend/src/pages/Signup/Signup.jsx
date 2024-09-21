@@ -14,21 +14,20 @@ export default function Signup() {
     e.preventDefault();
 
     const payload = {
-      name: name,
+      username: name,
       email: email,
       password: password,
     };
 
     try {
-      // Send a POST request
-      const response = await fetch("http://localhost:8080/api/v1/user", {
+      
+      const response = await fetch("http://localhost:8080/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
-      });
-
+      })
       if (response.ok) {
         setMessage("User registered successfully!");
       } else if (response.status === 409) {
@@ -56,7 +55,7 @@ export default function Signup() {
               type="text"
               id="name"
               value={name}
-              onChange={(e) => setName(e.target.value)} // Update name state
+              onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
               required
             />
@@ -67,7 +66,7 @@ export default function Signup() {
               type="email"
               id="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} // Update email state
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
             />
@@ -78,13 +77,13 @@ export default function Signup() {
               type="password"
               id="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} // Update password state
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               required
             />
           </div>
           <button type="submit">Submit</button>
-          {message && <p>{message}</p>} {/* Display feedback message */}
+          {message && <p>{message}</p>} {}
           <h2 align="center" className={styles.or}>
             OR
           </h2>
