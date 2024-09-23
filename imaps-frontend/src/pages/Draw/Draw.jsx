@@ -47,7 +47,7 @@ function Draw() {
             {/* Add more floors as needed */}
           </select>
         </div>
-        <h2>Shapes:</h2>
+        <h2>Objects:</h2>
         <ul className={styles.shapeOptions} id="shapeOptions">
           <li data-info="Entrance" className={`${styles.shapeOption} ${styles.entrance}`}>
             Entrance

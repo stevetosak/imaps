@@ -1,34 +1,26 @@
 import React, { useState, useEffect } from "react";
-import styles from "./EntranceModal.module.css";
+import styles from "./InfoPinModal.module.css"; // Reusing the same styles
 
-export default function EntranceModal() {
+export default function InfoPinModal() {
   const [modal, setModal] = useState(false);
-  const [room, setRoom] = useState(null);
-  const [availableRooms, setAvailableRooms] = useState(["Office", "Classroom", "Lab", "Library"]);
-  const [availablePins, setAvailablePins] = useState(["Pin A", "Pin B", "Pin C", "Pin D"]);
   const [pins, setPins] = useState([]);
+  const [availablePins, setAvailablePins] = useState(["Pin A", "Pin B", "Pin C", "Pin D"]); // Example predefined pins
 
   const [formData, setFormData] = useState({
-    entranceName: "", // Add name field
-    selectedRoom: "",
+    pinName: "", // Add name field
     description: "",
-    isMainEntrance: false,
     selectedPin: "",
   });
 
   const toggleModal = () => {
-    if (modal) {
-      room.info = { ...formData, pins }; // Save form data with pins to room info
-      console.log(room.info);
-    }
     setModal(!modal); // Toggle modal state
   };
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
   };
 
@@ -43,31 +35,25 @@ export default function EntranceModal() {
   };
 
   const saveDetails = () => {
-    if (room) {
-      room.info = { ...formData, pins }; // Save selected room and pins
-      toggleModal();
-    }
+    console.log({ ...formData, pins }); // Save selected pin and description, plus added pins
+    toggleModal();
   };
 
   useEffect(() => {
-    const openModalHandler = (event) => {
-      const roomObj = event.detail;
-      setRoom(roomObj);
+    const openModalHandler = () => {
       setFormData({
-        entranceName: roomObj.info.entranceName || "", // Load entrance name
-        selectedRoom: roomObj.info.selectedRoom || "",
-        description: roomObj.info.description || "",
-        isMainEntrance: roomObj.info.isMainEntrance || false,
+        pinName: "", // Reset on open
+        description: "",
         selectedPin: "",
       });
-      setPins(roomObj.info.pins || []); // Load existing pins
-      setModal(true); // Open the modal
+      setPins([]); // Reset pins
+      toggleModal(true);
     };
 
-    window.addEventListener("openEntranceModalEvent", openModalHandler);
+    window.addEventListener("openInfoPinModalEvent", openModalHandler);
 
     return () => {
-      window.removeEventListener("openEntranceModalEvent", openModalHandler);
+      window.removeEventListener("openInfoPinModalEvent", openModalHandler);
     };
   }, []);
 
@@ -80,51 +66,32 @@ export default function EntranceModal() {
   return (
     <>
       <button onClick={toggleModal} className={styles.btnModal}>
-        Entrance Modal
+        Info Pin Modal
       </button>
 
       {modal && (
         <div className={styles.modal}>
           <div onClick={toggleModal} className={styles.overlay}></div>
           <div className={styles.modalContent}>
-            <h2>Enter Entrance Details</h2>
+            <h2>Enter Pin Details</h2>
             <form className={styles.form}>
-              {/* Entrance Name */}
+              {/* Pin Name */}
               <div className={styles.formGroup}>
-                <label htmlFor="entranceName">Name:</label>
+                <label htmlFor="pinName">Name:</label>
                 <input
                   type="text"
-                  id="entranceName"
-                  name="entranceName"
-                  value={formData.entranceName}
+                  id="pinName"
+                  name="pinName"
+                  value={formData.pinName}
                   onChange={handleInputChange}
-                  placeholder="Enter the entrance name" // Suggest user input
+                  placeholder="Enter the pin name"
                   required
                 />
               </div>
 
-              {/* Select Room for Entrance */}
-              <div className={styles.formGroup}>
-                <label htmlFor="selectedRoom">Select room associated with entrance:</label>
-                <select
-                  id="selectedRoom"
-                  name="selectedRoom"
-                  value={formData.selectedRoom}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="">Select Room</option>
-                  {availableRooms.map((room, index) => (
-                    <option key={index} value={room}>
-                      {room}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
               {/* Pins Dropdown for Hallway Navigation */}
               <div className={styles.formGroup}>
-                <label htmlFor="selectedPin">Select pins connected to entrance:</label>
+                <label htmlFor="selectedPin">Select pins connected to this pin:</label>
                 <select
                   id="selectedPin"
                   name="selectedPin"
@@ -170,19 +137,8 @@ export default function EntranceModal() {
                   value={formData.description}
                   onChange={handleInputChange}
                   rows="3"
+                  placeholder="Enter description for the pin"
                 />
-              </div>
-
-              {/* Main Entrance Checkbox */}
-              <div className={styles.formGroupCheckbox}>
-                <input
-                  type="checkbox"
-                  id="isMainEntrance"
-                  name="isMainEntrance"
-                  checked={formData.isMainEntrance}
-                  onChange={handleInputChange}
-                />
-                <label htmlFor="isMainEntrance">Is Main Entrance?</label>
               </div>
 
               {/* Save Button */}
