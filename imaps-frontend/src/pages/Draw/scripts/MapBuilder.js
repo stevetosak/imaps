@@ -11,6 +11,7 @@ export class MapBuilder {
       container: containerId,
       width: this.container.clientWidth,
       height: this.container.clientHeight,
+      draggable: true,
     });
 
     this.gridLayer = new Konva.Layer();
@@ -29,6 +30,15 @@ export class MapBuilder {
     this.blockSize = 10;
     this.isDrawing = false;
     this.stageRect = this.stage.container().getBoundingClientRect();
+
+    this.gridLine = new Konva.Line({
+      points: [],
+      stroke: "grey",
+      strokeWidth: 1,
+      opacity: 0.3,
+    })
+
+    this.gridLine.cache();
 
     this.mainTransformer = new Konva.Transformer({
       centeredScaling: false,
@@ -56,6 +66,8 @@ export class MapBuilder {
     this.selecting = false;
 
     this.initialize();
+
+    console.log(this.stage.position());
   }
 
   initialize() {
@@ -91,6 +103,13 @@ export class MapBuilder {
     this.stage.on("mouseup touchend", this.handleMouseUp.bind(this));
     this.stage.on("click tap", this.handleStageClick.bind(this));
     this.stage.on("contextmenu", this.addInfoPin.bind(this));
+    this.stage.on("dragmove",this.dragStage.bind(this));
+  }
+
+  dragStage(e){
+    //this.stage.setPosition(e.currentTarget.position())
+    console.log(this.stage.getPosition());
+    this.setupGrid();
   }
 
   transformerSnapFunc() {
@@ -170,46 +189,68 @@ export class MapBuilder {
   }
 
   setupGrid() {
+  
     this.gridLayer.destroyChildren();
-    let width = this.container.clientWidth;
-    let height = this.container.clientHeight;
 
-    let columns = Math.ceil(width / this.blockSize);
-    let rows = Math.ceil(height / this.blockSize);
+  
+    let width = this.stage.width();
+    let height = this.stage.height();
 
-    for (let i = 0; i <= columns; i++) {
-      this.gridLayer.add(
-        new Konva.Line({
-          points: [
-            i * this.blockSize + 0.5,
-            0,
-            i * this.blockSize + 0.5,
-            height,
-          ],
-          stroke: "grey",
-          strokeWidth: 1,
-          opacity: 0.3,
-        })
-      );
+
+    let transform = this.stage.getAbsoluteTransform().copy().invert();
+    let topLeft = transform.point({
+      x: 0,
+      y: 0
+    });
+
+    let bottomRight = transform.point({
+      x: width,
+      y: height
+    });
+
+    let startX = Math.floor(topLeft.x / this.blockSize) * this.blockSize;
+    let startY = Math.floor(topLeft.y / this.blockSize) * this.blockSize;
+
+    let endX = Math.ceil(bottomRight.x / this.blockSize) * this.blockSize;
+    let endY = Math.ceil(bottomRight.y / this.blockSize) * this.blockSize;
+
+    for (let x = startX; x <= endX; x += this.blockSize) {
+      let line = this.gridLine.clone({
+        points: [
+          x + 0.5, topLeft.y - this.blockSize, 
+          x + 0.5, bottomRight.y + this.blockSize
+      ],
+      });
+        
+        line.transformsEnabled("position");
+        line.perfectDrawEnabled(false);
+        line.shadowForStrokeEnabled(false);
+        
+        this.gridLayer.add(line);
     }
-    for (let j = 0; j <= rows; j++) {
-      this.gridLayer.add(
-        new Konva.Line({
-          points: [
-            0,
-            j * this.blockSize + 0.5,
-            width,
-            j * this.blockSize + 0.5,
-          ],
-          stroke: "grey",
-          strokeWidth: 1,
-          opacity: 0.3,
-        })
-      );
+
+    for (let y = startY; y <= endY; y += this.blockSize) {
+      let line = this.gridLine.clone({
+        points: [
+          topLeft.x - this.blockSize, y + 0.5, 
+          bottomRight.x + this.blockSize, y + 0.5
+      ],
+      })
+      
+        line.perfectDrawEnabled(false);
+        line.shadowForStrokeEnabled(false);
+        line.transformsEnabled("position");
+        this.gridLayer.add(line);
+
     }
+
     this.mainLayer.moveToTop();
     this.infoPinLayer.moveToTop();
-  }
+
+    this.gridLayer.batchDraw();
+}
+
+
 
   hideInfoPinMenus(e){
     InfoPin.hideMenus(e,false,this.getInfoPins());
@@ -231,7 +272,6 @@ export class MapBuilder {
     );
 
     infoPin.init(this.stageRect);
-
     this.shapes.push(infoPin);
     this.infoPinLayer.add(infoPin);
     this.infoPinLayer.batchDraw();
@@ -241,7 +281,7 @@ export class MapBuilder {
   clickHandler() {
     return () => {
       if (this.isDrawing) {
-        const mousePos = this.stage.getPointerPosition();
+        const mousePos = this.stage.getRelativePointerPosition();
         const placedObj = Factory.createShape(
           this.hoverObj.type,
           mousePos,
@@ -269,10 +309,10 @@ export class MapBuilder {
   mouseMoveHandler() {
     return () => {
       if (this.isDrawing) {
-        const mousePos = this.stage.getPointerPosition();
+        const mousePos = this.stage.getRelativePointerPosition();
         this.hoverObj.position({ x: mousePos.x, y: mousePos.y });
         this.hoverObj.visible(true);
-        this.dragLayer.batchDraw();
+        // this.dragLayer.batchDraw();
       }
     };
   }
@@ -429,7 +469,6 @@ export class MapBuilder {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
-          'Sender-Url': window.location.pathname
         },
         body: JSON.stringify(json)
       })

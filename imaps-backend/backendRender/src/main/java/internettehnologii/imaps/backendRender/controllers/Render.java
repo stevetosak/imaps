@@ -16,8 +16,6 @@ public class Render {
 
     @PostMapping("/render")
     public ResponseEntity<Map<String, Object>> render(@RequestBody Map<String, Object> requestBody, HttpServletRequest request) {
-        String senderUrl = request.getHeader("Sender-Url");
-        String viewUrl = senderUrl.replace("Draw","View");
         Map<String,Object> response = new HashMap<>();
         response.put("status","ok");
         jsonData = requestBody;
@@ -26,6 +24,7 @@ public class Render {
 
     @GetMapping("/mapData")
     public ResponseEntity<Map<String,Object>> getMapData(){
+        System.out.println(jsonData);
         if(!jsonData.isEmpty()){
             return ResponseEntity.ok(jsonData);
         } else {

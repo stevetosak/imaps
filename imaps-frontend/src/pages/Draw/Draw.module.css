@@ -4,7 +4,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden; /* Prevent scrolling */
+  /*overflow: hidden; /* Prevent scrolling */
   background-color: #141414f6; /* Set background to prevent any white areas */
 }
 
@@ -12,16 +12,17 @@ body {
   display: flex;
   height: 100vh; /* Ensure the wrapper takes full viewport height */
   background-color: #141414f6;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 
 .cont {
   flex-grow: 1;
-  width: 85vw; /* Adjust the drawing area width */
-  height: 100vh; /* Ensure the container fills the viewport */
+  width: 85vw;
+  height: 100vh; 
   background-color: #16161600;
   border: 1px solid gray;
   margin: 50px; /* Remove unnecessary margins */
+  overflow: auto;
 }
 
 .panel {

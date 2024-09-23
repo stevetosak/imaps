@@ -11,6 +11,7 @@ export class MapDisplay {
       container: containerId,
       width: window.innerWidth,
       height: window.innerHeight,
+      draggable : true
     });
 
     this.shapes = [];
