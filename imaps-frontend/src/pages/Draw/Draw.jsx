@@ -7,6 +7,7 @@ import SideBar from "../../components/SideBar/SideBar.jsx";
 import EntranceModal from "../../components/EntranceModal/EntranceModal.jsx";
 import DrawGuide from "../../components/DrawGuide/DrawGuide.jsx";
 import RoomTypeModal from "../../components/RoomTypeModal/RoomTypeModal.jsx";
+import InfoPinModal from "../../components/InfoPinModal/InfoPinModal.jsx";
 
 function Draw() {
   const [selectedFloor, setSelectedFloor] = useState(1); // Track the selected floor
@@ -62,6 +63,7 @@ function Draw() {
         <RoomModal></RoomModal>
         <EntranceModal></EntranceModal>
         <DrawGuide></DrawGuide>
+        <InfoPinModal></InfoPinModal>
         <RoomTypeModal></RoomTypeModal>
         <div id="render" className={styles.buttonContainer}>
           <button id="render-button" type="button" className={styles.renderButton}>
