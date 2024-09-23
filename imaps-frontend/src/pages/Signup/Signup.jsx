@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import illustration from "../../assets/illustration_img.png";
 import styles from "./Signup.module.css";
 
@@ -7,8 +7,9 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState(""); // New state to manage message type
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,23 +21,32 @@ export default function Signup() {
     };
 
     try {
-      
       const response = await fetch("http://localhost:8080/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
-      })
+      });
+
       if (response.ok) {
+        setMessageType("success");
         setMessage("User registered successfully!");
+
+        // Wait 3 seconds and then redirect to login page
+        setTimeout(() => {
+          navigate("/login");
+        }, 3000);
       } else if (response.status === 409) {
+        setMessageType("error");
         setMessage("Email is already taken.");
       } else {
+        setMessageType("error");
         setMessage("Registration failed.");
       }
     } catch (error) {
       console.error("Error:", error);
+      setMessageType("error");
       setMessage("Error registering user.");
     }
   };
@@ -83,7 +93,13 @@ export default function Signup() {
             />
           </div>
           <button type="submit">Submit</button>
-          {message && <p>{message}</p>} {}
+
+          {/* Display message with appropriate styling */}
+          {message && (
+            <p className={messageType === "success" ? styles.successMessage : styles.errorMessage}>
+              {message}
+            </p>
+          )}
           <h2 align="center" className={styles.or}>
             OR
           </h2>

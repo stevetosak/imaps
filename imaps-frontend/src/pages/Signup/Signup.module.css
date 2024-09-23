@@ -125,3 +125,29 @@ button:hover {
 button:active {
   transform: scale(0.98);
 }
+
+/* Error message style */
+.errorMessage {
+  color: #e74c3c; /* Red color for error */
+  background-color: #fbeaea;
+  padding: 10px;
+  border: 1px solid #e74c3c;
+  border-radius: 5px;
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* Success message style */
+.successMessage {
+  color: #2ecc71; /* Green color for success */
+  background-color: #ebf9f1;
+  padding: 10px;
+  border: 1px solid #2ecc71;
+  border-radius: 5px;
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
