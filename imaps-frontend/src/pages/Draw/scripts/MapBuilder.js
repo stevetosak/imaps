@@ -58,14 +58,13 @@ export class MapBuilder {
       fill: "rgba(200,0,255,0.5)",
       visible: false,
       listening: false,
-      zIndex: 100
+      zIndex: 100,
     });
 
     this.x1 = 0;
     this.y1 = 0;
     this.x2 = 0;
     this.y2 = 0;
-
 
     this.selecting = false;
 
@@ -93,13 +92,14 @@ export class MapBuilder {
     window.addEventListener("keydown", this.handleExitSelection.bind(this));
     window.addEventListener("keydown", this.handleDelete.bind(this));
     window.addEventListener("resize", this.handleResize.bind(this));
-    window.addEventListener("keydown", this.rotateShapesBy90.bind(this));
+    window.addEventListener("keydown", this.rotateShapesBy90Deg.bind(this));
     this.stage.on("mousedown touchstart", this.handleMouseDown.bind(this));
     this.stage.on("mousemove touchmove", this.handleMouseMove.bind(this));
     this.stage.on("mouseup touchend", this.handleMouseUp.bind(this));
     this.stage.on("click tap", this.handleStageClick.bind(this));
     this.stage.on("contextmenu", this.addInfoPin.bind(this));
     this.stage.on("dragmove", this.dragStage.bind(this));
+    this.stage.on('wheel',this.zoomStage.bind(this))
   }
 
   dragStage(e) {
@@ -153,29 +153,43 @@ export class MapBuilder {
     };
   }
 
-  handleResize() {
-    const containerWidth = this.container.offsetWidth;
-    const containerHeight = this.container.offsetHeight;
+  handleResize(e){
+    this.stage.width(this.container.offsetWidth);
+    this.stage.height(this.container.offsetHeight);
+    this.drawGrid();
+  }
 
-    const scaleX = containerWidth / this.stage.width();
-    const scaleY = containerHeight / this.stage.height();
+  zoomStage(e) {
 
-    const scale = Math.min(scaleX, scaleY);
-    this.stage.width(containerWidth);
-    this.stage.height(containerHeight);
-    this.stage.scale({ x: scale, y: scale });
+    if(!e.evt.shiftKey) return;
 
-    this.scaleShapes(scale);
-    if (
-      this.previousWidth !== containerWidth ||
-      this.previousHeight !== containerHeight
-    ) {
-      this.drawGrid();
-      this.previousWidth = containerWidth;
-      this.previousHeight = containerHeight;
-      console.log("resized");
-    }
+    e.evt.preventDefault();
 
+    const scaleFactor = e.evt.deltaY > 0 ? 0.95 : 1.15;
+
+    const prevScale = this.stage.scaleX();
+
+    let newScale = prevScale * scaleFactor;
+
+    const mousePos = this.stage.getRelativePointerPosition();
+
+    let mousePoint = {
+      x: (mousePos.x - this.stage.x()) / prevScale,
+      y: (mousePos.y - this.stage.y()) / prevScale
+    };
+
+    this.stage.scale({
+      x: newScale,
+      y: newScale,
+    });
+
+    let newStagePos = {
+      x: mousePos.x - mousePoint.x * newScale,
+      y: mousePos.y - mousePoint.y * newScale,
+    };
+
+    this.stage.position(newStagePos);
+    this.drawGrid()
     this.stage.batchDraw();
   }
 
@@ -250,8 +264,6 @@ export class MapBuilder {
     this.gridLayer.batchDraw();
   }
 
-  
-
   getInfoPins() {
     return this.shapes.filter((shape) => shape.className === "InfoPin");
   }
@@ -298,8 +310,6 @@ export class MapBuilder {
       this.dragLayer.removeChildren();
       this.stage.off("mousemove", this.mouseMoveHandler());
       this.stage.off("click", this.clickHandler());
-
-      console.log(this.selecting,"<--")
     };
   }
 
@@ -338,9 +348,9 @@ export class MapBuilder {
     }
   }
 
-  rotateShapesBy90(e) {
+  rotateShapesBy90Deg(e) {
     if (e.key === "r" || e.key === "R") {
-      if(this.hoverObj) this.hoverObj.rotate(90);
+      if (this.hoverObj) this.hoverObj.rotate(90);
       this.mainTransformer.nodes().forEach((node) => {
         node.rotate(90);
       });
@@ -386,8 +396,6 @@ export class MapBuilder {
       return;
     }
 
-    
-
     e.evt.preventDefault();
     this.x1 = this.stage.getRelativePointerPosition().x;
     this.y1 = this.stage.getRelativePointerPosition().y;
@@ -398,7 +406,7 @@ export class MapBuilder {
     this.selectionRectangle.height(0);
     this.selecting = true;
 
-    console.log(this.selecting, "sel")
+    console.log(this.selecting, "sel");
   }
 
   handleMouseMove(e) {
@@ -419,10 +427,8 @@ export class MapBuilder {
   }
 
   handleMouseUp(e) {
-
     this.selecting = false;
     this.stage.draggable(false);
-
 
     if (!this.selectionRectangle.visible()) {
       return;

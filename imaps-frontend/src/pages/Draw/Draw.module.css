@@ -18,11 +18,11 @@ body {
 .cont {
   flex-grow: 1;
   width: 85vw;
-  height: 100vh; 
+  height: 90vh; 
   background-color: #16161600;
   border: 1px solid gray;
-  margin: 50px; /* Remove unnecessary margins */
-  overflow: auto;
+  margin: 50px;
+  overflow: hidden;
 }
 
 .panel {
