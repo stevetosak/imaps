@@ -4,7 +4,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  /*overflow: hidden; /* Prevent scrolling */
+  overflow: hidden; /* Prevent scrolling */
   background-color: #141414f6; /* Set background to prevent any white areas */
 }
 
@@ -12,7 +12,7 @@ body {
   display: flex;
   height: 100vh; /* Ensure the wrapper takes full viewport height */
   background-color: #141414f6;
-  /*overflow: hidden;*/
+  overflow: hidden;
 }
 
 .cont {

@@ -26,7 +26,7 @@ export default class IMapsNetUtil {
     stageJson.Layer[0].children.push(shapes);
 
 
-   let response  = fetch(`${this.backendUrl}/api/protected/render`, {
+   let response = fetch(`${this.backendUrl}/api/protected/render`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -61,9 +61,7 @@ export default class IMapsNetUtil {
         },
       });
 
-      let data = await response.json()
-      console.log("JSON DATA: ", data);
-
-    return data;
+      
+    return await response.json();
   }
 }

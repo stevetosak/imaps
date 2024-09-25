@@ -11,8 +11,9 @@ export class MapBuilder {
       container: containerId,
       width: this.container.clientWidth,
       height: this.container.clientHeight,
-      draggable: true,
     });
+
+    // TODO AKO DRAGNIT NEKOJ OD POCETOK NA STAGE POZICIIVE KE SA ZEZNAT
 
     this.gridLayer = new Konva.Layer();
     this.mainLayer = new Konva.Layer();
@@ -36,7 +37,7 @@ export class MapBuilder {
       stroke: "grey",
       strokeWidth: 1,
       opacity: 0.3,
-    })
+    });
 
     this.gridLine.cache();
 
@@ -57,21 +58,22 @@ export class MapBuilder {
       fill: "rgba(200,0,255,0.5)",
       visible: false,
       listening: false,
+      zIndex: 100
     });
 
     this.x1 = 0;
     this.y1 = 0;
     this.x2 = 0;
     this.y2 = 0;
+
+
     this.selecting = false;
 
     this.initialize();
-
-    console.log(this.stage.position());
   }
 
   initialize() {
-    this.setupGrid();
+    this.drawGrid();
     this.mainLayer.add(this.mainTransformer);
     this.mainLayer.add(this.selectionRectangle);
     this.stage.add(this.gridLayer);
@@ -86,30 +88,23 @@ export class MapBuilder {
       .getElementById("shapeOptions")
       .addEventListener("click", this.selectShape.bind(this));
     document
-    .getElementById("render-button")
-    .addEventListener("click",this.render.bind(this));
-    window.addEventListener("keydown", this.handleDelete.bind(this));
+      .getElementById("render-button")
+      .addEventListener("click", this.render.bind(this));
     window.addEventListener("keydown", this.handleExitSelection.bind(this));
-    window.addEventListener("keydown", this.hideInfoPinMenus.bind(this));
-    window.addEventListener("resize", () => {
-      this.stage.width(this.container.clientWidth);
-      this.stage.height(this.container.clientHeight);
-      this.handleResize();
-    });
-    window.addEventListener("wheel", this.handleWheel.bind(this));
-    window.addEventListener("wheel", this.rotateShapesBy90.bind(this));
+    window.addEventListener("keydown", this.handleDelete.bind(this));
+    window.addEventListener("resize", this.handleResize.bind(this));
+    window.addEventListener("keydown", this.rotateShapesBy90.bind(this));
     this.stage.on("mousedown touchstart", this.handleMouseDown.bind(this));
     this.stage.on("mousemove touchmove", this.handleMouseMove.bind(this));
     this.stage.on("mouseup touchend", this.handleMouseUp.bind(this));
     this.stage.on("click tap", this.handleStageClick.bind(this));
     this.stage.on("contextmenu", this.addInfoPin.bind(this));
-    this.stage.on("dragmove",this.dragStage.bind(this));
+    this.stage.on("dragmove", this.dragStage.bind(this));
   }
 
-  dragStage(e){
-    //this.stage.setPosition(e.currentTarget.position())
-    console.log(this.stage.getPosition());
-    this.setupGrid();
+  dragStage(e) {
+    if (!e.evt.shiftKey) return;
+    this.drawGrid();
   }
 
   transformerSnapFunc() {
@@ -161,7 +156,7 @@ export class MapBuilder {
   handleResize() {
     const containerWidth = this.container.offsetWidth;
     const containerHeight = this.container.offsetHeight;
-    
+
     const scaleX = containerWidth / this.stage.width();
     const scaleY = containerHeight / this.stage.height();
 
@@ -171,13 +166,16 @@ export class MapBuilder {
     this.stage.scale({ x: scale, y: scale });
 
     this.scaleShapes(scale);
-    if(this.previousWidth !== containerWidth || this.previousHeight !== containerHeight){
-      this.setupGrid();
+    if (
+      this.previousWidth !== containerWidth ||
+      this.previousHeight !== containerHeight
+    ) {
+      this.drawGrid();
       this.previousWidth = containerWidth;
-      this.previousHeight = containerHeight
-      console.log("resized")
+      this.previousHeight = containerHeight;
+      console.log("resized");
     }
-   
+
     this.stage.batchDraw();
   }
 
@@ -188,24 +186,22 @@ export class MapBuilder {
     });
   }
 
-  setupGrid() {
-  
+  drawGrid() {
     this.gridLayer.destroyChildren();
 
-  
     let width = this.stage.width();
     let height = this.stage.height();
 
-
+    //presmetka na od globalen koordinaten sistem vo lokalen na canvasot
     let transform = this.stage.getAbsoluteTransform().copy().invert();
     let topLeft = transform.point({
       x: 0,
-      y: 0
+      y: 0,
     });
 
     let bottomRight = transform.point({
       x: width,
-      y: height
+      y: height,
     });
 
     let startX = Math.floor(topLeft.x / this.blockSize) * this.blockSize;
@@ -217,52 +213,52 @@ export class MapBuilder {
     for (let x = startX; x <= endX; x += this.blockSize) {
       let line = this.gridLine.clone({
         points: [
-          x + 0.5, topLeft.y - this.blockSize, 
-          x + 0.5, bottomRight.y + this.blockSize
-      ],
+          x + 0.5,
+          topLeft.y - this.blockSize,
+          x + 0.5,
+          bottomRight.y + this.blockSize,
+        ],
       });
-        
-        line.transformsEnabled("position");
-        line.perfectDrawEnabled(false);
-        line.shadowForStrokeEnabled(false);
-        
-        this.gridLayer.add(line);
+
+      //optimizacija
+      line.transformsEnabled("position");
+      line.perfectDrawEnabled(false);
+      line.shadowForStrokeEnabled(false);
+
+      this.gridLayer.add(line);
     }
 
     for (let y = startY; y <= endY; y += this.blockSize) {
       let line = this.gridLine.clone({
         points: [
-          topLeft.x - this.blockSize, y + 0.5, 
-          bottomRight.x + this.blockSize, y + 0.5
-      ],
-      })
-      
-        line.perfectDrawEnabled(false);
-        line.shadowForStrokeEnabled(false);
-        line.transformsEnabled("position");
-        this.gridLayer.add(line);
+          topLeft.x - this.blockSize,
+          y + 0.5,
+          bottomRight.x + this.blockSize,
+          y + 0.5,
+        ],
+      });
 
+      line.perfectDrawEnabled(false);
+      line.shadowForStrokeEnabled(false);
+      line.transformsEnabled("position");
+      this.gridLayer.add(line);
     }
 
     this.mainLayer.moveToTop();
     this.infoPinLayer.moveToTop();
 
     this.gridLayer.batchDraw();
-}
-
-
-
-  hideInfoPinMenus(e){
-    InfoPin.hideMenus(e,false,this.getInfoPins());
   }
 
-  getInfoPins(){
-    return this.shapes.filter(shape => shape.className === 'InfoPin');
+  
+
+  getInfoPins() {
+    return this.shapes.filter((shape) => shape.className === "InfoPin");
   }
 
   addInfoPin(e) {
     e.evt.preventDefault();
-    let mousePos = this.stage.getPointerPosition();
+    let mousePos = this.stage.getRelativePointerPosition();
     let infoPin = Factory.createShape(
       "InfoPin",
       mousePos,
@@ -271,49 +267,49 @@ export class MapBuilder {
       0
     );
 
-    infoPin.init(this.stageRect);
     this.shapes.push(infoPin);
     this.infoPinLayer.add(infoPin);
     this.infoPinLayer.batchDraw();
-    console.log(infoPin.name())
+    console.log(infoPin.name());
   }
 
   clickHandler() {
     return () => {
-      if (this.isDrawing) {
-        const mousePos = this.stage.getRelativePointerPosition();
-        const placedObj = Factory.createShape(
-          this.hoverObj.type,
-          mousePos,
-          this.blockSize,
-          this.mainLayer,
-          this.hoverObj.rotation()
-        );
+      if (!this.isDrawing) return;
 
-        if (placedObj) {
-          this.mainLayer.add(placedObj);
-          this.shapes.push(placedObj);
-          placedObj.snapToGrid();
-          this.mainTransformer.nodes([placedObj]);
-          this.mainLayer.draw();
-          this.isDrawing = false;
-          this.hoverObj.remove();
-          this.dragLayer.removeChildren();
-          this.stage.off("mousemove", this.mouseMoveHandler());
-          this.stage.off("click", this.clickHandler());
-        }
-      }
+      const mousePos = this.stage.getRelativePointerPosition();
+      const placedObj = Factory.createShape(
+        this.hoverObj.type,
+        mousePos,
+        this.blockSize,
+        this.mainLayer,
+        this.hoverObj.rotation()
+      );
+
+      if (!placedObj) return;
+
+      this.mainLayer.add(placedObj);
+      this.shapes.push(placedObj);
+      placedObj.snapToGrid();
+      this.mainTransformer.nodes([placedObj]);
+      this.mainLayer.draw();
+      this.isDrawing = false;
+      this.hoverObj.remove();
+      this.dragLayer.removeChildren();
+      this.stage.off("mousemove", this.mouseMoveHandler());
+      this.stage.off("click", this.clickHandler());
+
+      console.log(this.selecting,"<--")
     };
   }
 
   mouseMoveHandler() {
+    if (!this.isDrawing) return;
     return () => {
-      if (this.isDrawing) {
-        const mousePos = this.stage.getRelativePointerPosition();
-        this.hoverObj.position({ x: mousePos.x, y: mousePos.y });
-        this.hoverObj.visible(true);
-        // this.dragLayer.batchDraw();
-      }
+      const mousePos = this.stage.getRelativePointerPosition();
+      this.hoverObj.position({ x: mousePos.x, y: mousePos.y });
+      this.hoverObj.visible(true);
+      // this.dragLayer.batchDraw();
     };
   }
 
@@ -342,10 +338,13 @@ export class MapBuilder {
     }
   }
 
-  rotateShapesBy90() {
-    this.mainTransformer.nodes().forEach((node) => {
-      node.rotate(90);
-    });
+  rotateShapesBy90(e) {
+    if (e.key === "r" || e.key === "R") {
+      if(this.hoverObj) this.hoverObj.rotate(90);
+      this.mainTransformer.nodes().forEach((node) => {
+        node.rotate(90);
+      });
+    }
   }
 
   handleDelete(e) {
@@ -353,18 +352,15 @@ export class MapBuilder {
       this.mainTransformer.nodes().forEach((node) => {
         node.remove();
         this.shapes.splice(this.shapes.indexOf(node), 1);
-        if (node.className === "InfoPin") {
-          node.infoBox.remove();
-        }
       });
       this.mainTransformer.nodes([]);
       this.mainLayer.batchDraw();
-      console.log(this.shapes.length);
     }
   }
 
   handleExitSelection(e) {
     if (e.key === "Escape") {
+      this.mainTransformer.nodes([]);
       if (this.isDrawing) {
         this.isDrawing = false;
         this.hoverObj.remove();
@@ -380,18 +376,29 @@ export class MapBuilder {
   }
 
   handleMouseDown(e) {
-    if (e.target !== this.stage) {
+    this.stage.draggable(e.evt.shiftKey);
+
+    if (
+      e.target !== this.stage ||
+      this.stage.draggable() ||
+      e.evt.button !== 0
+    ) {
       return;
     }
+
+    
+
     e.evt.preventDefault();
-    this.x1 = this.stage.getPointerPosition().x;
-    this.y1 = this.stage.getPointerPosition().y;
-    this.x2 = this.stage.getPointerPosition().x;
-    this.y2 = this.stage.getPointerPosition().y;
+    this.x1 = this.stage.getRelativePointerPosition().x;
+    this.y1 = this.stage.getRelativePointerPosition().y;
+    this.x2 = this.stage.getRelativePointerPosition().x;
+    this.y2 = this.stage.getRelativePointerPosition().y;
 
     this.selectionRectangle.width(0);
     this.selectionRectangle.height(0);
     this.selecting = true;
+
+    console.log(this.selecting, "sel")
   }
 
   handleMouseMove(e) {
@@ -399,8 +406,8 @@ export class MapBuilder {
       return;
     }
     e.evt.preventDefault();
-    this.x2 = this.stage.getPointerPosition().x;
-    this.y2 = this.stage.getPointerPosition().y;
+    this.x2 = this.stage.getRelativePointerPosition().x;
+    this.y2 = this.stage.getRelativePointerPosition().y;
 
     this.selectionRectangle.setAttrs({
       visible: true,
@@ -412,10 +419,15 @@ export class MapBuilder {
   }
 
   handleMouseUp(e) {
+
     this.selecting = false;
+    this.stage.draggable(false);
+
+
     if (!this.selectionRectangle.visible()) {
       return;
     }
+
     e.evt.preventDefault();
     this.selectionRectangle.visible(false);
     const shapes = this.stage.find(".mapObj");
@@ -427,58 +439,54 @@ export class MapBuilder {
     console.log(this.mainTransformer.nodes());
   }
 
-  saveShapeDetails(){
+  saveShapeDetails() {
     this.shapes
-    .filter(shape => shape.className === 'Room' || shape.className === 'Entrance')
-    .forEach(room => {
-      room.saveShapeDetails();
-      console.log(room.info);
-    });
+      .filter(
+        (shape) => shape.className === "Room" || shape.className === "Entrance"
+      )
+      .forEach((room) => {
+        room.saveShapeDetails();
+        console.log(room.info);
+      });
   }
 
-  async render(){
-    InfoPin.hideMenus(null,true,this.getInfoPins());
+  async render() {
     this.saveShapeDetails();
 
     const token = localStorage.getItem("token");
 
-
     var json = {
       attrs: {
         width: this.container.clientWidth,
-        height: this.container.clientHeight
+        height: this.container.clientHeight,
       },
       className: "Stage",
       Layer: [
         {
           attrs: {},
           className: "Layer",
-          children: []
-        }
-      ]
+          children: [],
+        },
+      ],
     };
 
     json.Layer[0].children.push(this.shapes);
 
-    console.log("tok",token)
+    console.log("tok", token);
 
+    const response = await fetch("http://localhost:8080/api/protected/render", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(json),
+    })
+      .then((response) => response.json())
+      .catch((error) => console.log(error))
+      .then((data) => console.log("RESPONSE: : " + JSON.stringify(data)));
 
-      var mapId = window.location.pathname.split("/")[2]
-      const response = await fetch("http://localhost:8080/api/protected/render",{
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(json)
-      })
-      .then(response => response.json())
-      .catch(error => console.log(error))
-      .then(data => console.log("RESPONSE: : " + JSON.stringify(data)));
-
-      console.log(token);
-
-
+    console.log(token);
   }
 
   handleStageClick(e) {
@@ -488,7 +496,6 @@ export class MapBuilder {
 
     if (e.target === this.stage) {
       this.mainTransformer.nodes([]);
-      InfoPin.hideMenus(e,true,this.getInfoPins()); // ne na sekoe
       return;
     }
 

@@ -9,7 +9,7 @@ export default function EntranceModal() {
   const [pins, setPins] = useState([]);
 
   const [formData, setFormData] = useState({
-    entranceName: "", // Add name field
+    entranceName: "",
     selectedRoom: "",
     description: "",
     isMainEntrance: false,
@@ -18,10 +18,10 @@ export default function EntranceModal() {
 
   const toggleModal = () => {
     if (modal) {
-      room.info = { ...formData, pins }; // Save form data with pins to room info
+      room.info = { ...formData, pins };
       console.log(room.info);
     }
-    setModal(!modal); // Toggle modal state
+    setModal(!modal); 
   };
 
   const handleInputChange = (e) => {
@@ -33,9 +33,9 @@ export default function EntranceModal() {
   };
 
   const addPinToList = () => {
-    if (!formData.selectedPin || pins.includes(formData.selectedPin)) return; // Prevent duplicates
+    if (!formData.selectedPin || pins.includes(formData.selectedPin)) return;
     setPins((prevPins) => [...prevPins, formData.selectedPin]);
-    setFormData({ ...formData, selectedPin: "" }); // Clear pin input
+    setFormData({ ...formData, selectedPin: "" });
   };
 
   const removePinFromList = (pinToRemove) => {
@@ -44,7 +44,7 @@ export default function EntranceModal() {
 
   const saveDetails = () => {
     if (room) {
-      room.info = { ...formData, pins }; // Save selected room and pins
+      room.info = { ...formData, pins };
       toggleModal();
     }
   };
@@ -54,14 +54,14 @@ export default function EntranceModal() {
       const roomObj = event.detail;
       setRoom(roomObj);
       setFormData({
-        entranceName: roomObj.info.entranceName || "", // Load entrance name
+        entranceName: roomObj.info.entranceName || "",
         selectedRoom: roomObj.info.selectedRoom || "",
         description: roomObj.info.description || "",
         isMainEntrance: roomObj.info.isMainEntrance || false,
         selectedPin: "",
       });
-      setPins(roomObj.info.pins || []); // Load existing pins
-      setModal(true); // Open the modal
+      setPins(roomObj.info.pins || []); 
+      setModal(true); 
     };
 
     window.addEventListener("openEntranceModalEvent", openModalHandler);

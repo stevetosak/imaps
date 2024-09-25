@@ -4,7 +4,7 @@ import MapShape from "./MapShape";
 import Factory from "../util/Factory";
 import { _registerNode } from 'konva/lib/Global';
 export default class InfoPin extends MapShape {
-  constructor(mousePos,blockSize,layer,snappable,id) {
+  constructor(mousePos,blockSize,layer,snappable) {
     super(
       {
         x: mousePos.x,
@@ -22,14 +22,12 @@ export default class InfoPin extends MapShape {
       blockSize,
       snappable
     );
-    this.boxID = id;
-    this.infoBox;
-    this.stagePos;
-    this.isDisplayingBox = false;
-    this.setAttr("room-name",undefined);
-    this.setAttr("room-type",undefined);
-    this.setAttr("room-description",undefined);
-    this.setAttr("isConnector",false);
+  
+    this._info = {
+      pinName: '',
+      connections: [],
+      description: '',
+    };
 
     this.on("mouseover", () => {
       this.fill("yellow");
@@ -37,6 +35,11 @@ export default class InfoPin extends MapShape {
     this.on("mouseout", () => {
       this.fill("red");
     });
+
+    this.on("dblclick", () => {
+      const event = new CustomEvent('openPinModalEvent',{detail: this});
+      window.dispatchEvent(event);
+    })
 
   }
   _sceneFunc(context, shape) {
@@ -56,88 +59,12 @@ export default class InfoPin extends MapShape {
     context.fillStrokeShape(shape);
   }
 
-  init(stagePos){
-    this.stagePos = stagePos;
-    this.infoBox = Factory.createInfoBox(this.boxID,this.updateBox.bind(this)); // html element e ova
-    this.on('dblclick', () => {
-      this.displayInfoBox(true);
-      this.moveToTop();
-    })
-    this.on('dragend', () => {
-      if(this.isDisplayingBox){
-        this.displayInfoBox(false);
-      }
-    })
+  saveShapeDetails(){
+    this.setAttr("pin_name",this.info.pinName);
+    this.setAttr("connections",this.info.connections);
+    this.setAttr("description",this.info.description);
   }
 
-  updateInfo(){
-    let roomName = this.infoBox.querySelector("#room-name").value;
-    console.log(roomName + "testroom");
-    let type = this.infoBox.querySelector("#type").value;
-    let description = this.infoBox.querySelector("#description").value;
-    let isConnector = document.getElementById("checkbox-" + this.boxID).checked;
-    this.setAttr("room-name",roomName);
-    this.setAttr("room-type",type);
-    this.setAttr("description",description);
-    this.setAttr("isConnector",isConnector);
-
-    if(isConnector){
-      // ova da sa koregirat ne globalno
-      let connectorOptions = document.getElementById("entranceOptions-" + this.boxID)
-      let from = connectorOptions.querySelector("#from").value;
-      let to = connectorOptions.querySelector("#to").value;
-      this.setAttr("from-room",from);
-      this.setAttr("to-room",to);
-    } else {
-      this.setAttr("from-room",undefined);
-      this.setAttr("to-room",undefined);
-    }
-  }
-
-
-  displayInfoBox(hide) {
-    if (this.isDisplayingBox && hide) {
-      this.isDisplayingBox = false;
-      this.infoBox.style.display = "none";
-      this.updateInfo();
-    } else {
-      const shapePos = this.getClientRect();
-      this.infoBox.style.display = "block";
-      const optionsBoxX = this.stagePos.left + shapePos.x;
-      const optionsBoxY = this.stagePos.top + shapePos.y - this.infoBox.offsetHeight;
-
-      this.infoBox.style.left = `${optionsBoxX}px`;
-      this.infoBox.style.top = `${optionsBoxY}px`;
-      this.isDisplayingBox = true;
-    }
-  }
-
-  updateBox() {
-    let checkbox = document.getElementById("checkbox-" + this.boxID);
-    let div = document.getElementById("entranceOptions-" + this.boxID);
-    if (checkbox.checked) {
-      div.style.display = "block";
-    } else {
-      div.style.display = "none";
-    }
-    this.displayInfoBox(false);
-  }
-
-  static hideMenus(e = null,clear,pins) {
-    if (clear || e.key === "Escape") {
-
-      pins.forEach(pin => {
-        pin.updateInfo();
-      });
-
-      for (let i = 0; i < Factory.infoPinCount; i++) {
-        let menu = document.getElementById("InfoPinMenu-" + i);
-        if (menu !== null && menu !== undefined) {
-          menu.style.display = "none";
-        }
-      }
-    }
-  }
 }
 
 InfoPin.prototype.className = 'InfoPin'
