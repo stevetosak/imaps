@@ -14,6 +14,8 @@ export class MapBuilder {
     });
 
     // TODO AKO DRAGNIT NEKOJ OD POCETOK NA STAGE POZICIIVE KE SA ZEZNAT
+    // TODO jwt vo cookie, proxy server trebit 
+    // TODO informaciite vo sobive da sa cuvaat ko so trebit
 
     this.gridLayer = new Konva.Layer();
     this.mainLayer = new Konva.Layer();
@@ -31,6 +33,8 @@ export class MapBuilder {
     this.blockSize = 10;
     this.isDrawing = false;
     this.stageRect = this.stage.container().getBoundingClientRect();
+    
+    this.roomTypes = []
 
     this.gridLine = new Konva.Line({
       points: [],
@@ -303,6 +307,15 @@ export class MapBuilder {
       this.mainLayer.add(placedObj);
       this.shapes.push(placedObj);
       placedObj.snapToGrid();
+      placedObj.on("dblclick", () => {
+        const eventName = placedObj.modalEventName;
+        const data = {
+          info: placedObj.info,
+          map: this
+        };
+        const event = new CustomEvent(eventName,{detail: data});
+        window.dispatchEvent(event);
+      })
       this.mainTransformer.nodes([placedObj]);
       this.mainLayer.draw();
       this.isDrawing = false;
@@ -523,4 +536,13 @@ export class MapBuilder {
       this.mainTransformer.nodes(nodes);
     }
   }
+
+  addRoomType(roomType){
+    this.roomTypes.push(roomType);
+  }
+  getRoomTypes(){
+    return this.roomTypes;
+  }
+
+
 }

@@ -16,12 +16,12 @@ public class MapController {
     }
 
     @GetMapping
-    public List<Map> getMaps(){
+    public List<IndoorMap> getMaps(){
         return mapService.getMaps();
     }
 
     @PostMapping
-    public void registerNewMap(@RequestBody Map map){
+    public void registerNewMap(@RequestBody IndoorMap map){
         mapService.addNewMap(map);
 
     }

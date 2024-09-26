@@ -1,6 +1,5 @@
 package internettehnologii.imaps.backendRender.entities.map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import internettehnologii.imaps.backendRender.util.json.DataJson;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +34,8 @@ public class MapConfig {
     @Bean
     CommandLineRunner mapCmdLineRunner(MapRepository repository){
         return args -> {
-            Map martin = new Map("MARTINCE",new DataJson(jsonTest1),true, "url");
-            Map stefan = new Map("STEFCE", new DataJson(jsonTest1), true, "url");
+            IndoorMap martin = new IndoorMap("MARTINCE",new DataJson(jsonTest1),true, "url");
+            IndoorMap stefan = new IndoorMap("STEFCE", new DataJson(jsonTest1), true, "url");
             repository.saveAll(
                     List.of(martin, stefan)
             );

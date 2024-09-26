@@ -10,17 +10,19 @@ import RoomTypeModal from "../../components/RoomTypeModal/RoomTypeModal.jsx";
 import InfoPinModal from "../../components/InfoPinModal/InfoPinModal.jsx";
 
 function Draw() {
-  const [selectedFloor, setSelectedFloor] = useState(1); // Track the selected floor
+
+  const [selectedFloor, setSelectedFloor] = useState(1);
+  const [app,setApp] = useState(null);
 
   useEffect(() => {
     const app = new MapBuilder("container");
+    setApp(app);
     fpsCounterLoop();
   }, []);
 
   const handleFloorChange = (event) => {
     setSelectedFloor(event.target.value);
     console.log(`Floor changed to: ${event.target.value}`);
-    // You can trigger additional actions here, like changing the displayed floor
   };
 
   return (
@@ -63,8 +65,8 @@ function Draw() {
         <RoomModal></RoomModal>
         <EntranceModal></EntranceModal>
         <DrawGuide></DrawGuide>
-        <InfoPinModal></InfoPinModal>
-        <RoomTypeModal></RoomTypeModal>
+        <InfoPinModal map={app}></InfoPinModal>
+        <RoomTypeModal map={app}></RoomTypeModal>
         <div id="render" className={styles.buttonContainer}>
           <button id="render-button" type="button" className={styles.renderButton}>
             Render

@@ -23,16 +23,12 @@ export default class Entrance extends MapShape {
         snap
       );
       this.type = "Entrance";
+      this.modalEventName = "openEntranceModalEvent";
 
-      this.on("dblclick", () => {
-        const event = new CustomEvent('openEntranceModalEvent',{detail: this});
-        window.dispatchEvent(event);
-
-      })
 
       this._info = {
-        from: '',
-        to: '',
+        entranceName: '',
+        selectedRoom: '',
         description: '',
         isMainEntrance: false
       };

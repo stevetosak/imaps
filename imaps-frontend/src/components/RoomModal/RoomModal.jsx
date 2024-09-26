@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./RoomModal.module.css";
 import { Ring } from "konva/lib/shapes/Ring";
 
-export default function RoomModal() {
+export default function RoomModal(args) {
   const [modal, setModal] = useState(false);
   const [room, setRoom] = useState(null);
   const [formData, setFormData] = useState({
@@ -86,10 +86,11 @@ export default function RoomModal() {
               <div className={styles.formGroup}>
                 <label htmlFor="type">Type:</label>
                 <select id="type" name="type" onChange={handleInputChange} value={formData.type} required>
-                  <option value="">Select Type</option>
+                  {/* <option value="">Select Type</option>
                   <option value="office">Office</option>
                   <option value="classroom">Classroom</option>
-                  <option value="lab">Lab</option>
+                  <option value="lab">Lab</option> */}
+                  {}
                 </select>
               </div>
               <div className={styles.formGroup}>

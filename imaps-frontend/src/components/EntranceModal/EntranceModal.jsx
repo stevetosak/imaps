@@ -8,6 +8,8 @@ export default function EntranceModal() {
   const [availablePins, setAvailablePins] = useState(["Pin A", "Pin B", "Pin C", "Pin D"]);
   const [pins, setPins] = useState([]);
 
+  //NE SE ZACUVUVAT VO MAPATA CAO
+
   const [formData, setFormData] = useState({
     entranceName: "",
     selectedRoom: "",
@@ -18,7 +20,7 @@ export default function EntranceModal() {
 
   const toggleModal = () => {
     if (modal) {
-      room.info = { ...formData, pins };
+      room.info = formData;
       console.log(room.info);
     }
     setModal(!modal); 
@@ -30,6 +32,11 @@ export default function EntranceModal() {
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
+
+
+    console.log(formData);
+
+  
   };
 
   const addPinToList = () => {
@@ -44,6 +51,7 @@ export default function EntranceModal() {
 
   const saveDetails = () => {
     if (room) {
+      console.log("room")
       room.info = { ...formData, pins };
       toggleModal();
     }
@@ -52,6 +60,9 @@ export default function EntranceModal() {
   useEffect(() => {
     const openModalHandler = (event) => {
       const roomObj = event.detail;
+      console.log("SOVA",roomObj)
+      
+      
       setRoom(roomObj);
       setFormData({
         entranceName: roomObj.info.entranceName || "",
@@ -62,6 +73,8 @@ export default function EntranceModal() {
       });
       setPins(roomObj.info.pins || []); 
       setModal(true); 
+      console.log("map")
+      console.log(event.detail.map);
     };
 
     window.addEventListener("openEntranceModalEvent", openModalHandler);

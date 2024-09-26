@@ -22,6 +22,7 @@ export default class Room extends MapShape {
       );
   
       this.type = "Room";
+      this.modalEventName = "openRoomModalEvent"
 
       this._info = {
         name: '',
@@ -29,11 +30,6 @@ export default class Room extends MapShape {
         description: ''
       }
 
-      this.on("dblclick", () => {
-        const event = new CustomEvent('openRoomModalEvent',{detail: this});
-        window.dispatchEvent(event);
-
-      })
     }
 
 

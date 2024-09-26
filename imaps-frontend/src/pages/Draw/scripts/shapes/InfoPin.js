@@ -22,6 +22,8 @@ export default class InfoPin extends MapShape {
       blockSize,
       snappable
     );
+
+    this.modalEventName = "openPinModalEvent";
   
     this._info = {
       pinName: '',
@@ -35,11 +37,6 @@ export default class InfoPin extends MapShape {
     this.on("mouseout", () => {
       this.fill("red");
     });
-
-    this.on("dblclick", () => {
-      const event = new CustomEvent('openPinModalEvent',{detail: this});
-      window.dispatchEvent(event);
-    })
 
   }
   _sceneFunc(context, shape) {

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styles from "./InfoPinModal.module.css"; // Reusing the same styles
-
-export default function InfoPinModal() {
+import infoPin from "../../pages/Draw/scripts/shapes/InfoPin"
+export default function InfoPinModal(args) {
   const [modal, setModal] = useState(false);
   const [pins, setPins] = useState([]);
-  const [availablePins, setAvailablePins] = useState(["Pin A", "Pin B", "Pin C", "Pin D"]); // Example predefined pins
+  // const [availablePins, setAvailablePins] = useState(["Pin A", "Pin B", "Pin C", "Pin D"]); // Example predefined pins
 
   const [formData, setFormData] = useState({
     pinName: "", 
@@ -100,8 +100,8 @@ export default function InfoPinModal() {
                   required
                 >
                   <option value="">Select Pin</option>
-                  {availablePins.map((pin, index) => (
-                    <option key={index} value={pin}>
+                  {pins.map((pin, index) => (
+                    <option key={index} value={args.map.shapes}>
                       {pin}
                     </option>
                   ))}

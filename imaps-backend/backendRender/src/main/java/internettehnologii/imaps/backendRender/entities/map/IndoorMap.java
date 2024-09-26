@@ -1,17 +1,12 @@
 package internettehnologii.imaps.backendRender.entities.map;
-import com.fasterxml.jackson.databind.JsonNode;
-import internettehnologii.imaps.backendRender.util.JsonNodeConverter;
 import internettehnologii.imaps.backendRender.util.json.DataJson;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 
-import javax.xml.crypto.Data;
-
 @Entity
-@Table
-public class Map {
+@Table(name = "maps")
+public class IndoorMap {
     @Id
     @SequenceGenerator(
             name = "map_id_seq",
@@ -35,18 +30,18 @@ public class Map {
     private String url;
 
 
-    public Map(String name, DataJson mapData, boolean isPublic, String url) {
+    public IndoorMap(String name, DataJson mapData, boolean isPublic, String url) {
         this.name = name;
         this.mapData = mapData;
         this.isPublic = isPublic;
         this.url = url;
     }
 
-    public Map() {
+    public IndoorMap() {
 
     }
 
-    public Map(Integer id, String name, DataJson mapData, boolean isPublic, String url) {
+    public IndoorMap(Integer id, String name, DataJson mapData, boolean isPublic, String url) {
         this.id = id;
         this.name = name;
         this.mapData = mapData;
@@ -54,7 +49,7 @@ public class Map {
         this.url = url;
     }
 
-    public Map(Integer id, String name, DataJson mapData, DataJson graphData, boolean isPublic, String url) {
+    public IndoorMap(Integer id, String name, DataJson mapData, DataJson graphData, boolean isPublic, String url) {
         this.id = id;
         this.name = name;
         this.mapData = mapData;
@@ -63,7 +58,7 @@ public class Map {
         this.url = url;
     }
 
-    public Map(String name, DataJson mapData, DataJson graphData, boolean isPublic, String url) {
+    public IndoorMap(String name, DataJson mapData, DataJson graphData, boolean isPublic, String url) {
         this.name = name;
         this.mapData = mapData;
         this.graphData = graphData;

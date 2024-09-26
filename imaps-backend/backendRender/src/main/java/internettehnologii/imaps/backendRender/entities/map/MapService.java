@@ -17,11 +17,11 @@ public class MapService {
         this.mapRepository = mapRepository;
     }
 
-    public List<Map> getMaps(){
+    public List<IndoorMap> getMaps(){
         return mapRepository.findAll();
     }
 
-    public void addNewMap(Map map) {
+    public void addNewMap(IndoorMap map) {
         mapRepository.save(map);
     }
 
@@ -35,14 +35,14 @@ public class MapService {
 
     }
 
-    public Optional<Map> getMapById(Long id){
+    public Optional<IndoorMap> getMapById(Long id){
         return mapRepository.findById(id);
     }
 
 
     @Transactional
     public void updateMap(Long mapId, String name) {
-        Map map = mapRepository.findById(mapId).orElseThrow(() -> new IllegalStateException("map with id " + mapId + " does not exist"));
+        IndoorMap map = mapRepository.findById(mapId).orElseThrow(() -> new IllegalStateException("map with id " + mapId + " does not exist"));
         if(name != null && name.length() > 0 && !Objects.equals(map.getName(), name)){
             map.setName(name);
         }
