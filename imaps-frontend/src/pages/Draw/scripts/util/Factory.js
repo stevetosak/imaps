@@ -13,6 +13,7 @@ export default class Factory {
   static roomCount = 0;
 
   static createShape(shapeType, position, blockSize, layer, rotation) {
+    console.log(shapeType, "VNATRE VO FACTORY")
     switch (shapeType) {
       case "Entrance":
         return new Entrance(position, blockSize, layer, rotation,true);
@@ -23,7 +24,7 @@ export default class Factory {
       case "InfoPin":
         return new InfoPin(position, blockSize, layer, false,this.infoPinCount++);
       default:
-        throw new Error("Invalid shape type.");
+        throw new Error("Invalid shape type: " + shapeType);
     }
   }
 

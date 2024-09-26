@@ -1,0 +1,27 @@
+PRIORITY HIGH
+
+-Graph na backend
+-Connections za infoPins i entrance
+-Cuvanje ID vo _info (da se sovpagjat so modalite)
+-Crtanje na ruta vo View
+-Da se prenesat info od From i To vo Mapata kaj so se crtat
+-Da se cuvaat connections vnatre vo js kodoj za da imat prev data ko ke otvoris nanovo modal
+
+
+PRIORITY MEDIUM
+
+-Modluarnost za pojke mapi (ne samo finkimap)
+-Refactor na kod
+-Hover na sobi na View
+-Filter na prostorii (Ke zemame od roomType modal)
+-Multiple floor (Prerabotka na baza)
+-Zoom na View (imame, da se napret globalno)
+-Implementacija na stairs
+
+
+PRIORITY LOW
+
+-Page za pregled na svoi mapi
+-Refactor (Da se koristit net util klasa za pustanje do backend)
+-AutoSave na draw duri crtas (Da se pret update request do baza)
+-Refactor na stil na Draw

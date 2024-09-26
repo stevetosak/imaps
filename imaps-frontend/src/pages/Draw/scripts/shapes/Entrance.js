@@ -30,7 +30,8 @@ export default class Entrance extends MapShape {
         entranceName: '',
         selectedRoom: '',
         description: '',
-        isMainEntrance: false
+        isMainEntrance: false,
+        selectedPin: ''
       };
     }
 

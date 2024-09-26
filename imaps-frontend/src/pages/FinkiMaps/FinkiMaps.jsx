@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import FilterBar from "../../components/FilterBar/FilterBar";
 import Profile from "../../components/Profile/Profile";
@@ -9,9 +9,12 @@ import MapControls from "../../components/MapControls/MapControls";
 import styles from "./FinkiMaps.module.css";
 
 function FinkiMaps() {
+  const [app,setApp] = useState(null);
+
   useEffect(() => {
     const app = new MapDisplay("map");
     app.loadMap();
+    setApp(app);
   }, []);
 
   const handleZoomIn = () => {
@@ -32,7 +35,7 @@ function FinkiMaps() {
       <div className={styles.toolbar}>
         <SideBar />
         <div className={styles.left}>
-          <SearchBar />
+          <SearchBar map={app}/>
           <FilterBar />
         </div>
         <div className={styles.right}>

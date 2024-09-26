@@ -88,4 +88,14 @@ export class MapDisplay {
       this.mainLayer.add(shape);
     });
   }
+
+  drawRoute(){
+    console.log("USPESNO RUTA CRTANJW VLEZE TOP");
+    
+  }
+
+  search(){
+    console.log("VLEZE VO SEARCH");
+    
+  }
 }

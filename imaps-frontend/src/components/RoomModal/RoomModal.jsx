@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./RoomModal.module.css";
 import { Ring } from "konva/lib/shapes/Ring";
 
-export default function RoomModal(args) {
+export default function RoomModal(props) {
   const [modal, setModal] = useState(false);
   const [room, setRoom] = useState(null);
   const [formData, setFormData] = useState({
@@ -10,6 +10,7 @@ export default function RoomModal(args) {
     type: "",
     description: "",
   });
+  const [roomTypes, setRoomTypes] = useState([]);
 
   const toggleModal = () => {
     if(modal) room.info = formData;
@@ -33,17 +34,19 @@ export default function RoomModal(args) {
       [name]: type === "checkbox" ? checked : value,
     }));
     room.info = formData;
+    
   };
 
   useEffect(() => {
     const openModalHandler = (event) => {
-      const roomObj = event.detail;
+      const roomObj = event.detail.room;
       setRoom(roomObj);
       setFormData({
         name: roomObj.info.name,
         type: roomObj.info.type,
         description: roomObj.info.description,
       });
+      setRoomTypes(event.detail.map.getRoomTypes());
       toggleModal(true);
     };
 
@@ -86,11 +89,12 @@ export default function RoomModal(args) {
               <div className={styles.formGroup}>
                 <label htmlFor="type">Type:</label>
                 <select id="type" name="type" onChange={handleInputChange} value={formData.type} required>
-                  {/* <option value="">Select Type</option>
-                  <option value="office">Office</option>
-                  <option value="classroom">Classroom</option>
-                  <option value="lab">Lab</option> */}
-                  {}
+                <option value="">Select Room Type</option>
+                  {roomTypes.map((type, index) => (
+                    <option key={index} value={type}>
+                      {type}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className={styles.formGroup}>

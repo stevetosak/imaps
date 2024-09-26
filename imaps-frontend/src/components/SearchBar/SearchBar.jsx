@@ -4,7 +4,7 @@ import routeIcon from "../../assets/route_icon.png";
 import closeIcon from "../../assets/close_icon.png";
 import styles from "./SearchBar.module.css";
 
-function SearchBar() {
+function SearchBar(props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -14,9 +14,15 @@ function SearchBar() {
     setIsExpanded(!isExpanded);
   };
 
+  function searchRoom(){
+    props.map.search();
+
+  }
+
   // Handle submission of directions
   const handleDirectionsSubmit = () => {
     console.log(`From: ${from}, To: ${to}`);
+    props.map.drawRoute();
   };
 
   return (
@@ -31,7 +37,7 @@ function SearchBar() {
             aria-label="Search"
           />
           <div className={styles.buttons}>
-            <button type="button" className={styles.iconButton}>
+            <button type="button" className={styles.iconButton} onClick={searchRoom}>
               <img src={searchIcon} alt="Search Icon" />
             </button>
             <button type="button" className={styles.iconButton} onClick={toggleExpanded}>

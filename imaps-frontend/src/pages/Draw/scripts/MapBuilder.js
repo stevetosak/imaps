@@ -14,7 +14,7 @@ export class MapBuilder {
     });
 
     // TODO AKO DRAGNIT NEKOJ OD POCETOK NA STAGE POZICIIVE KE SA ZEZNAT
-    // TODO jwt vo cookie, proxy server trebit 
+    // TODO jwt vo cookie, proxy server trebit
     // TODO informaciite vo sobive da sa cuvaat ko so trebit
 
     this.gridLayer = new Konva.Layer();
@@ -33,8 +33,8 @@ export class MapBuilder {
     this.blockSize = 10;
     this.isDrawing = false;
     this.stageRect = this.stage.container().getBoundingClientRect();
-    
-    this.roomTypes = []
+
+    this.roomTypes = [];
 
     this.gridLine = new Konva.Line({
       points: [],
@@ -101,9 +101,12 @@ export class MapBuilder {
     this.stage.on("mousemove touchmove", this.handleMouseMove.bind(this));
     this.stage.on("mouseup touchend", this.handleMouseUp.bind(this));
     this.stage.on("click tap", this.handleStageClick.bind(this));
-    this.stage.on("contextmenu", this.addInfoPin.bind(this));
+    this.stage.on("contextmenu", (e) => {
+      e.evt.preventDefault();
+      this.startDrawing("InfoPin")
+    });
     this.stage.on("dragmove", this.dragStage.bind(this));
-    this.stage.on('wheel',this.zoomStage.bind(this))
+    this.stage.on("wheel", this.zoomStage.bind(this));
   }
 
   dragStage(e) {
@@ -157,15 +160,14 @@ export class MapBuilder {
     };
   }
 
-  handleResize(e){
+  handleResize(e) {
     this.stage.width(this.container.offsetWidth);
     this.stage.height(this.container.offsetHeight);
     this.drawGrid();
   }
 
   zoomStage(e) {
-
-    if(!e.evt.shiftKey) return;
+    if (!e.evt.shiftKey) return;
 
     e.evt.preventDefault();
 
@@ -179,7 +181,7 @@ export class MapBuilder {
 
     let mousePoint = {
       x: (mousePos.x - this.stage.x()) / prevScale,
-      y: (mousePos.y - this.stage.y()) / prevScale
+      y: (mousePos.y - this.stage.y()) / prevScale,
     };
 
     this.stage.scale({
@@ -193,7 +195,7 @@ export class MapBuilder {
     };
 
     this.stage.position(newStagePos);
-    this.drawGrid()
+    this.drawGrid();
     this.stage.batchDraw();
   }
 
@@ -284,14 +286,32 @@ export class MapBuilder {
     );
 
     this.shapes.push(infoPin);
-    this.infoPinLayer.add(infoPin);
-    this.infoPinLayer.batchDraw();
+    // this.infoPinLayer.add(infoPin);
+    // this.infoPinLayer.batchDraw();
     console.log(infoPin.name());
   }
 
-  clickHandler() {
+  createPlacedShape(type, rotation) {
+    const mousePos = this.stage.getRelativePointerPosition();
+    const placedObj = Factory.createShape(
+      type,
+      mousePos,
+      this.blockSize,
+      this.mainLayer,
+      rotation
+    );
+
+    return placedObj;
+  }
+
+  placeShape() {
     return () => {
-      if (!this.isDrawing) return;
+      console.log("vleze2")
+      if(this.isDrawing){
+        console.log("vleze")
+
+
+        console.log(this.hoverObj.type,"type vo click");
 
       const mousePos = this.stage.getRelativePointerPosition();
       const placedObj = Factory.createShape(
@@ -310,19 +330,22 @@ export class MapBuilder {
       placedObj.on("dblclick", () => {
         const eventName = placedObj.modalEventName;
         const data = {
-          info: placedObj.info,
-          map: this
+          room: placedObj,
+          map: this,
         };
-        const event = new CustomEvent(eventName,{detail: data});
+        const event = new CustomEvent(eventName, { detail: data });
         window.dispatchEvent(event);
-      })
+      });
       this.mainTransformer.nodes([placedObj]);
       this.mainLayer.draw();
       this.isDrawing = false;
       this.hoverObj.remove();
       this.dragLayer.removeChildren();
       this.stage.off("mousemove", this.mouseMoveHandler());
-      this.stage.off("click", this.clickHandler());
+      this.stage.off("click", this.placeShape());
+      }
+
+      
     };
   }
 
@@ -337,6 +360,7 @@ export class MapBuilder {
   }
 
   startDrawing(shapeType) {
+    console.log(shapeType, "VIO DARW")
     this.isDrawing = true;
     let pos = { x: 0, y: 0 };
     this.hoverObj = Factory.createShape(
@@ -346,17 +370,18 @@ export class MapBuilder {
       this.dragLayer,
       0
     );
+    console.log(this.hoverObj.type, "vo dDRAWWW")
     this.hoverObj.visible(false);
     this.dragLayer.add(this.hoverObj);
     this.dragLayer.moveToTop();
     this.stage.on("mousemove", this.mouseMoveHandler());
-    this.stage.on("click", this.clickHandler());
+    this.stage.on("click", this.placeShape());
   }
 
   selectShape(e) {
     if (e.target.tagName === "LI") {
-      const shape = e.target.getAttribute("data-info");
-      this.startDrawing(shape);
+      const shapeType = e.target.getAttribute("data-info");
+      this.startDrawing(shapeType);
       this.mainTransformer.nodes([]);
     }
   }
@@ -537,12 +562,20 @@ export class MapBuilder {
     }
   }
 
-  addRoomType(roomType){
+  addRoomType(roomType) {
     this.roomTypes.push(roomType);
   }
-  getRoomTypes(){
+  getRoomTypes() {
     return this.roomTypes;
   }
+  getRooms(){
+    return this.getShapeByType("Room")
+  }
+  getPins(){
+    return this.getShapeByType("InfoPin")
+  }
 
-
+  getShapeByType(type){
+    return this.shapes.filter(shape => shape.className === type).map(shape => shape.info)
+  }
 }

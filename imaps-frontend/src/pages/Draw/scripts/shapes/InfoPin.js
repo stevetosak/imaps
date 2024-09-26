@@ -9,9 +9,9 @@ export default class InfoPin extends MapShape {
       {
         x: mousePos.x,
         y: mousePos.y,
-        radiusX: blockSize / 3,
-        radiusY: blockSize * 0.45,
-        tailHeight: blockSize * 0.8,
+        radiusX: blockSize / 1.5,
+        radiusY: blockSize * 0.9,
+        tailHeight: blockSize * 1.5,
         fill: "#d70113",
         stroke: "#1b1b1b",
         strokeWidth: 0.2,
@@ -24,10 +24,10 @@ export default class InfoPin extends MapShape {
     );
 
     this.modalEventName = "openPinModalEvent";
-  
+    this.type = "InfoPin"
     this._info = {
-      pinName: '',
-      connections: [],
+      name: '',
+      selectedPin: '',
       description: '',
     };
 
@@ -57,7 +57,7 @@ export default class InfoPin extends MapShape {
   }
 
   saveShapeDetails(){
-    this.setAttr("pin_name",this.info.pinName);
+    this.setAttr("pin_name",this.info.name);
     this.setAttr("connections",this.info.connections);
     this.setAttr("description",this.info.description);
   }

@@ -4,23 +4,23 @@ import styles from "./EntranceModal.module.css";
 export default function EntranceModal() {
   const [modal, setModal] = useState(false);
   const [room, setRoom] = useState(null);
-  const [availableRooms, setAvailableRooms] = useState(["Office", "Classroom", "Lab", "Library"]);
-  const [availablePins, setAvailablePins] = useState(["Pin A", "Pin B", "Pin C", "Pin D"]);
   const [pins, setPins] = useState([]);
 
-  //NE SE ZACUVUVAT VO MAPATA CAO
 
   const [formData, setFormData] = useState({
     entranceName: "",
-    selectedRoom: "",
+    connectedRoom: "",
     description: "",
+    availableRooms: [],
+    availablePins: [],
     isMainEntrance: false,
     selectedPin: "",
   });
 
   const toggleModal = () => {
     if (modal) {
-      room.info = formData;
+      //const {entranceName, connectedRoom,description,isMainEntrance} = formData
+      room.info = formData
       console.log(room.info);
     }
     setModal(!modal); 
@@ -59,22 +59,25 @@ export default function EntranceModal() {
 
   useEffect(() => {
     const openModalHandler = (event) => {
-      const roomObj = event.detail;
-      console.log("SOVA",roomObj)
-      
-      
+      console.log(event.detail,"detail")
+      const roomObj = event.detail.room;
       setRoom(roomObj);
       setFormData({
         entranceName: roomObj.info.entranceName || "",
-        selectedRoom: roomObj.info.selectedRoom || "",
+        connectedRoom: roomObj.info.selectedRoom || "",
         description: roomObj.info.description || "",
+        availablePins: event.detail.map.getPins() || [],
+        availableRooms: event.detail.map.getRooms() || [],
         isMainEntrance: roomObj.info.isMainEntrance || false,
         selectedPin: "",
       });
       setPins(roomObj.info.pins || []); 
       setModal(true); 
-      console.log("map")
-      console.log(event.detail.map);
+      console.log(room,"toska");
+      console.log(event.detail.map.getPins(), "available pinrs");
+      // console.log("map")
+      // console.log(event.detail.map);
+      console.log(formData.availablePins,"ova se pins")
     };
 
     window.addEventListener("openEntranceModalEvent", openModalHandler);
@@ -122,14 +125,14 @@ export default function EntranceModal() {
                 <select
                   id="selectedRoom"
                   name="selectedRoom"
-                  value={formData.selectedRoom}
+                  value={formData.connectedRoom}
                   onChange={handleInputChange}
                   required
                 >
-                  <option value="">Select Room</option>
-                  {availableRooms.map((room, index) => (
-                    <option key={index} value={room}>
-                      {room}
+                  /*<option value="">Select Room</option>
+                  {formData.availableRooms.map((room, index) => (
+                    <option key={index} value={room.name}>
+                      {room.name}
                     </option>
                   ))}
                 </select>
@@ -146,9 +149,9 @@ export default function EntranceModal() {
                   required
                 >
                   <option value="">Select Pin</option>
-                  {availablePins.map((pin, index) => (
-                    <option key={index} value={pin}>
-                      {pin}
+                  {formData.availablePins.map((pin, index) => (
+                    <option key={index} value={pin.name}>
+                      {pin.name}
                     </option>
                   ))}
                 </select>

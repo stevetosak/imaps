@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
 import styles from "./InfoPinModal.module.css"; // Reusing the same styles
-import infoPin from "../../pages/Draw/scripts/shapes/InfoPin"
-export default function InfoPinModal(args) {
+
+export default function InfoPinModal(props) {
   const [modal, setModal] = useState(false);
   const [pins, setPins] = useState([]);
-  // const [availablePins, setAvailablePins] = useState(["Pin A", "Pin B", "Pin C", "Pin D"]); // Example predefined pins
+  const [room, setRoom] = useState(null);
 
   const [formData, setFormData] = useState({
-    pinName: "", 
+    name: "", 
     description: "",
     selectedPin: "",
+    availablePins: [],
   });
 
   const toggleModal = () => {
+    if (modal) {
+      room.info = { ...formData, pins };
+    }
     setModal(!modal); 
   };
 
@@ -27,11 +31,23 @@ export default function InfoPinModal(args) {
   const addPinToList = () => {
     if (!formData.selectedPin || pins.includes(formData.selectedPin)) return; 
     setPins((prevPins) => [...prevPins, formData.selectedPin]);
-    setFormData({ ...formData, selectedPin: "" });
+    
+    // Remove selected pin from available pins
+    setFormData((prevData) => ({
+      ...prevData,
+      availablePins: prevData.availablePins.filter(pin => pin.name !== formData.selectedPin),
+      selectedPin: "", // Clear selected pin
+    }));
   };
 
   const removePinFromList = (pinToRemove) => {
     setPins((prevPins) => prevPins.filter((pin) => pin !== pinToRemove));
+
+    // Re-add the removed pin to available pins
+    setFormData((prevData) => ({
+      ...prevData,
+      availablePins: [...prevData.availablePins, { name: pinToRemove }],
+    }));
   };
 
   const saveDetails = () => {
@@ -40,14 +56,17 @@ export default function InfoPinModal(args) {
   };
 
   useEffect(() => {
-    const openModalHandler = () => {
+    const openModalHandler = (event) => {
+      const roomObj = event.detail.room;
+      setRoom(roomObj);
       setFormData({
-        pinName: "", 
-        description: "",
+        name: roomObj.info.name || "", 
+        description: roomObj.info.description || "",
         selectedPin: "",
+        availablePins: event.detail.map.getPins(), // Initialize available pins
       });
-      setPins([]); 
-      toggleModal(true);
+      setPins(roomObj.info.pins || []); 
+      setModal(true);
     };
 
     window.addEventListener("openPinModalEvent", openModalHandler);
@@ -75,21 +94,19 @@ export default function InfoPinModal(args) {
           <div className={styles.modalContent}>
             <h2>Enter Pin Details</h2>
             <form className={styles.form}>
-              {}
               <div className={styles.formGroup}>
-                <label htmlFor="pinName">Name:</label>
+                <label htmlFor="name">Name:</label>
                 <input
                   type="text"
-                  id="pinName"
-                  name="pinName"
-                  value={formData.pinName}
+                  id="name"
+                  name="name"
+                  value={formData.name}
                   onChange={handleInputChange}
                   placeholder="Enter the pin name"
                   required
                 />
               </div>
 
-              {}
               <div className={styles.formGroup}>
                 <label htmlFor="selectedPin">Select pins connected to this pin:</label>
                 <select
@@ -100,9 +117,9 @@ export default function InfoPinModal(args) {
                   required
                 >
                   <option value="">Select Pin</option>
-                  {pins.map((pin, index) => (
-                    <option key={index} value={args.map.shapes}>
-                      {pin}
+                  {formData.availablePins.map((pin, index) => (
+                    <option key={index} value={pin.name}>
+                      {pin.name}
                     </option>
                   ))}
                 </select>
@@ -111,7 +128,6 @@ export default function InfoPinModal(args) {
                 </button>
               </div>
 
-              {}
               <h3>Pins:</h3>
               <ul className={styles.pinList}>
                 {pins.length > 0 ? (
@@ -128,7 +144,6 @@ export default function InfoPinModal(args) {
                 )}
               </ul>
 
-              {}
               <div className={styles.formGroup}>
                 <label htmlFor="description">Description:</label>
                 <textarea
@@ -141,7 +156,6 @@ export default function InfoPinModal(args) {
                 />
               </div>
 
-              {}
               <div className={styles.formGroup}>
                 <button
                   type="button"
