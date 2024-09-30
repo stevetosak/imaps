@@ -1,6 +1,7 @@
 package internettehnologii.imaps.backendRender.controllers;
 
 import internettehnologii.imaps.backendRender.entities.user.IMapsUser;
+import internettehnologii.imaps.backendRender.service.JWTService;
 import internettehnologii.imaps.backendRender.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

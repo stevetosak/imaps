@@ -1,5 +1,6 @@
 package internettehnologii.imaps.backendRender.entities.map;
 
+import internettehnologii.imaps.backendRender.util.json.DataJson;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,10 +42,10 @@ public class MapService {
 
 
     @Transactional
-    public void updateMap(Long mapId, String name) {
-        IndoorMap map = mapRepository.findById(mapId).orElseThrow(() -> new IllegalStateException("map with id " + mapId + " does not exist"));
-        if(name != null && name.length() > 0 && !Objects.equals(map.getName(), name)){
-            map.setName(name);
+    public void updateMap(String mapName, DataJson mapData) {
+        IndoorMap map = mapRepository.findMapByName(mapName).orElseThrow(() -> new IllegalStateException("map with name " + mapName + " does not exist"));
+        if(mapName != null && !mapName.isEmpty() && !Objects.equals(map.getName(), mapName)){
+            map.setMapData(mapData);
         }
     }
 }

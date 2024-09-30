@@ -23,7 +23,6 @@ public class MapController {
     @PostMapping
     public void registerNewMap(@RequestBody IndoorMap map){
         mapService.addNewMap(map);
-
     }
 
     @DeleteMapping(path = "{mapId}")
@@ -36,6 +35,6 @@ public class MapController {
             @PathVariable("mapId") Long mapId,
             @RequestParam(required = false) String name){
             
-        mapService.updateMap(mapId, name);
+        //mapService.updateMap(name);
     }
 }

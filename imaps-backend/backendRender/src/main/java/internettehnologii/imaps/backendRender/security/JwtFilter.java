@@ -28,31 +28,46 @@ public class JwtFilter extends OncePerRequestFilter {
     private ApplicationContext context;
 
 
+    private void sendErrorResponse(HttpServletResponse response, String message, int status) throws IOException {
+        response.setStatus(status);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\": \"" + message + "\"}");
+    }
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println(request.getRequestURI());
+        if(request.getRequestURI().contains("/login") || request.getRequestURI().contains("/register")) {
+            filterChain.doFilter(request, response);
+        }
+
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username;
 
-        System.out.println(authHeader);
-
         if(authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            username = jwtService.extractUsername(token);
-
-            if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = context.getBean(MapUserDetailsService.class).loadUserByUsername(username);
-                if(jwtService.validateToken(token,userDetails)){
-                    UsernamePasswordAuthenticationToken upAuthToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    upAuthToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(upAuthToken);
+            try{
+                username = jwtService.extractUsername(token);
+                if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UserDetails userDetails = context.getBean(MapUserDetailsService.class).loadUserByUsername(username);
+                    if(jwtService.validateToken(token,userDetails)){
+                        UsernamePasswordAuthenticationToken upAuthToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        upAuthToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(upAuthToken);
+                    } else {
+                        System.out.println("Invalid token");
+                        sendErrorResponse(response, "The token could not be validated, please try logging in again", HttpServletResponse.SC_UNAUTHORIZED);
+                    }
+                } else {
+                    System.out.println("Bad auth");
+                    sendErrorResponse(response, "Username could not be extracted or token not authenticated", HttpServletResponse.SC_UNAUTHORIZED);
                 }
-            } else {
-                System.out.println("Bad auth");
+            } catch (Exception e){
+                System.out.println("ERROR: " + e.getMessage());
             }
 
-        }else {
-            System.out.println("Bad header");
         }
 
         filterChain.doFilter(request, response);

@@ -12,17 +12,22 @@ import "./App.css";
 
 function App() {
   //TRUE E NAMESTENO ZA PRISTAP DO DRAW BEZ LOGIN (trebit false da e)
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    console.log(isAuthenticated)
+    const token = localStorage.getItem("token");
     if (token) {
       setIsAuthenticated(true);
+    }
+    else{
+      setIsAuthenticated(false);
     }
   }, []);
 
   const handleLogin = (token) => {
-    localStorage.setItem("authToken", token);
+    console.log(isAuthenticated)
+    localStorage.setItem("token", token);
     setIsAuthenticated(true);
   };
 
