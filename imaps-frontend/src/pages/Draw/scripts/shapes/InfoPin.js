@@ -27,7 +27,7 @@ export default class InfoPin extends MapShape {
     this.type = "InfoPin"
     this._info = {
       name: '',
-      selectedPin: '',
+      selectedPins: [],
       description: '',
     };
 
@@ -57,9 +57,10 @@ export default class InfoPin extends MapShape {
   }
 
   saveShapeDetails(){
-    this.setAttr("pin_name",this.info.name);
-    this.setAttr("connections",this.info.connections);
+    this.setAttr("obj_name",this.info.name);
+    this.setAttr("connected_pins",this.info.selectedPins);
     this.setAttr("description",this.info.description);
+    console.log(this.info,"vnatre vo info");
   }
 
 }

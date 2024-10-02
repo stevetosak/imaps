@@ -15,18 +15,17 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    console.log(isAuthenticated)
+    console.log(isAuthenticated);
     const token = localStorage.getItem("token");
     if (token) {
       setIsAuthenticated(true);
-    }
-    else{
+    } else {
       setIsAuthenticated(false);
     }
   }, []);
 
   const handleLogin = (token) => {
-    console.log(isAuthenticated)
+    console.log(isAuthenticated);
     localStorage.setItem("token", token);
     setIsAuthenticated(true);
   };

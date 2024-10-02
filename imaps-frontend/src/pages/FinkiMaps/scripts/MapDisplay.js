@@ -70,16 +70,29 @@ export class MapDisplay {
 
   parseJson(json) {
     var data = JSON.parse(json);
-    var children = data.Layer[0].children[0];
+    var children = data;
 
     // refactor trebit na ddraw shapes za da rabotat i tuka ko so trevbit
 
-    var shapes = children.filter((child) => child.className !== "InfoPin");
 
-    shapes.forEach((child) => {
+    // children.forEach(child => {
+    //   console.log(child,"kurace");
+    // })
+
+    console.log(data,"chcicihchc");
+    
+    
+
+    
+
+    children.forEach((child) => {
       var shape = JSON.parse(child);
-      var renderedShape = Factory.createRenderedShape(shape.className, shape.attrs);
-      this.shapes.push(renderedShape);
+      console.log(shape.className,"geegge");
+      if(shape.className !== "InfoPin"){
+        var renderedShape = Factory.createRenderedShape(shape.className, shape.attrs);
+        this.shapes.push(renderedShape);
+      }
+     
     });
   }
 

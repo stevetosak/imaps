@@ -34,7 +34,7 @@ export default class Room extends MapShape {
 
 
     saveShapeDetails(){
-      this.setAttr("room_name",this.info.name);
+      this.setAttr("obj_name",this.info.name);
       this.setAttr("room_type",this.info.type);
       this.setAttr("floor",this.info.floor)
       this.setAttr("description",this.info.description);

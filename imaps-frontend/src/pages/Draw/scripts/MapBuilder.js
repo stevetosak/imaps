@@ -485,9 +485,6 @@ export class MapBuilder {
 
   saveShapeDetails() {
     this.shapes
-      .filter(
-        (shape) => shape.className === "Room" || shape.className === "Entrance"
-      )
       .forEach((room) => {
         room.saveShapeDetails();
         console.log(room.info);
@@ -499,23 +496,6 @@ export class MapBuilder {
 
     const token = localStorage.getItem("token");
 
-    var json = {
-      attrs: {
-        width: this.container.clientWidth,
-        height: this.container.clientHeight,
-      },
-      className: "Stage",
-      Layer: [
-        {
-          attrs: {},
-          className: "Layer",
-          children: [],
-        },
-      ],
-    };
-
-    json.Layer[0].children.push(this.shapes);
-
     console.log("tok", token);
 
     const response = await fetch("http://localhost:8080/api/protected/render", {
@@ -524,7 +504,7 @@ export class MapBuilder {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(json),
+      body: JSON.stringify(this.shapes),
     })
       .then((response) => response.json())
       .catch((error) => console.log(error))

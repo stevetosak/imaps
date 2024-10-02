@@ -61,7 +61,7 @@ export default class Factory {
           cornerRadius:3
         });
       default:
-        throw new Error("Invalid shape type.");
+        throw new Error("Invalid shape type." + shapeType);
     }
   }
 
