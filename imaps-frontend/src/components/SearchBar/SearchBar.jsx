@@ -22,7 +22,25 @@ function SearchBar(props) {
   // Handle submission of directions
   const handleDirectionsSubmit = () => {
     console.log(`From: ${from}, To: ${to}`);
-    props.map.drawRoute();
+    const url = new URL('http://localhost:8080/api/public/navigate');
+    url.searchParams.append('from', from);
+    url.searchParams.append('to', to);
+
+    fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parse the JSON from the response
+            })
+            .then(data => {
+                console.log('Success:', data);
+                const points = data.map(item => item.coordinates);
+                props.map.drawRoute(points);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
   };
 
   return (

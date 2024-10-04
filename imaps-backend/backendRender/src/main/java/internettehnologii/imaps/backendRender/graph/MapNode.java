@@ -10,18 +10,19 @@ import java.util.List;
 public class MapNode {
     private String name;
     private String description;
-    private Tuple<Double,Double> coordinates;
+    private Coordinates<Double,Double> coordinates;
     private List<String> connectionNames = new ArrayList<>();
 
-    public MapNode(String name, String description, Tuple<Double, Double> coordinates) {
+    public MapNode(String name, String description, Coordinates<Double, Double> coordinates) {
         this.name = name;
         this.description = description;
         this.coordinates = coordinates;
     }
 
-    public MapNode(Tuple<Double, Double> coordinates, String name) {
+    public MapNode(String name,Coordinates<Double, Double> coordinates,List<String> connectionNames) {
         this.coordinates = coordinates;
         this.name = name;
+        this.connectionNames = connectionNames;
     }
 
     public MapNode() {

@@ -558,4 +558,6 @@ export class MapBuilder {
   getShapeByType(type){
     return this.shapes.filter(shape => shape.className === type).map(shape => shape.info)
   }
+
+
 }

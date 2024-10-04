@@ -17,7 +17,10 @@ export class MapDisplay {
     this.shapes = [];
     this.loaded = false;
     this.mainLayer = new Konva.Layer();
+    this.routeLayer = new Konva.Layer();
     this.stage.add(this.mainLayer);
+    this.stage.add(this.routeLayer);
+    this.route = new Konva.Line();
 
     this.json = {
       attrs: {
@@ -45,7 +48,7 @@ export class MapDisplay {
         try {
           //if (loaded) return;
 
-          let response = await fetch("http://localhost:8080/api/protected/mapData",
+          let response = await fetch("http://localhost:8080/api/public/mapData",
           {
             method: "GET",
             headers: {
@@ -102,9 +105,20 @@ export class MapDisplay {
     });
   }
 
-  drawRoute(){
-    console.log("USPESNO RUTA CRTANJW VLEZE TOP");
-    
+  drawRoute(path){
+    this.routeLayer.removeChildren();
+    console.log("====PATH====")
+    path.forEach(point => console.log(point.x,point.y));
+
+    const pointsArray = path.flatMap(point => [point.x, point.y]);
+
+    const route = new Konva.Line({
+      points: pointsArray,
+      stroke: "red",
+      strokeWidth: 3
+    })
+
+    this.routeLayer.add(route);
   }
 
   search(){

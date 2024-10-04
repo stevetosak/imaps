@@ -6,12 +6,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class MapNodeParser {
-
-    //private final List<MapNode> mapNodes = new ArrayList<>();
-
     public List<MapNode> parseAndCreateNodes(String mapJson) throws JsonProcessingException {
         final List<MapNode> mapNodes = new ArrayList<>();
 
@@ -23,6 +19,7 @@ public class MapNodeParser {
                     JsonNode parsedNode = objectMapper.readTree(shape);
                     String type = parsedNode.get("className").asText();
 
+                    // Wall i room ne se bitni za navigacija
                     if(Objects.equals(type,"Wall") || Objects.equals(type,"Room")) return;
 
                     JsonNode attrs = parsedNode.get("attrs");
@@ -32,7 +29,7 @@ public class MapNodeParser {
                         JsonNode connectedPins = attrs.get("connected_pins");
                         if (connectedPins.isArray()) {
                             for (JsonNode pin : connectedPins) {
-                                System.out.println("Connected Pin: " + pin.asText() + " of: " + attrs.get("obj_name"));
+                                System.out.println("Connected node (markup) : " + pin.asText() + " to: " + attrs.get("obj_name"));
                                 mapNode.addConnectionName(pin.asText());
                             }
                         }
@@ -52,27 +49,12 @@ public class MapNodeParser {
     }
 
 
-
-
-    private static String[] getAttrs(JsonNode node){
-        Stream<String> attrs = Arrays.stream(
-                        node.get("attrs")
-                                .toString()
-                                .split(","))
-                .map(attr -> attr
-                        .replaceAll("\\{","")
-                        .replaceAll("}",""));
-        return attrs.toArray(String[]::new);
-    }
-
     private static String findAttr(String key,JsonNode attrs){
-
         if(attrs.has(key)){
             return attrs.get(key).asText();
         } else {
             return "No attribute found for key: " + key;
         }
-
 
     }
 
@@ -82,7 +64,7 @@ public class MapNodeParser {
         String description = findAttr("description",attrs);
         double x = Double.parseDouble(Objects.requireNonNull(findAttr("x", attrs)));
         double y = Double.parseDouble(Objects.requireNonNull(findAttr("y", attrs)));
-        Tuple<Double,Double> coordinates = new Tuple<>(x,y);
+        Coordinates<Double,Double> coordinates = new Coordinates<>(x,y);
 
         return new MapNode(name, description, coordinates);
     }

@@ -4,19 +4,20 @@ package internettehnologii.imaps.backendRender.graph;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter @Getter
-public class Edge <T>{
-    private T source;
-    private T target;
-    private double weight;
+import java.util.Map;
 
-    public Edge(T source, T target) {
-        this.source = source;
-        this.target = target;
+@Setter @Getter
+public class Edge{
+  private MapNode node;
+   private double weight;
+
+    public Edge(MapNode node, double weight) {
+        this.node = node;
+        this.weight = weight;
     }
 
-    private double calculateWeight(){
-        return 0;
+    public Edge(MapNode node) {
+     this.node = node;
     }
 
 
