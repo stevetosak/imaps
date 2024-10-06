@@ -10,6 +10,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,6 +65,7 @@ public class JWTService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+
     }
 
     private <T> T extractClaim(String token, Function<Claims,T> claimResolver){

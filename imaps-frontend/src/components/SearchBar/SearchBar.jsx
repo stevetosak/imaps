@@ -9,7 +9,6 @@ function SearchBar(props) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
-  // Toggle dropdown for directions
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
@@ -19,7 +18,6 @@ function SearchBar(props) {
 
   }
 
-  // Handle submission of directions
   const handleDirectionsSubmit = () => {
     console.log(`From: ${from}, To: ${to}`);
     const url = new URL('http://localhost:8080/api/public/navigate');
@@ -31,7 +29,7 @@ function SearchBar(props) {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json(); // Parse the JSON from the response
+                return response.json();
             })
             .then(data => {
                 console.log('Success:', data);

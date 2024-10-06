@@ -38,11 +38,11 @@ public class RouteGraph {
         MapNode sourceNode = nameToNodeMap.get(source);
         MapNode targetNode = nameToNodeMap.get(target);
 
+
         if (sourceNode == null || targetNode == null) {
             throw new IllegalArgumentException("Source or target node not found.");
         }
 
-        //TODO
 
         PriorityQueue<Edge> queue = new PriorityQueue<>(Comparator.comparingDouble(Edge::getWeight));
         queue.add(new Edge(sourceNode,0));
@@ -82,10 +82,7 @@ public class RouteGraph {
 
         }
 
-        for (Map.Entry<MapNode, Double> entry : dist.entrySet()) {
-            System.out.println("Shortest distance to node " + entry.getKey() + " is " + entry.getValue());
-        }
-
+        System.out.println("No path found from: " + source + " to " + target);
         return new ArrayList<>();
 
     }

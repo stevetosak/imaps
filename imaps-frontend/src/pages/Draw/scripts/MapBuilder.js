@@ -4,6 +4,7 @@ import Room from "./shapes/Room";
 import InfoPin from "./shapes/InfoPin";
 import Factory from "./util/Factory";
 import Konva from "konva";
+import HttpService from "../../../Net/HttpService";
 export class MapBuilder {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
@@ -14,8 +15,7 @@ export class MapBuilder {
     });
 
     // TODO AKO DRAGNIT NEKOJ OD POCETOK NA STAGE POZICIIVE KE SA ZEZNAT
-    // TODO jwt vo cookie, proxy server trebit
-    // TODO informaciite vo sobive da sa cuvaat ko so trebit
+    // TODO jwt vo cookie
 
     this.gridLayer = new Konva.Layer();
     this.mainLayer = new Konva.Layer();
@@ -32,7 +32,9 @@ export class MapBuilder {
     this.infoNodes = []; // unused
     this.blockSize = 10;
     this.isDrawing = false;
+    this.efficientDrawingMode = true;
     this.stageRect = this.stage.container().getBoundingClientRect();
+    this.currentShapeType = "";
 
     this.roomTypes = [];
 
@@ -50,7 +52,7 @@ export class MapBuilder {
       rotationSnaps: [0, 90, 180, 270],
       anchorSize: 5,
       padding: 2,
-      anchorFill: "yellow",
+      anchorFill: "#3cc9e8",
       borderStroke: "black",
       anchorStroke: "black",
       cornerRadius: 20,
@@ -103,7 +105,7 @@ export class MapBuilder {
     this.stage.on("click tap", this.handleStageClick.bind(this));
     this.stage.on("contextmenu", (e) => {
       e.evt.preventDefault();
-      this.startDrawing("InfoPin")
+      this.startDrawing("InfoPin");
     });
     this.stage.on("dragmove", this.dragStage.bind(this));
     this.stage.on("wheel", this.zoomStage.bind(this));
@@ -306,47 +308,50 @@ export class MapBuilder {
 
   placeShape() {
     return () => {
-      console.log("vleze2")
-      if(this.isDrawing){
-        console.log("vleze")
+      if (this.isDrawing) {
+        const mousePos = this.stage.getRelativePointerPosition();
+        const placedObj = Factory.createShape(
+          this.hoverObj.type,
+          mousePos,
+          this.blockSize,
+          this.mainLayer,
+          this.hoverObj.rotation()
+        );
 
+        if (!placedObj) return;
 
-        console.log(this.hoverObj.type,"type vo click");
+        this.mainLayer.add(placedObj);
+        this.shapes.push(placedObj);
+        placedObj.snapToGrid();
+        placedObj.on("dblclick", () => {
+          const eventName = placedObj.modalEventName;
+          const data = {
+            room: placedObj,
+            map: this,
+          };
+          const event = new CustomEvent(eventName, { detail: data });
+          window.dispatchEvent(event);
+        });
+        //this.mainTransformer.nodes([placedObj]);
+        this.mainLayer.draw();
+        this.stopDrawing();
 
-      const mousePos = this.stage.getRelativePointerPosition();
-      const placedObj = Factory.createShape(
-        this.hoverObj.type,
-        mousePos,
-        this.blockSize,
-        this.mainLayer,
-        this.hoverObj.rotation()
-      );
+        // if (this.efficientDrawingMode) {
+        //   this.startDrawing(this.currentShapeType);
+        // }
+      }
+    };
+  }
 
-      if (!placedObj) return;
-
-      this.mainLayer.add(placedObj);
-      this.shapes.push(placedObj);
-      placedObj.snapToGrid();
-      placedObj.on("dblclick", () => {
-        const eventName = placedObj.modalEventName;
-        const data = {
-          room: placedObj,
-          map: this,
-        };
-        const event = new CustomEvent(eventName, { detail: data });
-        window.dispatchEvent(event);
-      });
-      this.mainTransformer.nodes([placedObj]);
-      this.mainLayer.draw();
+  stopDrawing() {
+    this.mainTransformer.nodes([]);
+    if (this.isDrawing) {
       this.isDrawing = false;
       this.hoverObj.remove();
       this.dragLayer.removeChildren();
       this.stage.off("mousemove", this.mouseMoveHandler());
       this.stage.off("click", this.placeShape());
-      }
-
-      
-    };
+    }
   }
 
   mouseMoveHandler() {
@@ -360,7 +365,7 @@ export class MapBuilder {
   }
 
   startDrawing(shapeType) {
-    console.log(shapeType, "VIO DARW")
+    this.currentShapeType = shapeType;
     this.isDrawing = true;
     let pos = { x: 0, y: 0 };
     this.hoverObj = Factory.createShape(
@@ -370,7 +375,7 @@ export class MapBuilder {
       this.dragLayer,
       0
     );
-    console.log(this.hoverObj.type, "vo dDRAWWW")
+    console.log(this.hoverObj.type, "vo dDRAWWW");
     this.hoverObj.visible(false);
     this.dragLayer.add(this.hoverObj);
     this.dragLayer.moveToTop();
@@ -443,8 +448,6 @@ export class MapBuilder {
     this.selectionRectangle.width(0);
     this.selectionRectangle.height(0);
     this.selecting = true;
-
-    console.log(this.selecting, "sel");
   }
 
   handleMouseMove(e) {
@@ -484,33 +487,22 @@ export class MapBuilder {
   }
 
   saveShapeDetails() {
-    this.shapes
-      .forEach((room) => {
-        room.saveShapeDetails();
-        console.log(room.info);
-      });
+    this.shapes.forEach((room) => {
+      room.saveShapeDetails();
+      console.log(room.info);
+    });
   }
 
   async render() {
     this.saveShapeDetails();
-
-    const token = localStorage.getItem("token");
-
-    console.log("tok", token);
-
-    const response = await fetch("http://localhost:8080/api/protected/render", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(this.shapes),
-    })
-      .then((response) => response.json())
-      .catch((error) => console.log(error))
-      .then((data) => console.log("RESPONSE: : " + JSON.stringify(data)));
-
-    console.log(token);
+    const httpService = new HttpService("http://localhost:8080/api/protected",true);
+    try{
+      const response = await httpService.post("/render",this.shapes);
+      console.log(response);
+    } catch(err){
+      console.log("ERROR --> Could not render map --->",err);
+    }
+   
   }
 
   handleStageClick(e) {
@@ -548,16 +540,16 @@ export class MapBuilder {
   getRoomTypes() {
     return this.roomTypes;
   }
-  getRooms(){
-    return this.getShapeByType("Room")
+  getRooms() {
+    return this.getShapeInfoByType("Room");
   }
-  getPins(){
-    return this.getShapeByType("InfoPin")
-  }
-
-  getShapeByType(type){
-    return this.shapes.filter(shape => shape.className === type).map(shape => shape.info)
+  getPins() {
+    return this.getShapeInfoByType("InfoPin");
   }
 
-
+  getShapeInfoByType(type) {
+    return this.shapes
+      .filter((shape) => shape.className === type)
+      .map((shape) => shape.info);
+  }
 }

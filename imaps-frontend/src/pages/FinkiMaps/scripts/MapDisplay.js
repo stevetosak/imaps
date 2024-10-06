@@ -22,21 +22,6 @@ export class MapDisplay {
     this.stage.add(this.routeLayer);
     this.route = new Konva.Line();
 
-    this.json = {
-      attrs: {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      },
-      className: "Stage",
-      Layer: [
-        {
-          attrs: {},
-          className: "Layer",
-          children: [],
-        },
-      ],
-    };
-
     this.stage.on("resize", () => {
       this.stage.width = window.innerWidth;
       this.stage.height = window.innerHeight;
@@ -46,7 +31,6 @@ export class MapDisplay {
       const loadResources = async () => {
         const token = localStorage.getItem("token");
         try {
-          //if (loaded) return;
 
           let response = await fetch("http://localhost:8080/api/public/mapData",
           {
@@ -75,22 +59,10 @@ export class MapDisplay {
     var data = JSON.parse(json);
     var children = data;
 
-    // refactor trebit na ddraw shapes za da rabotat i tuka ko so trevbit
-
-
-    // children.forEach(child => {
-    //   console.log(child,"kurace");
-    // })
-
     console.log(data,"chcicihchc");
     
-    
-
-    
-
     children.forEach((child) => {
       var shape = JSON.parse(child);
-      console.log(shape.className,"geegge");
       if(shape.className !== "InfoPin"){
         var renderedShape = Factory.createRenderedShape(shape.className, shape.attrs);
         this.shapes.push(renderedShape);

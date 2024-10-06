@@ -9,9 +9,9 @@ export default class InfoPin extends MapShape {
       {
         x: mousePos.x,
         y: mousePos.y,
-        radiusX: blockSize / 1.5,
-        radiusY: blockSize * 0.9,
-        tailHeight: blockSize * 1.5,
+        radiusX: blockSize * 0.5,
+        radiusY: blockSize * 0.7,
+        tailHeight: blockSize * 1.2,
         fill: "#d70113",
         stroke: "#1b1b1b",
         strokeWidth: 0.2,

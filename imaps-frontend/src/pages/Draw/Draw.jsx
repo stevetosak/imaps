@@ -47,7 +47,7 @@ function Draw() {
             <option value={2}>2nd Floor</option>
             <option value={3}>3rd Floor</option>
             <option value={4}>4th Floor</option>
-            {/* Add more floors as needed */}
+            {}
           </select>
         </div>
         <h2>Objects:</h2>

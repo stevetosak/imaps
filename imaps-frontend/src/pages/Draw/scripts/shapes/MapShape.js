@@ -15,7 +15,7 @@ export default class MapShape extends Konva.Shape {
     this.shadowForStrokeEnabled(false);
     this.on("mouseover", () => (document.body.style.cursor = "pointer"));
     this.on("mouseout", () => (document.body.style.cursor = "default"));
-    this.on("dblclick", () => {
+    this.on("dblclick", (e) => {
       this.moveToTop();
       this.getLayer()
         .find("Transformer")

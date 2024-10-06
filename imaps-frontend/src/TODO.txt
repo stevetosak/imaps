@@ -17,6 +17,7 @@ PRIORITY MEDIUM
 -Multiple floor (Prerabotka na baza)
 -Zoom na View (imame, da se napret globalno)
 -Implementacija na stairs
+-Shape sho ke selektiras za klavanje da sejt celo vreme ko selektiran, duri ne kliknis drug shape ili escape.
 
 
 PRIORITY LOW
@@ -25,3 +26,7 @@ PRIORITY LOW
 -Refactor (Da se koristit net util klasa za pustanje do backend)
 -AutoSave na draw duri crtas (Da se pret update request do baza)
 -Refactor na stil na Draw
+
+
+
+ZA PREZ

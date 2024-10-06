@@ -4,12 +4,19 @@ package internettehnologii.imaps.backendRender.graph;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import internettehnologii.imaps.backendRender.graph.exceptions.MapParseException;
 
 import java.util.*;
 
 public class MapNodeParser {
-    public List<MapNode> parseAndCreateNodes(String mapJson) throws JsonProcessingException {
+    public List<MapNode> parseAndCreateNodes(String mapJson) throws Exception {
         final List<MapNode> mapNodes = new ArrayList<>();
+
+        System.out.println("======= MAP JSON ====== " + mapJson);
+
+        if(mapJson == null || mapJson.isEmpty() || mapJson.equals("[]")) {
+            throw new MapParseException("Cannot parse empty map");
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
             String[] shapes = objectMapper.readValue(mapJson, String[].class);

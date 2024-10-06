@@ -9,26 +9,46 @@ import Draw from "./pages/Draw/Draw";
 import Error from "./pages/Error/Error";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import "./App.css";
+import HttpService from "./Net/HttpService";
 
 function App() {
-  //TRUE E NAMESTENO ZA PRISTAP DO DRAW BEZ LOGIN (trebit false da e)
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
-    console.log(isAuthenticated);
     const token = localStorage.getItem("token");
+    const httpService = new HttpService('http://localhost:8080/api/auth');
+
+    const verifyToken = async () => {
+      try {
+        const response = await httpService.get(`/verify?token=${token}`);
+        if(response.username){
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (token) {
-      setIsAuthenticated(true);
+      verifyToken();
     } else {
       setIsAuthenticated(false);
+      setLoading(false);
     }
+  
   }, []);
 
   const handleLogin = (token) => {
-    console.log(isAuthenticated);
     localStorage.setItem("token", token);
     setIsAuthenticated(true);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Router>

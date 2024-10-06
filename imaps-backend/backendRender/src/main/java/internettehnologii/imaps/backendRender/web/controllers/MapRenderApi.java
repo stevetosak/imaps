@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import internettehnologii.imaps.backendRender.graph.MapNode;
 import internettehnologii.imaps.backendRender.graph.MapNodeParser;
 import internettehnologii.imaps.backendRender.graph.RouteGraph;
+import internettehnologii.imaps.backendRender.graph.exceptions.MapParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173/",allowedHeaders = {"Authorization"})
 public class MapRenderApi {
 
@@ -21,15 +22,20 @@ public class MapRenderApi {
     private RouteGraph graph;
 
     @PostMapping("/protected/render")
-    public ResponseEntity<Map<String, Object>> render(@RequestBody String requestBody) throws JsonProcessingException {
+    public ResponseEntity<Map<String, Object>> render(@RequestBody String requestBody) throws Exception {
         Map<String,Object> response = new HashMap<>();
         response.put("status","ok");
         jsonData = requestBody;
+        try{
+            MapNodeParser parser = new MapNodeParser();
+            List<MapNode> nodes = parser.parseAndCreateNodes(requestBody);
+            graph = new RouteGraph(nodes);
+            System.out.println("=======================\n" + graph);
+        } catch (MapParseException e){
+            response.put("status","error: " + e.getMessage());
+        }
 
-        MapNodeParser parser = new MapNodeParser();
-        List<MapNode> nodes = parser.parseAndCreateNodes(requestBody);
-        graph = new RouteGraph(nodes);
-        System.out.println("=======================\n" + graph.toString());
+
 
         return ResponseEntity.ok(response);
     }
@@ -43,6 +49,7 @@ public class MapRenderApi {
 
     @GetMapping("/public/mapData")
     public ResponseEntity<String> getMapData(){
+        //tuka povik do baza
         System.out.println(jsonData);
         if(!jsonData.isEmpty()){
             return ResponseEntity.ok(jsonData);
