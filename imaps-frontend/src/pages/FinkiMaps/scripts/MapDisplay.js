@@ -30,7 +30,6 @@ export class MapDisplay {
   }
 
   deserializeMap(data) {
-  
     data.forEach((child) => {
       var shape = JSON.parse(child);
       if (shape.className !== "InfoPin") {
@@ -45,8 +44,8 @@ export class MapDisplay {
 
   async loadMap() {
   
-    const httpService = new HttpService("http://localhost:8080/api/public");
-    const mapData = await httpService.get("/mapData");
+    const httpService = new HttpService();
+    const mapData = await httpService.get("/public/mapData");
     this.deserializeMap(mapData);
     this.shapes.forEach((shape) => {
       this.mainLayer.add(shape);

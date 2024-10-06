@@ -38,6 +38,8 @@ export default class InfoPin extends MapShape {
       this.fill("red");
     });
 
+    this.initText();
+
   }
   _sceneFunc(context, shape) {
     const { radiusX, radiusY, tailHeight } = this.attrs;

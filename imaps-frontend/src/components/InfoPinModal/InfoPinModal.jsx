@@ -15,9 +15,9 @@ export default function InfoPinModal(props) {
   });
 
   const toggleModal = () => {
-    console.log(pins,'sdsd')
     if (modal) {
       room.info = formData
+      props.map.updateRoomNames();
     }
     setModal(!modal);
   };
@@ -33,27 +33,23 @@ export default function InfoPinModal(props) {
   const addPinToList = () => {
     if (!formData.selectedPin || pins.includes(formData.selectedPin)) return;
   
-    // Update pins and formData with the new pin
     setPins((prevPins) => {
       const updatedPins = [...prevPins, formData.selectedPin];
-  
-      // Set the selectedPins in formData after updating pins
+
       setFormData((prevFormData) => ({
         ...prevFormData,
         selectedPin: "",
-        selectedPins: updatedPins, // Reflect the updated pins
+        selectedPins: updatedPins,
       }));
   
-      return updatedPins; // Return the updated pins for state
+      return updatedPins;
     });
   };
   
 
   const removePinFromList = (pinToRemove) => {
-    // Remove pin from the pins list
     setPins((prevPins) => prevPins.filter((pin) => pin !== pinToRemove));
 
-    // Re-add the removed pin back to availablePins
     setFormData({ ...formData, selectedPins: pins});
 
   };

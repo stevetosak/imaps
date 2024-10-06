@@ -18,6 +18,7 @@ PRIORITY MEDIUM
 -Zoom na View (imame, da se napret globalno)
 -Implementacija na stairs
 -Shape sho ke selektiras za klavanje da sejt celo vreme ko selektiran, duri ne kliknis drug shape ili escape.
+-Nacin da znes dodeka crtas koi sobi ti se povrzani
 
 
 PRIORITY LOW

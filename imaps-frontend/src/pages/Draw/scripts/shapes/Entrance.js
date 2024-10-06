@@ -27,18 +27,21 @@ export default class Entrance extends MapShape {
 
 
       this._info = {
-        entranceName: '',
+        name: '',
         connectedRoom: '',
         description: '',
         isMainEntrance: false,
         selectedPin: '',
         selectedPins: []
       };
+
+      this.initText();
+      
     }
 
     saveShapeDetails(){
       this.setAttr("connected_pins",this.info.selectedPins);
-      this.setAttr("obj_name",this.info.entranceName);
+      this.setAttr("obj_name",this.info.name);
       this.setAttr("description",this.info.description)
       this.setAttr("is_main_entrance",this.info.isMainEntrance);
       this.setAttr("connected_room",this.info.connectedRoom);

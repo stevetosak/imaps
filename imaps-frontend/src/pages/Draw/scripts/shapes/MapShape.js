@@ -11,6 +11,7 @@ export default class MapShape extends Konva.Shape {
     this.snappable = snap;
     this._info = {};
     this.modalEventName = "";
+    this.infoText = null;
 
     this.shadowForStrokeEnabled(false);
     this.on("mouseover", () => (document.body.style.cursor = "pointer"));
@@ -32,6 +33,42 @@ export default class MapShape extends Konva.Shape {
       const scaleY = this.scaleY();
       this.strokeWidth(1 / Math.max(scaleX, scaleY));
     });
+
+    this.on('dragend', () => {
+      if (this.infoText) {
+        this.updateTextPosition();
+      }
+    });
+    
+  }
+
+
+  initText() {
+    console.log(this.info.name,"VLEZEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+    this.textOffsetX = 0;
+    this.textOffsetY = -30;
+    this.infoText = new Konva.Text({
+      x: this.x() + this.textOffsetX,
+      y: this.y() + this.textOffsetY,
+      text:this._info.name,
+      fontSize: 12,
+      fontFamily: 'Verdana',
+      fill: 'white',
+    });
+  }
+
+  updateTextPosition() {
+    if (this.infoText) {
+      this.infoText.x(this.x() + this.textOffsetX);
+      this.infoText.y(this.y() + this.textOffsetY);
+    }
+  }
+
+  displayName(layer) {
+    if (this.infoText) {
+      this.infoText.text(this._info.name);
+      layer.add(this.infoText);
+    }
   }
 
     _sceneFunc(context){
@@ -53,6 +90,8 @@ export default class MapShape extends Konva.Shape {
   saveShapeDetails(){
     console.log("This shape does not contain information");
   }
+
+
 
   get info(){
     return this._info;

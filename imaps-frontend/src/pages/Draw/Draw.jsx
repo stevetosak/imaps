@@ -62,8 +62,8 @@ function Draw() {
             Room
           </li>
         </ul>
-        <RoomModal></RoomModal>
-        <EntranceModal></EntranceModal>
+        <RoomModal map={app}></RoomModal>
+        <EntranceModal map={app}></EntranceModal>
         <DrawGuide></DrawGuide>
         <InfoPinModal map={app}></InfoPinModal>
         <RoomTypeModal map={app}></RoomTypeModal>

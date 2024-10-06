@@ -1,11 +1,16 @@
+import config from "./netconfig";
 
 
 class HttpService {
-    constructor(baseURL, auth = false) {
-      this.baseURL = baseURL;
+    constructor(URL = config.apiBaseUrl, auth = false) {
+      this.baseURL = URL;
       this.auth = auth;
     }
-  
+
+    setAuthenticated(){
+        this.auth = true;
+    }
+
     async request(method, endpoint, data = null) {
       const options = {
         method: method,

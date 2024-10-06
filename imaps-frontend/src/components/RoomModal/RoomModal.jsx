@@ -13,7 +13,10 @@ export default function RoomModal(props) {
   const [roomTypes, setRoomTypes] = useState([]);
 
   const toggleModal = () => {
-    if(modal) room.info = formData;
+    if(modal) {
+      room.info = formData;
+      props.map.updateRoomNames();
+    }
     setModal(!modal);
   };
 

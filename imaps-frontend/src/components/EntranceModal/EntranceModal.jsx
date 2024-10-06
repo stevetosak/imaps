@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import styles from "./EntranceModal.module.css";
 
-export default function EntranceModal() {
+export default function EntranceModal(props) {
   const [modal, setModal] = useState(false);
   const [room, setRoom] = useState(null);
   const [pins, setPins] = useState([]);
 
 
   const [formData, setFormData] = useState({
-    entranceName: "",
+    name: "",
     connectedRoom: "",
     description: "",
     availableRooms: [],
@@ -20,9 +20,8 @@ export default function EntranceModal() {
 
   const toggleModal = () => {
     if (modal) {
-      //const {entranceName, connectedRoom,description,isMainEntrance} = formData
       room.info = formData
-      console.log(room.info);
+      props.map.updateRoomNames();
     }
     setModal(!modal); 
   };
@@ -43,18 +42,16 @@ export default function EntranceModal() {
   const addPinToList = () => {
     if (!formData.selectedPin || pins.includes(formData.selectedPin)) return;
   
-    // Update pins and formData with the new pin
     setPins((prevPins) => {
       const updatedPins = [...prevPins, formData.selectedPin];
       
-      // Set the selectedPins in formData after updating pins
       setFormData((prevFormData) => ({
         ...prevFormData,
         selectedPin: "",
-        selectedPins: updatedPins, // Reflect the updated pins
+        selectedPins: updatedPins, 
       }));
   
-      return updatedPins; // Return the updated pins for state
+      return updatedPins;
     });
   
     console.log(formData.selectedPins, "sele");
@@ -78,21 +75,21 @@ export default function EntranceModal() {
       const roomObj = event.detail.room;
       setRoom(roomObj);
       
-      // Populate pins and formData when the modal is opened
+  
       const savedPins = roomObj.info.selectedPins || [];
       
       setFormData({
-        entranceName: roomObj.info.entranceName || "",
+        name: roomObj.info.name || "",
         connectedRoom: roomObj.info.connectedRoom || "",
         description: roomObj.info.description || "",
         availablePins: event.detail.map.getPins() || [],
         availableRooms: event.detail.map.getRooms() || [],
         isMainEntrance: roomObj.info.isMainEntrance || false,
         selectedPin: "",
-        selectedPins: savedPins, // Load saved pins into formData
+        selectedPins: savedPins,
       });
       
-      setPins(savedPins); // Set the pins state with the saved pins
+      setPins(savedPins);
       setModal(true);
     
       console.log(savedPins, "Loaded pins on modal open");
@@ -125,12 +122,12 @@ export default function EntranceModal() {
             <form className={styles.form}>
               {/* Entrance Name */}
               <div className={styles.formGroup}>
-                <label htmlFor="entranceName">Name:</label>
+                <label htmlFor="name">Name:</label>
                 <input
                   type="text"
-                  id="entranceName"
-                  name="entranceName"
-                  value={formData.entranceName}
+                  id="name"
+                  name="name"
+                  value={formData.name}
                   onChange={handleInputChange}
                   placeholder="Enter the entrance name" // Suggest user input
                   required

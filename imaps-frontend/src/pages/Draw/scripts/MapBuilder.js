@@ -21,6 +21,7 @@ export class MapBuilder {
     this.mainLayer = new Konva.Layer();
     this.dragLayer = new Konva.Layer();
     this.infoPinLayer = new Konva.Layer();
+    this.textLayer = new Konva.Layer();
     this.gridLayer.listening(false);
 
     this.originalWidth = this.container.clientWidth;
@@ -85,6 +86,7 @@ export class MapBuilder {
     this.stage.add(this.dragLayer);
     this.stage.add(this.mainLayer);
     this.stage.add(this.infoPinLayer);
+    this.stage.add(this.textLayer);
     this.setupEventListeners();
   }
 
@@ -332,13 +334,12 @@ export class MapBuilder {
           const event = new CustomEvent(eventName, { detail: data });
           window.dispatchEvent(event);
         });
-        //this.mainTransformer.nodes([placedObj]);
         this.mainLayer.draw();
         this.stopDrawing();
 
-        // if (this.efficientDrawingMode) {
-        //   this.startDrawing(this.currentShapeType);
-        // }
+        //  if (this.efficientDrawingMode) {
+        //    this.startDrawing(this.currentShapeType);
+        //  }
       }
     };
   }
@@ -375,7 +376,8 @@ export class MapBuilder {
       this.dragLayer,
       0
     );
-    console.log(this.hoverObj.type, "vo dDRAWWW");
+
+    console.log("POMINA")
     this.hoverObj.visible(false);
     this.dragLayer.add(this.hoverObj);
     this.dragLayer.moveToTop();
@@ -551,5 +553,15 @@ export class MapBuilder {
     return this.shapes
       .filter((shape) => shape.className === type)
       .map((shape) => shape.info);
+  }
+
+  updateRoomNames(){
+    this.textLayer.removeChildren();
+    this.shapes
+    .forEach(shape => {
+      shape.displayName(this.textLayer);
+    })
+
+    this.textLayer.children.forEach(child => console.log(child));
   }
 }

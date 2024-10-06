@@ -20,23 +20,28 @@ export default class Room extends MapShape {
         blockSize,
         snap
       );
-  
-      this.type = "Room";
-      this.modalEventName = "openRoomModalEvent"
 
       this._info = {
         name: '',
         type: '',
         description: ''
       }
+  
+      this.type = "Room";
+      this.modalEventName = "openRoomModalEvent"
+      this.id = id;
+
+      this.initText();
+
 
     }
+
 
 
     saveShapeDetails(){
       this.setAttr("obj_name",this.info.name);
       this.setAttr("room_type",this.info.type);
-      this.setAttr("floor",this.info.floor)
+      this.setAttr("floor",this.info.floor);
       this.setAttr("description",this.info.description);
     }
    
