@@ -35,14 +35,11 @@ public class MapRenderApi {
             response.put("status","error: " + e.getMessage());
         }
 
-
-
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/public/navigate")
     public ResponseEntity<List<MapNode>> navigate(@RequestParam String from, @RequestParam String to){
-        System.out.println("GR");
         List<MapNode> path = graph.findRoute(from, to);
         return ResponseEntity.ok(path);
     }

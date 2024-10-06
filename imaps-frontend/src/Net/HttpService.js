@@ -1,4 +1,4 @@
-// HttpService.js
+
 
 class HttpService {
     constructor(baseURL, auth = false) {
@@ -35,9 +35,7 @@ class HttpService {
               console.log("Unauthorized: Invalid token or session expired");
               break;
             case 403:
-              console.log(
-                "Forbidden: You don't have permission to access this resource"
-              );
+              console.log("Forbidden: You don't have permission to access this resource");
               window.location.href = "/Login";
               break;
             case 500:

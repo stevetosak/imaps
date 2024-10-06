@@ -12,7 +12,7 @@ import "./App.css";
 import HttpService from "./Net/HttpService";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
@@ -24,8 +24,10 @@ function App() {
         const response = await httpService.get(`/verify?token=${token}`);
         if(response.username){
           setIsAuthenticated(true);
+          console.log("good")
         }
       } catch (error) {
+        console.log("ERROR: ", error)
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
@@ -34,6 +36,7 @@ function App() {
 
     if (token) {
       verifyToken();
+      //setLoading(false);
     } else {
       setIsAuthenticated(false);
       setLoading(false);
