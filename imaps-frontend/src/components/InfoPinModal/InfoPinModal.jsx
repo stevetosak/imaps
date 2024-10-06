@@ -7,7 +7,7 @@ export default function InfoPinModal(props) {
   const [room, setRoom] = useState(null);
 
   const [formData, setFormData] = useState({
-    name: "", 
+    name: "",
     description: "",
     selectedPin: "",
     availablePins: [],
@@ -15,9 +15,9 @@ export default function InfoPinModal(props) {
   });
 
   const toggleModal = () => {
-    console.log(pins,'sdsd')
+    console.log(pins, "sdsd");
     if (modal) {
-      room.info = formData
+      room.info = formData;
     }
     setModal(!modal);
   };
@@ -32,34 +32,31 @@ export default function InfoPinModal(props) {
 
   const addPinToList = () => {
     if (!formData.selectedPin || pins.includes(formData.selectedPin)) return;
-  
+
     // Update pins and formData with the new pin
     setPins((prevPins) => {
       const updatedPins = [...prevPins, formData.selectedPin];
-  
+
       // Set the selectedPins in formData after updating pins
       setFormData((prevFormData) => ({
         ...prevFormData,
         selectedPin: "",
         selectedPins: updatedPins, // Reflect the updated pins
       }));
-  
+
       return updatedPins; // Return the updated pins for state
     });
   };
-  
 
   const removePinFromList = (pinToRemove) => {
     // Remove pin from the pins list
     setPins((prevPins) => prevPins.filter((pin) => pin !== pinToRemove));
 
     // Re-add the removed pin back to availablePins
-    setFormData({ ...formData, selectedPins: pins});
-
+    setFormData({ ...formData, selectedPins: pins });
   };
 
   const saveDetails = () => {
-    
     room.info = formData;
     toggleModal();
   };
@@ -78,7 +75,6 @@ export default function InfoPinModal(props) {
         availablePins: event.detail.map.getPins(),
         selectedPins: roomObj.info.selectedPins,
       });
-
 
       setPins(roomObj.info.selectedPins || []); // Set the already connected pins
 
@@ -102,9 +98,9 @@ export default function InfoPinModal(props) {
 
   return (
     <>
-      <button onClick={toggleModal} className={styles.btnModal}>
+      {/* <button onClick={toggleModal} className={styles.btnModal}>
         Info Pin Modal
-      </button>
+      </button> */}
 
       {modal && (
         <div className={styles.modal}>
@@ -126,9 +122,7 @@ export default function InfoPinModal(props) {
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="selectedPin">
-                  Select pins connected to this pin:
-                </label>
+                <label htmlFor="selectedPin">Select pins connected to this pin:</label>
                 <select
                   id="selectedPin"
                   name="selectedPin"
@@ -143,11 +137,7 @@ export default function InfoPinModal(props) {
                     </option>
                   ))}
                 </select>
-                <button
-                  type="button"
-                  onClick={addPinToList}
-                  className={styles.addButton}
-                >
+                <button type="button" onClick={addPinToList} className={styles.addButton}>
                   Add Pin
                 </button>
               </div>
@@ -158,10 +148,7 @@ export default function InfoPinModal(props) {
                   pins.map((pin, index) => (
                     <li key={index} className={styles.pinItem}>
                       {pin}
-                      <button
-                        onClick={() => removePinFromList(pin)}
-                        className={styles.removeButton}
-                      >
+                      <button onClick={() => removePinFromList(pin)} className={styles.removeButton}>
                         Remove
                       </button>
                     </li>

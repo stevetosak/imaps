@@ -15,7 +15,7 @@ function SideBar() {
     <div>
       <div className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
         <button className={styles.toggleBtn} onClick={toggleSidebar}>
-          <img src={isOpen ? menu_opened : menu_closed} alt="Menu Toggle"></img>
+          <img src={isOpen ? menu_opened : menu_closed} alt="Menu Toggle" />
         </button>
         <div className={styles.sidebarContent}>
           <ul>

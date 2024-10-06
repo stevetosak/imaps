@@ -13,21 +13,21 @@ import HttpService from "./Net/HttpService";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const httpService = new HttpService('http://localhost:8080/api/auth');
+    const httpService = new HttpService("http://localhost:8080/api/auth");
 
     const verifyToken = async () => {
       try {
         const response = await httpService.get(`/verify?token=${token}`);
-        if(response.username){
+        if (response.username) {
           setIsAuthenticated(true);
-          console.log("good")
+          console.log("good");
         }
       } catch (error) {
-        console.log("ERROR: ", error)
+        console.log("ERROR: ", error);
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
@@ -41,7 +41,6 @@ function App() {
       setIsAuthenticated(false);
       setLoading(false);
     }
-  
   }, []);
 
   const handleLogin = (token) => {
@@ -50,7 +49,12 @@ function App() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Loading, please wait...</p>
+      </div>
+    );
   }
 
   return (

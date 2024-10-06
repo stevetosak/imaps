@@ -11,7 +11,7 @@ export default function DrawGuide() {
   return (
     <>
       <button onClick={toggleModal} className={styles.btnModal}>
-        Draw Guide
+        Guide
       </button>
 
       {modal && (

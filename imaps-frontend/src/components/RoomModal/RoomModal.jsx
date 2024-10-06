@@ -13,7 +13,7 @@ export default function RoomModal(props) {
   const [roomTypes, setRoomTypes] = useState([]);
 
   const toggleModal = () => {
-    if(modal) room.info = formData;
+    if (modal) room.info = formData;
     setModal(!modal);
   };
 
@@ -23,18 +23,16 @@ export default function RoomModal(props) {
       toggleModal();
       console.log(room.info);
     }
-  }
+  };
   // impl da sa gledat dali ti e zacuvana formava
 
   const handleInputChange = (e) => {
-    
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
     room.info = formData;
-    
   };
 
   useEffect(() => {
@@ -65,9 +63,9 @@ export default function RoomModal(props) {
 
   return (
     <>
-      <button onClick={toggleModal} className={styles.btnModal}>
+      {/* <button onClick={toggleModal} className={styles.btnModal}>
         RoomModal
-      </button>
+      </button> */}
 
       {modal && (
         <div className={styles.modal}>
@@ -89,7 +87,7 @@ export default function RoomModal(props) {
               <div className={styles.formGroup}>
                 <label htmlFor="type">Type:</label>
                 <select id="type" name="type" onChange={handleInputChange} value={formData.type} required>
-                <option value="">Select Room Type</option>
+                  <option value="">Select Room Type</option>
                   {roomTypes.map((type, index) => (
                     <option key={index} value={type}>
                       {type}

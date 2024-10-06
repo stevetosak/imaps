@@ -43,7 +43,7 @@ export default function RoomTypeModal(args) {
   //   if(args && args.map){
   //     setRoomTypes(args.map.roomTypes);
   //   }
-  
+
   // }, [args]);
 
   // Save room types to local storage whenever they change
@@ -54,7 +54,7 @@ export default function RoomTypeModal(args) {
   return (
     <>
       <button onClick={toggleModal} className={styles.btnModal}>
-        Room Type Modal
+        Room Types
       </button>
 
       {modal && (
