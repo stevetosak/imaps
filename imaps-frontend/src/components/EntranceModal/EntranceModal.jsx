@@ -6,7 +6,6 @@ export default function EntranceModal(props) {
   const [room, setRoom] = useState(null);
   const [pins, setPins] = useState([]);
 
-
   const [formData, setFormData] = useState({
     name: "",
     connectedRoom: "",
@@ -23,7 +22,7 @@ export default function EntranceModal(props) {
       room.info = formData
       props.map.updateRoomNames();
     }
-    setModal(!modal); 
+    setModal(!modal);
   };
 
   const handleInputChange = (e) => {
@@ -33,10 +32,7 @@ export default function EntranceModal(props) {
       [name]: type === "checkbox" ? checked : value,
     }));
 
-
     console.log(formData);
-
-  
   };
 
   const addPinToList = () => {
@@ -53,14 +49,13 @@ export default function EntranceModal(props) {
   
       return updatedPins;
     });
-  
+
     console.log(formData.selectedPins, "sele");
   };
-  
 
   const removePinFromList = (pinToRemove) => {
     setPins((prevPins) => prevPins.filter((pin) => pin !== pinToRemove));
-    setFormData({ ...formData, selectedPins: pins});
+    setFormData({ ...formData, selectedPins: pins });
   };
 
   const saveDetails = () => {
@@ -77,7 +72,7 @@ export default function EntranceModal(props) {
       
   
       const savedPins = roomObj.info.selectedPins || [];
-      
+
       setFormData({
         name: roomObj.info.name || "",
         connectedRoom: roomObj.info.connectedRoom || "",
@@ -91,7 +86,7 @@ export default function EntranceModal(props) {
       
       setPins(savedPins);
       setModal(true);
-    
+
       console.log(savedPins, "Loaded pins on modal open");
     };
 
@@ -110,9 +105,9 @@ export default function EntranceModal(props) {
 
   return (
     <>
-      <button onClick={toggleModal} className={styles.btnModal}>
+      {/* <button onClick={toggleModal} className={styles.btnModal}>
         Entrance Modal
-      </button>
+      </button> */}
 
       {modal && (
         <div className={styles.modal}>

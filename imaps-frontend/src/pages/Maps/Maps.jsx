@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Maps.module.css";
 import "react-tiles-dnd/esm/index.css";
 import { TilesContainer } from "react-tiles-dnd";
 import { Link } from "react-router-dom";
 import card from "../../assets/card-map.png";
 
-const tiles = [
+const initialTiles = [
   { text: "FINKI", cols: 1, rows: 1 },
   { text: "TMF", cols: 1, rows: 1 },
   { text: "HOSPITAL", cols: 1, rows: 1 },
@@ -13,18 +13,6 @@ const tiles = [
   { text: "LIBRARY", cols: 1, rows: 1 },
   { text: "PENTAGON", cols: 1, rows: 1 },
   { text: "WHITE HOUSE", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
   { text: "HOME", cols: 1, rows: 1 },
   { text: "PRESPATEKS", cols: 1, rows: 1 },
 ];
@@ -51,9 +39,29 @@ const tileSize = (tile) => ({
 });
 
 export default function Maps() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [tiles, setTiles] = useState(initialTiles);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+
+    // Filter the tiles based on search term
+    setTiles(initialTiles.filter((tile) => tile.text.toLowerCase().includes(value)));
+  };
+
   return (
     <div className={styles.container}>
-      <h1>Explore maps</h1>
+      <h1>Explore Maps</h1>
+
+      <div className={styles.searchBar}>
+        <input
+          type="text"
+          placeholder="Search for maps..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      </div>
 
       <TilesContainer
         data={tiles}
