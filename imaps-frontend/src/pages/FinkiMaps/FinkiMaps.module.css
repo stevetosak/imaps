@@ -45,7 +45,7 @@
   width: 100vw; /* Make the map fill the entire width of the screen */
   height: 100vh; /* Make the map fill the entire height of the screen */
   z-index: 1; /* Ensure the map is behind the toolbar */
-  background-color: beige; /* Set your map's background color */
+  background-color:beige /* Set your map's background color */
 }
 
 .mapControlsContainer {

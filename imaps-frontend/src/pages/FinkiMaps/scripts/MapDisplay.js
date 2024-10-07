@@ -43,31 +43,62 @@ export class MapDisplay {
   }
 
   async loadMap() {
-  
     const httpService = new HttpService();
     const mapData = await httpService.get("/public/mapData");
     this.deserializeMap(mapData);
     this.shapes.forEach((shape) => {
       this.mainLayer.add(shape);
     });
-
   }
 
   drawRoute(path) {
-    this.routeLayer.removeChildren();
+    this.routeLayer.removeChildren(); // Clear the layer
     console.log("====PATH====");
     path.forEach((point) => console.log(point.x, point.y));
 
     const pointsArray = path.flatMap((point) => [point.x, point.y]);
 
-    const route = new Konva.Line({
-      points: pointsArray,
-      stroke: "red",
-      strokeWidth: 3,
-    });
+    console.log(pointsArray, "POINTS");
 
-    this.routeLayer.add(route);
-  }
+    let buff = [];
+    let count = 0;
+    let index = 0;
+
+    const drawNextSegment = () => {
+        if (index >= pointsArray.length) return;
+
+        buff.push(pointsArray[index]);
+        count++;
+
+        if (count % 4 === 0) {
+            const line = new Konva.Arrow({
+                points: buff,
+                stroke: "#e91332",
+                strokeWidth: 2.5,
+                dash: [5, 4],
+                lineCap: 'round',
+                lineJoin: 'round',
+                pointerLength: 7,
+                pointerWidth: 7,
+                fill:'red',
+            });
+
+            this.routeLayer.add(line);
+            this.routeLayer.draw(); 
+
+            console.log(buff, "BUFFER");
+            buff = []; 
+            index -= 2; 
+        }
+
+        index++;
+
+        setTimeout(drawNextSegment, 25); 
+    };
+
+    drawNextSegment(); 
+}
+
 
   search() {
     console.log("VLEZE VO SEARCH");

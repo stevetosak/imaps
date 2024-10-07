@@ -38,7 +38,7 @@ export default class Factory {
           y: attrs.y,
           width: attrs.width * scaleX,
           height: attrs.height * scaleY,
-          fill: 'blue',
+          fill: '#1c3cff',
           stroke: 'black',
           strokeWidth: 1,
           draggable: false,
