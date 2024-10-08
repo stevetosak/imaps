@@ -18,24 +18,23 @@ export default function DrawGuide() {
           <div onClick={toggleModal} className={styles.overlay}></div>
           <div className={styles.modalContent}>
             <h2>How to Use the Map Builder</h2>
-            <p>Welcome to the Map Builder! Follow these steps to create your map:</p>
+            <p>Welcome to the Map Builder! Here you can create an indoor map, render it and enjoy!:</p>
+            <br></br>
             <ul>
-              <li>First, insert the room types by selecting from the available options.</li>
-              <li>
-                Next, start drawing the layout by dragging and dropping walls and rooms. You can resize and
-                adjust them accordingly to fit your desired layout.
-              </li>
-              <li>
-                To add specific information about a room, double-click on the room or pin. This will open a
-                dialog where you can enter room details such as the room name, type, and other important
-                information.
-              </li>
-              <li>
-                Finally, place infoPins on the map to assist with navigation. These pins will be used to guide
-                users from one room to another within the building.
-              </li>
+              <h3>Shapes and Placement</h3>
+              <li>There are 4 types of shapes : Walls, Rooms, Entrances and Pins. </li>
+              <li>By clicking on a shape's respective icon, that shape will follow your mouse untill you place it by clicking anywhere on the canvas</li>
+              <li>Placed shapes automatically get snapped in place, with respect to the grid</li>
+              <li>You can place a pin on the canvas by right clicking and then left clicking - imat bug tuka nekogas direktno se postavuvaat</li>
+              <br></br>
+              <h3>Adding information</h3>
+              <li>By double clicking on any shape (except a Wall), you can add information to the shape</li>
+              <li>Every shape holds basic information like a name, and more advanced information for navigation aswell</li>
+              <br></br>
+              <li>To explore map building in detail you can check our own wiki page. TODO</li>
             </ul>
-            <p>After completing your map, save the details and your custom layout will be ready for use!</p>
+            <br></br>
+            <p>After completing your map, click the render button and go to the View page to see your full featured map!</p>
 
             <button className={styles.closeModal} onClick={toggleModal}>
               CLOSE
