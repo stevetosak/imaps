@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./DrawGuide.module.css";
+import help_icon from "../../assets/help_icon.png";
 
 export default function DrawGuide() {
   const [modal, setModal] = useState(false);
@@ -10,9 +11,7 @@ export default function DrawGuide() {
 
   return (
     <>
-      <button onClick={toggleModal} className={styles.btnModal}>
-        Guide
-      </button>
+      <button onClick={toggleModal} className={styles.btnModal}></button>
 
       {modal && (
         <div className={styles.modal}>

@@ -60,7 +60,7 @@ export default function Signup() {
         <div className={styles.heading}>CREATE AN ACCOUNT</div>
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Username</label>
             <input
               type="text"
               id="name"

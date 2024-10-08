@@ -1,17 +1,37 @@
-/* Ensure no scrolling and remove white background */
 html,
 body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden; /* Prevent scrolling */
-  background-color: #141414f6; /* Set background to prevent any white areas */
+  overflow: hidden;
+  background-color: #141414;
+}
+
+.logo {
+  width: 100px;
+  margin: 10px;
+  align-self: center;
+}
+
+.title {
+  margin-top: 20px;
+  color: #f0e68c;
+}
+
+.paragraph {
+  color: #cccccc;
+}
+.guideWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
 }
 
 .wrapper {
   display: flex;
-  height: 100vh; /* Ensure the wrapper takes full viewport height */
-  background-color: #141414f6;
+  height: 100vh;
+  background-color: #141414;
   overflow: hidden;
 }
 
@@ -19,21 +39,20 @@ body {
   flex-grow: 1;
   width: 85vw;
   height: 90vh;
-  background-color: #16161600;
+  background-color: #161616;
   border: 1px solid gray;
   margin: 50px;
-  overflow: hidden;
 }
 
 .panel {
-  width: 15vw; /* Adjust width of the panel */
-  height: 100vh; /* Make sure panel takes full height of viewport */
+  width: 250px;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   padding: 20px;
-  background-color: #1c1c1c; /* Darker background for contrast */
-  color: white;
-  overflow-y: auto; /* Allow content to scroll if it exceeds panel height */
+  background-color: #1c1c1c;
+  color: #ffffff;
+  overflow-y: hidden;
   box-sizing: border-box;
 }
 
@@ -45,58 +64,55 @@ body {
   gap: 10px;
 }
 
-.hide {
-  /* visibility: hidden; */
-}
+/* .hide {
+  visibility: hidden;
+} */
 
 .renderButton {
   width: 100%;
   height: 50px;
-  background-color: #1e90ff;
-  color: white;
+  background-color: #e67e22;
+  color: #ffffff;
   border: none;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
 }
 
 .renderButton:hover {
-  background-color: #1c86ee;
+  background-color: #d2691e;
   transform: scale(1.05);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 .renderButton:active {
-  background-color: #187bcd;
+  background-color: #b35418;
   transform: scale(0.98);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .shapeOptions {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
   margin: 20px 0;
   display: flex;
-  flex-direction: column; /* Stack items vertically */
-  gap: 10px; /* Add space between items */
-  align-items: center; /* Center the shapes horizontally */
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
 }
 
 .shapeOption {
-  display: block;
-  padding: 10px 20px;
   width: 100px;
   height: 100px;
   border: 2px solid #804047;
   border-radius: 5px;
-  background-color: #362929d2;
+  background-color: #362929;
   color: white;
   font-size: 12px;
   font-weight: bold;
@@ -112,11 +128,6 @@ body {
   border-color: #94183b;
 }
 
-.shapeOption:active {
-  background-color: #94183b;
-  border-color: #94183b;
-}
-
 .fpscounter {
   border: 1px solid #00b822;
   margin: 20px 0;
@@ -125,21 +136,21 @@ body {
 .fpscounter p {
   color: #00740c;
   font-weight: bold;
-  margin: 2px 3px;
   text-align: center;
+  margin: 0;
+  padding: 5px 0;
 }
 
 .floorSelector {
-  margin-bottom: 20px; /* Add space between elements */
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  color: white;
+  color: #ffffff;
 }
 
 .floorSelector label {
   font-size: 14px;
-  color: #fff; /* Ensure text is visible on dark background */
 }
 
 .floorDropdown {
@@ -148,75 +159,44 @@ body {
   border-radius: 5px;
   border: 1px solid #ccc;
   background-color: #3a3a3a;
-  color: #fff;
+  color: #ffffff;
   cursor: pointer;
-  width: 100%; /* Make it fill the available space */
+  width: 100%;
+  transition: border-color 0.3s;
 }
 
 .floorDropdown:focus {
   outline: none;
-  border-color: #1e90ff; /* Highlight on focus */
-}
-
-.nodeOptions {
-  display: none;
-  position: absolute;
-  border: 1px solid #ccc;
-  background-color: white;
-  width: 200px;
-  padding: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  opacity: 0.9;
-  box-sizing: border-box;
-  border-radius: 5px;
-}
-
-.info {
-  margin-top: 10px;
-  color: white;
-  font-size: small;
-}
-
-.checkboxCont {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 100%;
+  border-color: #1e90ff;
 }
 
 .popup {
   position: fixed;
-  top: 20%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(73, 73, 73, 0.8);
   color: white;
   padding: 20px;
   border-radius: 8px;
-  z-index: 1000; /* Ensure it appears above other content */
+  z-index: 1000;
   width: 300px;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   opacity: 0;
   animation: fadeInOut 3s ease-in-out forwards;
 }
 
 @keyframes fadeInOut {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -40%);
-  }
-  10% {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-  90% {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
+  0%,
   100% {
     opacity: 0;
     transform: translate(-50%, -40%);
+  }
+  10%,
+  90% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
   }
 }
 

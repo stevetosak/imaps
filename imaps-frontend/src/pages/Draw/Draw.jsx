@@ -8,6 +8,7 @@ import EntranceModal from "../../components/EntranceModal/EntranceModal.jsx";
 import DrawGuide from "../../components/DrawGuide/DrawGuide.jsx";
 import RoomTypeModal from "../../components/RoomTypeModal/RoomTypeModal.jsx";
 import InfoPinModal from "../../components/InfoPinModal/InfoPinModal.jsx";
+import logo from "../../assets/logo_icon.png";
 
 function Draw() {
   const [selectedFloor, setSelectedFloor] = useState(1);
@@ -40,12 +41,16 @@ function Draw() {
       <SideBar></SideBar>
       <div id="container" className={styles.cont}></div>
       <div className={styles.panel}>
-        <h1>Welcome, User</h1>
-
-        <div id="fpscont" className={styles.fpscounter}>
+        <img src={logo} alt="Finki Logo" className={styles.logo} />
+        <h1 className={styles.title}>Finki</h1>
+        {/* <div id="fpscont" className={styles.fpscounter}>
           <p id="fpsCounter"></p>
+        </div> */}
+        <div className={styles.guideWrapper}>
+          <DrawGuide />
         </div>
-        <div className={styles.floorSelector}>
+
+        {/* <div className={styles.floorSelector}>
           <label htmlFor="floorSelect">Select Floor:</label>
           <select
             id="floorSelect"
@@ -58,15 +63,14 @@ function Draw() {
             <option value={3}>3rd Floor</option>
             <option value={4}>4th Floor</option>
           </select>
-        </div>
-        <h2>Objects:</h2>
+        </div> */}
+        {/* <h2 className={styles.paragraph}>Objects:</h2> */}
         <ul className={styles.shapeOptions} id="shapeOptions">
           <li data-info="Entrance" className={`${styles.shapeOption} ${styles.entrance}`}></li>
           <li data-info="Wall" className={`${styles.shapeOption} ${styles.wall}`} id="wall"></li>
           <li data-info="Room" className={`${styles.shapeOption} ${styles.room}`} id="room"></li>
         </ul>
 
-        <DrawGuide></DrawGuide>
         <RoomTypeModal map={app}></RoomTypeModal>
 
         <div id="render" className={styles.buttonContainer}>
