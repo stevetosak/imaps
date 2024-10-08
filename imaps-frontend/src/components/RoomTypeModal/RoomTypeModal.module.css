@@ -47,7 +47,7 @@ h3 {
 .btnModal {
   padding: 10px 20px;
   font-size: 18px;
-  background-color: #007bff;
+  background-color: #aa5c5c;
   color: white;
   border: none;
   border-radius: 5px;
@@ -57,7 +57,7 @@ h3 {
 }
 
 .btnModal:hover {
-  background-color: #0056b3;
+  background-color: #994f4f;
 }
 
 /* Close button inside the modal */
