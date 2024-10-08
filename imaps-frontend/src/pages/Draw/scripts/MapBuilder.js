@@ -507,6 +507,18 @@ export class MapBuilder {
    
   }
 
+  async saveMap(){
+    this.saveShapeDetails();
+    const httpService = new HttpService("http://localhost:8080/api/protected",true);
+    try{
+      const response = await httpService.put("/saveMap",this.shapes);
+      console.log(response);
+    } catch(err){
+      console.log("ERROR --> Could not render map --->",err);
+    }
+
+  }
+
   handleStageClick(e) {
     if (this.selectionRectangle.visible()) {
       return;
@@ -561,7 +573,6 @@ export class MapBuilder {
     .forEach(shape => {
       shape.displayName(this.textLayer);
     })
-
     this.textLayer.children.forEach(child => console.log(child));
   }
 }

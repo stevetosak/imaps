@@ -42,6 +42,10 @@ public class MapService {
         return mapRepository.findById(id);
     }
 
+    public void saveMap(IndoorMap map) {
+
+    }
+
 
     @Transactional
     public void updateMap(String mapName, DataJson mapData) {

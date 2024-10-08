@@ -19,6 +19,7 @@ PRIORITY MEDIUM
 -Implementacija na stairs
 -Shape sho ke selektiras za klavanje da sejt celo vreme ko selektiran, duri ne kliknis drug shape ili escape.
 -Nacin da znes dodeka crtas koi sobi ti se povrzani
+-Ako kliknis na room vo view, da ta odnesit do toj room (navigacija);
 
 
 PRIORITY LOW

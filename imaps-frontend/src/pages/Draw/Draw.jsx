@@ -8,12 +8,12 @@ import EntranceModal from "../../components/EntranceModal/EntranceModal.jsx";
 import DrawGuide from "../../components/DrawGuide/DrawGuide.jsx";
 import RoomTypeModal from "../../components/RoomTypeModal/RoomTypeModal.jsx";
 import InfoPinModal from "../../components/InfoPinModal/InfoPinModal.jsx";
+import HttpService from "../../Net/HttpService.js";
 
 function Draw() {
   const [selectedFloor, setSelectedFloor] = useState(1);
   const [app, setApp] = useState(null);
-  const [isPopupVisible, setIsPopupVisible] = useState(false); // State for popup
-
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
   useEffect(() => {
     const app = new MapBuilder("container");
     setApp(app);
@@ -26,14 +26,16 @@ function Draw() {
   };
 
   const handleRenderClick = () => {
-    // Show the popup
     setIsPopupVisible(true);
 
-    // Hide the popup after 3 seconds
     setTimeout(() => {
       setIsPopupVisible(false);
     }, 3000);
   };
+
+  const handleSaveClick = () => {
+    app.saveMap();
+  }
 
   return (
     <div className={styles.wrapper} id="wrapper">
@@ -73,11 +75,23 @@ function Draw() {
             id="render-button"
             type="button"
             className={styles.renderButton}
-            onClick={handleRenderClick} // Show popup when clicked
+            onClick={handleRenderClick}
           >
             Render
           </button>
         </div>
+
+        <div id="save">
+        <button
+            id="save-map-button"
+            type="button"
+            className={styles.renderButton}
+            onClick={handleSaveClick}
+            >
+              Save
+             </button>
+        </div>
+
         <div className={styles.hide}>
           <RoomModal map={app}></RoomModal>
           <EntranceModal map={app}></EntranceModal>

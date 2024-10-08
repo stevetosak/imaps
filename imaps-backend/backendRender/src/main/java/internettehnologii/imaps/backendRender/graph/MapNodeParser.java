@@ -14,9 +14,9 @@ public class MapNodeParser {
 
         System.out.println("======= MAP JSON ====== " + mapJson);
 
-        if(mapJson == null || mapJson.isEmpty() || mapJson.equals("[]")) {
-            throw new MapParseException("Cannot parse empty map");
-        }
+//        if(mapJson == null || mapJson.isEmpty() || mapJson.equals("[]")) {
+//            throw new MapParseException("Cannot parse empty map");
+//        }
 
         ObjectMapper objectMapper = new ObjectMapper();
             String[] shapes = objectMapper.readValue(mapJson, String[].class);
@@ -60,7 +60,8 @@ public class MapNodeParser {
         if(attrs.has(key)){
             return attrs.get(key).asText();
         } else {
-            return "No attribute found for key: " + key;
+            System.out.println("No attribute found for key:" + key);
+            return null;
         }
 
     }
@@ -69,11 +70,17 @@ public class MapNodeParser {
     private static MapNode createMapNode(JsonNode attrs) {
         String name = findAttr("obj_name",attrs);
         String description = findAttr("description",attrs);
+        String connectedRoom = findAttr("connected_room",attrs);
         double x = Double.parseDouble(Objects.requireNonNull(findAttr("x", attrs)));
         double y = Double.parseDouble(Objects.requireNonNull(findAttr("y", attrs)));
         Coordinates<Double,Double> coordinates = new Coordinates<>(x,y);
 
-        return new MapNode(name, description, coordinates);
+        MapNode mapNode = new MapNode(name, description, coordinates);
+        if(connectedRoom != null){
+            mapNode.setConnectedRoom(connectedRoom);
+        }
+
+        return mapNode;
     }
 
 }

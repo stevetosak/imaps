@@ -1,5 +1,7 @@
 package internettehnologii.imaps.backendRender.graph;
 
+import jakarta.persistence.Tuple;
+
 import java.util.*;
 
 public class RouteGraph {
@@ -117,6 +119,20 @@ public class RouteGraph {
         graph.get(from).add(new Edge(to,distance));
         graph.get(to).add(new Edge(from,distance));
 
+    }
+
+
+    public String findNodeConnectedToEntrance(String roomName){
+        for(MapNode node : graph.keySet()){
+            if(node.getConnectedRoom().equals(roomName)){
+                return node.getName();
+            }
+        }
+        return null;
+    }
+
+    public String getNodeNameByName(String name){
+        return nameToNodeMap.get(name).getName();
     }
 
 

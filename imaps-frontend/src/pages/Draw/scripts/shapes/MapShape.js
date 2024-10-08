@@ -16,12 +16,12 @@ export default class MapShape extends Konva.Shape {
     this.shadowForStrokeEnabled(false);
     this.on("mouseover", () => (document.body.style.cursor = "pointer"));
     this.on("mouseout", () => (document.body.style.cursor = "default"));
-    this.on("dblclick", (e) => {
-      this.moveToTop();
-      this.getLayer()
-        .find("Transformer")
-        .forEach((t) => t.moveToTop());
-    });
+    // this.on("dblclick", (e) => {
+    //   this.moveToTop();
+    //   this.getLayer()
+    //     .find("Transformer")
+    //     .forEach((t) => t.moveToTop());
+    // });
 
     if(snap){
       this.on("dragend",this.snapToGrid.bind(this));
@@ -44,7 +44,6 @@ export default class MapShape extends Konva.Shape {
 
 
   initText() {
-    console.log(this.info.name,"VLEZEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
     this.textOffsetX = 0;
     this.textOffsetY = -30;
     this.infoText = new Konva.Text({

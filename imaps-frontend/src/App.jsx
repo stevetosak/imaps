@@ -12,7 +12,7 @@ import "./App.css";
 import HttpService from "./Net/HttpService";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -61,7 +61,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<IMaps />} />
-        <Route path="/Maps/FinkiMaps/View" element={<FinkiMaps />} />
+        <Route path="/Maps/FinkiMaps/View" element={<FinkiMaps />} /> 
         <Route path="/Maps" element={<Maps />} />
         <Route path="/Login" element={<LoginPage onLogin={handleLogin} />} />
         <Route path="/Signup" element={<Signup />} />

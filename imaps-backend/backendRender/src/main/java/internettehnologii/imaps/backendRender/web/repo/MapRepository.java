@@ -20,4 +20,8 @@ public interface MapRepository extends JpaRepository<IndoorMap, Long> {
     @Query(nativeQuery = true,
     value = "SELECT * FROM map WHERE name = ?1")
     Optional<IndoorMap> findMapByName(String name);
+
+    @Query(nativeQuery = true,
+    value = "SELECT map.map_data FROM map WHERE name = ?1")
+    Optional<DataJson> findMapDataByName(String name);
 }

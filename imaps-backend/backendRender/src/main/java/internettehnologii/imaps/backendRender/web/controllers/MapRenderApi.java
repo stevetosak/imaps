@@ -5,10 +5,14 @@ import internettehnologii.imaps.backendRender.graph.MapNode;
 import internettehnologii.imaps.backendRender.graph.MapNodeParser;
 import internettehnologii.imaps.backendRender.graph.RouteGraph;
 import internettehnologii.imaps.backendRender.graph.exceptions.MapParseException;
+import internettehnologii.imaps.backendRender.graph.exceptions.NodeNotFoundException;
+import internettehnologii.imaps.backendRender.web.service.MapService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +24,14 @@ public class MapRenderApi {
 
     private String jsonData;
     private RouteGraph graph;
+
+
+    private MapService mapService;
+
+    @Autowired
+    public MapRenderApi(MapService mapService) {
+        this.mapService = mapService;
+    }
 
     @PostMapping("/protected/render")
     public ResponseEntity<Map<String, Object>> render(@RequestBody String requestBody) throws Exception {
@@ -38,9 +50,23 @@ public class MapRenderApi {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping
+    public ResponseEntity<String> saveMap(@RequestBody String requestBody) {
+        mapService.
+    }
+
     @GetMapping("/public/navigate")
     public ResponseEntity<List<MapNode>> navigate(@RequestParam String from, @RequestParam String to){
-        List<MapNode> path = graph.findRoute(from, to);
+
+        String entranceFrom = graph.findNodeConnectedToEntrance(from);
+        String entranceTo = graph.findNodeConnectedToEntrance(to);
+        if(entranceFrom == null){
+            throw new NodeNotFoundException("Could not find entrance related to room: " + from);
+        }
+        if(entranceTo == null){
+            throw new NodeNotFoundException("Could not find entrance related to room: " + to);
+        }
+        List<MapNode> path = graph.findRoute(entranceFrom, entranceTo);
         return ResponseEntity.ok(path);
     }
 
@@ -48,7 +74,7 @@ public class MapRenderApi {
     public ResponseEntity<String> getMapData(){
         //tuka povik do baza
         System.out.println(jsonData);
-        if(!jsonData.isEmpty()){
+        if(jsonData != null && !jsonData.isEmpty()){
             return ResponseEntity.ok(jsonData);
         } else {
             return ResponseEntity.notFound().build();

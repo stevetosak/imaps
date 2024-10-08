@@ -10,6 +10,7 @@ import java.util.List;
 public class MapNode {
     private String name;
     private String description;
+    private String connectedRoom = "EMPTY";
     private Coordinates<Double,Double> coordinates;
     private List<String> connectionNames = new ArrayList<>();
 
@@ -23,6 +24,13 @@ public class MapNode {
         this.coordinates = coordinates;
         this.name = name;
         this.connectionNames = connectionNames;
+    }
+
+    public MapNode(String name, String description, Coordinates<Double, Double> coordinates, String connectedRoom) {
+        this.name = name;
+        this.description = description;
+        this.coordinates = coordinates;
+        this.connectedRoom = connectedRoom;
     }
 
     public MapNode() {
