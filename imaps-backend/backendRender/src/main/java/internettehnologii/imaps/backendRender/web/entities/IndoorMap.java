@@ -66,6 +66,11 @@ public class IndoorMap {
         this.url = url;
     }
 
+    public IndoorMap(String name, DataJson dataJson) {
+        this.name = name;
+        this.mapData = dataJson;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -16,11 +16,11 @@ public class MapService {
     private final MapRepository mapRepository;
 
     @Autowired
-    public MapService(MapRepository mapRepository){
+    public MapService(MapRepository mapRepository) {
         this.mapRepository = mapRepository;
     }
 
-    public List<IndoorMap> getMaps(){
+    public List<IndoorMap> getMaps() {
         return mapRepository.findAll();
     }
 
@@ -31,26 +31,42 @@ public class MapService {
 
     public void deleteMap(Long mapId) {
         boolean exists = mapRepository.existsById(mapId);
-        if(!exists){
+        if (!exists) {
             throw new IllegalStateException("Map with id: " + mapId + " does not exist");
         }
         mapRepository.deleteById(mapId);
 
     }
 
-    public Optional<IndoorMap> getMapById(Long id){
+    public Optional<IndoorMap> getMapById(Long id) {
         return mapRepository.findById(id);
     }
 
-    public void saveMap(IndoorMap map) {
 
+    // repository.save zavisit od state na object sho sakas da zacuvas. Ako napres direktno new obj, pa save pret INSERT, a ako napres get na object od baza pa mu setnis attrib so setter pa save, pret UPDATE.
+    @Transactional
+    public void saveMap(String name, String mapData) {
+        Optional<IndoorMap> indoorMap = mapRepository.findMapByName(name);
+        indoorMap.ifPresentOrElse(map -> {
+            map.setName(name);
+            map.setMapData(new DataJson(mapData));
+            mapRepository.save(map);
+        },() -> {
+            IndoorMap map = new IndoorMap(name,new DataJson(mapData));
+            mapRepository.save(map);
+        });
+
+    }
+
+    public Optional<IndoorMap> getMapByName(String name) {
+        return mapRepository.findMapByName(name);
     }
 
 
     @Transactional
     public void updateMap(String mapName, DataJson mapData) {
         IndoorMap map = mapRepository.findMapByName(mapName).orElseThrow(() -> new IllegalStateException("map with name " + mapName + " does not exist"));
-        if(mapName != null && !mapName.isEmpty() && !Objects.equals(map.getName(), mapName)){
+        if (mapName != null && !mapName.isEmpty() && !Objects.equals(map.getName(), mapName)) {
             map.setMapData(mapData);
         }
     }

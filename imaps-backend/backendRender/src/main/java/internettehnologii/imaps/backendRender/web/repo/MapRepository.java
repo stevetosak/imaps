@@ -12,16 +12,23 @@ import java.util.Optional;
 @Repository
 public interface MapRepository extends JpaRepository<IndoorMap, Long> {
 
-    @Modifying
-    @Query(nativeQuery = true,
-    value = "UPDATE map SET map_data = ?1 WHERE name = ?2")
-    void updateMapData(DataJson jsonMapData, String name);
+//    @Modifying
+//    @Query(nativeQuery = true,
+//            value = "UPDATE maps SET map_data = ?2 WHERE name = ?1")
+//    void updateMapData(IndoorMap map);
+//
+//    @Modifying
+//    @Query(nativeQuery = true,
+//            value = "INSERT INTO maps(name,map_data) VALUES (?1, ?2)")
+//    void insertMapData(String name, DataJson data);
 
     @Query(nativeQuery = true,
-    value = "SELECT * FROM map WHERE name = ?1")
+            value = "SELECT * FROM maps WHERE name = ?1")
     Optional<IndoorMap> findMapByName(String name);
 
     @Query(nativeQuery = true,
-    value = "SELECT map.map_data FROM map WHERE name = ?1")
+            value = "SELECT maps.map_data FROM map WHERE name = ?1")
     Optional<DataJson> findMapDataByName(String name);
+
+
 }

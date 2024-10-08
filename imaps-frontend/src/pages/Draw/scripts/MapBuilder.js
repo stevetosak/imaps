@@ -507,14 +507,15 @@ export class MapBuilder {
    
   }
 
-  async saveMap(){
+  async saveMap(mapName){
     this.saveShapeDetails();
     const httpService = new HttpService("http://localhost:8080/api/protected",true);
     try{
-      const response = await httpService.put("/saveMap",this.shapes);
-      console.log(response);
+      console.log(this.shapes,"SJAPES")
+      const response = await httpService.put(`/saveMap?mapName=${mapName}`,this.shapes);
+      console.log(response,"resp in builder");
     } catch(err){
-      console.log("ERROR --> Could not render map --->",err);
+      console.log("ERROR --> Could not Save map --->",err);
     }
 
   }

@@ -9,6 +9,7 @@ import DrawGuide from "../../components/DrawGuide/DrawGuide.jsx";
 import RoomTypeModal from "../../components/RoomTypeModal/RoomTypeModal.jsx";
 import InfoPinModal from "../../components/InfoPinModal/InfoPinModal.jsx";
 import HttpService from "../../Net/HttpService.js";
+import SaveMap from "../../components/SaveMap/SaveMap.jsx";
 
 function Draw() {
   const [selectedFloor, setSelectedFloor] = useState(1);
@@ -33,8 +34,8 @@ function Draw() {
     }, 3000);
   };
 
-  const handleSaveClick = () => {
-    app.saveMap();
+  const handleSaveClick = async (mapName) => {
+    const resp = await app.saveMap(mapName);
   }
 
   return (
@@ -81,7 +82,7 @@ function Draw() {
           </button>
         </div>
 
-        <div id="save">
+        {/* <div id="save">
         <button
             id="save-map-button"
             type="button"
@@ -90,7 +91,9 @@ function Draw() {
             >
               Save
              </button>
-        </div>
+        </div> */}
+
+        <SaveMap submitHandler={handleSaveClick}></SaveMap>
 
         <div className={styles.hide}>
           <RoomModal map={app}></RoomModal>

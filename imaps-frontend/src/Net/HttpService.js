@@ -51,6 +51,8 @@ class HttpService {
           }
         throw new Error(`Error! status: ${response.status}`);
       }
+
+      console.log("HTTPSERVICE: RESPONSE:",response);
   
       return response.json();
     }
