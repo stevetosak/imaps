@@ -325,15 +325,16 @@ export class MapBuilder {
         this.mainLayer.add(placedObj);
         this.shapes.push(placedObj);
         placedObj.snapToGrid();
-        placedObj.on("dblclick", () => {
-          const eventName = placedObj.modalEventName;
-          const data = {
-            room: placedObj,
-            map: this,
-          };
-          const event = new CustomEvent(eventName, { detail: data });
-          window.dispatchEvent(event);
-        });
+        // placedObj.on("dblclick", () => {
+        //   const eventName = placedObj.modalEventName;
+        //   const data = {
+        //     room: placedObj,
+        //     map: this,
+        //   };
+        //   const event = new CustomEvent(eventName, { detail: data });
+        //   window.dispatchEvent(event);
+        // });
+        this.addModalHandling(placedObj)
         this.mainLayer.draw();
         this.stopDrawing();
 
@@ -342,6 +343,20 @@ export class MapBuilder {
         //  }
       }
     };
+  }
+
+  addModalHandling(shape){
+    shape.on("dblclick",() => {
+      const eventName = shape.modalEventName;
+          if(eventName){
+            const data = {
+              room: shape,
+              map: this,
+            };
+            const event = new CustomEvent(eventName, { detail: data });
+            window.dispatchEvent(event);
+          }
+    })
   }
 
   stopDrawing() {
@@ -377,7 +392,7 @@ export class MapBuilder {
       0
     );
 
-    console.log("POMINA")
+    console.log("POMINA");
     this.hoverObj.visible(false);
     this.dragLayer.add(this.hoverObj);
     this.dragLayer.moveToTop();
@@ -497,27 +512,33 @@ export class MapBuilder {
 
   async render() {
     this.saveShapeDetails();
-    const httpService = new HttpService("http://localhost:8080/api/protected",true);
-    try{
-      const response = await httpService.post("/render",this.shapes);
+    const httpService = new HttpService(
+      "http://localhost:8080/api/protected",
+      true
+    );
+    try {
+      const response = await httpService.post("/render", this.shapes);
       console.log(response);
-    } catch(err){
-      console.log("ERROR --> Could not render map --->",err);
+    } catch (err) {
+      console.log("ERROR --> Could not render map --->", err);
     }
-   
   }
 
-  async saveMap(mapName){
+  async saveMap(mapName) {
     this.saveShapeDetails();
-    const httpService = new HttpService("http://localhost:8080/api/protected",true);
-    try{
-      console.log(this.shapes,"SJAPES")
-      const response = await httpService.put(`/saveMap?mapName=${mapName}`,this.shapes);
-      console.log(response,"resp in builder");
-    } catch(err){
-      console.log("ERROR --> Could not Save map --->",err);
+    const httpService = new HttpService(
+      "http://localhost:8080/api/protected/maps",
+      true
+    );
+    try {
+      const response = await httpService.put(
+        `/save?mapName=${mapName}`,
+        this.shapes
+      );
+      console.log(response, "resp in builder");
+    } catch (err) {
+      console.log("ERROR --> Could not Save map --->", err);
     }
-
   }
 
   handleStageClick(e) {
@@ -568,12 +589,38 @@ export class MapBuilder {
       .map((shape) => shape.info);
   }
 
-  updateRoomNames(){
+  updateRoomNames() {
     this.textLayer.removeChildren();
-    this.shapes
-    .forEach(shape => {
+    this.shapes.forEach((shape) => {
       shape.displayName(this.textLayer);
-    })
-    this.textLayer.children.forEach(child => console.log(child));
+    });
+    this.textLayer.children.forEach((child) => console.log(child));
   }
+
+  clearMap() {
+    this.mainLayer.removeChildren();
+    this.shapes = [];
+    this.hoverObj = null;
+  }
+
+  deserializeMap(data) {
+    console.log("DESERIALIZING: ",data)
+    this.clearMap();
+    let dsrData = JSON.parse(data);
+    dsrData.forEach((child) => {
+      var shape = JSON.parse(child);
+      var loadShape = Factory.createShape(
+        shape.className,
+        { x: shape.attrs.x, y: shape.attrs.y },
+        this.blockSize,
+        this.mainLayer,
+        shape.attrs.rotation
+      );
+      loadShape.loadInfo(shape.attrs);
+      this.shapes.push(loadShape);
+      this.addModalHandling(loadShape);
+      this.mainLayer.add(loadShape);
+    });
+  }
+
 }

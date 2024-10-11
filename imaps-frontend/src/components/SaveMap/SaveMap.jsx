@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import HttpService from '../../Net/HttpService';
+import styles from './SaveMap.module.css';
 
 const SaveMap = ({submitHandler}) => {
     const [name, setName] = useState('');
@@ -11,7 +12,8 @@ const SaveMap = ({submitHandler}) => {
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
+        <div className={styles.saveMapContainer}>
+            <form onSubmit={handleSubmit} className={styles.saveMapForm}>
                 <div>
                     <label htmlFor="name">Map Name: </label>
                     <input 
@@ -21,12 +23,14 @@ const SaveMap = ({submitHandler}) => {
                         onChange={(e) => setName(e.target.value)} 
                         placeholder="Enter map name" 
                         required
+                        className={styles.saveMapInput}
                     />
                 </div>
                 <div>
-                    <button type="submit">Save Map</button>
+                    <button type="submit" className={styles.saveMapButton}>Save Map</button>
                 </div>
             </form>
+            </div>
         </>
     );
 }

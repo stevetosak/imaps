@@ -24,8 +24,7 @@ public class MapRenderApi {
     private String jsonData;
     private RouteGraph graph;
 
-
-    private MapService mapService;
+    private final MapService mapService;
 
     @Autowired
     public MapRenderApi(MapService mapService) {
@@ -49,41 +48,6 @@ public class MapRenderApi {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/protected/saveMap")
-    public ResponseEntity<Map<String,Object>> saveMap(@RequestBody String mapData, @RequestParam String mapName) {
-        HashMap<String,Object> response = new HashMap<>();
-        try {
-            mapService.saveMap(mapName, mapData);
-            response.put("status","ok");
-            Optional<IndoorMap> map = mapService.getMapByName(mapName);
-            if(map.isPresent()){
-                response.put("map",map.get());
-            } else {
-                response.put("map","rip");
-            }
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(response);
-        }
-    }
-
-    @GetMapping("/protected/loadMap")
-    public ResponseEntity<Map<String,Object>> loadMap(@RequestParam String mapName) {
-        HashMap<String,Object> response = new HashMap<>();
-        Optional<IndoorMap> map = mapService.getMapByName(mapName);
-        if (map.isPresent()) {
-            response.put("status","ok");
-            response.put("map",map.get());
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("status","error");
-        }
-        return ResponseEntity.ok(response);
-    }
 
     @GetMapping("/public/navigate")
     public ResponseEntity<List<MapNode>> navigate(@RequestParam String from, @RequestParam String to){

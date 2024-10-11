@@ -1,0 +1,51 @@
+.mapTemplateSelector {
+   
+  }
+  
+  
+  .templateList {
+    list-style-type: none;
+    padding: 0;
+     display: grid;
+    grid-template-columns: repeat(2, 7vh); /* Defines responsive columns */
+    gap: 5px;
+    margin: 20px 0;
+  }
+  
+  .templateListItem {
+    /* display: flex;
+    justify-content: center; */
+    width: 80%;
+  }
+  
+  .mapTemplateButton {
+    display: flex; /* Enable flexbox for the button */
+    justify-content: center; /* Center text horizontally */
+    align-items: center; /* Center text vertically */
+    width: 100%; /* Full width of the parent container */
+    padding: 10px;
+    background-color: #804047;
+    border: 2px solid beige;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 70%; /* Adjust font size as needed */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide any overflow text */
+    text-overflow: ellipsis; /* Show ellipsis for overflow text */
+}
+
+  
+  .mapTemplateButton:hover {
+    background-color: beige;
+  }
+  .text{
+    font-size: medium;
+    color: #804047;
+  }
+  
+  .selectedTemplate {
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+  }
+  

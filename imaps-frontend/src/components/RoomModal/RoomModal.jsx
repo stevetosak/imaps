@@ -30,6 +30,7 @@ export default function RoomModal(props) {
   // impl da sa gledat dali ti e zacuvana formava
 
   const handleInputChange = (e) => {
+    console.log(room.info)
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -41,6 +42,7 @@ export default function RoomModal(props) {
   useEffect(() => {
     const openModalHandler = (event) => {
       const roomObj = event.detail.room;
+      console.log(roomObj, "ROOMOBJ OTV")
       setRoom(roomObj);
       setFormData({
         name: roomObj.info.name,

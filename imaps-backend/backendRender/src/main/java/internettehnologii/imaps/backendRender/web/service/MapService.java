@@ -43,7 +43,7 @@ public class MapService {
     }
 
 
-    // repository.save zavisit od state na object sho sakas da zacuvas. Ako napres direktno new obj, pa save pret INSERT, a ako napres get na object od baza pa mu setnis attrib so setter pa save, pret UPDATE.
+    // repository.save zavisit od state na object sho sakas da zacuvas. Ako napres direktno new obj, pa save, pret INSERT, a ako napres get na object od baza pa mu setnis attrib so setter pa save, pret UPDATE.
     @Transactional
     public void saveMap(String name, String mapData) {
         Optional<IndoorMap> indoorMap = mapRepository.findMapByName(name);

@@ -42,6 +42,10 @@ export default class MapShape extends Konva.Shape {
     
   }
 
+  loadInfo(attrs){
+    console.log("Abstract function");
+  }
+
 
   initText() {
     this.textOffsetX = 0;

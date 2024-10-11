@@ -11,6 +11,7 @@ import InfoPinModal from "../../components/InfoPinModal/InfoPinModal.jsx";
 import HttpService from "../../Net/HttpService.js";
 import SaveMap from "../../components/SaveMap/SaveMap.jsx";
 import logo from "../../assets/logo_icon.png";
+import MapTemplateSelector from "../../components/MapTemplateSelector/LoadMap.jsx";
 
 function Draw() {
   const [selectedFloor, setSelectedFloor] = useState(1);
@@ -19,7 +20,7 @@ function Draw() {
   useEffect(() => {
     const app = new MapBuilder("container");
     setApp(app);
-    fpsCounterLoop();
+    // fpsCounterLoop();
   }, []);
 
   const handleFloorChange = (event) => {
@@ -38,6 +39,9 @@ function Draw() {
   const handleSaveClick = async (mapName) => {
     const resp = await app.saveMap(mapName);
   }
+  const handleLoadMapClick = (data) => {
+    app.deserializeMap(data);
+  }
 
   return (
     <div className={styles.wrapper} id="wrapper">
@@ -45,7 +49,7 @@ function Draw() {
       <div id="container" className={styles.cont}></div>
       <div className={styles.panel}>
         <img src={logo} alt="Finki Logo" className={styles.logo} />
-        <h1 className={styles.title}>Finki</h1>
+        <h1 className={styles.title}>MapBuilder</h1>
         {/* <div id="fpscont" className={styles.fpscounter}>
           <p id="fpsCounter"></p>
         </div> */}
@@ -73,6 +77,7 @@ function Draw() {
           <li data-info="Wall" className={`${styles.shapeOption} ${styles.wall}`} id="wall"></li>
           <li data-info="Room" className={`${styles.shapeOption} ${styles.room}`} id="room"></li>
         </ul>
+        
         <RoomTypeModal map={app}></RoomTypeModal>
 
         <div id="render" className={styles.buttonContainer}>
@@ -85,19 +90,12 @@ function Draw() {
             Render
           </button>
         </div>
-
-        {/* <div id="save">
-        <button
-            id="save-map-button"
-            type="button"
-            className={styles.renderButton}
-            onClick={handleSaveClick}
-            >
-              Save
-             </button>
-        </div> */}
-
+        <div className={styles.templateCont}>
         <SaveMap submitHandler={handleSaveClick}></SaveMap>
+        <MapTemplateSelector loadHandler={handleLoadMapClick}></MapTemplateSelector>
+        </div>
+        
+
 
         <div className={styles.hide}>
           <RoomModal map={app}></RoomModal>

@@ -58,6 +58,12 @@ export default class InfoPin extends MapShape {
     context.fillStrokeShape(shape);
   }
 
+  loadInfo(attrs){
+    this.info.name = attrs.obj_name;
+    this.info.selectedPins = attrs.connected_pins;
+    this.info.description = attrs.description;
+  }
+
   saveShapeDetails(){
     this.setAttr("obj_name",this.info.name);
     this.setAttr("connected_pins",this.info.selectedPins);

@@ -1,0 +1,36 @@
+.saveMapContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 10px;
+  }
+  
+  .saveMapForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .saveMapInput {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .saveMapButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 8vw;
+    height: 2vw;
+    text-align: center;
+  }
+  
+  .saveMapButton:hover {
+    background-color: #45a049;
+  }
+  
