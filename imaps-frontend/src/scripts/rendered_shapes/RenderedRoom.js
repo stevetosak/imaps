@@ -1,13 +1,14 @@
-import RenderedMapShape from "./RenderedMapShape";
+import Konva from "konva";
+import RenderedMapShape from "./RenderedMapShape.js";
 
-export default class RenderedEntrance extends RenderedMapShape{
+export default class RenderedRoom extends RenderedMapShape{
     constructor(attrs,scaleX,scaleY){
         super({
             x: attrs.x,
             y: attrs.y,
             width: attrs.width * scaleX,
             height: attrs.height * scaleY,
-            fill: '#1c3cff',
+            fill: 'white',
             stroke: 'black',
             strokeWidth: 1,
             draggable: false,
@@ -23,15 +24,17 @@ export default class RenderedEntrance extends RenderedMapShape{
         this.on("mouseenter",() => {
         console.log("HOVER ROOM IN", this.x());
         console.log(this.info.name,"NAME");
-        this.stroke('purple');
+        this.opacity(0.7);
+        this.fill("pink");
         })
         this.on("mouseleave", () => {
             console.log("HOVER ROOM OUT");
             this.opacity(1);
-            this.stroke('black')
-
+            this.fill("white");
         })
 
         this.initText()
     }
+
+   
 }

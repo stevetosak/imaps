@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './LoadMap.module.css';
-import HttpService from '../../Net/HttpService';
+import HttpService from '../../scripts/net/HttpService';
 
 const MapTemplateSelector = ({ loadHandler }) => {
   const [templates, setTemplates] = useState([]);

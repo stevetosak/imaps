@@ -1,4 +1,4 @@
-import config from "./netconfig";
+import config from "./netconfig.js";
 
 
 class HttpService {

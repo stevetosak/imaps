@@ -4,7 +4,7 @@ import FilterBar from "../../components/FilterBar/FilterBar";
 import Profile from "../../components/Profile/Profile";
 import SideBar from "../../components/SideBar/SideBar";
 import Draw from "../../pages/Draw/Draw";
-import { MapDisplay } from "./scripts/MapDisplay";
+import { MapDisplay } from "../../scripts/main/MapDisplay.js";
 import MapControls from "../../components/MapControls/MapControls";
 import styles from "./FinkiMaps.module.css";
 

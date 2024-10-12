@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { MapBuilder } from "./scripts/MapBuilder";
+import { MapBuilder } from "../../scripts/main/MapBuilder.js";
 import styles from "./Draw.module.css";
-import { fpsCounterLoop } from "./scripts/util/FpsCounter.js";
 import RoomModal from "../../components/RoomModal/RoomModal.jsx";
 import SideBar from "../../components/SideBar/SideBar.jsx";
 import EntranceModal from "../../components/EntranceModal/EntranceModal.jsx";
 import DrawGuide from "../../components/DrawGuide/DrawGuide.jsx";
 import RoomTypeModal from "../../components/RoomTypeModal/RoomTypeModal.jsx";
 import InfoPinModal from "../../components/InfoPinModal/InfoPinModal.jsx";
-import HttpService from "../../Net/HttpService.js";
+import HttpService from "../../scripts/net/HttpService.js";
 import SaveMap from "../../components/SaveMap/SaveMap.jsx";
 import logo from "../../assets/logo_icon.png";
 import MapTemplateSelector from "../../components/MapTemplateSelector/LoadMap.jsx";

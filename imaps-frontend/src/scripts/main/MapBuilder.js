@@ -1,10 +1,7 @@
-import Entrance from "./shapes/Entrance";
-import Wall from "./shapes/Wall";
-import Room from "./shapes/Room";
-import InfoPin from "./shapes/InfoPin";
-import Factory from "./util/Factory";
+import Factory from "../util/Factory.js";
 import Konva from "konva";
-import HttpService from "../../../Net/HttpService";
+import HttpService from "../net/HttpService.js";
+
 export class MapBuilder {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
@@ -53,7 +50,7 @@ export class MapBuilder {
       rotationSnaps: [0, 90, 180, 270],
       anchorSize: 5,
       padding: 2,
-      anchorFill: "#3cc9e8",
+      anchorFill: "#ef7539",
       borderStroke: "black",
       anchorStroke: "black",
       cornerRadius: 20,
@@ -164,7 +161,7 @@ export class MapBuilder {
     };
   }
 
-  handleResize(e) {
+  handleResize() {
     this.stage.width(this.container.offsetWidth);
     this.stage.height(this.container.offsetHeight);
     this.drawGrid();
@@ -297,66 +294,44 @@ export class MapBuilder {
 
   createPlacedShape(type, rotation) {
     const mousePos = this.stage.getRelativePointerPosition();
-    const placedObj = Factory.createShape(
-      type,
-      mousePos,
-      this.blockSize,
-      this.mainLayer,
-      rotation
+    return Factory.createShape(
+        type,
+        mousePos,
+        this.blockSize,
+        this.mainLayer,
+        rotation
     );
-
-    return placedObj;
   }
 
   placeShape() {
-    return () => {
-      if (this.isDrawing) {
+    if(this.isDrawing){
+      return () => {
         const mousePos = this.stage.getRelativePointerPosition();
         const placedObj = Factory.createShape(
-          this.hoverObj.type,
-          mousePos,
-          this.blockSize,
-          this.mainLayer,
-          this.hoverObj.rotation()
+            this.hoverObj.type,
+            mousePos,
+            this.blockSize,
+            this.mainLayer,
+            this.hoverObj.rotation()
         );
+
+        console.log("placed obj ")
 
         if (!placedObj) return;
 
         this.mainLayer.add(placedObj);
         this.shapes.push(placedObj);
         placedObj.snapToGrid();
-        // placedObj.on("dblclick", () => {
-        //   const eventName = placedObj.modalEventName;
-        //   const data = {
-        //     room: placedObj,
-        //     map: this,
-        //   };
-        //   const event = new CustomEvent(eventName, { detail: data });
-        //   window.dispatchEvent(event);
-        // });
         this.addModalHandling(placedObj)
         this.mainLayer.draw();
         this.stopDrawing();
-
-        //  if (this.efficientDrawingMode) {
-        //    this.startDrawing(this.currentShapeType);
-        //  }
+        console.log("placed")
+      };
+    } else {
+      if(this.efficientDrawingMode){
+        this.startDrawing(this.currentShapeType)
       }
-    };
-  }
-
-  addModalHandling(shape){
-    shape.on("dblclick",() => {
-      const eventName = shape.modalEventName;
-          if(eventName){
-            const data = {
-              room: shape,
-              map: this,
-            };
-            const event = new CustomEvent(eventName, { detail: data });
-            window.dispatchEvent(event);
-          }
-    })
+    }
   }
 
   stopDrawing() {
@@ -381,6 +356,8 @@ export class MapBuilder {
   }
 
   startDrawing(shapeType) {
+    if (this.isDrawing) return;
+
     this.currentShapeType = shapeType;
     this.isDrawing = true;
     let pos = { x: 0, y: 0 };
@@ -396,6 +373,7 @@ export class MapBuilder {
     this.hoverObj.visible(false);
     this.dragLayer.add(this.hoverObj);
     this.dragLayer.moveToTop();
+
     this.stage.on("mousemove", this.mouseMoveHandler());
     this.stage.on("click", this.placeShape());
   }
@@ -406,6 +384,20 @@ export class MapBuilder {
       this.startDrawing(shapeType);
       this.mainTransformer.nodes([]);
     }
+  }
+
+  addModalHandling(shape){
+    shape.on("dblclick",() => {
+      const eventName = shape.modalEventName;
+      if(eventName){
+        const data = {
+          room: shape,
+          map: this,
+        };
+        const event = new CustomEvent(eventName, { detail: data });
+        window.dispatchEvent(event);
+      }
+    })
   }
 
   rotateShapesBy90Deg(e) {
@@ -431,6 +423,9 @@ export class MapBuilder {
   handleExitSelection(e) {
     if (e.key === "Escape") {
       this.mainTransformer.nodes([]);
+      if(this.efficientDrawingMode){
+        this.efficientDrawingMode = false;
+      }
       if (this.isDrawing) {
         this.isDrawing = false;
         this.hoverObj.remove();
@@ -608,18 +603,18 @@ export class MapBuilder {
     this.clearMap();
     let dsrData = JSON.parse(data);
     dsrData.forEach((child) => {
-      var shape = JSON.parse(child);
-      var loadShape = Factory.createShape(
-        shape.className,
-        { x: shape.attrs.x, y: shape.attrs.y },
-        this.blockSize,
-        this.mainLayer,
-        shape.attrs.rotation
+      const shape = JSON.parse(child);
+      const loadedShape = Factory.createShape(
+          shape.className,
+          {x: shape.attrs.x, y: shape.attrs.y},
+          this.blockSize,
+          this.mainLayer,
+          shape.attrs.rotation
       );
-      loadShape.loadInfo(shape.attrs);
-      this.shapes.push(loadShape);
-      this.addModalHandling(loadShape);
-      this.mainLayer.add(loadShape);
+      loadedShape.loadInfo(shape.attrs);
+      this.shapes.push(loadedShape);
+      this.addModalHandling(loadedShape);
+      this.mainLayer.add(loadedShape);
     });
   }
 

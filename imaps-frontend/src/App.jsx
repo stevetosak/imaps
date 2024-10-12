@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import FinkiMaps from "./pages/FinkiMaps/FinkiMaps";
@@ -9,7 +10,7 @@ import Draw from "./pages/Draw/Draw";
 import Error from "./pages/Error/Error";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import "./App.css";
-import HttpService from "./Net/HttpService";
+import HttpService from "./scripts/net/HttpService";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

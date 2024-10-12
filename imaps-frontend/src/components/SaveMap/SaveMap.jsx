@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import HttpService from '../../Net/HttpService';
+import HttpService from '../../scripts/net/HttpService';
 import styles from './SaveMap.module.css';
 
 const SaveMap = ({submitHandler}) => {

@@ -1,5 +1,4 @@
 import Konva from "konva";
-import styles from "../../Draw.module.css"
 import MapShape from "./MapShape";
 import Factory from "../util/Factory";
 import { _registerNode } from 'konva/lib/Global';

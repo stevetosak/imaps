@@ -1,9 +1,6 @@
 import Konva from "konva";
-import { Rect } from "konva/lib/shapes/Rect";
-import Wall from "../../Draw/scripts/shapes/Wall";
-import RenderedWall from "./shapes/RenderedWall";
-import Factory from "../../Draw/scripts/util/Factory";
-import HttpService from "../../../Net/HttpService";
+import Factory from "../util/Factory.js";
+import HttpService from "../net/HttpService.js";
 export class MapDisplay {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
@@ -35,13 +32,13 @@ export class MapDisplay {
 
   deserializeMap(data) {
     data.forEach((child) => {
-      var shape = JSON.parse(child);
-      if (shape.className !== "InfoPin") {
-        var renderedShape = Factory.createRenderedShape(
-          shape.className,
-          shape.attrs
-        );
-        this.shapes.push(renderedShape);
+        const shape = JSON.parse(child);
+        if (shape.className !== "InfoPin") {
+            const renderedShape = Factory.createRenderedShape(
+                shape.className,
+                shape.attrs
+            );
+            this.shapes.push(renderedShape);
       }
     });
   }
