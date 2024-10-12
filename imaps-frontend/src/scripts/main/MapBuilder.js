@@ -24,17 +24,11 @@ export class MapBuilder {
 
         this.originalWidth = this.container.clientWidth;
         this.originalHeight = this.container.clientHeight;
-        this.previousWidth = this.originalWidth;
-        this.previousHeight = this.originalHeight;
+
 
         this.shapes = [];
-        this.infoNodes = []; // unused
         this.blockSize = 10;
-        this.isDrawing = false;
-        this.efficientDrawingMode = true;
-        this.stageRect = this.stage.container().getBoundingClientRect();
-        this.currentShapeType = "";
-
+        this.efficientDrawingMode = false;
         this.roomTypes = [];
 
         this.gridLine = new Konva.Line({
@@ -199,12 +193,6 @@ export class MapBuilder {
         this.stage.batchDraw();
     }
 
-    scaleShapes(scale) {
-        this.shapes.forEach((shape) => {
-            shape.x(shape.x() * scale);
-            shape.y(shape.y() * scale);
-        });
-    }
 
     drawGrid() {
         this.gridLayer.destroyChildren();
@@ -270,10 +258,6 @@ export class MapBuilder {
         this.gridLayer.batchDraw();
     }
 
-    getInfoPins() {
-        return this.shapes.filter((shape) => shape.className === "InfoPin");
-    }
-
     placeInfoPin(e) {
         e.evt.preventDefault();
         let mousePos = this.stage.getRelativePointerPosition();
@@ -299,17 +283,6 @@ export class MapBuilder {
         if (!this.efficientDrawingMode) {
             this.stopDrawing();
         }
-    }
-
-    createPlacedShape(type, rotation) {
-        const mousePos = this.stage.getRelativePointerPosition();
-        return Factory.createShape(
-            type,
-            mousePos,
-            this.blockSize,
-            this.mainLayer,
-            rotation
-        );
     }
 
     placeShape() {
@@ -602,7 +575,10 @@ export class MapBuilder {
             this.addModalHandling(loadedShape);
             this.mainLayer.add(loadedShape);
         });
-      this.mainTransformer.nodes([])
+        this.mainTransformer.nodes([])
+        this.mainLayer.add(this.mainTransformer);
+        this.mainLayer.add(this.selectionRectangle);
+
     }
 
 }
