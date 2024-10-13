@@ -5,6 +5,7 @@ import InfoPin from "../shapes/InfoPin";
 import Konva from "konva";
 import RenderedRoom from "../rendered_shapes/RenderedRoom";
 import RenderedEntrance from "../rendered_shapes/RenderedEntrance";
+import RenderedWall from "../rendered_shapes/RenderedWall.js";
 export default class Factory {
 
   static infoPinCount = 0;
@@ -37,18 +38,7 @@ export default class Factory {
       case "Room":
         return new RenderedRoom(attrs,scaleX,scaleY);
       case "Wall":
-        return new Konva.Rect({
-          x: attrs.x,
-          y: attrs.y,
-          width: attrs.width * scaleX,
-          height: attrs.height * scaleY,
-          fill: 'grey',
-          stroke: 'black',
-          strokeWidth: 1,
-          draggable: false,
-          rotation: attrs.rotation,
-          cornerRadius:3
-        });
+        return new RenderedWall(attrs,scaleX,scaleY);
       default:
         throw new Error("Invalid shape type." + shapeType);
     }

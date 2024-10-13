@@ -1,4 +1,3 @@
-import Konva from "konva";
 import RenderedMapShape from "./RenderedMapShape.js";
 
 export default class RenderedRoom extends RenderedMapShape{
@@ -19,6 +18,8 @@ export default class RenderedRoom extends RenderedMapShape{
 
         this.info.name = attrs.obj_name;
         this.info.description = attrs.description;
+
+        this.textOffsetX = -50
         
     
         this.on("mouseenter",() => {

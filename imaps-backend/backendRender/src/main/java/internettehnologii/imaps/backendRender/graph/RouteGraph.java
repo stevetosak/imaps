@@ -42,7 +42,8 @@ public class RouteGraph {
 
 
         if (sourceNode == null || targetNode == null) {
-            throw new IllegalArgumentException("Source or target node not found.");
+            System.out.println(this.toString());
+            throw new IllegalArgumentException("Source or target node not found. SOURCE: " + source + " TARGET: " + target);
         }
 
 

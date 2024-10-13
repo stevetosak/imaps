@@ -91,9 +91,9 @@ export class MapBuilder {
             .addEventListener("click", this.render.bind(this));
         window.addEventListener("keydown", this.handleExitSelection.bind(this));
         window.addEventListener("keydown", this.handleDelete.bind(this));
-        window.addEventListener("resize", this.handleResize.bind(this));
         window.addEventListener("keydown", this.rotateShapesBy90Deg.bind(this));
         window.addEventListener("keydown", this.toggleEfficientDrawingMode.bind(this));
+        window.addEventListener("resize", this.handleResize.bind(this));
         this.stage.on("mousedown touchstart", this.handleMouseDown.bind(this));
         this.stage.on("mousemove touchmove", this.handleMouseMove.bind(this));
         this.stage.on("mouseup touchend", this.handleMouseUp.bind(this));
@@ -101,6 +101,19 @@ export class MapBuilder {
         this.stage.on("contextmenu", this.placeInfoPin.bind(this));
         this.stage.on("dragmove", this.dragStage.bind(this));
         this.stage.on("wheel", this.zoomStage.bind(this));
+    }
+
+    detachKeyPressEventListeners(){
+        window.removeEventListener("keydown", this.handleExitSelection.bind(this));
+        window.removeEventListener("keydown", this.handleDelete.bind(this));
+        window.removeEventListener("keydown", this.rotateShapesBy90Deg.bind(this));
+        window.removeEventListener("keydown", this.toggleEfficientDrawingMode.bind(this));
+    }
+    attachKeyPressEventListeners(){
+        window.addEventListener("keydown", this.handleExitSelection.bind(this));
+        window.addEventListener("keydown", this.handleDelete.bind(this));
+        window.addEventListener("keydown", this.rotateShapesBy90Deg.bind(this));
+        window.addEventListener("keydown", this.toggleEfficientDrawingMode.bind(this));
     }
 
     dragStage(e) {
@@ -278,11 +291,12 @@ export class MapBuilder {
         if (e.key === "e" || e.key === "E") {
             this.efficientDrawingMode = !this.efficientDrawingMode;
             console.log("EFFICIENT DRAWING MODE is: ", this.efficientDrawingMode)
+
+            if (!this.efficientDrawingMode) {
+                this.stopDrawing();
+            }
         }
 
-        if (!this.efficientDrawingMode) {
-            this.stopDrawing();
-        }
     }
 
     placeShape() {
@@ -312,7 +326,6 @@ export class MapBuilder {
 
     stopDrawing() {
         this.mainTransformer.nodes([]);
-        this.isDrawing = false;
         this.hoverObj.remove();
         this.dragLayer.removeChildren();
         this.stage.off("mousemove", this.boundMouseMoveHandler);
@@ -327,8 +340,6 @@ export class MapBuilder {
     }
 
     startDrawing(shapeType) {
-        this.currentShapeType = shapeType;
-        this.isDrawing = true;
         let pos = {x: 0, y: 0};
         this.hoverObj = Factory.createShape(
             shapeType,
@@ -341,7 +352,6 @@ export class MapBuilder {
         this.hoverObj.visible(false);
         this.dragLayer.add(this.hoverObj);
         this.dragLayer.moveToTop();
-
         this.boundMouseMoveHandler = this.mouseMoveHandler.bind(this);
         this.boundPlaceShapeHandler = this.placeShape.bind(this);
 
@@ -373,7 +383,9 @@ export class MapBuilder {
 
     rotateShapesBy90Deg(e) {
         if (e.key === "r" || e.key === "R") {
-            console.log(this.mainTransformer.nodes())
+            if(this.hoverObj){
+                this.hoverObj.rotate(90);
+            }
             this.mainTransformer.nodes().forEach((node) => {
                 node.rotate(90);
             });

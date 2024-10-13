@@ -12,12 +12,12 @@ export default class RenderedMapShape extends Konva.Rect{
             name: "",
             description: "",
           }
-          this.infoText = null;;
+          this.infoText = null;
+          this.textOffsetX = 0;
+          this.textOffsetY = 0;
     }
 
     initText() {
-      this.textOffsetX = 0;
-      this.textOffsetY = -30;
       this.infoText = new Konva.Text({
         x: this.x() + this.textOffsetX,
         y: this.y() + this.textOffsetY,
@@ -36,7 +36,10 @@ export default class RenderedMapShape extends Konva.Rect{
     }
   
     displayName(layer) {
-        layer.add(this.infoText);
+        if(this.infoText != null){
+            layer.add(this.infoText);
+        }
+
     }
     
 }

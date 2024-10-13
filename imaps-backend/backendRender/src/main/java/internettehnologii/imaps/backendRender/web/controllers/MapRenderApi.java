@@ -52,15 +52,18 @@ public class MapRenderApi {
     @GetMapping("/public/navigate")
     public ResponseEntity<List<MapNode>> navigate(@RequestParam String from, @RequestParam String to){
 
-        String entranceFrom = graph.findNodeConnectedToEntrance(from);
-        String entranceTo = graph.findNodeConnectedToEntrance(to);
-        if(entranceFrom == null){
-            throw new NodeNotFoundException("Could not find entrance related to room: " + from);
+        String startNode = from;
+        String endNode = to;
+
+        String roomConnectedToEntranceFrom = graph.findNodeConnectedToEntrance(from);
+        String roomConnectedToEntranceTo = graph.findNodeConnectedToEntrance(to);
+        if(roomConnectedToEntranceFrom != null){
+            startNode = roomConnectedToEntranceFrom;
         }
-        if(entranceTo == null){
-            throw new NodeNotFoundException("Could not find entrance related to room: " + to);
+        if(roomConnectedToEntranceTo != null){
+           endNode = roomConnectedToEntranceTo;
         }
-        List<MapNode> path = graph.findRoute(entranceFrom, entranceTo);
+        List<MapNode> path = graph.findRoute(startNode,endNode);
         return ResponseEntity.ok(path);
     }
 
