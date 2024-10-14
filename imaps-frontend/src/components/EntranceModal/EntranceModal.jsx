@@ -19,7 +19,7 @@ export default function EntranceModal(props) {
 
   const toggleModal = () => {
     if (modal) {
-      room.info = formData
+      room.info = formData;
       props.map.updateRoomNames();
     }
     setModal(!modal);
@@ -37,16 +37,16 @@ export default function EntranceModal(props) {
 
   const addPinToList = () => {
     if (!formData.selectedPin || pins.includes(formData.selectedPin)) return;
-  
+
     setPins((prevPins) => {
       const updatedPins = [...prevPins, formData.selectedPin];
-      
+
       setFormData((prevFormData) => ({
         ...prevFormData,
         selectedPin: "",
-        selectedPins: updatedPins, 
+        selectedPins: updatedPins,
       }));
-  
+
       return updatedPins;
     });
 
@@ -69,23 +69,23 @@ export default function EntranceModal(props) {
     const openModalHandler = (event) => {
       const roomObj = event.detail.room;
       setRoom(roomObj);
-      
-  
+
       const savedPins = roomObj.info.selectedPins || [];
 
       setFormData({
         name: roomObj.info.name || "",
         connectedRoom: roomObj.info.connectedRoom || "",
         description: roomObj.info.description || "",
-        availablePins: event.detail.map.getPins() || [],
+        availablePins: event.detail.map.getConnections() || [],
         availableRooms: event.detail.map.getRooms() || [],
         isMainEntrance: roomObj.info.isMainEntrance || false,
         selectedPin: "",
         selectedPins: savedPins,
       });
-      
+
       setPins(savedPins);
       setModal(true);
+      event.detail.map.updateConnections();
 
       console.log(savedPins, "Loaded pins on modal open");
     };
@@ -159,11 +159,18 @@ export default function EntranceModal(props) {
                   required
                 >
                   <option value="">Select Pin</option>
-                  {formData.availablePins.map((pin, index) => (
-                    <option key={index} value={pin.name}>
-                      {pin.name}
-                    </option>
-                  ))}
+                  {formData.availablePins
+                    .filter(
+                      (pin) =>
+                        formData.selectedPins.includes(pin.name) == false &&
+                        pin.name != "" &&
+                        pin.name != formData.name
+                    )
+                    .map((pin, index) => (
+                      <option key={index} value={pin.name}>
+                        {pin.name}
+                      </option>
+                    ))}
                 </select>
                 <button type="button" onClick={addPinToList} className={styles.addButton}>
                   Add Pin

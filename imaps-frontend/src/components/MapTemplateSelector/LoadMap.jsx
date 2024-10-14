@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import styles from './LoadMap.module.css';
-import HttpService from '../../scripts/net/HttpService';
+import React, { useState, useEffect } from "react";
+import styles from "./LoadMap.module.css";
+import HttpService from "../../scripts/net/HttpService";
 
 const MapTemplateSelector = ({ loadHandler }) => {
   const [templates, setTemplates] = useState([]);
@@ -15,7 +15,7 @@ const MapTemplateSelector = ({ loadHandler }) => {
         setTemplates(response);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching templates:', error);
+        console.error("Error fetching templates:", error);
         setLoading(false);
       }
     };
@@ -25,7 +25,7 @@ const MapTemplateSelector = ({ loadHandler }) => {
 
   const handleSelect = async (template) => {
     setSelectedTemplate(template);
-    console.log('Selected template:', template);
+    console.log("Selected template:", template);
     const httpService = new HttpService("http://localhost:8080/api/protected", true);
     const response = await httpService.get(`/maps/load?mapName=${template.name}`);
     console.log("LOAD TEMPLATE: ", response);
@@ -40,15 +40,12 @@ const MapTemplateSelector = ({ loadHandler }) => {
 
   return (
     <div className={styles.mapTemplateSelector}>
-      <p>Select a Map Template</p>
+      <p>Templates</p>
       {templates.length > 0 ? (
         <ul className={styles.templateList}>
           {templates.map((template) => (
             <li key={template.id}>
-              <button
-                onClick={() => handleSelect(template)}
-                className={styles.mapTemplateButton}
-              >
+              <button onClick={() => handleSelect(template)} className={styles.mapTemplateButton}>
                 {template.name}
               </button>
             </li>

@@ -29,7 +29,6 @@ body {
   margin: 0;
 }
 
-
 .wrapper {
   display: flex;
   height: 100vh;
@@ -108,7 +107,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  align-items: start;
+  align-items: center;
 }
 
 .shapeOption {
@@ -127,7 +126,7 @@ body {
   transition: background-color 0.3s, border-color 0.3s;
 }
 
-.templateCont{
+.templateCont {
   display: flex;
   flex-direction: column;
 }

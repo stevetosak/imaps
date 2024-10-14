@@ -1,38 +1,37 @@
 .saveMapContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 40% 10px;
-  }
-  
-  .saveMapForm {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-  }
-  
-  .saveMapInput {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-  }
-  
-  .saveMapButton {
-    background-color: #e67e22;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 8vw;
-    height: 2vw;
-    text-align: center;
-  }
-  
-  .saveMapButton:hover {
-    background-color: #b35418;
-    transform: scale(0.98);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10% 10px;
+}
+
+.saveMapForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.saveMapInput {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.saveMapButton {
+  background-color: #e67e22;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 8vw;
+  height: 2vw;
+  text-align: center;
+}
+
+.saveMapButton:hover {
+  background-color: #b35418;
+  transform: scale(0.98);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

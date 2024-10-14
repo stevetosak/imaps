@@ -1,9 +1,9 @@
 import Konva from "konva";
 import MapShape from "./MapShape";
 import Factory from "../util/Factory";
-import { _registerNode } from 'konva/lib/Global';
+import { _registerNode } from "konva/lib/Global";
 export default class InfoPin extends MapShape {
-  constructor(mousePos,blockSize,layer,snappable) {
+  constructor(mousePos, blockSize, layer, snappable) {
     super(
       {
         x: mousePos.x,
@@ -23,11 +23,11 @@ export default class InfoPin extends MapShape {
     );
 
     this.modalEventName = "openPinModalEvent";
-    this.type = "InfoPin"
+    this.type = "InfoPin";
     this._info = {
-      name: '',
+      name: "Pin " + Math.floor(Math.random() * 100) + 1,
       selectedPins: [],
-      description: '',
+      description: "",
     };
 
     this.on("mouseover", () => {
@@ -38,7 +38,6 @@ export default class InfoPin extends MapShape {
     });
 
     this.initText();
-
   }
   _sceneFunc(context, shape) {
     const { radiusX, radiusY, tailHeight } = this.attrs;
@@ -57,20 +56,19 @@ export default class InfoPin extends MapShape {
     context.fillStrokeShape(shape);
   }
 
-  loadInfo(attrs){
+  loadInfo(attrs) {
     this.info.name = attrs.obj_name;
     this.info.selectedPins = attrs.connected_pins;
     this.info.description = attrs.description;
   }
 
-  saveShapeDetails(){
-    this.setAttr("obj_name",this.info.name);
-    this.setAttr("connected_pins",this.info.selectedPins);
-    this.setAttr("description",this.info.description);
-    console.log(this.info,"vnatre vo info");
+  saveShapeDetails() {
+    this.setAttr("obj_name", this.info.name);
+    this.setAttr("connected_pins", this.info.selectedPins);
+    this.setAttr("description", this.info.description);
+    console.log(this.info, "vnatre vo info");
   }
-
 }
 
-InfoPin.prototype.className = 'InfoPin'
+InfoPin.prototype.className = "InfoPin";
 _registerNode(InfoPin);
