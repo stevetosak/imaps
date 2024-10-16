@@ -63,21 +63,21 @@ public class MapController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
-    public void registerNewMap(@RequestBody IndoorMap map){
-        mapService.addNewMap(map);
-    }
-
-    @DeleteMapping(path = "{mapId}")
-    public void deleteMap(@PathVariable("mapId") Long mapId){
-        mapService.deleteMap(mapId);
-    }
-
-    @PutMapping(path = "{mapId}")
-    public void updateMap(
-            @PathVariable("mapId") Long mapId,
-            @RequestParam(required = false) String name){
-            
-        //mapService.updateMap(name);
-    }
+//    @PostMapping
+//    public void registerNewMap(@RequestBody IndoorMap map){
+//        mapService.addNewMap(map);
+//    }
+//
+//    @DeleteMapping(path = "{mapId}")
+//    public void deleteMap(@PathVariable("mapId") Long mapId){
+//        mapService.deleteMap(mapId);
+//    }
+//
+//    @PutMapping(path = "{mapId}")
+//    public void updateMap(
+//            @PathVariable("mapId") Long mapId,
+//            @RequestParam(required = false) String name){
+//
+//        //mapService.updateMap(name);
+//    }
 }

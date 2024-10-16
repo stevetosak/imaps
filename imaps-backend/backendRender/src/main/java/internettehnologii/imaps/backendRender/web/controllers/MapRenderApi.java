@@ -18,7 +18,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:5173/",allowedHeaders = {"Authorization"})
+@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = {"Authorization"})
 public class MapRenderApi {
 
     private String jsonData;
@@ -33,16 +33,16 @@ public class MapRenderApi {
 
     @PostMapping("/protected/render")
     public ResponseEntity<Map<String, Object>> render(@RequestBody String requestBody) throws Exception {
-        Map<String,Object> response = new HashMap<>();
-        response.put("status","ok");
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "ok");
         jsonData = requestBody;
-        try{
+        try {
             MapNodeParser parser = new MapNodeParser();
             List<MapNode> nodes = parser.parseAndCreateNodes(requestBody);
             graph = new RouteGraph(nodes);
             System.out.println("=======================\n" + graph);
-        } catch (MapParseException e){
-            response.put("status","error: " + e.getMessage());
+        } catch (MapParseException e) {
+            response.put("status", "error: " + e.getMessage());
         }
 
         return ResponseEntity.ok(response);
@@ -50,28 +50,29 @@ public class MapRenderApi {
 
 
     @GetMapping("/public/navigate")
-    public ResponseEntity<List<MapNode>> navigate(@RequestParam String from, @RequestParam String to){
+    public ResponseEntity<List<MapNode>> navigate(@RequestParam String from, @RequestParam String to) {
 
         String startNode = from;
         String endNode = to;
 
         String roomConnectedToEntranceFrom = graph.findNodeConnectedToEntrance(from);
         String roomConnectedToEntranceTo = graph.findNodeConnectedToEntrance(to);
-        if(roomConnectedToEntranceFrom != null){
+        if (roomConnectedToEntranceFrom != null) {
             startNode = roomConnectedToEntranceFrom;
         }
-        if(roomConnectedToEntranceTo != null){
-           endNode = roomConnectedToEntranceTo;
+        if (roomConnectedToEntranceTo != null) {
+            endNode = roomConnectedToEntranceTo;
         }
-        List<MapNode> path = graph.findRoute(startNode,endNode);
+
+        List<MapNode> path = graph.findRoute(startNode, endNode);
         return ResponseEntity.ok(path);
     }
 
     @GetMapping("/public/mapData")
-    public ResponseEntity<String> getMapData(){
+    public ResponseEntity<String> getMapData() {
         //tuka povik do baza
         System.out.println(jsonData);
-        if(jsonData != null && !jsonData.isEmpty()){
+        if (jsonData != null && !jsonData.isEmpty()) {
             return ResponseEntity.ok(jsonData);
         } else {
             return ResponseEntity.notFound().build();

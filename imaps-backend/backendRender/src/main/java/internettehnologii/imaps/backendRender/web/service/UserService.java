@@ -61,7 +61,7 @@ public class UserService {
             user.setUsername(name);
         }
 
-        if(email != null && email.length() > 0 && !Objects.equals(user.getEmail(), email)){
+        if(email != null && !email.isEmpty() && !Objects.equals(user.getEmail(), email)){
             Optional<IMapsUser> userOptional = userRepository.findUserByEmail(email);
             if(userOptional.isPresent()){
                 throw new IllegalStateException("email taken");

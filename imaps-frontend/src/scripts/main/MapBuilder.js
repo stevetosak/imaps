@@ -1,6 +1,7 @@
 import Factory from "../util/Factory.js";
 import Konva from "konva";
 import HttpService from "../net/HttpService.js";
+import {zoomStage} from "../util/zoomStage.js";
 
 export class MapBuilder {
     constructor(containerId) {
@@ -17,12 +18,13 @@ export class MapBuilder {
         this.gridLayer = new Konva.Layer();
         this.mainLayer = new Konva.Layer();
         this.dragLayer = new Konva.Layer();
-        this.infoPinLayer = new Konva.Layer();
         this.textLayer = new Konva.Layer();
-        this.gridLayer.listening(false);
 
-        this.originalWidth = this.container.clientWidth;
-        this.originalHeight = this.container.clientHeight;
+        this.isDrawing = false;
+
+        this.gridLayer.listening(false);
+        this.textLayer.listening(false)
+
 
         this.shapes = [];
         this.blockSize = 10;
@@ -77,7 +79,6 @@ export class MapBuilder {
         this.stage.add(this.gridLayer);
         this.stage.add(this.dragLayer);
         this.stage.add(this.mainLayer);
-        this.stage.add(this.infoPinLayer);
         this.stage.add(this.textLayer);
         this.setupEventListeners();
     }
@@ -96,7 +97,7 @@ export class MapBuilder {
         this.stage.on("click tap", this.handleStageClick.bind(this));
         this.stage.on("contextmenu", this.placeInfoPin.bind(this));
         this.stage.on("dragmove", this.dragStage.bind(this));
-        this.stage.on("wheel", this.zoomStage.bind(this));
+        this.stage.on("wheel", this.zoom.bind(this));
     }
 
     detachKeyPressEventListeners() {
@@ -168,37 +169,9 @@ export class MapBuilder {
         this.drawGrid();
     }
 
-    zoomStage(e) {
-        if (!e.evt.shiftKey) return;
-
-        e.evt.preventDefault();
-
-        const scaleFactor = e.evt.deltaY > 0 ? 0.95 : 1.15;
-
-        const prevScale = this.stage.scaleX();
-
-        let newScale = prevScale * scaleFactor;
-
-        const mousePos = this.stage.getRelativePointerPosition();
-
-        let mousePoint = {
-            x: (mousePos.x - this.stage.x()) / prevScale,
-            y: (mousePos.y - this.stage.y()) / prevScale,
-        };
-
-        this.stage.scale({
-            x: newScale,
-            y: newScale,
-        });
-
-        let newStagePos = {
-            x: mousePos.x - mousePoint.x * newScale,
-            y: mousePos.y - mousePoint.y * newScale,
-        };
-
-        this.stage.position(newStagePos);
+    zoom(e) {
+        zoomStage(e,this.stage)
         this.drawGrid();
-        this.stage.batchDraw();
     }
 
     drawGrid() {
@@ -249,7 +222,7 @@ export class MapBuilder {
         }
 
         this.mainLayer.moveToTop();
-        this.infoPinLayer.moveToTop();
+        this.textLayer.moveToTop()
 
         this.gridLayer.batchDraw();
     }
@@ -257,10 +230,11 @@ export class MapBuilder {
     placeInfoPin(e) {
         e.evt.preventDefault();
         let mousePos = this.stage.getRelativePointerPosition();
-        let infoPin = Factory.createShape("InfoPin", mousePos, this.blockSize, this.infoPinLayer, 0);
+        let infoPin = Factory.createShape("InfoPin", mousePos, this.blockSize, this.mainLayer, 0);
         this.addModalHandling(infoPin);
         this.shapes.push(infoPin);
         this.mainLayer.add(infoPin);
+        infoPin.displayName(this.textLayer);
         console.log(infoPin.name());
     }
 
@@ -291,6 +265,7 @@ export class MapBuilder {
         this.shapes.push(placedObj);
         placedObj.snapToGrid();
         this.addModalHandling(placedObj);
+        placedObj.displayName(this.textLayer);
         this.mainLayer.draw();
 
         if (!this.efficientDrawingMode) {
@@ -304,6 +279,7 @@ export class MapBuilder {
         this.dragLayer.removeChildren();
         this.stage.off("mousemove", this.boundMouseMoveHandler);
         this.stage.off("click", this.boundPlaceShapeHandler);
+        this.isDrawing = false;
     }
 
     mouseMoveHandler() {
@@ -324,6 +300,8 @@ export class MapBuilder {
 
         this.stage.on("mousemove", this.boundMouseMoveHandler);
         this.stage.on("click", this.boundPlaceShapeHandler);
+
+        this.isDrawing = true;
     }
 
     selectShape(e) {
@@ -363,6 +341,7 @@ export class MapBuilder {
         if (e.key === "Delete") {
             this.mainTransformer.nodes().forEach((node) => {
                 node.remove();
+                node.clearText();
                 this.shapes.splice(this.shapes.indexOf(node), 1);
             });
             this.mainTransformer.nodes([]);
@@ -471,6 +450,8 @@ export class MapBuilder {
         if (!e.target.hasName("mapObj")) {
             return;
         }
+
+        if(this.isDrawing) return;
 
         const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
         const isSelected = this.mainTransformer.nodes().indexOf(e.target) >= 0;
@@ -584,5 +565,7 @@ export class MapBuilder {
         this.mainTransformer.nodes([]);
         this.mainLayer.add(this.mainTransformer);
         this.mainLayer.add(this.selectionRectangle);
+
+        this.shapes.forEach((shape) => shape.displayName(this.textLayer))
     }
 }

@@ -1,6 +1,7 @@
 import Konva from "konva";
 import Factory from "../util/Factory.js";
 import HttpService from "../net/HttpService.js";
+import {zoomStage} from "../util/zoomStage.js";
 export class MapDisplay {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
@@ -26,6 +27,10 @@ export class MapDisplay {
       this.stage.width = window.innerWidth;
       this.stage.height = window.innerHeight;
     });
+
+    this.stage.on("wheel",(e) => {
+        zoomStage(e,this.stage);
+    })
 
    
   }

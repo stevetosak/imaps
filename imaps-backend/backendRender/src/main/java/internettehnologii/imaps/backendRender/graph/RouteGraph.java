@@ -1,7 +1,5 @@
 package internettehnologii.imaps.backendRender.graph;
 
-import jakarta.persistence.Tuple;
-
 import java.util.*;
 
 public class RouteGraph {
@@ -26,7 +24,7 @@ public class RouteGraph {
     }
 
 
-    private double getDistance(MapNode a, MapNode b){
+    private double getDistanceBetweenPoints(MapNode a, MapNode b){
         double x1 = a.getCoordinates().x;
         double y1 = a.getCoordinates().y;
         double x2 = b.getCoordinates().x;
@@ -116,7 +114,7 @@ public class RouteGraph {
             graph.put(to, new HashSet<>());
         }
 
-        double distance = getDistance(from, to);
+        double distance = getDistanceBetweenPoints(from, to);
         graph.get(from).add(new Edge(to,distance));
         graph.get(to).add(new Edge(from,distance));
 
