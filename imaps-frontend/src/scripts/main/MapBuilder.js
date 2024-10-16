@@ -1,6 +1,7 @@
 import Factory from "../util/Factory.js";
 import Konva from "konva";
 import HttpService from "../net/HttpService.js";
+import { zoomStage } from "../util/zoomStage.js";
 
 export class MapBuilder {
   constructor(containerId) {
@@ -580,5 +581,7 @@ export class MapBuilder {
     this.mainTransformer.nodes([]);
     this.mainLayer.add(this.mainTransformer);
     this.mainLayer.add(this.selectionRectangle);
+
+    this.shapes.forEach((shape) => shape.displayName(this.textLayer));
   }
 }

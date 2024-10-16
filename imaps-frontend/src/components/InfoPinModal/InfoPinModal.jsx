@@ -154,7 +154,7 @@ export default function InfoPinModal(props) {
                 </button>
               </div>
 
-              <h3>Pins:</h3>
+              <h3>Connected Pins:</h3>
               <ul className={styles.pinList}>
                 {pins.length > 0 ? (
                   pins.map((pin, index) => (

@@ -36,12 +36,14 @@ public class AuthController {
     public Map<String, Object> login(@RequestBody IMapsUser user, HttpServletRequest request) {
         System.out.println(user);
         Map<String, Object> response = new HashMap<>();
-        response.put("token", userService.verify(user));
+        String token = userService.verify(user);
+        response.put("token", token);
         response.put("username", user.getUsername());
-
         return response;
     }
 
+
+    //ZA TESTIRANJE
     @GetMapping("/list")
     public List<IMapsUser> showUsers() {
         return userService.getUsers();
