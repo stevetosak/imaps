@@ -162,9 +162,9 @@ export default function EntranceModal(props) {
                   {formData.availablePins
                     .filter(
                       (pin) =>
-                        formData.selectedPins.includes(pin.name) == false &&
-                        pin.name != "" &&
-                        pin.name != formData.name
+                        formData.selectedPins.includes(pin.name) === false &&
+                        pin.name !== "" &&
+                        pin.name !== formData.name
                     )
                     .map((pin, index) => (
                       <option key={index} value={pin.name}>
@@ -178,7 +178,7 @@ export default function EntranceModal(props) {
               </div>
 
               {/* Display added pins */}
-              <h3>Pins:</h3>
+              <h3>Connected Pins:</h3>
               <ul className={styles.pinList}>
                 {pins.length > 0 ? (
                   pins.map((pin, index) => (
