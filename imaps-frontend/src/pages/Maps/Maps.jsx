@@ -46,7 +46,6 @@ export default function Maps() {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
-    // Filter the tiles based on search term
     setTiles(initialTiles.filter((tile) => tile.text.toLowerCase().includes(value)));
   };
 
@@ -68,7 +67,7 @@ export default function Maps() {
         renderTile={renderTile}
         tileSize={tileSize}
         forceTileWidth={150}
-        forceTileHeight={150}
+        forceTileHeight={170}
       />
     </div>
   );

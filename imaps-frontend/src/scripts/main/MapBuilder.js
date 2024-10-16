@@ -517,6 +517,8 @@ export class MapBuilder {
   }
 
   updateConnections() {
+    console.log("Update");
+
     this.shapes.forEach((shape) => {
       if (shape.className === "InfoPin" || shape.className === "Entrance") {
         shape.info.selectedPins.forEach((connectedShapeName) => {
@@ -532,6 +534,15 @@ export class MapBuilder {
         });
       }
     });
+  }
+
+  removeConnection(from, to) {
+    this.shapes
+      .filter((s) => s.info.name === from || s.info.name === to)
+      .forEach((s) => {
+        s.info.selectedPins = s.info.selectedPins.filter((pin) => pin !== from && pin !== to);
+      });
+    console.log("Remove");
   }
 
   updateRoomNames() {

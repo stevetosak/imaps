@@ -6,7 +6,7 @@ import logo from "../../../assets/logo_icon.png";
 function Footer() {
   return (
     <div className="footer-container">
-      <div className="footer-links">
+      {/* <div className="footer-links">
         <div className="footer-link-wrapper">
           <div className="footer-link-items">
             <h2>Contact Us</h2>
@@ -25,7 +25,7 @@ function Footer() {
             <a href="#">Twitter</a>
           </div>
         </div>
-      </div>
+      </div> */}
       <section className="social-media">
         <div className="social-media-wrap">
           <div className="footer-logo">

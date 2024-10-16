@@ -21,6 +21,7 @@ export default function EntranceModal(props) {
     if (modal) {
       room.info = formData;
       props.map.updateRoomNames();
+      console.log("Se vikna");
     }
     setModal(!modal);
   };
@@ -49,13 +50,18 @@ export default function EntranceModal(props) {
 
       return updatedPins;
     });
-
-    console.log(formData.selectedPins, "sele");
   };
 
   const removePinFromList = (pinToRemove) => {
-    setPins((prevPins) => prevPins.filter((pin) => pin !== pinToRemove));
-    setFormData({ ...formData, selectedPins: pins });
+    setPins((prevPins) => {
+      const updatedPins = prevPins.filter((pin) => pin !== pinToRemove);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        selectedPins: updatedPins,
+      }));
+      return updatedPins;
+    });
+    props.map.removeConnection(formData.name, pinToRemove);
   };
 
   const saveDetails = () => {

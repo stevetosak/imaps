@@ -49,7 +49,7 @@ function Draw() {
       <div id="container" className={styles.cont}></div>
       <div className={styles.panel}>
         <img src={logo} alt="Finki Logo" className={styles.logo} />
-        <h1 className={styles.title}>MapBuilder</h1>
+        <h1 className={styles.title}>Map Builder</h1>
         {/* <div id="fpscont" className={styles.fpscounter}>
           <p id="fpsCounter"></p>
         </div> */}
@@ -77,7 +77,7 @@ function Draw() {
           <li data-info="Wall" className={`${styles.shapeOption} ${styles.wall}`} id="wall"></li>
           <li data-info="Room" className={`${styles.shapeOption} ${styles.room}`} id="room"></li>
         </ul>
-
+        <br />
         <RoomTypeModal map={app}></RoomTypeModal>
 
         <div id="render" className={styles.buttonContainer}>
@@ -90,10 +90,10 @@ function Draw() {
             Render
           </button>
         </div>
-        <div className={styles.templateCont}>
+        {/* <div className={styles.templateCont}>
           <SaveMap submitHandler={handleSaveClick}></SaveMap>
           <MapTemplateSelector loadHandler={handleLoadMapClick}></MapTemplateSelector>
-        </div>
+        </div> */}
 
         <div className={styles.hide}>
           <RoomModal map={app}></RoomModal>

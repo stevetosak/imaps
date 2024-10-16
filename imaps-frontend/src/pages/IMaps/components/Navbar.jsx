@@ -36,18 +36,6 @@ function Navbar() {
             <i className={click ? "fas fa-times" : "fas fa-bars"} />
           </div>
           <ul className={click ? "nav-menu active" : "nav-menu"}>
-            {/* <li className="nav-item">
-              <a href="#" className="nav-links" onClick={closeMobileMenu}>
-                Maps
-              </a>
-            </li> */}
-            <Link to="/error">
-              <li className="nav-item">
-                <a href="#" className="nav-links" onClick={closeMobileMenu}>
-                  Error
-                </a>
-              </li>
-            </Link>
             <Link to="/Signup">
               <li className="nav-item">
                 <a href="#" className="nav-links" onClick={closeMobileMenu}>

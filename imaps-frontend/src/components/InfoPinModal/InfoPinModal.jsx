@@ -47,9 +47,17 @@ export default function InfoPinModal(props) {
   };
 
   const removePinFromList = (pinToRemove) => {
-    setPins((prevPins) => prevPins.filter((pin) => pin !== pinToRemove));
+    setPins((prevPins) => {
+      const updatedPins = prevPins.filter((pin) => pin !== pinToRemove);
 
-    setFormData({ ...formData, selectedPins: pins });
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        selectedPins: updatedPins,
+      }));
+
+      props.map.removeConnection(formData.name, pinToRemove);
+      return updatedPins;
+    });
   };
 
   const saveDetails = () => {
