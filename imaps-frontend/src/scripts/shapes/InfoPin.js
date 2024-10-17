@@ -3,7 +3,7 @@ import MapShape from "./MapShape";
 import Factory from "../util/Factory";
 import { _registerNode } from "konva/lib/Global";
 export default class InfoPin extends MapShape {
-  constructor(mousePos, blockSize, layer, snappable) {
+  constructor(mousePos, blockSize, layer, snappable,id) {
     super(
       {
         x: mousePos.x,
@@ -22,10 +22,12 @@ export default class InfoPin extends MapShape {
       snappable
     );
 
+    this.id = id;
+
     this.modalEventName = "openPinModalEvent";
     this.type = "InfoPin";
     this._info = {
-      name: "Pin " + Math.floor(Math.random() * 100) + 1,
+      name: `Pin ${id}`,
       selectedPins: [],
       description: "",
     };

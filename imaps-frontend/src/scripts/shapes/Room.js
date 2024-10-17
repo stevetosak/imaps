@@ -2,13 +2,13 @@ import Konva from "konva";
 import MapShape from "./MapShape";
 import { _registerNode } from "konva/lib/Global";
 export default class Room extends MapShape {
-  constructor(mousePos, blockSize, layer, rotation, snap, id) {
+  constructor(mousePos, blockSize, layer, rotation, snap, id, scaleX = 1, scaleY = 1){
     super(
       {
         x: mousePos.x,
         y: mousePos.y,
-        width: blockSize * 8,
-        height: blockSize * 4,
+        width: blockSize * 8 * scaleX,
+        height: blockSize * 4 * scaleY,
         fill: "#DDE0F8",
         stroke: "grey",
         strokeWidth: 1,
@@ -22,7 +22,7 @@ export default class Room extends MapShape {
     );
 
     this._info = {
-      name: "Room " + Math.floor(Math.random() * 100) + 1,
+      name: `Room ${id}`,
       type: "",
       description: "",
     };

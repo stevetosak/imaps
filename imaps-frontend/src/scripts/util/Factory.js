@@ -2,7 +2,6 @@ import Entrance from "../shapes/Entrance";
 import Wall from "../shapes/Wall";
 import Room from "../shapes/Room";
 import InfoPin from "../shapes/InfoPin";
-import Konva from "konva";
 import RenderedRoom from "../rendered_shapes/RenderedRoom";
 import RenderedEntrance from "../rendered_shapes/RenderedEntrance";
 import RenderedWall from "../rendered_shapes/RenderedWall.js";
@@ -13,17 +12,19 @@ export default class Factory {
   static entranceCount = 0;
   static roomCount = 0;
 
-  static createShape(shapeType, position, blockSize, layer, rotation) {
-    console.log(shapeType, "VNATRE VO FACTORY")
+  static createShape(shapeType, position, blockSize, layer, rotation,scaleX = 1, scaleY = 1, increment = false) {
     switch (shapeType) {
       case "Entrance":
-        return new Entrance(position, blockSize, layer, rotation,true);
+        if(increment) this.entranceCount++;
+        return new Entrance(position, blockSize, layer, rotation,true,this.entranceCount,scaleX,scaleY);
       case "Room":
-        return new Room(position, blockSize, layer, rotation,true, this.roomCount++);
+        if(increment) this.roomCount++;
+        return new Room(position, blockSize, layer, rotation,true, this.roomCount,scaleX,scaleY);
       case "Wall":
-        return new Wall(position, blockSize, layer, rotation,true);
+        return new Wall(position, blockSize, layer, rotation,true,scaleX,scaleY);
       case "InfoPin":
-        return new InfoPin(position, blockSize, layer, false,this.infoPinCount++);
+        if(increment) this.infoPinCount++;
+        return new InfoPin(position, blockSize, layer, false,this.infoPinCount);
       default:
         throw new Error("Invalid shape type: " + shapeType);
     }

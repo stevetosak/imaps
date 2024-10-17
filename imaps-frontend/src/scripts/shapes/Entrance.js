@@ -2,13 +2,13 @@ import Konva from "konva";
 import MapShape from "./MapShape";
 import { _registerNode } from "konva/lib/Global";
 export default class Entrance extends MapShape {
-  constructor(mousePos, blockSize, layer, rotation, snap) {
+  constructor(mousePos, blockSize, layer, rotation, snap,id,scaleX = 1, scaleY = 1) {
     super(
       {
         x: mousePos.x,
         y: mousePos.y,
-        width: blockSize,
-        height: blockSize * 2,
+        width: blockSize * scaleX,
+        height: blockSize * 2 * scaleY,
         fill: "#0051ff",
         stroke: "grey",
         strokeWidth: 1,
@@ -25,8 +25,10 @@ export default class Entrance extends MapShape {
     this.type = "Entrance";
     this.modalEventName = "openEntranceModalEvent";
 
+    this.id = id;
+
     this._info = {
-      name: "Entrance " + Math.floor(Math.random() * 100) + 1,
+      name: `Entrance ${id}`,
       connectedRoom: "",
       description: "",
       isMainEntrance: false,
