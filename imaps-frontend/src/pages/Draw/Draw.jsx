@@ -12,6 +12,7 @@ import SaveMap from "../../components/SaveMap/SaveMap.jsx";
 import logo from "../../assets/logo_icon.png";
 import MapTemplateSelector from "../../components/MapTemplateSelector/LoadMap.jsx";
 import KeymapPanel from "../../components/KeyMappingsGuidePanel/KeymapPanel.jsx";
+import { Link } from "react-router-dom";
 
 function Draw() {
   const [selectedFloor, setSelectedFloor] = useState(1);
@@ -48,7 +49,9 @@ function Draw() {
       <SideBar></SideBar>
       <div id="container" className={styles.cont}></div>
       <div className={styles.panel}>
-        <img src={logo} alt="Finki Logo" className={styles.logo} />
+        <Link to="/">
+          <img src={logo} alt="Finki Logo" className={styles.logo} />
+        </Link>
         <h1 className={styles.title}>Map Builder</h1>
         {/* <div id="fpscont" className={styles.fpscounter}>
           <p id="fpsCounter"></p>

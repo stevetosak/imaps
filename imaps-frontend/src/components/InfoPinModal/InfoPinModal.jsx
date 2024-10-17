@@ -127,7 +127,7 @@ export default function InfoPinModal(props) {
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="selectedPin">Select pins connected to this pin:</label>
+                <label htmlFor="selectedPin">Select connections:</label>
                 <select
                   id="selectedPin"
                   name="selectedPin"
@@ -135,7 +135,7 @@ export default function InfoPinModal(props) {
                   onChange={handleInputChange}
                   required
                 >
-                  <option value="">Select Pin</option>
+                  <option value="">Select Connection</option>
                   {formData.availablePins
                     .filter(
                       (pin) =>
@@ -150,11 +150,11 @@ export default function InfoPinModal(props) {
                     ))}
                 </select>
                 <button type="button" onClick={addPinToList} className={styles.addButton}>
-                  Add Pin
+                  Add Connection
                 </button>
               </div>
 
-              <h3>Connected Pins:</h3>
+              <h3>Connections:</h3>
               <ul className={styles.pinList}>
                 {pins.length > 0 ? (
                   pins.map((pin, index) => (
@@ -166,10 +166,10 @@ export default function InfoPinModal(props) {
                     </li>
                   ))
                 ) : (
-                  <li>No pins added</li>
+                  <li>No connections added</li>
                 )}
               </ul>
-
+              <br />
               <div className={styles.formGroup}>
                 <label htmlFor="description">Description:</label>
                 <textarea

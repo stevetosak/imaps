@@ -156,7 +156,7 @@ export default function EntranceModal(props) {
 
               {/* Pins Dropdown for Hallway Navigation */}
               <div className={styles.formGroup}>
-                <label htmlFor="selectedPin">Select pins connected to entrance:</label>
+                <label htmlFor="selectedPin">Select connections:</label>
                 <select
                   id="selectedPin"
                   name="selectedPin"
@@ -164,7 +164,7 @@ export default function EntranceModal(props) {
                   onChange={handleInputChange}
                   required
                 >
-                  <option value="">Select Pin</option>
+                  <option value="">Select Connection</option>
                   {formData.availablePins
                     .filter(
                       (pin) =>
@@ -179,12 +179,12 @@ export default function EntranceModal(props) {
                     ))}
                 </select>
                 <button type="button" onClick={addPinToList} className={styles.addButton}>
-                  Add Pin
+                  Add Connection
                 </button>
               </div>
 
               {/* Display added pins */}
-              <h3>Connected Pins:</h3>
+              <h3>Connections:</h3>
               <ul className={styles.pinList}>
                 {pins.length > 0 ? (
                   pins.map((pin, index) => (
@@ -196,9 +196,10 @@ export default function EntranceModal(props) {
                     </li>
                   ))
                 ) : (
-                  <li>No pins added</li>
+                  <li>No connections added</li>
                 )}
               </ul>
+              <br />
 
               {/* Description */}
               <div className={styles.formGroup}>
