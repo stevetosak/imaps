@@ -96,7 +96,7 @@ export class MapBuilder {
     this.stage.on("click tap", this.handleStageClick.bind(this));
     this.stage.on("contextmenu", this.placeInfoPin.bind(this));
     this.stage.on("dragmove", this.dragStage.bind(this));
-    this.stage.on("wheel", this.zoomStage.bind(this));
+    this.stage.on("wheel", this.zoom.bind(this));
   }
 
   detachKeyPressEventListeners() {
@@ -167,37 +167,9 @@ export class MapBuilder {
     this.drawGrid();
   }
 
-  zoomStage(e) {
-    if (!e.evt.shiftKey) return;
-
-    e.evt.preventDefault();
-
-    const scaleFactor = e.evt.deltaY > 0 ? 0.95 : 1.15;
-
-    const prevScale = this.stage.scaleX();
-
-    let newScale = prevScale * scaleFactor;
-
-    const mousePos = this.stage.getRelativePointerPosition();
-
-    let mousePoint = {
-      x: (mousePos.x - this.stage.x()) / prevScale,
-      y: (mousePos.y - this.stage.y()) / prevScale,
-    };
-
-    this.stage.scale({
-      x: newScale,
-      y: newScale,
-    });
-
-    let newStagePos = {
-      x: mousePos.x - mousePoint.x * newScale,
-      y: mousePos.y - mousePoint.y * newScale,
-    };
-
-    this.stage.position(newStagePos);
-    this.drawGrid();
-    this.stage.batchDraw();
+  zoom(e) {
+   zoomStage(e,this.stage);
+   this.drawGrid();
   }
 
   drawGrid() {
@@ -256,10 +228,11 @@ export class MapBuilder {
   placeInfoPin(e) {
     e.evt.preventDefault();
     let mousePos = this.stage.getRelativePointerPosition();
-    let infoPin = Factory.createShape("InfoPin", mousePos, this.blockSize, this.infoPinLayer, 0);
+    let infoPin = Factory.createShape("InfoPin", mousePos, this.blockSize, this.mainLayer, 0);
     this.addModalHandling(infoPin);
     this.shapes.push(infoPin);
-    this.mainLayer.add(infoPin);
+    this.mainLayer.add(infoPin)
+    infoPin.displayName(this.textLayer);
     console.log(infoPin.name());
   }
 
@@ -288,9 +261,10 @@ export class MapBuilder {
 
     this.mainLayer.add(placedObj);
     this.shapes.push(placedObj);
-    placedObj.snapToGrid();
     this.addModalHandling(placedObj);
     this.mainLayer.draw();
+    placedObj.displayName(this.textLayer);
+    placedObj.snapToGrid();
 
     if (!this.efficientDrawingMode) {
       this.stopDrawing();

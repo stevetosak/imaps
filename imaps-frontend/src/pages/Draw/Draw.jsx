@@ -90,10 +90,10 @@ function Draw() {
             Render
           </button>
         </div>
-        {/* <div className={styles.templateCont}>
+        <div className={styles.templateCont}>
           <SaveMap submitHandler={handleSaveClick}></SaveMap>
           <MapTemplateSelector loadHandler={handleLoadMapClick}></MapTemplateSelector>
-        </div> */}
+        </div>
 
         <div className={styles.hide}>
           <RoomModal map={app}></RoomModal>
