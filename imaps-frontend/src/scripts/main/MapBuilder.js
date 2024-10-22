@@ -228,7 +228,7 @@ export class MapBuilder {
   placeInfoPin(e) {
     e.evt.preventDefault();
     let mousePos = this.stage.getRelativePointerPosition();
-    let infoPin = Factory.createShape("InfoPin", mousePos, this.blockSize, this.mainLayer, 0);
+    let infoPin = Factory.createShape("InfoPin", mousePos, this.blockSize, this.mainLayer, 0,1,1,true);
     this.addModalHandling(infoPin);
     this.shapes.push(infoPin);
     this.mainLayer.add(infoPin)
@@ -254,7 +254,10 @@ export class MapBuilder {
       mousePos,
       this.blockSize,
       this.mainLayer,
-      this.hoverObj.rotation()
+      this.hoverObj.rotation(),
+        1,
+        1,
+        true
     );
 
     if (!placedObj) return;
@@ -545,7 +548,9 @@ export class MapBuilder {
         { x: shape.attrs.x, y: shape.attrs.y },
         this.blockSize,
         this.mainLayer,
-        shape.attrs.rotation
+        shape.attrs.rotation,
+          shape.attrs.scaleX,
+          shape.attrs.scaleY
       );
       loadedShape.loadInfo(shape.attrs);
       this.shapes.push(loadedShape);

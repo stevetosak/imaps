@@ -2,13 +2,13 @@ import Konva from "konva";
 import MapShape from "./MapShape";
 import { _registerNode } from 'konva/lib/Global';
 export default class Wall extends MapShape {
-    constructor(mousePos, blockSize, layer, rotation,snap, draggable = true) {
+    constructor(mousePos, blockSize, layer, rotation,snap, draggable = true,scaleX = 1, scaleY = 1){
       super(
         {
           x: mousePos.x,
           y: mousePos.y,
-          width: blockSize,
-          height: blockSize * 8,
+          width: blockSize * scaleX,
+          height: blockSize * 8 * scaleY,
           fill: "#DDE0F8",
           stroke: "grey",
           strokeWidth: 1,
