@@ -49,6 +49,7 @@ public class MapRenderApi {
     }
 
 
+
     @GetMapping("/public/navigate")
     public ResponseEntity<List<MapNode>> navigate(@RequestParam String from, @RequestParam String to) {
 
@@ -69,13 +70,25 @@ public class MapRenderApi {
     }
 
     @GetMapping("/public/mapData")
-    public ResponseEntity<String> getMapData() {
-        //tuka povik do baza
-        System.out.println(jsonData);
-        if (jsonData != null && !jsonData.isEmpty()) {
+    public ResponseEntity<String> getMapData(@RequestParam String mapName) {
+        Optional<IndoorMap> map = mapService.getMapByName(mapName);
+        if (map.isPresent()) {
+            jsonData = map.get().getMapData().getTextData();
+            loadGraph(jsonData);
             return ResponseEntity.ok(jsonData);
-        } else {
-            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonData);
+    }
+
+    private void loadGraph(String mapData){
+        try {
+            MapNodeParser parser = new MapNodeParser();
+            List<MapNode> nodes = parser.parseAndCreateNodes(mapData);
+            graph = new RouteGraph(nodes);
+            System.out.println("======================= CREATED GRAPH =======================\n" + graph);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 

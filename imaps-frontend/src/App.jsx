@@ -11,6 +11,7 @@ import Error from "./pages/Error/Error";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import "./App.css";
 import HttpService from "./scripts/net/HttpService";
+import MapView from "./components/MapView/MapView.jsx";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -62,7 +63,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<IMaps />} />
-        <Route path="/Maps/FinkiMaps/View" element={<FinkiMaps />} /> 
+        <Route path="/Maps/:mapName/View" element={<MapView />} />
         <Route path="/Maps" element={<Maps />} />
         <Route path="/Login" element={<LoginPage onLogin={handleLogin} />} />
         <Route path="/Signup" element={<Signup />} />

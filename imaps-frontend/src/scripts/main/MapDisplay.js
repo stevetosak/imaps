@@ -53,9 +53,9 @@ export class MapDisplay {
     this.textLayer.children.forEach((child) => console.log(child, "DECAAA"));
   }
 
-  async loadMap(onMapLoaded) {
+  async loadMap(onMapLoadedmapName) {
     const httpService = new HttpService();
-    const mapData = await httpService.get("/public/mapData");
+    const mapData = await httpService.get(`/public/mapData?mapName=${mapName}`);
 
     this.deserializeMap(mapData);
     this.shapes.forEach((shape) => {
