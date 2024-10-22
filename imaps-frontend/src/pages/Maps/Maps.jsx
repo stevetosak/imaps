@@ -6,23 +6,12 @@ import { Link } from "react-router-dom";
 import card from "../../assets/card-map.png";
 import {useEffect, useState} from "react";
 import HttpService from "../../scripts/net/HttpService.js";
-import httpService from "../../scripts/net/HttpService.js";
 
-const loadedTiles = [
-  { text: "FINKI", cols: 1, rows: 1 },
-  { text: "TMF", cols: 1, rows: 1 },
-  { text: "HOSPITAL", cols: 1, rows: 1 },
-  { text: "POLICE", cols: 1, rows: 1 },
-  { text: "LIBRARY", cols: 1, rows: 1 },
-  { text: "PENTAGON", cols: 1, rows: 1 },
-  { text: "WHITE HOUSE", cols: 1, rows: 1 },
-  { text: "HOME", cols: 1, rows: 1 },
-  { text: "PRESPATEKS", cols: 1, rows: 1 },
-];
+const loadedTiles = [];
 
 const renderTile = ({ data, isDragging }) => (
   <div style={{ padding: "1rem", width: "100%" }}>
-    <Link to="/Maps/FinkiMaps/View" className={styles.linkStyle}>
+    <Link to= {`/Maps/${data.text}/View`} className={styles.linkStyle}>
       <div
         className={`${styles.tile} ${isDragging ? styles.dragging : ""}`}
         style={{ width: "100%", height: "100%" }}
@@ -47,8 +36,16 @@ export default function Maps() {
       const httpService = new HttpService("http://localhost:8080/api");
       const resp = await httpService.get("/public/maps/loadPublic");
       console.log("RESPONSE MAPs",resp)
+
+      const mapTiles = resp.maps.map(elem => ({
+        text: elem.name,
+        cols: 1,
+        rows: 1
+      }))
+
+      setTiles(mapTiles);
     }
-    loadPublicMaps()
+    loadPublicMaps();
   }, []);
 
   const [searchTerm, setSearchTerm] = useState("");
