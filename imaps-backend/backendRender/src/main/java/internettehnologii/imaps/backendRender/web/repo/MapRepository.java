@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,8 +28,11 @@ public interface MapRepository extends JpaRepository<IndoorMap, Long> {
     Optional<IndoorMap> findMapByName(String name);
 
     @Query(nativeQuery = true,
-            value = "SELECT maps.map_data FROM map WHERE name = ?1")
+            value = "SELECT maps.map_data FROM maps WHERE name = ?1")
     Optional<DataJson> findMapDataByName(String name);
 
 
+    @Query(nativeQuery = true,
+    value = "SELECT * FROM maps WHERE is_public = false")
+    Optional<List<IndoorMap>> findAllByStatus();
 }

@@ -63,6 +63,20 @@ public class MapController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/public/maps/loadPublic")
+    public ResponseEntity<Map<String,Object>> loadPublicMaps(){
+        HashMap<String,Object> response = new HashMap<>();
+
+        mapService.findAllPublicMaps()
+                .ifPresentOrElse(maps -> {
+                    response.put("status","ok");
+                    response.put("maps",maps);
+                },() -> response.put("status","error: public maps not found"));
+
+
+        return ResponseEntity.ok(response);
+    }
+
 //    @PostMapping
 //    public void registerNewMap(@RequestBody IndoorMap map){
 //        mapService.addNewMap(map);

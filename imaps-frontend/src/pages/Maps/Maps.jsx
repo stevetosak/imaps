@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+
 import styles from "./Maps.module.css";
 import "react-tiles-dnd/esm/index.css";
 import { TilesContainer } from "react-tiles-dnd";
 import { Link } from "react-router-dom";
 import card from "../../assets/card-map.png";
+import {useEffect, useState} from "react";
+import HttpService from "../../scripts/net/HttpService.js";
+import httpService from "../../scripts/net/HttpService.js";
 
-const initialTiles = [
+const loadedTiles = [
   { text: "FINKI", cols: 1, rows: 1 },
   { text: "TMF", cols: 1, rows: 1 },
   { text: "HOSPITAL", cols: 1, rows: 1 },
@@ -39,14 +42,23 @@ const tileSize = (tile) => ({
 });
 
 export default function Maps() {
+  useEffect(() => {
+    const loadPublicMaps = async () => {
+      const httpService = new HttpService("http://localhost:8080/api");
+      const resp = await httpService.get("/public/maps/loadPublic");
+      console.log("RESPONSE MAPs",resp)
+    }
+    loadPublicMaps()
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState("");
-  const [tiles, setTiles] = useState(initialTiles);
+  const [tiles, setTiles] = useState(loadedTiles);
 
   const handleSearchChange = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
-    setTiles(initialTiles.filter((tile) => tile.text.toLowerCase().includes(value)));
+    setTiles(loadedTiles.filter((tile) => tile.text.toLowerCase().includes(value)));
   };
 
   return (

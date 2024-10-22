@@ -42,6 +42,12 @@ public class MapService {
         return mapRepository.findById(id);
     }
 
+    public Optional<List<IndoorMap>> findAllPublicMaps(){
+       return mapRepository.findAllByStatus();
+
+
+    }
+
 
     // repository.save zavisit od state na object sho sakas da zacuvas. Ako napres direktno new obj, pa save, pret INSERT, a ako napres get na object od baza pa mu setnis attrib so setter pa save, pret UPDATE.
     @Transactional
