@@ -51,6 +51,15 @@ public class MapController {
 
     @GetMapping("/protected/maps/load")
     public ResponseEntity<Map<String,Object>> loadMap(@RequestParam String mapName) {
+        return getMapResponseEntity(mapName);
+    }
+
+    @GetMapping("/public/maps/load")
+    public ResponseEntity<Map<String,Object>> loadMapByName(@RequestParam String mapName) {
+        return getMapResponseEntity(mapName);
+    }
+
+    private ResponseEntity<Map<String, Object>> getMapResponseEntity(@RequestParam String mapName) {
         HashMap<String,Object> response = new HashMap<>();
         Optional<IndoorMap> map = mapService.getMapByName(mapName);
         if (map.isPresent()) {
@@ -62,6 +71,7 @@ public class MapController {
         }
         return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/public/maps/loadPublic")
     public ResponseEntity<Map<String,Object>> loadPublicMaps(){
