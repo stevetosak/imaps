@@ -1,4 +1,5 @@
 .wrapper {
+  position: relative; /* Ensure dropdowns are positioned relative to the wrapper */
   display: flex;
   justify-content: center;
   margin: 0px auto;
@@ -8,15 +9,16 @@
 
 .searchBar,
 .directionsContainer {
+  position: relative;
   display: flex;
-  align-items: end; /* Ensure all items remain aligned in the center */
+  align-items: end;
   width: 100%;
   background-color: white;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 30px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  flex-wrap: nowrap; /* Prevent items from wrapping to the next line */
+  flex-wrap: nowrap;
 }
 
 .inputField {
@@ -27,7 +29,30 @@
   border-radius: 30px;
   outline: none;
   margin-right: 10px;
-  min-width: 0; /* Ensure the input field remains flexible */
+  min-width: 0;
+  position: relative;
+}
+
+.dropdown {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: calc(100% - 20px);
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 100;
+  top: calc(100% + 10px);
+  left: 10px;
+}
+
+.dropdownItem {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdownItem:hover {
+  background-color: #f0f0f0;
 }
 
 .buttons {
@@ -49,7 +74,6 @@
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
-  width: auto;
 }
 
 .iconButton:hover {
@@ -61,7 +85,6 @@
   height: 20px;
 }
 
-/* Expanded view for the direction inputs */
 .directionsContainer {
   flex-direction: column;
   gap: 10px;
@@ -71,41 +94,4 @@
   display: flex;
   width: 100%;
   gap: 10px;
-}
-
-.directionsInputs .inputField {
-  flex: 1;
-}
-
-/* Media query for responsive design */
-@media (max-width: 768px) {
-  .wrapper {
-    max-width: 100%;
-    padding: 10px;
-  }
-
-  /* Keep buttons and input fields inline */
-  .searchBar,
-  .directionsContainer {
-    flex-direction: row; /* Keep items in a row */
-    align-items: center; /* Keep buttons and inputs on the same line */
-    flex-wrap: nowrap; /* Prevent items from wrapping */
-    padding: 8px;
-  }
-
-  .inputField {
-    width: 100%;
-    flex-grow: 1;
-    margin-right: 10px;
-  }
-
-  .buttons {
-    width: auto;
-    gap: 5px;
-  }
-
-  .iconButton {
-    width: auto;
-    padding: 10px;
-  }
 }
