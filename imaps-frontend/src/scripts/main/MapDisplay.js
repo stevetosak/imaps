@@ -1,7 +1,7 @@
 import Konva from "konva";
 import Factory from "../util/Factory.js";
 import HttpService from "../net/HttpService.js";
-import {zoomStage} from "../util/zoomStage.js";
+import { zoomStage } from "../util/zoomStage.js";
 export class MapDisplay {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
@@ -14,6 +14,7 @@ export class MapDisplay {
     });
 
     this.shapes = [];
+    this.roomTypes = [];
     this.loaded = false;
     this.mainLayer = new Konva.Layer();
     this.routeLayer = new Konva.Layer();
@@ -28,44 +29,44 @@ export class MapDisplay {
       this.stage.height = window.innerHeight;
     });
 
-    this.stage.on("wheel",(e) => {
-        zoomStage(e,this.stage);
-    })
-
-   
+    this.stage.on("wheel", (e) => {
+      zoomStage(e, this.stage);
+    });
   }
 
   deserializeMap(data) {
     data.forEach((child) => {
-        const shape = JSON.parse(child);
-        if (shape.className !== "InfoPin") {
-            const renderedShape = Factory.createRenderedShape(
-                shape.className,
-                shape.attrs
-            );
-            this.shapes.push(renderedShape);
+      const shape = JSON.parse(child);
+      if (shape.className !== "InfoPin") {
+        const renderedShape = Factory.createRenderedShape(shape.className, shape.attrs);
+        this.shapes.push(renderedShape);
       }
     });
   }
 
-  displayRoomNames(){
-    console.log("VLEZE")
-    this.shapes.forEach(shape => {
+  displayRoomNames() {
+    console.log("VLEZE");
+    this.shapes.forEach((shape) => {
       shape.displayName(this.textLayer);
-    })
+    });
 
-    this.textLayer.children.forEach(child => console.log(child,"DECAAA"));
+    this.textLayer.children.forEach((child) => console.log(child, "DECAAA"));
   }
 
-  async loadMap() {
+  async loadMap(onMapLoaded) {
     const httpService = new HttpService();
     const mapData = await httpService.get("/public/mapData");
-    console.log("DESERIALIZED --->",mapData);
+
     this.deserializeMap(mapData);
     this.shapes.forEach((shape) => {
       this.mainLayer.add(shape);
     });
     this.displayRoomNames();
+    this.initializeRoomTypes();
+
+    if (onMapLoaded) {
+      onMapLoaded();
+    }
   }
 
   drawRoute(path) {
@@ -82,40 +83,65 @@ export class MapDisplay {
     let index = 0;
 
     const drawNextSegment = () => {
-        if (index >= pointsArray.length) return;
+      if (index >= pointsArray.length) return;
 
-        buff.push(pointsArray[index]);
-        count++;
+      buff.push(pointsArray[index]);
+      count++;
 
-        if (count % 4 === 0) {
-            const line = new Konva.Arrow({
-                points: buff,
-                stroke: "#e91332",
-                strokeWidth: 2.5,
-                dash: [5, 4],
-                lineCap: 'round',
-                lineJoin: 'round',
-                pointerLength: 7,
-                pointerWidth: 7,
-                fill:'red',
-            });
+      if (count % 4 === 0) {
+        const line = new Konva.Arrow({
+          points: buff,
+          stroke: "#e91332",
+          strokeWidth: 2.5,
+          dash: [5, 4],
+          lineCap: "round",
+          lineJoin: "round",
+          pointerLength: 7,
+          pointerWidth: 7,
+          fill: "red",
+        });
 
-            this.routeLayer.add(line);
-            this.routeLayer.draw(); 
+        this.routeLayer.add(line);
+        this.routeLayer.draw();
 
-            console.log(buff, "BUFFER");
-            buff = []; 
-            index -= 2; 
-        }
+        console.log(buff, "BUFFER");
+        buff = [];
+        index -= 2;
+      }
 
-        index++;
+      index++;
 
-        setTimeout(drawNextSegment, 25); 
+      setTimeout(drawNextSegment, 25);
     };
 
-    drawNextSegment(); 
-}
+    drawNextSegment();
+  }
 
+  initializeRoomTypes() {
+    this.roomTypes = this.shapes
+      .filter((shape) => shape.class === "Room" && shape.info.type !== "")
+      .map((shape) => shape.info.type);
+  }
+
+  getRoomTypes() {
+    return this.roomTypes;
+  }
+
+  getRooms() {
+    return this.getShapeInfoByType("Room");
+  }
+
+  getPins() {
+    return this.getShapeInfoByType("InfoPin");
+  }
+
+  getEntrances() {
+    return this.getShapeInfoByType("Entrance");
+  }
+
+  getShapeInfoByType(type) {
+    return this.shapes.filter((shape) => shape.class === type).map((shape) => shape.info.name);
+  }
 
   search() {
     console.log("VLEZE VO SEARCH");
