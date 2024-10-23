@@ -84,6 +84,10 @@ public class MapController {
         return getAllMaps(false);
     }
 
+    private List<IndoorMap> getAllPersonalMapsForUser(String username){
+        return null;
+    }
+
     private ResponseEntity<Map<String, Object>> getAllMaps(boolean status) {
         HashMap<String,Object> response = new HashMap<>();
 

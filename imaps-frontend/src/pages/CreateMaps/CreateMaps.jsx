@@ -3,9 +3,10 @@ import "react-tiles-dnd/esm/index.css";
 import {TilesContainer} from "react-tiles-dnd";
 import {Link} from "react-router-dom";
 import card from "../../assets/card-map.png";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import HttpService from "../../scripts/net/HttpService.js";
 import MapDetailsModal from "../../components/Modals/CreateMapModal/CreateMapModal.jsx";
+import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
 
 const loadedTiles = [];
 
@@ -35,6 +36,7 @@ export default function CreateMaps() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [mapDetails, setMapDetails] = useState(null);
+    const { username } = useContext(AuthContext);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -81,7 +83,7 @@ export default function CreateMaps() {
         <>
             <div className={styles.container}>
                 <h1>Your Maps</h1>
-
+                <h1> Hello {username}</h1>
                 <div className={styles.searchBar}>
                     <input
                         type="text"

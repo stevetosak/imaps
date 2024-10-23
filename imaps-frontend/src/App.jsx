@@ -13,75 +13,34 @@ import "./App.css";
 import HttpService from "./scripts/net/HttpService";
 import MapView from "./components/MapView/MapView.jsx";
 import CreateMaps from "./pages/CreateMaps/CreateMaps.jsx";
+import {AuthContext, AuthProvider} from "./components/AuthContext/AuthContext.jsx";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const httpService = new HttpService("http://localhost:8080/api/auth");
-
-    const verifyToken = async () => {
-      try {
-        const response = await httpService.get(`/verify?token=${token}`);
-        if (response.username) {
-          setIsAuthenticated(true);
-          console.log("good");
-        }
-      } catch (error) {
-        console.log("ERROR: ", error);
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (token) {
-      verifyToken();
-      //setLoading(false);
-    } else {
-      setIsAuthenticated(false);
-      setLoading(false);
-    }
-  }, []);
-
-  const handleLogin = (token) => {
-    localStorage.setItem("token", token);
-    setIsAuthenticated(true);
-  };
-
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <p>Loading, please wait...</p>
-      </div>
-    );
-  }
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<IMaps />} />
-        <Route path="/Maps/:mapName/View" element={<MapView />} />
-        <Route path="/Maps" element={<Maps />} />
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<IMaps />} />
+            <Route path="/Maps/:mapName/View" element={<MapView />} />
+            <Route path="/Maps" element={<Maps />} />
 
-        <Route path="/Login" element={<LoginPage onLogin={handleLogin} />} />
-        <Route path="/Signup" element={<Signup />} />
+            <Route path="/Login" element={<LoginPage />} />
+            <Route path="/Signup" element={<Signup />} />
 
-        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
-          <Route path="/Maps/:mapName/Draw" element={<Draw />} />
-        </Route>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/Maps/:mapName/Draw" element={<Draw />} />
+            </Route>
 
-        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
-          <Route path="/myMaps" element={<CreateMaps />} />
-        </Route>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/myMaps" element={<CreateMaps />} />
+            </Route>
+            
+            <Route path="*" element={<Error />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
 
-
-        <Route path="*" element={<Error />} />
-      </Routes>
-    </Router>
   );
 }
 

@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import styles from "./Login.module.css";
 import illustration from "../../assets/illustration_img.png";
+import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
 
-const LoginPage = ({onLogin}) => {
+const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { handleLogin } = useContext(AuthContext);
 
   const { targetPath } = location.state || { targetPath: { pathname: "/" } };
 
@@ -17,7 +20,7 @@ const LoginPage = ({onLogin}) => {
     password: password
   };
 
-  const handleLogin = (e) => {
+  const login = (e) => {
     e.preventDefault();
 
     fetch("http://localhost:8080/api/auth/login", {
@@ -36,7 +39,7 @@ const LoginPage = ({onLogin}) => {
       .then((data) => {
         if (data.token) {
           navigate(targetPath)
-          onLogin(data.token)
+          handleLogin(data)
         } else {
           setError("Invalid username or password.");
         }
@@ -55,7 +58,7 @@ const LoginPage = ({onLogin}) => {
       </div>
       <div className={styles.form}>
         <div className={styles.heading}>LOGIN</div>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={login}>
           <div>
             <label htmlFor="username">Username</label>
             <input
