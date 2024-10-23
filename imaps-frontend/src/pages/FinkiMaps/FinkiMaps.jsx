@@ -13,7 +13,6 @@ function FinkiMaps() {
 
   useEffect(() => {
     const appInstance = new MapDisplay("map");
-
     appInstance.loadMap(() => {
       setMapLoaded(true);
     });
@@ -41,7 +40,6 @@ function FinkiMaps() {
       <div className={styles.toolbar}>
         <SideBar />
         <div className={styles.left}>
-          {/* Conditionally render SearchBar and FilterBar only when the map is fully loaded */}
           {mapLoaded && app && (
             <>
               <SearchBar map={app} />

@@ -63,26 +63,13 @@ public class MapController {
     }
 
     @GetMapping("/protected/maps/load")
-    public ResponseEntity<Map<String,Object>> loadMap(@RequestParam String mapName) {
-        return getMapResponseEntity(mapName);
+    public ResponseEntity<Map<String,Object>> loadMapProtected(@RequestParam String mapName) {
+        return getMapByName(mapName);
     }
 
     @GetMapping("/public/maps/load")
-    public ResponseEntity<Map<String,Object>> loadMapByName(@RequestParam String mapName) {
-        return getMapResponseEntity(mapName);
-    }
-
-    private ResponseEntity<Map<String, Object>> getMapResponseEntity(@RequestParam String mapName) {
-        HashMap<String,Object> response = new HashMap<>();
-        Optional<IndoorMap> map = mapService.getMapByName(mapName);
-        if (map.isPresent()) {
-            response.put("status","ok");
-            response.put("map",map.get());
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("status","error: map " + mapName + " not found");
-        }
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Map<String,Object>> loadMapPublic(@RequestParam String mapName) {
+        return getMapByName(mapName);
     }
 
 
@@ -110,22 +97,16 @@ public class MapController {
         return ResponseEntity.ok(response);
     }
 
-
-//    @PostMapping
-//    public void registerNewMap(@RequestBody IndoorMap map){
-//        mapService.addNewMap(map);
-//    }
-//
-//    @DeleteMapping(path = "{mapId}")
-//    public void deleteMap(@PathVariable("mapId") Long mapId){
-//        mapService.deleteMap(mapId);
-//    }
-//
-//    @PutMapping(path = "{mapId}")
-//    public void updateMap(
-//            @PathVariable("mapId") Long mapId,
-//            @RequestParam(required = false) String name){
-//
-//        //mapService.updateMap(name);
-//    }
+    private ResponseEntity<Map<String, Object>> getMapByName(@RequestParam String mapName) {
+        HashMap<String,Object> response = new HashMap<>();
+        Optional<IndoorMap> map = mapService.getMapByName(mapName);
+        if (map.isPresent()) {
+            response.put("status","ok");
+            response.put("map",map.get());
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("status","error: map " + mapName + " not found");
+        }
+        return ResponseEntity.ok(response);
+    }
 }

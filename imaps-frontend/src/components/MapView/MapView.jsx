@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {MapDisplay} from "../../scripts/main/MapDisplay.js";
 import styles from "../../pages/FinkiMaps/FinkiMaps.module.css";
@@ -9,15 +9,22 @@ import Profile from "../Profile/Profile.jsx";
 import MapControls from "../MapControls/MapControls.jsx";
 
 const MapView = () => {
-    const { mapName } = useParams();
+    const {mapName} = useParams();
 
-    const [app,setApp] = useState(null);
+    const [mapLoaded, setMapLoaded] = useState(false);
+    const [app, setApp] = useState(null);
 
     useEffect(() => {
-        const app = new MapDisplay("map");
-        app.loadMap(mapName);
-        setApp(app);
-        console.log(mapName)
+        const appInstance = new MapDisplay("map");
+        appInstance.loadMap(mapName)
+            .then(() => {
+                setApp(appInstance);
+                setMapLoaded(true);
+                console.log(mapName)
+            })
+            .catch(reason => {
+                console.log("ERROR: ", reason);
+            })
     }, []);
 
     const handleZoomIn = () => {
@@ -35,19 +42,26 @@ const MapView = () => {
     return (
         <div id="main" className={styles.main}>
             <div id="map" className={styles.mapContainer}></div>
+
             <div className={styles.toolbar}>
-                <SideBar />
+                <h1>{mapName}</h1>
+                <SideBar/>
                 <div className={styles.left}>
-                    <SearchBar map={app}/>
-                    <FilterBar />
+                    {mapLoaded && app &&
+                        <>
+                            <SearchBar map={app}/>
+                            <FilterBar map={app}/>
+                        </>
+                    }
+
                 </div>
                 <div className={styles.right}>
-                    <Profile />
+                    <Profile/>
                 </div>
             </div>
 
             <div className={styles.mapControlsContainer}>
-                <MapControls onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} onFloorChange={handleFloorChange} />
+                <MapControls onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} onFloorChange={handleFloorChange}/>
             </div>
         </div>
     );

@@ -1,18 +1,18 @@
 body {
-  background-color: white;
+  background: white;
 }
 .loading-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full-screen loader */
-  background-color: #f7f9fc; /* Light background */
+  height: 100vh;
+  background-color: #f7f9fc;
 }
 
 .spinner {
-  border: 8px solid #f3f3f3; /* Light grey border */
-  border-top: 8px solid #1e90ff; /* Accent color for spinning part */
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #1e90ff;
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -31,6 +31,6 @@ body {
 .loading-container p {
   margin-top: 20px;
   font-size: 18px;
-  color: #2c3e50; /* Dark text for contrast */
+  color: #2c3e50;
   font-weight: 500;
 }

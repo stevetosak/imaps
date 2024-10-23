@@ -102,7 +102,7 @@ function Draw() {
         </div>
         <div className={styles.templateCont}>
           <SaveMap submitHandler={handleSaveClick}></SaveMap>
-          <MapTemplateSelector loadHandler={handleLoadMapClick}></MapTemplateSelector>
+          {/*<MapTemplateSelector loadHandler={handleLoadMapClick}></MapTemplateSelector>*/}
         </div>
 
         <div className={styles.hide}>
