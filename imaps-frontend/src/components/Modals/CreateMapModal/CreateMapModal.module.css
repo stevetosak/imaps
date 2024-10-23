@@ -1,0 +1,30 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 80%;
+}
+
+.modalButtons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.formData{
+    display: flex;
+    flex-direction: column;
+}

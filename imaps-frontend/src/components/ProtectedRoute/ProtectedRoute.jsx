@@ -1,8 +1,14 @@
-import React from "react";
-import { Outlet, Navigate } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 const ProtectedRoute = ({ isAuthenticated }) => {
-  return isAuthenticated ? <Outlet /> : <Navigate to="/Login" />;
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+
+    return <Navigate to="/Login" state={{ targetPath: location }} />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

@@ -23,10 +23,10 @@ function SideBar() {
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/Maps">Maps</Link>
+              <Link to="/Maps">Browse Maps</Link>
             </li>
             <li>
-              <Link to="/Maps/FinkiMaps/Draw">Draw</Link>
+              <Link to="/myMaps">My Maps</Link>
             </li>
           </ul>
         </div>

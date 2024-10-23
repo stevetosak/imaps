@@ -12,6 +12,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import "./App.css";
 import HttpService from "./scripts/net/HttpService";
 import MapView from "./components/MapView/MapView.jsx";
+import CreateMaps from "./pages/CreateMaps/CreateMaps.jsx";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -65,12 +66,18 @@ function App() {
         <Route path="/" element={<IMaps />} />
         <Route path="/Maps/:mapName/View" element={<MapView />} />
         <Route path="/Maps" element={<Maps />} />
+
         <Route path="/Login" element={<LoginPage onLogin={handleLogin} />} />
         <Route path="/Signup" element={<Signup />} />
 
         <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
-          <Route path="/Maps/FinkiMaps/Draw" element={<Draw />} />
+          <Route path="/Maps/:mapName/Draw" element={<Draw />} />
         </Route>
+
+        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
+          <Route path="/myMaps" element={<CreateMaps />} />
+        </Route>
+
 
         <Route path="*" element={<Error />} />
       </Routes>

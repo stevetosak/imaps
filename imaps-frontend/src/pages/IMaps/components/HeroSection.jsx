@@ -10,7 +10,7 @@ function HeroSection() {
       <h1>Map Your World</h1>
       <p>Create and explore detailed indoor maps.</p>
       <div className="hero-btns">
-        <Link to="/Maps/FinkiMaps/Draw">
+        <Link to="/myMaps">
           <Button className="btns" buttonStyle="btn--outline" buttonSize="btn--large">
             Create maps
           </Button>
@@ -20,7 +20,6 @@ function HeroSection() {
             className="btns"
             buttonStyle="btn--primary"
             buttonSize="btn--large"
-            onClick={console.log("hey")}
           >
             Browse Maps <i className="far fa-play-circle" />
           </Button>

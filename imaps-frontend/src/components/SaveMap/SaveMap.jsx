@@ -7,25 +7,13 @@ const SaveMap = ({submitHandler}) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        submitHandler(name);
+        submitHandler();
     };
 
     return (
         <>
         <div className={styles.saveMapContainer}>
             <form onSubmit={handleSubmit} className={styles.saveMapForm}>
-                <div>
-                    <label htmlFor="name">Map Name: </label>
-                    <input 
-                        type="text" 
-                        id="name" 
-                        value={name} 
-                        onChange={(e) => setName(e.target.value)} 
-                        placeholder="Enter map name" 
-                        required
-                        className={styles.saveMapInput}
-                    />
-                </div>
                 <div>
                     <button type="submit" className={styles.saveMapButton}>Save Map</button>
                 </div>

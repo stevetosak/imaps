@@ -29,6 +29,3 @@ PRIORITY LOW
 -AutoSave na draw duri crtas (Da se pret update request do baza)
 -Refactor na stil na Draw
 
-
-
-ZA PREZ

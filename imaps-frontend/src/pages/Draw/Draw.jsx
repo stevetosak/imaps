@@ -1,26 +1,33 @@
 import { useEffect, useState } from "react";
 import { MapBuilder } from "../../scripts/main/MapBuilder.js";
 import styles from "./Draw.module.css";
-import RoomModal from "../../components/RoomModal/RoomModal.jsx";
+import RoomModal from "../../components/Modals/RoomModal/RoomModal.jsx";
 import SideBar from "../../components/SideBar/SideBar.jsx";
-import EntranceModal from "../../components/EntranceModal/EntranceModal.jsx";
+import EntranceModal from "../../components/Modals/EntranceModal/EntranceModal.jsx";
 import DrawGuide from "../../components/DrawGuide/DrawGuide.jsx";
-import RoomTypeModal from "../../components/RoomTypeModal/RoomTypeModal.jsx";
-import InfoPinModal from "../../components/InfoPinModal/InfoPinModal.jsx";
+import RoomTypeModal from "../../components/Modals/RoomTypeModal/RoomTypeModal.jsx";
+import InfoPinModal from "../../components/Modals/InfoPinModal/InfoPinModal.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
 import SaveMap from "../../components/SaveMap/SaveMap.jsx";
 import logo from "../../assets/logo_icon.png";
 import MapTemplateSelector from "../../components/MapTemplateSelector/LoadMap.jsx";
 import KeymapPanel from "../../components/KeyMappingsGuidePanel/KeymapPanel.jsx";
-import { Link } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 
 function Draw() {
+
+  const { mapName} = useParams();
   const [selectedFloor, setSelectedFloor] = useState(1);
   const [app, setApp] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   useEffect(() => {
     const app = new MapBuilder("container");
     setApp(app);
+    app.loadMap(mapName)
+        .then(resp => console.log(resp))
+        .catch(reason => {
+          console.log("ERRR: ",reason)
+        })
     // fpsCounterLoop();
   }, []);
 
@@ -37,7 +44,7 @@ function Draw() {
     }, 3000);
   };
 
-  const handleSaveClick = async (mapName) => {
+  const handleSaveClick = async () => {
     const resp = await app.saveMap(mapName);
   };
   const handleLoadMapClick = (data) => {

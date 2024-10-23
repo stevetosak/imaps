@@ -37,6 +37,11 @@ public class IndoorMap {
         this.url = url;
     }
 
+    public IndoorMap(String name){
+        this.name = name;
+    }
+
+
     public IndoorMap() {
 
     }

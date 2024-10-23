@@ -339,6 +339,7 @@ export class MapBuilder {
     if (e.key === "Delete") {
       this.mainTransformer.nodes().forEach((node) => {
         node.remove();
+        node.clearText();
         this.shapes.splice(this.shapes.indexOf(node), 1);
       });
       this.mainTransformer.nodes([]);
@@ -537,6 +538,17 @@ export class MapBuilder {
     this.hoverObj = null;
   }
 
+  async loadMap(mapName) {
+    const httpService = new HttpService();
+    httpService.setAuthenticated();
+    const resp = await httpService.get(`/protected/maps/load?mapName=${mapName}`);
+    console.log("RESPONSE FROM LOAD --->", resp);
+    this.deserializeMap(resp.map.mapData.textData);
+    this.shapes.forEach((shape) => {
+      this.mainLayer.add(shape);
+    });
+  }
+
   deserializeMap(data) {
     console.log("DESERIALIZING: ", data);
     this.clearMap();
@@ -563,4 +575,6 @@ export class MapBuilder {
 
     this.shapes.forEach((shape) => shape.displayName(this.textLayer));
   }
+
+
 }

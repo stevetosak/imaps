@@ -1,0 +1,88 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #34495e;
+  margin-bottom: 20px;
+}
+
+/* Search Bar */
+.searchBar {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.searchBar input {
+  width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.searchBar input:focus {
+  border-color: #1e90ff;
+  box-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+}
+
+/* Tile Styles */
+.tile {
+  background: #fff;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #2c3e50;
+  background-color: #f7f9fc;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 15px;
+  transition: all 300ms ease-in-out;
+  padding: 10px;
+  border: 1px solid #dcdcdc;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.tile:hover {
+  transform: scale(1.05);
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 18px;
+}
+
+.imgStyle {
+  width: 80%;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+/* When dragging a tile */
+.dragging {
+  background-color: #1e90ff;
+  transform: scale(1.06) rotate(3deg);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px,
+    rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+/* Link Style */
+.linkStyle {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 768px) {
+  .searchBar input {
+    width: 100%;
+  }
+
+  .tile {
+    width: 100%;
+    height: auto;
+  }
+}

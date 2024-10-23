@@ -6,6 +6,7 @@ import RenderedRoom from "../rendered_shapes/RenderedRoom";
 import RenderedEntrance from "../rendered_shapes/RenderedEntrance";
 import RenderedWall from "../rendered_shapes/RenderedWall.js";
 export default class Factory {
+  // BUG KO KE NAPRES REFRESH SA RESETVAT COUNTS!
 
   static infoPinCount = 0;
   static wallCount = 0;

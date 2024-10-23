@@ -2,6 +2,7 @@ package internettehnologii.imaps.backendRender.web.controllers;
 
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.service.MapService;
+import internettehnologii.imaps.backendRender.web.util.CreateMapDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,18 @@ public class MapController {
         }
     }
 
+    @PutMapping("/protected/maps/create")
+    public ResponseEntity<Map<String,Object>> createMap(@RequestBody CreateMapDTO mapData) {
+        HashMap<String,Object> response = new HashMap<>();
+        IndoorMap indoorMap = new IndoorMap();
+        System.out.println("MAP NAME TO ADD: " + mapData.getName());
+        indoorMap.setName(mapData.getName());
+        indoorMap.setPublic(false);
+        mapService.addNewMap(indoorMap);
+        response.put("status","ok");
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/protected/maps/load")
     public ResponseEntity<Map<String,Object>> loadMap(@RequestParam String mapName) {
         return getMapResponseEntity(mapName);
@@ -75,9 +88,19 @@ public class MapController {
 
     @GetMapping("/public/maps/loadPublic")
     public ResponseEntity<Map<String,Object>> loadPublicMaps(){
+        return getAllMaps(true);
+    }
+
+    @GetMapping("/protected/maps/loadPersonal")
+    public ResponseEntity<Map<String,Object>> loadPersonalMaps(){
+        //user specific ne samo site so se false;
+        return getAllMaps(false);
+    }
+
+    private ResponseEntity<Map<String, Object>> getAllMaps(boolean status) {
         HashMap<String,Object> response = new HashMap<>();
 
-        mapService.findAllPublicMaps()
+        mapService.findAllMapsByPublicStatus(status)
                 .ifPresentOrElse(maps -> {
                     response.put("status","ok");
                     response.put("maps",maps);
@@ -86,6 +109,7 @@ public class MapController {
 
         return ResponseEntity.ok(response);
     }
+
 
 //    @PostMapping
 //    public void registerNewMap(@RequestBody IndoorMap map){

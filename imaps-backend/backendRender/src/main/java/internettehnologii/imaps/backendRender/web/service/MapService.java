@@ -25,8 +25,13 @@ public class MapService {
     }
 
     public void addNewMap(IndoorMap map) {
-        mapRepository.save(map);
+        getMapByName(map.getName())
+                .ifPresentOrElse(lMap -> {
+                    System.out.println("Map with name " + map.getName() + " already exists");
+                },() -> mapRepository.save(map));
     }
+
+
 
 
     public void deleteMap(Long mapId) {
@@ -42,12 +47,16 @@ public class MapService {
         return mapRepository.findById(id);
     }
 
-    public Optional<List<IndoorMap>> findAllPublicMaps(){
-       return mapRepository.findAllByStatus();
+//    public Optional<List<IndoorMap>> findAllPublicMaps(){
+//       return mapRepository.findAllByStatus(true);
+//    }
+//    public Optional<List<IndoorMap>> findAllPersonalMaps(){
+//        return mapRepository.findAllByStatus(false);
+//    }
 
-
+    public Optional<List<IndoorMap>> findAllMapsByPublicStatus(boolean publicStatus) {
+        return mapRepository.findAllByStatus(publicStatus);
     }
-
 
     // repository.save zavisit od state na object sho sakas da zacuvas. Ako napres direktno new obj, pa save, pret INSERT, a ako napres get na object od baza pa mu setnis attrib so setter pa save, pret UPDATE.
     @Transactional
@@ -58,10 +67,8 @@ public class MapService {
             map.setMapData(new DataJson(mapData));
             mapRepository.save(map);
         },() -> {
-            IndoorMap map = new IndoorMap(name,new DataJson(mapData));
-            mapRepository.save(map);
+            System.out.println("Map with name: " + name + " does not exist");
         });
-
     }
 
     public Optional<IndoorMap> getMapByName(String name) {

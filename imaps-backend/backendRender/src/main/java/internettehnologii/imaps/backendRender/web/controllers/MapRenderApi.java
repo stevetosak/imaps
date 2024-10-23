@@ -58,6 +58,7 @@ public class MapRenderApi {
 
         String roomConnectedToEntranceFrom = graph.findNodeConnectedToEntrance(from);
         String roomConnectedToEntranceTo = graph.findNodeConnectedToEntrance(to);
+
         if (roomConnectedToEntranceFrom != null) {
             startNode = roomConnectedToEntranceFrom;
         }

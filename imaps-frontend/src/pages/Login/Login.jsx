@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import styles from "./Login.module.css";
 import illustration from "../../assets/illustration_img.png";
 
@@ -8,6 +8,9 @@ const LoginPage = ({onLogin}) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { targetPath } = location.state || { targetPath: { pathname: "/" } };
 
   const payload = {
     username: username,
@@ -32,7 +35,7 @@ const LoginPage = ({onLogin}) => {
       })
       .then((data) => {
         if (data.token) {
-          navigate("/Maps/FinkiMaps/Draw");
+          navigate(targetPath)
           onLogin(data.token)
         } else {
           setError("Invalid username or password.");
