@@ -3,6 +3,7 @@
   width: 100vw;
   height: 100vh; /* Full screen height */
   overflow: hidden; /* Prevent scrolling */
+  background-color: white;
 }
 
 .toolbar {
@@ -13,7 +14,7 @@
   position: absolute;
   top: 0; /* Position toolbar at the top */
   z-index: 10; /* Ensure the toolbar is above the map */
-  background-color: rgba(255, 255, 255, 0.8); /* Optional: translucent background */
+  background-color: rgba(255, 255, 255, 1); /* Optional: translucent background */
   backdrop-filter: blur(5px); /* Optional: blur effect */
   flex-wrap: wrap; /* Allow items to wrap on smaller screens */
 }
@@ -45,7 +46,7 @@
   width: 100vw; /* Make the map fill the entire width of the screen */
   height: 100vh; /* Make the map fill the entire height of the screen */
   z-index: 1; /* Ensure the map is behind the toolbar */
-  background-color:beige /* Set your map's background color */
+  background-color: beige; /* Set your map's background color */
 }
 
 .mapControlsContainer {
@@ -53,41 +54,4 @@
   bottom: 20px;
   right: 20px;
   z-index: 10; /* Ensure the map controls are above the map */
-}
-
-@media (max-width: 768px) {
-  .toolbar {
-    flex-direction: column; /* Stack elements vertically */
-    align-items: center;
-    max-width: 100%;
-    padding: 20px 20px;
-    position: relative;
-  }
-
-  .left {
-    width: 100%;
-    max-width: 100%; /* Take full width */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  /* Profile floating above Search and Filter */
-  .right {
-    position: absolute; /* Keep it floating */
-    top: 0.8em; /* Make sure it's above the search */
-    right: 20px;
-    z-index: 11; /* Ensure it's on top */
-  }
-
-  .left {
-    margin-top: 40px; /* Push the Search and Filter below the Profile */
-  }
-
-  .mapControlsContainer {
-    bottom: 10px;
-    right: 10px;
-  }
 }

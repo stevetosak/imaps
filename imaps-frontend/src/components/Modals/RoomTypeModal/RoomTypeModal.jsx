@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./RoomTypeModal.module.css";
 
-export default function RoomTypeModal(args) {
+export default function RoomTypeModal(props) {
   const [modal, setModal] = useState(false);
   const [roomTypes, setRoomTypes] = useState([]);
   const [formData, setFormData] = useState({
@@ -19,13 +19,14 @@ export default function RoomTypeModal(args) {
     if (!formData.type || roomTypes.includes(formData.type)) return; // Prevent empty or duplicate room types
     setRoomTypes((prevTypes) => [...prevTypes, formData.type]);
     setFormData({ ...formData, type: "" }); // Reset type input after adding
-    args.map.addRoomType(formData.type);
-    console.log(args.map.roomTypes);
+    props.map.addRoomType(formData.type);
+    console.log("TYPES" + props.map.roomTypes);
   };
 
   // Remove room type from the list
   const removeRoomType = (typeToRemove) => {
     setRoomTypes((prevTypes) => prevTypes.filter((type) => type !== typeToRemove));
+    props.map.removeRoomType(typeToRemove);
   };
 
   // Handle form input changes
@@ -36,20 +37,6 @@ export default function RoomTypeModal(args) {
       [name]: value,
     }));
   };
-
-  // Load room types from local storage on mount
-  // useEffect(() => {
-  //   //const storedRoomTypes = JSON.parse(localStorage.getItem("roomTypes")) || [];
-  //   if(args && args.map){
-  //     setRoomTypes(args.map.roomTypes);
-  //   }
-
-  // }, [args]);
-
-  // Save room types to local storage whenever they change
-  // useEffect(() => {
-  //   localStorage.setItem("roomTypes", JSON.stringify(roomTypes));
-  // }, [roomTypes]);
 
   return (
     <>

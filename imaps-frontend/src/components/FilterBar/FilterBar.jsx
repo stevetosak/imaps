@@ -1,33 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./FilterBar.module.css";
 
-function FilterBar() {
+function FilterBar(props) {
+  const [roomTypes, setRoomTypes] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  useEffect(() => {
+    if (props.map) {
+      const types = props.map.getRoomTypes() || [];
+      setRoomTypes(types);
+    }
+  }, [props.map]);
+
   const filterLocation = (category) => {
     console.log(`Filter locations by: ${category}`);
-    // filtering logic
+    setSelectedCategory(category);
   };
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.scrollableContainer}>
-        <button className={styles.buttonValue} onClick={() => filterLocation("all")}>
+        <button
+          className={`${styles.buttonValue} ${selectedCategory === "all" ? styles.active : ""}`}
+          onClick={() => filterLocation("all")}
+        >
           All
         </button>
-        <button className={styles.buttonValue} onClick={() => filterLocation("Classrooms")}>
-          Classrooms
-        </button>
-        <button className={styles.buttonValue} onClick={() => filterLocation("Administrative")}>
-          Administrative
-        </button>
-        <button className={styles.buttonValue} onClick={() => filterLocation("Labs")}>
-          Labs
-        </button>
-        <button className={styles.buttonValue} onClick={() => filterLocation("Restrooms")}>
-          Restrooms
-        </button>
-        <button className={styles.buttonValue} onClick={() => filterLocation("Cafeteria")}>
-          Cafeteria
-        </button>
+
+        {roomTypes.map((type, index) => (
+          <button
+            key={index}
+            className={`${styles.buttonValue} ${selectedCategory === type ? styles.active : ""}`}
+            onClick={() => filterLocation(type)}
+          >
+            {type}
+          </button>
+        ))}
       </div>
     </div>
   );

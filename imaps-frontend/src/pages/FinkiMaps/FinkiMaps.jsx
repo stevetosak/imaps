@@ -3,18 +3,22 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import FilterBar from "../../components/FilterBar/FilterBar";
 import Profile from "../../components/Profile/Profile";
 import SideBar from "../../components/SideBar/SideBar";
-import Draw from "../../pages/Draw/Draw";
 import { MapDisplay } from "../../scripts/main/MapDisplay.js";
 import MapControls from "../../components/MapControls/MapControls";
 import styles from "./FinkiMaps.module.css";
 
 function FinkiMaps() {
-  const [app,setApp] = useState(null);
+  const [app, setApp] = useState(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   useEffect(() => {
-    const app = new MapDisplay("map");
-    app.loadMap();
-    setApp(app);
+    const appInstance = new MapDisplay("map");
+
+    appInstance.loadMap(() => {
+      setMapLoaded(true);
+    });
+
+    setApp(appInstance);
   }, []);
 
   const handleZoomIn = () => {
@@ -31,12 +35,19 @@ function FinkiMaps() {
 
   return (
     <div id="main" className={styles.main}>
+      {/* Map container for Konva */}
       <div id="map" className={styles.mapContainer}></div>
+
       <div className={styles.toolbar}>
         <SideBar />
         <div className={styles.left}>
-          <SearchBar map={app}/>
-          <FilterBar />
+          {/* Conditionally render SearchBar and FilterBar only when the map is fully loaded */}
+          {mapLoaded && app && (
+            <>
+              <SearchBar map={app} />
+              <FilterBar map={app} />
+            </>
+          )}
         </div>
         <div className={styles.right}>
           <Profile />
