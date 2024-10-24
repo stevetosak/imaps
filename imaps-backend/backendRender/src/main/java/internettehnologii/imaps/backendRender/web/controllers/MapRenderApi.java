@@ -7,6 +7,7 @@ import internettehnologii.imaps.backendRender.graph.RouteGraph;
 import internettehnologii.imaps.backendRender.graph.exceptions.MapParseException;
 import internettehnologii.imaps.backendRender.graph.exceptions.NodeNotFoundException;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
+import internettehnologii.imaps.backendRender.web.security.json.DataJson;
 import internettehnologii.imaps.backendRender.web.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -74,8 +75,15 @@ public class MapRenderApi {
     public ResponseEntity<String> getMapData(@RequestParam String mapName) {
         Optional<IndoorMap> map = mapService.getMapByName(mapName);
         if (map.isPresent()) {
-            jsonData = map.get().getMapData().getTextData();
+            DataJson mapData = map.get().getMapData();
+
+            if(mapData == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            jsonData = mapData.getTextData();
             loadGraph(jsonData);
+
             return ResponseEntity.ok(jsonData);
         }
 
