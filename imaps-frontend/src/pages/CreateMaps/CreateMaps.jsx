@@ -1,121 +1,149 @@
 import styles from "./CreateMaps.module.css";
 import "react-tiles-dnd/esm/index.css";
-import {TilesContainer} from "react-tiles-dnd";
-import {Link} from "react-router-dom";
+import { TilesContainer } from "react-tiles-dnd";
+import { Link } from "react-router-dom";
 import card from "../../assets/card-map.png";
 import {useContext, useEffect, useState} from "react";
 import HttpService from "../../scripts/net/HttpService.js";
 import MapDetailsModal from "../../components/Modals/CreateMapModal/CreateMapModal.jsx";
 import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
+import DeleteConfirmationModal from "../../components/DeleteConfirmationModal/DeleteConfirmationModal";
+import edit_icon from "../../assets/edit_icon.png";
+import view_icon from "../../assets/view_icon.png";
 
 const loadedTiles = [];
 
-const renderTile = ({data, isDragging}) => (
-    <div style={{padding: "1rem", width: "100%"}}>
+const renderTile = ({ data, isDragging }) => (
+  <div style={{ padding: "1rem", width: "100%" }}>
+    <div
+      className={`${styles.tile} ${isDragging ? styles.dragging : ""}`}
+      style={{ width: "100%", height: "100%" }}
+    >
+      <img src={card} className={styles.imgStyle} alt="Map Thumbnail" />
+      <div>
+        {data.mapName} {isDragging ? "DRAGGING" : null}
+      </div>
+      <div className={styles.iconContainer}>
         <Link to={`/Maps/${data.mapName}/Draw`} className={styles.linkStyle}>
-            <div
-                className={`${styles.tile} ${isDragging ? styles.dragging : ""}`}
-                style={{width: "100%", height: "100%"}}
-            >
-                <img src={card} className={styles.imgStyle} alt="Map Thumbnail"/>
-                <div>
-                    {data.mapName} {isDragging ? "DRAGGING" : null}
-                </div>
-            </div>
+          <img src={edit_icon} className={styles.icon} alt="Edit" />
         </Link>
+        <Link to={`/Maps/${data.mapName}/View`} className={styles.linkStyle}>
+          <img src={view_icon} className={styles.icon} alt="View" />
+        </Link>
+      </div>
     </div>
+  </div>
 );
 
 const tileSize = (tile) => ({
-    colSpan: tile.cols,
-    rowSpan: tile.rows,
+  colSpan: tile.cols,
+  rowSpan: tile.rows,
 });
 
 export default function CreateMaps() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [mapDetails, setMapDetails] = useState(null);
+  const [mapToDelete, setMapToDelete] = useState(null);
+  const [tiles, setTiles] = useState(loadedTiles);
+  const { username } = useContext(AuthContext);
 
+  const openCreateModal = () => {
+    setIsModalOpen(true);
+  };
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [mapDetails, setMapDetails] = useState(null);
-    const { username } = useContext(AuthContext);
+  const closeCreateModal = () => {
+    setIsModalOpen(false);
+  };
 
-    const openModal = () => {
-        setIsModalOpen(true);
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDeleteMap = (mapName) => {
+    setMapToDelete(mapName);
+    confirmDelete();
+  };
+
+  const confirmDelete = async () => {
+    const httpService = new HttpService();
+    await httpService.post(`/maps/delete/${mapToDelete}`);
+
+    setTiles((prevTiles) => prevTiles.filter((tile) => tile.mapName !== mapToDelete));
+    closeDeleteModal();
+  };
+
+  useEffect(() => {
+    const loadPublicMaps = async () => {
+      const httpService = new HttpService();
+      httpService.setAuthenticated();
+      const resp = await httpService.get("/protected/maps/loadPersonal");
+      console.log("RESPONSE MAPS PUBLIC", resp);
+
+      const mapTiles = resp.maps.map((elem) => ({
+        mapName: elem.name,
+        cols: 1,
+        rows: 1,
+      }));
+
+      setTiles(mapTiles);
     };
+    loadPublicMaps();
+  }, []);
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
+  const [searchTerm, setSearchTerm] = useState("");
 
-    const handleModalSubmit = (details) => {
-        console.log("Map Details Submitted:", details);
-        setMapDetails(details);
-    }
+  const handleSearchChange = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
 
-    useEffect(() => {
-        const loadPublicMaps = async () => {
-            const httpService = new HttpService();
-            httpService.setAuthenticated()
-            const resp = await httpService.get("/protected/maps/loadPersonal");
-            console.log("RESPONSE MAPS PUBLIC", resp)
+    setTiles(loadedTiles.filter((tile) => tile.mapName.toLowerCase().includes(value)));
+  };
 
-            const mapTiles = resp.maps.map(elem => ({
-                mapName: elem.name,
-                cols: 1,
-                rows: 1
-            }))
+  return (
+    <>
+      <div className={styles.container}>
+        <h1>Your Maps</h1>
 
-            setTiles(mapTiles);
-        }
-        loadPublicMaps();
-    }, []);
+        <div className={styles.actionButtons}>
+          <button className={styles.button} onClick={openCreateModal}>
+            Create Map
+          </button>
+          <button className={styles.button} onClick={openDeleteModal}>
+            Delete a Map
+          </button>
+        </div>
 
-    const [searchTerm, setSearchTerm] = useState("");
-    const [tiles, setTiles] = useState(loadedTiles);
+        <div className={styles.searchBar}>
+          <input
+            type="text"
+            placeholder="Search for maps..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </div>
 
-    const handleSearchChange = (e) => {
-        const value = e.target.value.toLowerCase();
-        setSearchTerm(value);
+        <TilesContainer
+          data={tiles}
+          renderTile={renderTile}
+          tileSize={tileSize}
+          forceTileWidth={150}
+          forceTileHeight={170}
+        />
+      </div>
 
-        setTiles(loadedTiles.filter((tile) => tile.text.toLowerCase().includes(value)));
-    };
+      <MapDetailsModal isOpen={isModalOpen} onClose={closeCreateModal} onSubmit={setMapDetails} />
 
-    return (
-        <>
-            <div className={styles.container}>
-                <h1>Your Maps</h1>
-                <h1> Hello {username}</h1>
-                <div className={styles.searchBar}>
-                    <input
-                        type="text"
-                        placeholder="Search for maps..."
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                    />
-                </div>
-
-                <TilesContainer
-                    data={tiles}
-                    renderTile={renderTile}
-                    tileSize={tileSize}
-                    forceTileWidth={150}
-                    forceTileHeight={170}
-                />
-            </div>
-            <div id="createMapButton">
-                <button onClick={openModal}> Create Map</button>
-            </div>
-
-            <MapDetailsModal
-                isOpen={isModalOpen}
-                onClose={closeModal}
-                onSubmit={handleModalSubmit}
-            />
-
-            <div id="requestMapPublish">
-                Want others to see your map?<br/>
-                <button>Publish Request</button>
-            </div>
-
-        </>
-    );
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        maps={tiles}
+        onClose={closeDeleteModal}
+        onDelete={handleDeleteMap}
+      />
+    </>
+  );
 }
