@@ -7,6 +7,7 @@ import internettehnologii.imaps.backendRender.web.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,22 +51,25 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-    public Map<String,Object> authenticateUser(@RequestParam String token) {
+    public ResponseEntity<Map<String,Object>> authenticateUser(@RequestParam String token) {
         Map<String, Object> response = new HashMap<>();
         try{
             String username = jwtService.extractUsername(token);
             UserDetails userDetails = context.getBean(MapUserDetailsService.class).loadUserByUsername(username);
             boolean auth = jwtService.validateToken(token, userDetails);
-            if(auth){
-                response.put("username", username);
+            if(!auth){
+                response.put("error", "Invalid Token");
+                return ResponseEntity.status(403).body(response);
             }
 
-            System.out.println(auth + " auth");
+            response.put("username", username);
+            System.out.println("Authenticated user: " + username);
+
         } catch (Exception e){
             System.out.println("ERROR: NOT AUTHENTICATED: " + e.getMessage());
         }
 
-        return response;
+        return ResponseEntity.ok(response);
 
     }
 }

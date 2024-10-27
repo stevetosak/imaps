@@ -16,6 +16,11 @@ export const AuthProvider = ({ children }) => {
                 const response = await httpService.get(`/verify?token=${token}`);
                 if (response.username) {
                     setIsAuthenticated(true);
+                    setUsername(response.username)
+                    console.log("/verify resp: ",response.username);
+                } else {
+                    setIsAuthenticated(false);
+                    setLoading(false);
                 }
             } catch (error) {
                 setIsAuthenticated(false);
@@ -25,11 +30,12 @@ export const AuthProvider = ({ children }) => {
         };
 
         if (token) {
-            verifyToken();
+            verifyToken()
         } else {
             setIsAuthenticated(false);
             setLoading(false);
         }
+
     }, []);
 
     const handleLogin = (data) => {

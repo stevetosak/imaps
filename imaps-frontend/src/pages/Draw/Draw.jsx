@@ -7,12 +7,10 @@ import EntranceModal from "../../components/Modals/EntranceModal/EntranceModal.j
 import DrawGuide from "../../components/DrawGuide/DrawGuide.jsx";
 import RoomTypeModal from "../../components/Modals/RoomTypeModal/RoomTypeModal.jsx";
 import InfoPinModal from "../../components/Modals/InfoPinModal/InfoPinModal.jsx";
-import HttpService from "../../scripts/net/HttpService.js";
 import SaveMap from "../../components/SaveMap/SaveMap.jsx";
 import logo from "../../assets/logo_icon.png";
-import MapTemplateSelector from "../../components/MapTemplateSelector/LoadMap.jsx";
-import KeymapPanel from "../../components/KeyMappingsGuidePanel/KeymapPanel.jsx";
 import {Link, useParams} from "react-router-dom";
+import Profile from "../../components/Profile/Profile.jsx";
 
 function Draw() {
 
@@ -56,9 +54,13 @@ function Draw() {
       <SideBar></SideBar>
       <div id="container" className={styles.cont}></div>
       <div className={styles.panel}>
-        <Link to="/">
-          <img src={logo} alt="Finki Logo" className={styles.logo} />
-        </Link>
+        <div className={styles.topPanelH}>
+          <Link to="/">
+            <img src={logo} alt="Finki Logo" className={styles.logo} />
+          </Link>
+          <Profile></Profile>
+        </div>
+
         <h1 className={styles.title}>Map Builder</h1>
         {/* <div id="fpscont" className={styles.fpscounter}>
           <p id="fpsCounter"></p>

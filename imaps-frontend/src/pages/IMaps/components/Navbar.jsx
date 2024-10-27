@@ -26,7 +26,6 @@ function Navbar() {
   window.addEventListener("resize", showButton);
 
   return (
-    <>
       <nav className="navbar">
         <div className="navbar-container">
           <a href="#" className="navbar-logo pad-bot" onClick={closeMobileMenu}>
@@ -49,7 +48,6 @@ function Navbar() {
           </div>
         </div>
       </nav>
-    </>
   );
 }
 

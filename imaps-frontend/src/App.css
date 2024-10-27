@@ -1,5 +1,9 @@
 body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
   background: white;
+  backdrop-filter: blur(10px);
 }
 .loading-container {
   display: flex;

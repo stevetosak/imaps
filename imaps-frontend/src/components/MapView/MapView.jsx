@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {MapDisplay} from "../../scripts/main/MapDisplay.js";
 import styles from "../../pages/FinkiMaps/FinkiMaps.module.css";
 import SideBar from "../SideBar/SideBar.jsx";
@@ -7,9 +7,11 @@ import SearchBar from "../SearchBar/SearchBar.jsx";
 import FilterBar from "../FilterBar/FilterBar.jsx";
 import Profile from "../Profile/Profile.jsx";
 import MapControls from "../MapControls/MapControls.jsx";
+import {AuthContext} from "../AuthContext/AuthContext.jsx";
 
 const MapView = () => {
     const {mapName} = useParams();
+    const {username} = useContext(AuthContext);
 
     const [mapLoaded, setMapLoaded] = useState(false);
     const [app, setApp] = useState(null);
@@ -45,6 +47,7 @@ const MapView = () => {
 
             <div className={styles.toolbar}>
                 <h1>{mapName}</h1>
+                <h1>{username}</h1>
                 <SideBar/>
                 <div className={styles.left}>
                     {mapLoaded && app &&

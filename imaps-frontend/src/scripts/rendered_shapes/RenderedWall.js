@@ -1,4 +1,5 @@
 import RenderedMapShape from "./RenderedMapShape.js";
+import {_registerNode} from "konva/lib/Global";
 
 export default class RenderedWall extends RenderedMapShape{
     constructor(attrs,scaleX,scaleY){
@@ -17,3 +18,6 @@ export default class RenderedWall extends RenderedMapShape{
 
     }
 }
+
+RenderedWall.prototype.className = "RenderedWall";
+_registerNode(RenderedWall);

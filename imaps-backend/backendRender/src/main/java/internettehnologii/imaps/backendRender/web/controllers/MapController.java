@@ -110,7 +110,7 @@ public class MapController {
             return ResponseEntity.ok(response);
         } else {
             response.put("status","error: map " + mapName + " not found");
+            return ResponseEntity.status(500).body(response);
         }
-        return ResponseEntity.ok(response);
     }
 }

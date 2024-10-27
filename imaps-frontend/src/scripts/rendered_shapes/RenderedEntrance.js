@@ -1,4 +1,6 @@
 import RenderedMapShape from "./RenderedMapShape.js";
+import {_registerNode} from "konva/lib/Global";
+import RenderedRoom from "./RenderedRoom.js";
 
 export default class RenderedEntrance extends RenderedMapShape {
   constructor(attrs, scaleX, scaleY) {
@@ -34,3 +36,6 @@ export default class RenderedEntrance extends RenderedMapShape {
     this.initText();
   }
 }
+
+RenderedEntrance.prototype.className = "RenderedEntrance";
+_registerNode(RenderedEntrance);

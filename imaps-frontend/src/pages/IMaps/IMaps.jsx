@@ -6,12 +6,10 @@ import Home from "./components/pages/Home";
 
 function IMaps() {
   return (
-    <>
-      <div className={styles.home}>
+      <div className="homebg">
         <Navbar></Navbar>
         <Home></Home>
       </div>
-    </>
   );
 }
 

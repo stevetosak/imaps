@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Exo:500);
+
 video {
   object-fit: cover;
   width: 100%;
@@ -6,22 +8,39 @@ video {
   z-index: -1;
 }
 
+
+
+
 .hero-container {
-  background: url("../images/img-home.jpg") center center/cover no-repeat;
   height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
+
   object-fit: contain;
+
+
+
 }
 
 .hero-container > h1 {
   color: #fff;
   font-size: 100px;
   margin-top: -100px;
+  font-family: exo, sans-serif;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0px #ef404e,
+  1px 2px 0px #ef404e,
+  1px 3px 0px #ef404e,
+  1px 4px 0px #ef404e,
+  1px 5px 0px #ef404e,
+  1px 6px 0px #ef404e,
+  1px 10px 5px rgba(16, 16, 16, 0.5),
+  1px 15px 10px rgba(16, 16, 16, 0.4),
+  1px 20px 30px rgba(16, 16, 16, 0.3),
+  1px 25px 50px rgba(16, 16, 16, 0.2);
 }
 
 .hero-container > p {

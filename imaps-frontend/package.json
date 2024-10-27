@@ -10,14 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/roboto": "^5.1.0",
     "axios": "^1.7.7",
+    "babel": "^6.23.0",
     "bootstrap": "^5.3.3",
     "konva": "^9.3.14",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.0",
-    "react-tiles-dnd": "^0.1.2"
+    "react-tiles-dnd": "^0.1.2",
+    "sass": "^1.80.4"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

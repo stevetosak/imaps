@@ -108,6 +108,7 @@ export default function CreateMaps() {
     <>
       <div className={styles.container}>
         <h1>Your Maps</h1>
+        <p>{username}</p>
 
         <div className={styles.actionButtons}>
           <button className={styles.button} onClick={openCreateModal}>
