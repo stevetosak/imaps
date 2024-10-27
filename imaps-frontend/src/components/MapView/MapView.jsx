@@ -8,6 +8,7 @@ import FilterBar from "../FilterBar/FilterBar.jsx";
 import Profile from "../Profile/Profile.jsx";
 import MapControls from "../MapControls/MapControls.jsx";
 import {AuthContext} from "../AuthContext/AuthContext.jsx";
+import RoomInfoPanel from "../RoomInfoPanel/RoomInfoPanel.jsx";
 
 const MapView = () => {
     const {mapName} = useParams();
