@@ -36,4 +36,17 @@ public interface MapRepository extends JpaRepository<IndoorMap, Long> {
     value = "SELECT * FROM maps WHERE is_public = ?1")
     Optional<List<IndoorMap>> findAllByStatus(boolean isPublic);
 
+    //ZA NOVA BAZA
+    //@Query(nativeQuery = true,
+    //            value = "SELECT * FROM maps WHERE user_id = ?1")
+    //    Optional<List<IndoorMap>> findAllMapsForUser(long userId);
+    //
+    //    @Query(nativeQuery = true,
+    //            value = "SELECT * FROM maps WHERE status = 'public'")
+    //    Optional<List<IndoorMap>> findAllPublicMaps();
+    //
+    //    @Query(nativeQuery = true,
+    //            value = "SELECT * FROM floors f WHERE f.map_id = ?1 AND f.floor = ?2 ")
+    //    Optional<IndoorMap> getFloorForMap(int mapId, int floor);
+
 }

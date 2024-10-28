@@ -28,24 +28,24 @@ function Navbar() {
   return (
       <nav className="navbar">
         <div className="navbar-container">
-          <a href="#" className="navbar-logo pad-bot" onClick={closeMobileMenu}>
-            iMaps
-          </a>
+          <div className="navlogoCont">
+            <h1>iMAPS</h1>
+          </div>
+
           <div className="menu-icon" onClick={handleClick}>
-            <i className={click ? "fas fa-times" : "fas fa-bars"} />
+            <i className={click ? "fas fa-times" : "fas fa-bars"}/>
           </div>
-          <ul className={click ? "nav-menu active" : "nav-menu"}>
-            <Link to="/Signup">
-              <li className="nav-item">
-                <a href="#" className="nav-links" onClick={closeMobileMenu}>
-                  SignUp
-                </a>
-              </li>
-            </Link>
-          </ul>
-          <div className="pad-bot">
-            <Link to="/Login">{button && <Button buttonStyle="btn--outline">LOG IN</Button>}</Link>
+          <div className={click ? "nav-menu active" : "nav-menu"}>
           </div>
+          <div className="linkCont">
+            <div className="signup">
+              <Link to="/Signup">{button && <Button buttonStyle="btn--outline">SIGN UP</Button>}</Link>
+            </div>
+            <div className="login">
+              <Link to="/Login">{button && <Button buttonStyle="btn--outline">LOG IN</Button>}</Link>
+            </div>
+          </div>
+
         </div>
       </nav>
   );
