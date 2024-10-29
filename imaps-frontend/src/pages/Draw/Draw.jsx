@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useContext, useEffect, useState} from "react";
 import { MapBuilder } from "../../scripts/main/MapBuilder.js";
 import styles from "./Draw.module.css";
 import RoomModal from "../../components/Modals/RoomModal/RoomModal.jsx";
@@ -11,26 +11,59 @@ import SaveMap from "../../components/SaveMap/SaveMap.jsx";
 import logo from "../../assets/logo_icon.png";
 import {Link, useParams} from "react-router-dom";
 import Profile from "../../components/Profile/Profile.jsx";
+import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
+import HttpService from "../../scripts/net/HttpService.js";
 
 function Draw() {
 
   const { mapName} = useParams();
-  const [selectedFloor, setSelectedFloor] = useState(1);
+  const [selectedFloor, setSelectedFloor] = useState(0);
   const [app, setApp] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const {username} = useContext(AuthContext);
+  const [floors,setFloors] = useState([]);
+  const [newFloorNumber,setNewFloorNumber] = useState(0);
   useEffect(() => {
     const app = new MapBuilder("container");
     setApp(app);
-    app.loadMap(mapName)
+    app.loadMap(mapName,username,0)
         .then(resp => console.log(resp))
         .catch(reason => {
           console.log("ERRR: ",reason)
         })
+
+    const loadFloors = async () => {
+      const httpService = new HttpService();
+      httpService.setAuthenticated();
+
+      try {
+        const resp = await httpService.get(`/protected/myMaps/loadAllFloors?mapName=${mapName}`);
+        setFloors(resp)
+        console.log("RESPONSE FLOORS:", resp);
+        console.log("SET",floors)
+      } catch (error) {
+        console.error("Error loading floors:", error);
+      }
+    };
+
+    loadFloors();
+
     // fpsCounterLoop();
   }, []);
 
+  const updateFloors = (floors) => {
+    setFloors(floors)
+  }
+
   const handleFloorChange = (event) => {
     setSelectedFloor(event.target.value);
+    app.loadMap(mapName,username,event.target.value)
+        .then(resp => {
+          console.log(resp)
+        })
+        .catch(reason => {
+          console.log("ERRR: ",reason)
+        })
     console.log(`Floor changed to: ${event.target.value}`);
   };
 
@@ -42,8 +75,21 @@ function Draw() {
     }, 3000);
   };
 
+  const addFloor = () => {
+    const httpService = new HttpService()
+    httpService.setAuthenticated();
+
+    const payload = {
+      num: newFloorNumber,
+      mapName: mapName
+    }
+
+    httpService.put("/protected/myMaps/addFloor",payload).then((resp) => console.log("Added new floor")).catch(reason => console.log(reason));
+
+  }
+
   const handleSaveClick = async () => {
-    const resp = await app.saveMap(mapName);
+    const resp = await app.saveMap(mapName,username,selectedFloor);
   };
   const handleLoadMapClick = (data) => {
     app.deserializeMap(data);
@@ -56,7 +102,7 @@ function Draw() {
       <div className={styles.panel}>
         <div className={styles.topPanelH}>
           <Link to="/">
-            <img src={logo} alt="Finki Logo" className={styles.logo} />
+            <img src={logo} alt="Finki Logo" className={styles.logo}/>
           </Link>
           <Profile></Profile>
         </div>
@@ -66,38 +112,49 @@ function Draw() {
           <p id="fpsCounter"></p>
         </div> */}
         <div className={styles.guideWrapper}>
-          <DrawGuide />
+          <DrawGuide/>
         </div>
-
-        {/* <div className={styles.floorSelector}>
+        {<div className={styles.floorSelector}>
           <label htmlFor="floorSelect">Select Floor:</label>
           <select
-            id="floorSelect"
-            value={selectedFloor}
-            onChange={handleFloorChange}
-            className={styles.floorDropdown}
+              id="floorSelect"
+              value={selectedFloor}
+              onChange={handleFloorChange}
+              className={styles.floorDropdown}
           >
-            <option value={1}>1st Floor</option>
-            <option value={2}>2nd Floor</option>
-            <option value={3}>3rd Floor</option>
-            <option value={4}>4th Floor</option>
+            {floors?.map(floor => (
+                <option key={floor.id} value={floor.floorNumber}>
+                  Floor {floor.floorNumber}
+                </option>
+            ))}
           </select>
-        </div> */}
-        {/* <h2 className={styles.paragraph}>Objects:</h2> */}
+        </div>}
+        <div>
+          <label htmlFor="newFloorInput">Add Floor:</label>
+          <input
+              type="number"
+              id="newFloorInput"
+              value={newFloorNumber} // Bind input value to state
+              onChange={(e) => setNewFloorNumber(Number(e.target.value))} // Update state on input change
+          />
+          <button onClick={addFloor}>Add Floor</button>
+          {/* Trigger addFloor on button click */}
+        </div>
+        {<h2 className={styles.paragraph}>Objects:</h2>}
         <ul className={styles.shapeOptions} id="shapeOptions">
           <li data-info="Entrance" className={`${styles.shapeOption} ${styles.entrance}`}></li>
           <li data-info="Wall" className={`${styles.shapeOption} ${styles.wall}`} id="wall"></li>
           <li data-info="Room" className={`${styles.shapeOption} ${styles.room}`} id="room"></li>
         </ul>
-        <br />
+        <br/>
         <RoomTypeModal map={app}></RoomTypeModal>
 
         <div id="render" className={styles.buttonContainer}>
           <button
-            id="render-button"
-            type="button"
-            className={styles.renderButton}
-            onClick={handleRenderClick}
+              id="render-button"
+              type="button"
+              className={styles.renderButton}
+              onClick={handleRenderClick}
           >
             Render
           </button>
@@ -115,12 +172,12 @@ function Draw() {
       </div>
 
       {isPopupVisible && (
-        <div className={styles.popup}>
-          <div className={styles.popupContent}>
-            <h2>Map Rendered!</h2>
-            <p>Your map has been successfully rendered.</p>
+          <div className={styles.popup}>
+            <div className={styles.popupContent}>
+              <h2>Map Rendered!</h2>
+              <p>Your map has been successfully rendered.</p>
+            </div>
           </div>
-        </div>
       )}
     </div>
   );

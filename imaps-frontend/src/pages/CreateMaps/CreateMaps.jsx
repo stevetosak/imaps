@@ -81,10 +81,10 @@ export default function CreateMaps() {
     const loadPublicMaps = async () => {
       const httpService = new HttpService();
       httpService.setAuthenticated();
-      const resp = await httpService.get("/protected/maps/loadPersonal");
+      const resp = await httpService.get(`/protected/myMaps/display?username=${username}`);
       console.log("RESPONSE MAPS PUBLIC", resp);
 
-      const mapTiles = resp.maps.map((elem) => ({
+      const mapTiles = resp.map((elem) => ({
         mapName: elem.name,
         cols: 1,
         rows: 1,

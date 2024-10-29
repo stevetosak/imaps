@@ -33,7 +33,7 @@ export default function Maps() {
     useEffect(() => {
         const loadPublicMaps = async () => {
             const httpService = new HttpService();
-            const resp = await httpService.get("/public/maps/loadPublic");
+            const resp = await httpService.get("/public/maps/display");
             console.log("RESPONSE MAPS PUBLIC", resp)
 
             const mapTiles = resp.maps.map(elem => ({

@@ -424,11 +424,11 @@ export class MapBuilder {
     }
   }
 
-  async saveMap(mapName) {
+  async saveMap(mapName,username,selectedFloor) {
     this.saveShapeDetails();
     const httpService = new HttpService("http://localhost:8080/api/protected/maps", true);
     try {
-      const response = await httpService.put(`/save?mapName=${mapName}`, this.shapes);
+      const response = await httpService.put(`/save?mapName=${mapName}&username=${username}&floorNum=${selectedFloor}`, this.shapes);
       console.log(response, "resp in builder");
     } catch (err) {
       console.log("ERROR --> Could not Save map --->", err);
@@ -534,16 +534,17 @@ export class MapBuilder {
 
   clearMap() {
     this.mainLayer.removeChildren();
+    this.shapes.forEach(shape => shape.clearText())
     this.shapes = [];
     this.hoverObj = null;
   }
 
-  async loadMap(mapName) {
+  async loadMap(mapName,username,floorNum) {
     const httpService = new HttpService();
     httpService.setAuthenticated();
-    const resp = await httpService.get(`/protected/maps/load?mapName=${mapName}`);
+    const resp = await httpService.get(`/protected/maps/load?mapName=${mapName}&username=${username}&floorNum=${floorNum}`);
     console.log("RESPONSE FROM LOAD --->", resp);
-    this.deserializeMap(resp.map.mapData.textData);
+    this.deserializeMap(resp.mapData);
     this.shapes.forEach((shape) => {
       this.mainLayer.add(shape);
     });
@@ -552,23 +553,30 @@ export class MapBuilder {
   deserializeMap(data) {
     console.log("DESERIALIZING: ", data);
     this.clearMap();
-    let dsrData = JSON.parse(data);
-    dsrData.forEach((child) => {
-      const shape = JSON.parse(child);
-      const loadedShape = Factory.createShape(
-        shape.className,
-        { x: shape.attrs.x, y: shape.attrs.y },
-        this.blockSize,
-        this.mainLayer,
-        shape.attrs.rotation,
-          shape.attrs.scaleX,
-          shape.attrs.scaleY
-      );
-      loadedShape.loadInfo(shape.attrs);
-      this.shapes.push(loadedShape);
-      this.addModalHandling(loadedShape);
-      this.mainLayer.add(loadedShape);
-    });
+
+    if(data != null){
+      const textData = data.textData;
+      let dsrData = JSON.parse(textData);
+      dsrData.forEach((child) => {
+        const shape = JSON.parse(child);
+        const loadedShape = Factory.createShape(
+            shape.className,
+            { x: shape.attrs.x, y: shape.attrs.y },
+            this.blockSize,
+            this.mainLayer,
+            shape.attrs.rotation,
+            shape.attrs.scaleX,
+            shape.attrs.scaleY
+        );
+        loadedShape.loadInfo(shape.attrs);
+        this.shapes.push(loadedShape);
+        this.addModalHandling(loadedShape);
+        this.mainLayer.add(loadedShape);
+      });
+    }
+
+
+
     this.mainTransformer.nodes([]);
     this.mainLayer.add(this.mainTransformer);
     this.mainLayer.add(this.selectionRectangle);

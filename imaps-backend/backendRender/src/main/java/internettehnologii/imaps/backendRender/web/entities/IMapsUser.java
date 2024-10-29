@@ -3,28 +3,30 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Entity
 @Table(name = "users")
+@Getter @Setter
 public class IMapsUser {
     @Id
-    @SequenceGenerator(
-            name = "users_id_seq",
-            sequenceName = "users_id_seq",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "users_id_seq"
-    )
+    @SequenceGenerator(name = "users_id_seq", sequenceName = "users_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
     private int id;
-    @Setter
-    @Column(name = "name")
     private String username;
-    @Setter
     private String email;
-    @Getter @Setter
     private String password;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
+
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
 
 
     public IMapsUser() {}

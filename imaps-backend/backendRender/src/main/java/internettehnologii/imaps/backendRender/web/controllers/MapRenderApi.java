@@ -1,19 +1,19 @@
 package internettehnologii.imaps.backendRender.web.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import internettehnologii.imaps.backendRender.graph.MapNode;
 import internettehnologii.imaps.backendRender.graph.MapNodeParser;
 import internettehnologii.imaps.backendRender.graph.RouteGraph;
 import internettehnologii.imaps.backendRender.graph.exceptions.MapParseException;
-import internettehnologii.imaps.backendRender.graph.exceptions.NodeNotFoundException;
+import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.security.json.DataJson;
-import internettehnologii.imaps.backendRender.web.service.MapService;
+import internettehnologii.imaps.backendRender.web.service.MapServiceImpl;
+import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
+import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
 
 import java.util.*;
 
@@ -22,21 +22,23 @@ import java.util.*;
 @CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = {"Authorization"})
 public class MapRenderApi {
 
-    private String jsonData;
+    private String jsonMapData;
     private RouteGraph graph;
 
     private final MapService mapService;
+    private final FloorService floorService;
 
     @Autowired
-    public MapRenderApi(MapService mapService) {
+    public MapRenderApi(MapService mapService, FloorService floorService) {
         this.mapService = mapService;
+        this.floorService = floorService;
     }
 
     @PostMapping("/protected/render")
     public ResponseEntity<Map<String, Object>> render(@RequestBody String requestBody) throws Exception {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "ok");
-        jsonData = requestBody;
+        jsonMapData = requestBody;
         try {
             MapNodeParser parser = new MapNodeParser();
             List<MapNode> nodes = parser.parseAndCreateNodes(requestBody);
@@ -72,25 +74,23 @@ public class MapRenderApi {
     }
 
     @GetMapping("/public/mapData")
-    public ResponseEntity<String> getMapData(@RequestParam String mapName) {
-        Optional<IndoorMap> map = mapService.getMapByName(mapName);
-        if (map.isPresent()) {
-            DataJson mapData = map.get().getMapData();
-
-            if(mapData == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            jsonData = mapData.getTextData();
-            loadGraph(jsonData);
-
-            return ResponseEntity.ok(jsonData);
+    public ResponseEntity<Floor> getMapData(@RequestParam String mapName) {
+        try{
+            Floor floor = floorService.loadFirstAvailableFloor(mapName);
+            jsonMapData = floor.getMapData().getTextData();
+            loadGraph(jsonMapData);
+            return ResponseEntity.ok(floor);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonData);
     }
 
     private void loadGraph(String mapData){
+        if(mapData == null || mapData.isEmpty()) return;
+
         try {
             MapNodeParser parser = new MapNodeParser();
             List<MapNode> nodes = parser.parseAndCreateNodes(mapData);

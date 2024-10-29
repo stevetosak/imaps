@@ -1,5 +1,7 @@
 package internettehnologii.imaps.backendRender.web.service;
 
+import internettehnologii.imaps.backendRender.web.exeptions.EmailTakenException;
+import internettehnologii.imaps.backendRender.web.exeptions.UserNotFoundException;
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
 import internettehnologii.imaps.backendRender.web.repo.UserRepository;
 import jakarta.transaction.Transactional;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -28,19 +29,21 @@ public class UserService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public List<IMapsUser> getUsers(){
+    public List<IMapsUser> getUsers() {
         return userRepository.findAll();
     }
 
     public IMapsUser register(IMapsUser user) {
-        Optional<IMapsUser> usrOptional = userRepository.findUserByEmail(user.getEmail());
-        if(usrOptional.isPresent()){
-            throw new IllegalStateException("email taken");
-        }
+        userRepository.findUserByEmail(user.getEmail()).ifPresent((u) -> {
+            throw new EmailTakenException("User with email: " + u.getEmail() + " already exists");
+        });
+        userRepository.findUserByName(user.getUsername()).ifPresent((u) -> {
+            throw new EmailTakenException("User with email: " + u.getEmail() + " already exists");
+        });
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
@@ -48,25 +51,21 @@ public class UserService {
 
     public void deleteUser(Long userId) {
         boolean exists = userRepository.existsById(userId);
-        if(!exists){
+        if (!exists) {
             throw new IllegalStateException("User with id: " + userId + " does not exist");
         }
+
         userRepository.deleteById(userId);
     }
 
     @Transactional
     public void updateUser(Long userId, String name, String email) {
-        IMapsUser user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("user with id " + userId + " does not exist"));
-        if(name != null && !name.isEmpty() && !Objects.equals(user.getUsername(), name)){
+        IMapsUser user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("user with id " + userId + " does not exist"));
+        if (name != null && !name.isEmpty() && !Objects.equals(user.getUsername(), name)) {
             user.setUsername(name);
         }
 
-        if(email != null && !email.isEmpty() && !Objects.equals(user.getEmail(), email)){
-            Optional<IMapsUser> userOptional = userRepository.findUserByEmail(email);
-            if(userOptional.isPresent()){
-                throw new IllegalStateException("email taken");
-            }
-
+        if (email != null && !email.isEmpty() && !Objects.equals(user.getEmail(), email)) {
             user.setEmail(email);
         }
     }
@@ -76,10 +75,11 @@ public class UserService {
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
-        if(authentication.isAuthenticated()){
+        if (authentication.isAuthenticated()) {
             return jwtService.generateToken(user.getUsername());
         }
 
+        // tuka exception
         return "Auth failed";
     }
 
