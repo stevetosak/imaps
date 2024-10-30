@@ -17,23 +17,23 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(path = "/api")
-public class MapController {
+@RequestMapping(path = "/api/protected")
+public class MapDrawController {
     private final MapService mapService;
     private final FloorService floorService;
 
     @Autowired
-    public MapController(MapService mapService, FloorService floorService) {
+    public MapDrawController(MapService mapService, FloorService floorService) {
         this.mapService = mapService;
         this.floorService = floorService;
     }
 
-    @GetMapping("/protected/maps")
+    @GetMapping("/my-maps")
     public List<IndoorMap> getMapsForUser(@RequestParam String username) {
         return mapService.getAllMapsForUser(username);
     }
 
-    @PutMapping("/protected/maps/save")
+    @PutMapping("/my-maps/save")
     public ResponseEntity<Map<String,Object>> updateMapData
             (@RequestBody String mapData, @RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
 
@@ -54,7 +54,7 @@ public class MapController {
         }
     }
 
-    @PutMapping("/protected/maps/create")
+    @PutMapping("/my-maps/create")
     public ResponseEntity<Void> createMap(@RequestBody MapDTO mapData, @RequestParam String username) {
         try{
             mapService.createMap(mapData.getName(), username);
@@ -66,8 +66,8 @@ public class MapController {
 
     }
 
-    @GetMapping("/protected/maps/load")
-    public ResponseEntity<Floor> loadPrivateMap(@RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
+    @GetMapping("/my-maps/load")
+    public ResponseEntity<Floor> loadPersonalMap(@RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
         try{
             IndoorMap map = mapService.getMapForUser(username,mapName);
             Floor floor = floorService.getFloorByNum(floorNum,map);
@@ -78,7 +78,7 @@ public class MapController {
         }
     }
 
-    @GetMapping("/protected/myMaps/loadAllFloors")
+    @GetMapping("/floors/load")
     public ResponseEntity<List<Floor>> loadAllFloors(@RequestParam String mapName) {
         try{
             IndoorMap map = mapService.getMap(mapName);
@@ -90,7 +90,7 @@ public class MapController {
         }
     }
 
-    @PutMapping("/protected/myMaps/addFloor")
+    @PutMapping("/floors/add")
     public ResponseEntity<Map<String,Object>> addFloor(@RequestBody FloorDTO floorDTO) {
         Map<String,Object> response = new HashMap<>();
         try{
@@ -102,25 +102,7 @@ public class MapController {
         }
     }
 
-    // nezz dali sa koristit
-//    @GetMapping("/public/maps/load")
-//    public ResponseEntity<Map<String,Object>> loadMapPublic(@RequestParam String mapName) {
-//        return getMapByName(mapName);
-//    }
-
-
-    @GetMapping("/public/maps/display")
-    public ResponseEntity<List<IndoorMap>> loadPublicMaps(){
-        try{
-            List<IndoorMap> publicMaps = mapService.getPublicMaps();
-            return ResponseEntity.ok(publicMaps);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-
-    @GetMapping("/protected/myMaps/display")
+    @GetMapping("/my-maps/display")
     public ResponseEntity<List<IndoorMap>> loadPersonalMaps(@RequestParam String username) {
         //user specific ne samo site so se false;
         try {

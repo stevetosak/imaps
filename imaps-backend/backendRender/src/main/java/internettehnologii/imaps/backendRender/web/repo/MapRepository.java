@@ -42,7 +42,7 @@ public interface MapRepository extends JpaRepository<IndoorMap, Long> {
         @Query("FROM IndoorMap m WHERE m.user.id = ?1")
         Optional<List<IndoorMap>> findAllMapsForUser(long userId);
 
-        @Query("FROM IndoorMap m WHERE m.status = 'public'")
+        @Query("FROM IndoorMap m WHERE m.status = 'PUBLIC'")
         Optional<List<IndoorMap>> findAllPublicMaps();
         @Query("FROM IndoorMap m WHERE m.user = ?1 AND m.id = ?2")
         Optional<IndoorMap> getMapForUser(IMapsUser user,int mapId);

@@ -36,7 +36,7 @@ export default function Maps() {
             const resp = await httpService.get("/public/maps/display");
             console.log("RESPONSE MAPS PUBLIC", resp)
 
-            const mapTiles = resp.maps.map(elem => ({
+            const mapTiles = resp.map(elem => ({
                 text: elem.name,
                 cols: 1,
                 rows: 1

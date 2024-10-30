@@ -6,6 +6,8 @@ PRIORITY HIGH
 -Multiple floor (Prerabotka na baza)
 -Filter na prostorii (Ke zemame od roomType modal)
 
+uste floors za view da imat.
+
 
 PRIORITY MEDIUM
 
@@ -22,3 +24,5 @@ PRIORITY LOW
 -Page za pregled na svoi mapi
 -Refactor (Da se koristit net util klasa za pustanje do backend)
 -AutoSave na draw duri crtas (Da se pret update request do baza)
+
+

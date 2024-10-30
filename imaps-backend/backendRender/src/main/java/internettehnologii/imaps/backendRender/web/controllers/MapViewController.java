@@ -6,8 +6,6 @@ import internettehnologii.imaps.backendRender.graph.RouteGraph;
 import internettehnologii.imaps.backendRender.graph.exceptions.MapParseException;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
-import internettehnologii.imaps.backendRender.web.security.json.DataJson;
-import internettehnologii.imaps.backendRender.web.service.MapServiceImpl;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/public")
 @CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = {"Authorization"})
-public class MapRenderApi {
+public class MapViewController {
 
     private String jsonMapData;
     private RouteGraph graph;
@@ -29,31 +27,23 @@ public class MapRenderApi {
     private final FloorService floorService;
 
     @Autowired
-    public MapRenderApi(MapService mapService, FloorService floorService) {
+    public MapViewController(MapService mapService, FloorService floorService) {
         this.mapService = mapService;
         this.floorService = floorService;
     }
 
-    @PostMapping("/protected/render")
-    public ResponseEntity<Map<String, Object>> render(@RequestBody String requestBody) throws Exception {
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "ok");
-        jsonMapData = requestBody;
-        try {
-            MapNodeParser parser = new MapNodeParser();
-            List<MapNode> nodes = parser.parseAndCreateNodes(requestBody);
-            graph = new RouteGraph(nodes);
-            System.out.println("=======================\n" + graph);
-        } catch (MapParseException e) {
-            response.put("status", "error: " + e.getMessage());
+
+    @GetMapping("/maps/display")
+    public ResponseEntity<List<IndoorMap>> loadPublicMaps(){
+        try{
+            List<IndoorMap> publicMaps = mapService.getPublicMaps();
+            return ResponseEntity.ok(publicMaps);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
-        return ResponseEntity.ok(response);
     }
-
-
-
-    @GetMapping("/public/navigate")
+    @GetMapping("/navigate")
     public ResponseEntity<List<MapNode>> navigate(@RequestParam String from, @RequestParam String to) {
 
         String startNode = from;
@@ -73,10 +63,11 @@ public class MapRenderApi {
         return ResponseEntity.ok(path);
     }
 
-    @GetMapping("/public/mapData")
+    @GetMapping("/map-data")
     public ResponseEntity<Floor> getMapData(@RequestParam String mapName) {
         try{
             Floor floor = floorService.loadFirstAvailableFloor(mapName);
+            System.out.println("LOADED FLOOR: " + floor);
             jsonMapData = floor.getMapData().getTextData();
             loadGraph(jsonMapData);
             return ResponseEntity.ok(floor);

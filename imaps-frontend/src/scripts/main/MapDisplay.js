@@ -2,6 +2,7 @@ import Konva from "konva";
 import Factory from "../util/Factory.js";
 import HttpService from "../net/HttpService.js";
 import { zoomStage } from "../util/zoomStage.js";
+import {json} from "react-router-dom";
 export class MapDisplay {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
@@ -35,7 +36,9 @@ export class MapDisplay {
   }
 
   deserializeMap(data) {
-    data.forEach((child) => {
+
+    let dsrData = JSON.parse(data.textData);
+    dsrData.forEach((child) => {
       const shape = JSON.parse(child);
       if (shape.className !== "InfoPin") {
         const renderedShape = Factory.createRenderedShape(shape.className, shape.attrs);
@@ -55,9 +58,11 @@ export class MapDisplay {
 
   async loadMap(mapName) {
     const httpService = new HttpService();
-      const mapData = await httpService.get(`/public/mapData?mapName=${mapName}`);
+      const resp = await httpService.get(`/public/map-data?mapName=${mapName}`);
 
-    this.deserializeMap(mapData);
+    console.log(resp);
+
+    this.deserializeMap(resp.mapData);
     this.shapes.forEach((shape) => {
       this.mainLayer.add(shape);
     });

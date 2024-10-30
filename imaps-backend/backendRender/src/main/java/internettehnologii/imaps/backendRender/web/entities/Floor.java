@@ -31,6 +31,16 @@ public class Floor {
     @Enumerated(EnumType.STRING)
     private MAP_STATUS status;
 
+    @Override
+    public String toString() {
+        return "Floor{" +
+                "id=" + id +
+                ", mapData=" + mapData +
+                ", floorNumber=" + floorNumber +
+                ", indoorMap=" + indoorMap +
+                ", status=" + status +
+                '}';
+    }
 }
 
 // @Id

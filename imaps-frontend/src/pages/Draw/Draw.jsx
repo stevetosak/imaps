@@ -37,7 +37,7 @@ function Draw() {
       httpService.setAuthenticated();
 
       try {
-        const resp = await httpService.get(`/protected/myMaps/loadAllFloors?mapName=${mapName}`);
+        const resp = await httpService.get(`/protected/floors/load?mapName=${mapName}`);
         setFloors(resp)
         console.log("RESPONSE FLOORS:", resp);
         console.log("SET",floors)
@@ -84,7 +84,7 @@ function Draw() {
       mapName: mapName
     }
 
-    httpService.put("/protected/myMaps/addFloor",payload).then((resp) => console.log("Added new floor")).catch(reason => console.log(reason));
+    httpService.put("/protected/floors/add",payload).then((resp) => console.log("Added new floor")).catch(reason => console.log(reason));
 
   }
 
@@ -149,16 +149,6 @@ function Draw() {
         <br/>
         <RoomTypeModal map={app}></RoomTypeModal>
 
-        <div id="render" className={styles.buttonContainer}>
-          <button
-              id="render-button"
-              type="button"
-              className={styles.renderButton}
-              onClick={handleRenderClick}
-          >
-            Render
-          </button>
-        </div>
         <div className={styles.templateCont}>
           <SaveMap submitHandler={handleSaveClick}></SaveMap>
           {/*<MapTemplateSelector loadHandler={handleLoadMapClick}></MapTemplateSelector>*/}

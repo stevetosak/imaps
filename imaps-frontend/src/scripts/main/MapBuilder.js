@@ -84,7 +84,6 @@ export class MapBuilder {
 
   setupEventListeners() {
     document.getElementById("shapeOptions").addEventListener("click", this.selectShape.bind(this));
-    document.getElementById("render-button").addEventListener("click", this.render.bind(this));
     window.addEventListener("keydown", this.handleExitSelection.bind(this));
     window.addEventListener("keydown", this.handleDelete.bind(this));
     window.addEventListener("keydown", this.rotateShapesBy90Deg.bind(this));
@@ -413,22 +412,11 @@ export class MapBuilder {
     });
   }
 
-  async render() {
+  async saveMap(mapName,username,selectedFloor) {
     this.saveShapeDetails();
     const httpService = new HttpService("http://localhost:8080/api/protected", true);
     try {
-      const response = await httpService.post("/render", this.shapes);
-      console.log(response);
-    } catch (err) {
-      console.log("ERROR --> Could not render map --->", err);
-    }
-  }
-
-  async saveMap(mapName,username,selectedFloor) {
-    this.saveShapeDetails();
-    const httpService = new HttpService("http://localhost:8080/api/protected/maps", true);
-    try {
-      const response = await httpService.put(`/save?mapName=${mapName}&username=${username}&floorNum=${selectedFloor}`, this.shapes);
+      const response = await httpService.put(`/my-maps/save?mapName=${mapName}&username=${username}&floorNum=${selectedFloor}`, this.shapes);
       console.log(response, "resp in builder");
     } catch (err) {
       console.log("ERROR --> Could not Save map --->", err);
@@ -542,7 +530,7 @@ export class MapBuilder {
   async loadMap(mapName,username,floorNum) {
     const httpService = new HttpService();
     httpService.setAuthenticated();
-    const resp = await httpService.get(`/protected/maps/load?mapName=${mapName}&username=${username}&floorNum=${floorNum}`);
+    const resp = await httpService.get(`/protected/my-maps/load?mapName=${mapName}&username=${username}&floorNum=${floorNum}`);
     console.log("RESPONSE FROM LOAD --->", resp);
     this.deserializeMap(resp.mapData);
     this.shapes.forEach((shape) => {

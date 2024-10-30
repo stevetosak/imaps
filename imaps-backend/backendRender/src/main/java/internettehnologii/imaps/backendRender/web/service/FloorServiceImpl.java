@@ -69,8 +69,10 @@ public class FloorServiceImpl implements FloorService {
 
         if(map.isPresent()) {
             Optional<List<Floor>> floors = floorRepository.getAllPublicFloorsForMap(map.get());
+            System.out.println("FLOORS REPO: " + floors);
             if(floors.isPresent()){
                 for(Floor floor : floors.get()){
+                    System.out.println("Iterating floors: " + floor);
                     if(floor.getFloorNumber() == 0){
                         return floor;
                     }

@@ -20,7 +20,7 @@ const MapDetailsModal = ({ isOpen, onClose, onSubmit }) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
 
-        httpService.put(`/protected/maps/create?username=${username}`,mapDetails)
+        httpService.put(`/protected/my-maps/create?username=${username}`,mapDetails)
             .then(resp => {
                 console.log("RESPONSE CREATE: ",resp);
             })
