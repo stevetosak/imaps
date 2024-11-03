@@ -1,4 +1,4 @@
-package internettehnologii.imaps.backendRender.web.exeptions;
+package internettehnologii.imaps.backendRender.web.exceptions;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String message) {

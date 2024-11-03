@@ -24,10 +24,10 @@ const renderTile = ({ data, isDragging }) => (
         {data.mapName} {isDragging ? "DRAGGING" : null}
       </div>
       <div className={styles.iconContainer}>
-        <Link to={`/Maps/${data.mapName}/Draw`} className={styles.linkStyle}>
+        <Link to={`/myMaps/${data.mapName}/Draw`} className={styles.linkStyle}>
           <img src={edit_icon} className={styles.icon} alt="Edit" />
         </Link>
-        <Link to={`/Maps/${data.mapName}/View`} className={styles.linkStyle}>
+        <Link to={`/myMaps/${data.mapName}/View`} className={styles.linkStyle}>
           <img src={view_icon} className={styles.icon} alt="View" />
         </Link>
       </div>

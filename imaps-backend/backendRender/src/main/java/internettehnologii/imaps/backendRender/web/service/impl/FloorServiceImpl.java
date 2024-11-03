@@ -1,11 +1,11 @@
-package internettehnologii.imaps.backendRender.web.service;
+package internettehnologii.imaps.backendRender.web.service.impl;
 
-import internettehnologii.imaps.backendRender.web.exeptions.EmptyMapException;
-import internettehnologii.imaps.backendRender.web.exeptions.FloorAlreadyExistsException;
-import internettehnologii.imaps.backendRender.web.exeptions.InvalidParametersException;
+import internettehnologii.imaps.backendRender.web.exceptions.EmptyMapException;
+import internettehnologii.imaps.backendRender.web.exceptions.FloorAlreadyExistsException;
+import internettehnologii.imaps.backendRender.web.exceptions.InvalidParametersException;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
-import internettehnologii.imaps.backendRender.web.exeptions.MapNotFoundException;
+import internettehnologii.imaps.backendRender.web.exceptions.MapNotFoundException;
 import internettehnologii.imaps.backendRender.web.repo.FloorRepository;
 import internettehnologii.imaps.backendRender.web.repo.MapRepository;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
@@ -51,8 +51,10 @@ public class FloorServiceImpl implements FloorService {
     }
 
     @Override
-    public List<Floor> getAllFloorsForMap(IndoorMap indoorMap) {
-        return floorRepository.getAllFloorsForMapById(indoorMap.getId()).orElseGet(ArrayList::new);
+    public List<Floor> getAllFloorsForMap(String mapName) {
+        IndoorMap map = mapRepository.findMapByName(mapName).orElseThrow(() -> new MapNotFoundException(mapName));
+
+        return floorRepository.getAllFloorsForMapById(map.getId()).orElseGet(ArrayList::new);
     }
 
     @Override
@@ -87,9 +89,17 @@ public class FloorServiceImpl implements FloorService {
     }
 
     @Override
-    public List<Floor> getAllPublicFloors(IndoorMap indoorMap) throws EmptyMapException {
-        return floorRepository.getAllPublicFloorsForMap(indoorMap).orElseThrow(
-                () ->  new EmptyMapException("Map: " + indoorMap.getName() + " has no public floors"));
+    public List<Floor> getAllPublicFloors(String mapName) throws EmptyMapException {
+
+        Optional<IndoorMap> map = mapRepository.findMapByName(mapName);
+
+        if(map.isPresent()) {
+            return floorRepository.getAllPublicFloorsForMap(map.get()).orElseThrow(
+                    () ->  new EmptyMapException("Map: " + map.get().getName() + " has no public floors"));
+        }
+
+        throw new MapNotFoundException("Map: " + mapName + " does not exist" );
+
     }
 
     @Override

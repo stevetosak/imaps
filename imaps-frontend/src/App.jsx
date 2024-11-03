@@ -28,18 +28,20 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<IMaps />} />
-            <Route path="/Maps/:mapName/View" element={<MapView />} />
+            <Route path="/Maps/:mapName/View" element={<MapView isPrivate={false}/>} />
             <Route path="/Maps" element={<Maps />} />
-
             <Route path="/Login" element={<LoginPage />} />
             <Route path="/Signup" element={<Signup />} />
 
             <Route element={<ProtectedRoute />}>
-              <Route path="/Maps/:mapName/Draw" element={<Draw />} />
+              <Route path="/myMaps/:mapName/Draw" element={<Draw />} />
+              <Route path="/myMaps" element={<CreateMaps />} />
+              <Route path="/myMaps/:mapName/View" element={<MapView isPrivate={true} />} />
             </Route>
 
+
             <Route element={<ProtectedRoute />}>
-              <Route path="/myMaps" element={<CreateMaps />} />
+
             </Route>
             
             <Route path="*" element={<Error />} />

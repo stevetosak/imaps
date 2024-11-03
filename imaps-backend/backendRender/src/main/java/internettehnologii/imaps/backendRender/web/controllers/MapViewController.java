@@ -3,9 +3,10 @@ package internettehnologii.imaps.backendRender.web.controllers;
 import internettehnologii.imaps.backendRender.graph.MapNode;
 import internettehnologii.imaps.backendRender.graph.MapNodeParser;
 import internettehnologii.imaps.backendRender.graph.RouteGraph;
-import internettehnologii.imaps.backendRender.graph.exceptions.MapParseException;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
+import internettehnologii.imaps.backendRender.web.exceptions.EmptyMapException;
+import internettehnologii.imaps.backendRender.web.exceptions.FloorNotFoundException;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/public")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = {"Authorization"})
 public class MapViewController {
 
-    private String jsonMapData;
+    private String currentFloorJsonData;
     private RouteGraph graph;
+    private List<Floor> floors = new ArrayList<>();
+    private Floor currentFloor = new Floor();
 
     private final MapService mapService;
     private final FloorService floorService;
@@ -33,7 +36,7 @@ public class MapViewController {
     }
 
 
-    @GetMapping("/maps/display")
+    @GetMapping("/public/maps/display")
     public ResponseEntity<List<IndoorMap>> loadPublicMaps(){
         try{
             List<IndoorMap> publicMaps = mapService.getPublicMaps();
@@ -43,7 +46,7 @@ public class MapViewController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-    @GetMapping("/navigate")
+    @GetMapping("/public/navigate")
     public ResponseEntity<List<MapNode>> navigate(@RequestParam String from, @RequestParam String to) {
 
         String startNode = from;
@@ -63,20 +66,60 @@ public class MapViewController {
         return ResponseEntity.ok(path);
     }
 
-    @GetMapping("/map-data")
+    @GetMapping("/public/map-data")
     public ResponseEntity<Floor> getMapData(@RequestParam String mapName) {
         try{
-            Floor floor = floorService.loadFirstAvailableFloor(mapName);
-            System.out.println("LOADED FLOOR: " + floor);
-            jsonMapData = floor.getMapData().getTextData();
-            loadGraph(jsonMapData);
+            this.floors = floorService.getAllPublicFloors(mapName);
+            this.currentFloor = getFloorByNum(0);
+            this.loadGraph(currentFloor.getMapData().getJsonData());
+            return ResponseEntity.ok(currentFloor);
+        } catch (EmptyMapException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping("/protected/map-data")
+    public ResponseEntity<Floor> getMapDataProtected(@RequestParam String mapName) {
+        try{
+            this.floors = floorService.getAllFloorsForMap(mapName);
+            this.currentFloor = getFloorByNum(0);
+            this.loadGraph(currentFloor.getMapData().getJsonData());
+            return ResponseEntity.ok(currentFloor);
+        } catch (EmptyMapException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+
+
+
+
+    @GetMapping("/public/load-floor")
+    public ResponseEntity<Floor> loadFloor(@RequestParam int floorNum) {
+        try{
+            Floor floor = getFloorByNum(floorNum);
+            currentFloor = floor;
             return ResponseEntity.ok(floor);
-        } catch (Exception e) {
+        }
+        catch (FloorNotFoundException e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
+    }
+
+    private Floor getFloorByNum(int num){
+        for(Floor floor : floors){
+            if(floor.getFloorNumber() == num){
+                return floor;
+            }
+        }
+        throw new FloorNotFoundException("Floor: " + num + " not found.\n:");
     }
 
     private void loadGraph(String mapData){
@@ -88,6 +131,7 @@ public class MapViewController {
             graph = new RouteGraph(nodes);
             System.out.println("======================= CREATED GRAPH =======================\n" + graph);
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println(e.getMessage());
         }
     }

@@ -1,10 +1,10 @@
-package internettehnologii.imaps.backendRender.web.service;
+package internettehnologii.imaps.backendRender.web.service.impl;
 
-import internettehnologii.imaps.backendRender.web.exeptions.MapNameTakenException;
+import internettehnologii.imaps.backendRender.web.exceptions.MapNameTakenException;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
-import internettehnologii.imaps.backendRender.web.exeptions.MapNotFoundException;
+import internettehnologii.imaps.backendRender.web.exceptions.MapNotFoundException;
 import internettehnologii.imaps.backendRender.web.repo.FloorRepository;
 import internettehnologii.imaps.backendRender.web.repo.MapRepository;
 import internettehnologii.imaps.backendRender.web.repo.UserRepository;

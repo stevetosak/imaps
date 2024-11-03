@@ -1,7 +1,7 @@
 package internettehnologii.imaps.backendRender.web.service;
 
-import internettehnologii.imaps.backendRender.web.exeptions.EmailTakenException;
-import internettehnologii.imaps.backendRender.web.exeptions.UserNotFoundException;
+import internettehnologii.imaps.backendRender.web.exceptions.EmailTakenException;
+import internettehnologii.imaps.backendRender.web.exceptions.UserNotFoundException;
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
 import internettehnologii.imaps.backendRender.web.repo.UserRepository;
 import jakarta.transaction.Transactional;

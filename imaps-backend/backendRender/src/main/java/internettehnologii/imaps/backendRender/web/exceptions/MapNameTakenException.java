@@ -1,4 +1,4 @@
-package internettehnologii.imaps.backendRender.web.exeptions;
+package internettehnologii.imaps.backendRender.web.exceptions;
 
 public class MapNameTakenException extends RuntimeException {
     public MapNameTakenException(String message) {

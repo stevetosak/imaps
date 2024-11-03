@@ -5,6 +5,8 @@ export default class MapShape extends Konva.Shape {
         if (new.target === MapShape) {
             throw new Error("Cannot instantiate abstract class BaseShape directly.");
         }
+
+        console.log(config.x,"FFF");
         super(config);
         this.layer = layer;
         this.blockSize = blockSize;

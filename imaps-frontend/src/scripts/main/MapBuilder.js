@@ -227,6 +227,16 @@ export class MapBuilder {
   placeInfoPin(e) {
     e.evt.preventDefault();
     let mousePos = this.stage.getRelativePointerPosition();
+    const attrs = {
+      type: "InfoPin",
+      position: mousePos,
+      blockSize: this.blockSize,
+      layer: this.mainLayer,
+      rotation: 0,
+      scaleX: 1,
+      scaleY: 1,
+      increment: true
+    };
     let infoPin = Factory.createShape("InfoPin", mousePos, this.blockSize, this.mainLayer, 0,1,1,true);
     this.addModalHandling(infoPin);
     this.shapes.push(infoPin);
@@ -248,16 +258,22 @@ export class MapBuilder {
 
   placeShape() {
     const mousePos = this.stage.getRelativePointerPosition();
-    const placedObj = Factory.createShape(
-      this.hoverObj.type,
-      mousePos,
-      this.blockSize,
-      this.mainLayer,
-      this.hoverObj.rotation(),
-        1,
-        1,
-        true
-    );
+    const attrs = {
+      position: mousePos,
+      width: this.blockSize,
+      height: this.blockSize,
+      layer: this.mainLayer,
+      rotation: this.hoverObj.rotation(),
+      scaleX: 1,
+      scaleY: 1,
+      increment: true,
+      snap: true,
+      fromLoad: false,
+    };
+
+
+    const placedObj = Factory.createShape(this.hoverObj.type,attrs);
+    console.log("PLACED",placedObj)
 
     if (!placedObj) return;
 
@@ -288,8 +304,21 @@ export class MapBuilder {
   }
 
   startDrawing(shapeType) {
+
+    const attrs = {
+      position: {x:0,y:0},
+      width: this.blockSize,
+      height: this.blockSize,
+      layer: this.mainLayer,
+      rotation: 0,
+      scaleX: 1,
+      scaleY: 1,
+      increment: false,
+      snap: true,
+      fromLoad: false,
+    };
     let pos = { x: 0, y: 0 };
-    this.hoverObj = Factory.createShape(shapeType, pos, this.blockSize, this.dragLayer, 0);
+    this.hoverObj = Factory.createShape(shapeType,attrs);
 
     this.hoverObj.visible(false);
     this.dragLayer.add(this.hoverObj);
@@ -543,27 +572,33 @@ export class MapBuilder {
     this.clearMap();
 
     if(data != null){
-      const textData = data.textData;
-      let dsrData = JSON.parse(textData);
+      const json = data.jsonData;
+      let dsrData = JSON.parse(json);
       dsrData.forEach((child) => {
         const shape = JSON.parse(child);
-        const loadedShape = Factory.createShape(
-            shape.className,
-            { x: shape.attrs.x, y: shape.attrs.y },
-            this.blockSize,
-            this.mainLayer,
-            shape.attrs.rotation,
-            shape.attrs.scaleX,
-            shape.attrs.scaleY
-        );
+        const attrs = {
+          position: {x:shape.attrs.x,y:shape.attrs.y},
+          width: shape.attrs.width,
+          height: shape.attrs.height,
+          layer: this.mainLayer,
+          rotation: shape.attrs.rotation,
+          scaleX: shape.attrs.scaleX,
+          scaleY: shape.attrs.scaleY,
+          increment: false,
+          snap: true,
+          fromLoad: true,
+        };
+
+        console.log("ATTTTTS",attrs);
+
+        const loadedShape = Factory.createShape(shape.className,attrs);
+        console.log("SCALE:",shape.attrs.scaleX,shape.attrs.scaleY);
+        console.log("attrs: ",shape.attrs);
         loadedShape.loadInfo(shape.attrs);
         this.shapes.push(loadedShape);
         this.addModalHandling(loadedShape);
-        this.mainLayer.add(loadedShape);
       });
     }
-
-
 
     this.mainTransformer.nodes([]);
     this.mainLayer.add(this.mainTransformer);

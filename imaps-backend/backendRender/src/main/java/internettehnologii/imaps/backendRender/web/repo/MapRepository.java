@@ -1,11 +1,9 @@
 package internettehnologii.imaps.backendRender.web.repo;
 
-import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
-import internettehnologii.imaps.backendRender.web.security.json.DataJson;
+import internettehnologii.imaps.backendRender.web.security.json.JsonMapData;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -31,7 +29,7 @@ public interface MapRepository extends JpaRepository<IndoorMap, Long> {
 
     @Query(nativeQuery = true,
             value = "SELECT maps.map_data FROM maps WHERE name = ?1")
-    Optional<DataJson> findMapDataByName(String name);
+    Optional<JsonMapData> findMapDataByName(String name);
 
 
     @Query(nativeQuery = true,

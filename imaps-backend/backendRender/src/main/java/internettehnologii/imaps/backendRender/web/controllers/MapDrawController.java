@@ -2,7 +2,7 @@ package internettehnologii.imaps.backendRender.web.controllers;
 
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
-import internettehnologii.imaps.backendRender.web.security.json.DataJson;
+import internettehnologii.imaps.backendRender.web.security.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import internettehnologii.imaps.backendRender.web.util.FloorDTO;
@@ -42,7 +42,7 @@ public class MapDrawController {
             IndoorMap map = mapService.getMapForUser(username,mapName);
             Floor f = floorService.getFloorByNum(floorNum, map);
 
-            DataJson jsonMapData = new DataJson(mapData);
+            JsonMapData jsonMapData = new JsonMapData(mapData);
             f.setMapData(jsonMapData);
             floorService.updateFloor(f);
 
@@ -55,10 +55,12 @@ public class MapDrawController {
     }
 
     @PutMapping("/my-maps/create")
-    public ResponseEntity<Void> createMap(@RequestBody MapDTO mapData, @RequestParam String username) {
+    public ResponseEntity<Map<String,Object>> createMap(@RequestBody MapDTO mapData, @RequestParam String username) {
+        Map<String,Object> response = new HashMap<>();
         try{
             mapService.createMap(mapData.getName(), username);
-            return ResponseEntity.ok().build();
+            response.put("created",true);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -81,8 +83,7 @@ public class MapDrawController {
     @GetMapping("/floors/load")
     public ResponseEntity<List<Floor>> loadAllFloors(@RequestParam String mapName) {
         try{
-            IndoorMap map = mapService.getMap(mapName);
-            List<Floor> floors = floorService.getAllFloorsForMap(map);
+            List<Floor> floors = floorService.getAllFloorsForMap(mapName);
             return ResponseEntity.ok(floors);
         } catch (Exception e){
             System.out.println(e.getMessage());

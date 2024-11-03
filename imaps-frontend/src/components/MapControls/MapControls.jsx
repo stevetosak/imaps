@@ -4,7 +4,7 @@ import plusIcon from "../../assets/plus_icon.png";
 import minusIcon from "../../assets/minus_icon.png";
 import floorIcon from "../../assets/floor_icon.png";
 
-export default function MapControls({ onZoomIn, onZoomOut, onFloorChange }) {
+export default function MapControls({ floors,onZoomIn, onZoomOut, onFloorChange }) {
   const [currentFloor, setCurrentFloor] = useState(1); // Starting floor
 
   // Handle floor selection
@@ -35,6 +35,12 @@ export default function MapControls({ onZoomIn, onZoomOut, onFloorChange }) {
           onChange={(e) => handleFloorChange(parseInt(e.target.value, 10))}
           className={styles.floorDropdown}
         >
+          {floors.map(floor => (
+              <option key={floor.id} value={floor.floorNumber}>
+                {floor.floorNumber}F
+              </option>
+
+          ))}
           <option value={1}>1F</option>
           <option value={2}>2F</option>
           <option value={3}>3F</option>

@@ -10,13 +10,16 @@ import MapControls from "../MapControls/MapControls.jsx";
 import {AuthContext} from "../AuthContext/AuthContext.jsx";
 import RoomInfoPanel from "../RoomInfoPanel/RoomInfoPanel.jsx";
 
-const MapView = () => {
+const MapView = ({isPrivate}) => {
     const {mapName} = useParams();
     const {username} = useContext(AuthContext);
+    const {isAuthenticated} = useContext(AuthContext);
 
     const [mapLoaded, setMapLoaded] = useState(false);
     const [app, setApp] = useState(null);
     const [isPanelOpen, setIsPanelOpen] = useState(true);
+    const [floors,setFloors] = useState([]);
+    const [selectedFloor,setSelectedFloor] = useState(null);
 
     const selectedRoom = {
         id: 1,
@@ -29,16 +32,16 @@ const MapView = () => {
 
     useEffect(() => {
         const appInstance = new MapDisplay("map");
-        appInstance.loadMap(mapName)
+        appInstance.loadMap(mapName,isPrivate)
             .then(() => {
                 setApp(appInstance);
                 setMapLoaded(true);
                 console.log(mapName)
             })
             .catch(reason => {
-                console.log("ERROR: ", reason);
+                console.log("Error loading map: ", reason);
             })
-    }, []);
+    }, [mapName]);
 
     const handleZoomIn = () => {
         console.log("Zooming in");
@@ -48,8 +51,16 @@ const MapView = () => {
         console.log("Zooming out");
     };
 
-    const handleFloorChange = (floor) => {
-        console.log(`Switched to floor ${floor}`);
+    const handleFloorChange = (num) => {
+        setSelectedFloor(num);
+        app.loadMap(mapName,num)
+            .then(resp => {
+                console.log(resp)
+            })
+            .catch(reason => {
+                console.log("ERRR: ",reason)
+            })
+        console.log(`Floor changed to: ${num}`);
     };
 
     const closePanel = () => {
@@ -80,7 +91,7 @@ const MapView = () => {
             </div>
             <RoomInfoPanel room={selectedRoom} isOpen={isPanelOpen} onClose={closePanel} />
             <div className={styles.mapControlsContainer}>
-                <MapControls onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} onFloorChange={handleFloorChange}/>
+                <MapControls floors={floors} onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} onFloorChange={handleFloorChange}/>
             </div>
         </div>
     );

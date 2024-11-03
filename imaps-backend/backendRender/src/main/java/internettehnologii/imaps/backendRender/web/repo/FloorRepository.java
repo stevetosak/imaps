@@ -2,7 +2,7 @@ package internettehnologii.imaps.backendRender.web.repo;
 
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
-import internettehnologii.imaps.backendRender.web.security.json.DataJson;
+import internettehnologii.imaps.backendRender.web.security.json.JsonMapData;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,7 +21,7 @@ public interface FloorRepository extends JpaRepository<Floor, Integer> {
 
     @Modifying @Transactional
     @Query("UPDATE Floor f SET f.mapData = ?3 WHERE f.floorNumber = ?1 AND f.indoorMap.id = ?2")
-    void updateMapData(Integer floorNumber, Integer indoorMapId, DataJson mapData);
+    void updateMapData(Integer floorNumber, Integer indoorMapId, JsonMapData mapData);
 
     @Query("FROM Floor f WHERE f.indoorMap = ?1 AND f.status = 'PUBLIC'")
     Optional<List<Floor>> getAllPublicFloorsForMap(IndoorMap indoorMap);

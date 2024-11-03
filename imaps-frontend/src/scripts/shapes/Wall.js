@@ -2,7 +2,7 @@ import Konva from "konva";
 import MapShape from "./MapShape";
 import { _registerNode } from 'konva/lib/Global';
 export default class Wall extends MapShape {
-    constructor(mousePos, blockSize, layer, rotation,snap, draggable = true,scaleX = 1, scaleY = 1){
+    constructor(mousePos, blockSize, layer, rotation,snap,scaleX = 1, scaleY = 1,fromLoad){
       super(
         {
           x: mousePos.x,
@@ -13,7 +13,7 @@ export default class Wall extends MapShape {
           stroke: "grey",
           strokeWidth: 1,
           name: "mapObj",
-          draggable: draggable,
+          draggable: true,
           rotation: rotation,
           zIndex: 0,
         },
@@ -21,7 +21,7 @@ export default class Wall extends MapShape {
         blockSize,
         snap,
       );
-  
+      console.log("SC",scaleX,scaleY)
       this.type = "Wall";
     }
   }

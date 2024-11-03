@@ -52,6 +52,7 @@ public class AuthController {
 
     @GetMapping("/verify")
     public ResponseEntity<Map<String,Object>> authenticateUser(@RequestParam String token) {
+        System.out.println("VERIFY");
         Map<String, Object> response = new HashMap<>();
         try{
             String username = jwtService.extractUsername(token);

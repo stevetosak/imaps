@@ -35,10 +35,10 @@ public class WebSecurityConfig {
          http
                  .csrf(AbstractHttpConfigurer::disable)
                  .cors(Customizer.withDefaults())
-                 .authorizeHttpRequests(request -> request.requestMatchers("/api/auth/**","api/public/**")
-                         .permitAll()
+                 .authorizeHttpRequests(request -> request.requestMatchers("/protected/**")
+                         .authenticated()
                          .anyRequest()
-                         .authenticated())
+                         .permitAll())
                  .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                  .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
          
