@@ -1,8 +1,8 @@
 .navbar {
   /*background: linear-gradient(90deg, rgba(188,108,37,1) 19%, rgba(221,161,94,1) 50%, rgba(188,108,37,1) 81%);*/
-  background: rgb(37,38,39);
-  background: linear-gradient(90deg, rgba(37,38,39,1) 20%, rgba(51,39,40,1) 28%, rgba(62,39,42,1) 40%, rgba(73,40,43,1) 59%, rgba(37,38,39,1) 79%);
-  height: 4em;
+  background: hsla(180, 8%, 32%, 0.877);
+  /* background: linear-gradient(90deg, rgba(37,38,39,1) 20%, rgba(51,39,40,1) 28%, rgba(62,39,42,1) 40%, rgba(73,40,43,1) 59%, rgba(37,38,39,1) 79%); */
+  height: 5em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,32 +16,29 @@
 }
 
 .signup {
-
 }
-.login{
-
+.login {
 }
 
-.navlogoCont h1{
+.navlogoCont h1 {
   font-family: exo, sans-serif;
-  font-size: 1.5em;
+  font-size: 2em;
   color: #ffffff;
   margin: 0;
-  text-shadow: #460616 2px 3px;
+  text-shadow: #222222 2px 3px;
 }
 
-.navlogoCont{
+.navlogoCont {
   display: flex;
   align-items: center;
   padding-left: 10%;
 }
 
-.linkCont{
+.linkCont {
   display: flex;
-  width: 50%;
+  width: 25%;
   justify-content: space-evenly;
 }
-
 
 .navbar-container {
   display: flex;
@@ -49,8 +46,6 @@
   align-items: center;
   width: 100%;
 }
-
-
 
 .navbar-logo {
   color: #ffff;
