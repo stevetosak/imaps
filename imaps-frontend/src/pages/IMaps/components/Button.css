@@ -24,24 +24,24 @@
 
   color: #fff;
   padding: 8px 20px;
-  border: 1px solid var(--primary);
+  /* border: 1px solid var(--primary); */
   transition: all 0.3s ease-out;
 }
 
 .btn--medium {
   padding: 8px 20px;
-  font-size: 18px;
+  font-size: 22px;
 }
 
 .btn--large {
   padding: 12px 26px;
-  font-size: 20px;
+  font-size: 24px;
 }
 
 .btn--large:hover,
 .btn--medium:hover {
   transition: all 0.3s ease-out;
-  background: #a63137;
+  background: #ffffffc2;
   color: #000000;
   transition: 250ms;
 }

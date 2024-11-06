@@ -26,28 +26,26 @@ function Navbar() {
   window.addEventListener("resize", showButton);
 
   return (
-      <nav className="navbar">
-        <div className="navbar-container">
-          <div className="navlogoCont">
-            <h1>iMAPS</h1>
-          </div>
-
-          <div className="menu-icon" onClick={handleClick}>
-            <i className={click ? "fas fa-times" : "fas fa-bars"}/>
-          </div>
-          <div className={click ? "nav-menu active" : "nav-menu"}>
-          </div>
-          <div className="linkCont">
-            <div className="signup">
-              <Link to="/Signup">{button && <Button buttonStyle="btn--outline">SIGN UP</Button>}</Link>
-            </div>
-            <div className="login">
-              <Link to="/Login">{button && <Button buttonStyle="btn--outline">LOG IN</Button>}</Link>
-            </div>
-          </div>
-
+    <nav className="navbar">
+      <div className="navbar-container">
+        <div className="navlogoCont">
+          <h1>iMAPS</h1>
         </div>
-      </nav>
+
+        <div className="menu-icon" onClick={handleClick}>
+          <i className={click ? "fas fa-times" : "fas fa-bars"} />
+        </div>
+        <div className={click ? "nav-menu active" : "nav-menu"}></div>
+        <div className="linkCont">
+          <div className="signup">
+            <Link to="/Signup">{button && <Button buttonStyle="btn--outline">SIGN UP</Button>}</Link>
+          </div>
+          <div className="login">
+            <Link to="/Login">{button && <Button buttonStyle="btn--outline">LOG IN</Button>}</Link>
+          </div>
+        </div>
+      </div>
+    </nav>
   );
 }
 
