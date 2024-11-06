@@ -2,33 +2,30 @@ import Konva from "konva";
 import MapShape from "./MapShape";
 import { _registerNode } from "konva/lib/Global";
 export default class Room extends MapShape {
-  constructor(attribs,scaleX,scaleY,id){
-      let width = attribs.width * scaleX;
-      let height = attribs.height * scaleY;
+  constructor(attrs,id){
 
-      console.log("AAAAAAAAAAAAAT",attribs.position)
-
-      if(!attribs.fromLoad){
-          // ako ne bile loadnati znacit gi klavame nie,taka da inicijalna vrednost na width i height e blockSize.
-          width *= 8;
-          height *= 4;
+      if(!attrs.fromLoad){
+          attrs.width *= 8;
+          attrs.height *= 4;
       }
+
+      console.log(attrs.position,"hehe")
     super(
       {
-        x: attribs.position.x,
-        y: attribs.position.y,
-        width: width,
-        height: height,
+        x: attrs.position.x,
+        y: attrs.position.y,
+        width: attrs.width * attrs.scaleX,
+        height: attrs.height * attrs.scaleY,
         fill: "#DDE0F8",
         stroke: "grey",
         strokeWidth: 1,
         name: "mapObj",
-        rotation: attribs.rotation,
+        rotation: attrs.rotation,
         draggable: true,
       },
-        attribs.layer,
-        attribs.blockSize,
-        attribs.snap
+        attrs.layer,
+        attrs.blockSize,
+        attrs.snap
     );
 
     this._info = {

@@ -14,22 +14,29 @@ export default class Factory {
   static roomCount = 0;
 
   static createShape(shapeType,attrs) {
+    console.log(attrs,"attrs in factory")
+    console.log("position in factory: " + attrs.position.x)
+
     let scaleX = (attrs.scaleX ? parseFloat(attrs.scaleX) : 1);
     let scaleY =  (attrs.scaleY ? parseFloat(attrs.scaleY) : 1);
+
+    attrs.scaleX = scaleX;
+    attrs.scaleY = scaleY;
+
     switch (shapeType) {
       case "Entrance":
         if(attrs.increment) this.entranceCount++;
         return new Entrance(attrs,this.entranceCount);
       case "Room":
         if(attrs.increment) this.roomCount++;
-        return new Room(attrs,scaleX,scaleY,this.roomCount);
-      // case "Wall":
-      //   return new Wall(position, blockSize, layer, rotation,true,scaleX,scaleY,true);
-      // case "InfoPin":
-      //   if(attrs.increment) this.infoPinCount++;
-      //   return new InfoPin(position, blockSize, layer, false,this.infoPinCount);
+        return new Room(attrs,this.roomCount);
+       case "Wall":
+         return new Wall(attrs);
+       case "InfoPin":
+        if(attrs.increment) this.infoPinCount++;
+          return new InfoPin(attrs,this.infoPinCount);
       default:
-        throw new Error("Invalid shape type: " + attrs.shapeType);
+        throw new Error("Invalid shape type: " + shapeType);
     }
   }
 

@@ -2,25 +2,30 @@ import Konva from "konva";
 import MapShape from "./MapShape";
 import { _registerNode } from "konva/lib/Global";
 export default class Entrance extends MapShape {
-  constructor(attribs,id) {
+
+  constructor(attrs,id) {
+
+      if(!attrs.fromLoad){
+          attrs.height *=2;
+      }
     super(
       {
-        x: attribs.position.x,
-        y: attribs.position.y,
-        width: attribs.blockSize * attribs.scaleX,
-        height: attribs.blockSize * 2 * attribs.scaleY,
+        x: attrs.position.x,
+        y: attrs.position.y,
+        width: attrs.width,
+        height: attrs.height,
         fill: "#0051ff",
         stroke: "grey",
         strokeWidth: 1,
         opacity: 0.7,
         name: "mapObj",
         draggable: true,
-        rotation: attribs.rotation,
+        rotation: attrs.rotation,
         zIndex: 1,
       },
-      attribs.layer,
-      attribs.blockSize,
-      attribs.snap
+      attrs.layer,
+      attrs.blockSize,
+      attrs.snap
     );
     this.type = "Entrance";
     this.modalEventName = "openEntranceModalEvent";

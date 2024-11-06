@@ -3,23 +3,25 @@ import MapShape from "./MapShape";
 import Factory from "../util/Factory";
 import { _registerNode } from "konva/lib/Global";
 export default class InfoPin extends MapShape {
-  constructor(mousePos, blockSize, layer, snappable,id) {
+  constructor(attrs,id) {
+
+    attrs.snap = false;
     super(
       {
-        x: mousePos.x,
-        y: mousePos.y,
-        radiusX: blockSize * 0.5,
-        radiusY: blockSize * 0.7,
-        tailHeight: blockSize * 1.2,
+        x: attrs.position.x,
+        y: attrs.position.y,
+        radiusX: attrs.blockSize * 0.5,
+        radiusY: attrs.blockSize * 0.7,
+        tailHeight: attrs.blockSize * 1.2,
         fill: "#d70113",
         stroke: "#1b1b1b",
         strokeWidth: 0.2,
         draggable: true,
         name: "mapObj",
       },
-      layer,
-      blockSize,
-      snappable
+      attrs.layer,
+      attrs.blockSize,
+      attrs.snap
     );
 
     this.id = id;

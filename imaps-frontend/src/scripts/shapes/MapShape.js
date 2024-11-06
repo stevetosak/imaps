@@ -95,10 +95,15 @@ export default class MapShape extends Konva.Shape {
     }
 
     snapToGrid() {
+
+        console.log("pos in snap",this.position())
+        console.log("bl size",this.blockSize)
         this.position({
             x: Math.round(this.x() / this.blockSize) * this.blockSize,
             y: Math.round(this.y() / this.blockSize) * this.blockSize,
         });
+
+        console.log("pos after snap",this.position())
     }
 
     saveShapeDetails() {

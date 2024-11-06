@@ -237,7 +237,7 @@ export class MapBuilder {
       scaleY: 1,
       increment: true
     };
-    let infoPin = Factory.createShape("InfoPin", mousePos, this.blockSize, this.mainLayer, 0,1,1,true);
+    let infoPin = Factory.createShape("InfoPin", attrs);
     this.addModalHandling(infoPin);
     this.shapes.push(infoPin);
     this.mainLayer.add(infoPin)
@@ -269,11 +269,12 @@ export class MapBuilder {
       increment: true,
       snap: true,
       fromLoad: false,
+      blockSize: this.blockSize
     };
 
 
     const placedObj = Factory.createShape(this.hoverObj.type,attrs);
-    console.log("PLACED",placedObj)
+    console.log("PLACED",placedObj.attrs)
 
     if (!placedObj) return;
 
@@ -283,6 +284,8 @@ export class MapBuilder {
     this.mainLayer.draw();
     placedObj.displayName(this.textLayer);
     placedObj.snapToGrid();
+
+    console.log(placedObj.attrs,"pokasno")
 
     if (!this.efficientDrawingMode) {
       this.stopDrawing();
@@ -581,6 +584,7 @@ export class MapBuilder {
           width: shape.attrs.width,
           height: shape.attrs.height,
           layer: this.mainLayer,
+          blockSize: this.blockSize,
           rotation: shape.attrs.rotation,
           scaleX: shape.attrs.scaleX,
           scaleY: shape.attrs.scaleY,
