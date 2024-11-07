@@ -9,7 +9,7 @@ import RoomTypeModal from "../../components/Modals/RoomTypeModal/RoomTypeModal.j
 import InfoPinModal from "../../components/Modals/InfoPinModal/InfoPinModal.jsx";
 import SaveMap from "../../components/SaveMap/SaveMap.jsx";
 import logo from "../../assets/logo_icon.png";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import Profile from "../../components/Profile/Profile.jsx";
 import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
@@ -24,10 +24,19 @@ function Draw() {
     const [floors, setFloors] = useState([]);
     const [newFloorNumber, setNewFloorNumber] = useState(0);
     const navigate = useNavigate();
+
+    const [searchParams,setSearchParams] = useSearchParams();
+
+
     useEffect(() => {
+
+        if(!searchParams.has("floor")){
+            setSearchParams({floor: "0"})
+        }
+
         const app = new MapBuilder("container");
         setApp(app);
-        app.loadMap(mapName, username, 0)
+        app.loadMap(mapName, username, searchParams.get("floor"))
             .then(() => {
                 loadFloors();
             })
@@ -58,7 +67,9 @@ function Draw() {
     };
 
     const handleFloorChange = (event) => {
-        setSelectedFloor(event.target.value);
+        setSelectedFloor(event.target.value); //updateSearchParam("floor",event.target.value)
+
+        setSearchParams({floor: event.target.value})
         app.loadMap(mapName, username, event.target.value)
             .then(resp => {
                 console.log(resp)
@@ -69,9 +80,6 @@ function Draw() {
         console.log(`Floor changed to: ${event.target.value}`);
     };
 
-    const handleRenderClick = () => {
-
-    };
 
     const addFloor = () => {
         const httpService = new HttpService()
@@ -124,7 +132,7 @@ function Draw() {
                     <label htmlFor="floorSelect">Select Floor:</label>
                     <select
                         id="floorSelect"
-                        value={selectedFloor}
+                        value={searchParams.get("floor")}
                         onChange={handleFloorChange}
                         className={styles.floorDropdown}
                     >
@@ -144,7 +152,6 @@ function Draw() {
                         onChange={(e) => setNewFloorNumber(Number(e.target.value))}
                     />
                     <button onClick={addFloor}>Add Floor</button>
-                    {/* Trigger addFloor on button click */}
                 </div>
                 {<h2 className={styles.paragraph}>Objects:</h2>}
                 <ul className={styles.shapeOptions} id="shapeOptions">

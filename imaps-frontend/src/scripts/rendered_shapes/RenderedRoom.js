@@ -23,6 +23,8 @@ export default class RenderedRoom extends RenderedMapShape {
     this.class = "Room";
     this.textOffsetX = -50;
 
+    this.eventName = "openRoomInfoPanel"
+
     this.on("mouseenter", () => {
       console.log("HOVER ROOM IN", this.x());
       console.log(this.info.name, "NAME");

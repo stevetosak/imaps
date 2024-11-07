@@ -2,6 +2,7 @@ import Factory from "../util/Factory.js";
 import Konva from "konva";
 import HttpService from "../net/HttpService.js";
 import { zoomStage } from "../util/zoomStage.js";
+import {addEventHandling} from "../util/addEventHandling.js";
 
 export class MapBuilder {
   constructor(containerId) {
@@ -15,6 +16,7 @@ export class MapBuilder {
     // TODO AKO DRAGNIT NEKOJ OD POCETOK NA STAGE POZICIIVE KE SA ZEZNAT
     // TODO jwt vo cookie
     // TODO placed shape i mouseMoveHandler da ne callback ( da ne vrakjat funkcija)
+    // TODO text na top layer sekogas
 
     this.gridLayer = new Konva.Layer();
     this.mainLayer = new Konva.Layer();
@@ -23,8 +25,6 @@ export class MapBuilder {
     this.textLayer = new Konva.Layer();
     this.gridLayer.listening(false);
 
-    this.originalWidth = this.container.clientWidth;
-    this.originalHeight = this.container.clientHeight;
 
     this.shapes = [];
     this.blockSize = 10;
@@ -238,7 +238,7 @@ export class MapBuilder {
       increment: true
     };
     let infoPin = Factory.createShape("InfoPin", attrs);
-    this.addModalHandling(infoPin);
+    addEventHandling(infoPin,this,"dblclick");
     this.shapes.push(infoPin);
     this.mainLayer.add(infoPin)
     infoPin.displayName(this.textLayer);
@@ -274,18 +274,15 @@ export class MapBuilder {
 
 
     const placedObj = Factory.createShape(this.hoverObj.type,attrs);
-    console.log("PLACED",placedObj.attrs)
-
     if (!placedObj) return;
 
     this.mainLayer.add(placedObj);
     this.shapes.push(placedObj);
-    this.addModalHandling(placedObj);
+    addEventHandling(placedObj,this,"dblclick");
     this.mainLayer.draw();
     placedObj.displayName(this.textLayer);
     placedObj.snapToGrid();
 
-    console.log(placedObj.attrs,"pokasno")
 
     if (!this.efficientDrawingMode) {
       this.stopDrawing();
@@ -320,7 +317,6 @@ export class MapBuilder {
       snap: true,
       fromLoad: false,
     };
-    let pos = { x: 0, y: 0 };
     this.hoverObj = Factory.createShape(shapeType,attrs);
 
     this.hoverObj.visible(false);
@@ -339,20 +335,6 @@ export class MapBuilder {
       this.startDrawing(shapeType);
       this.mainTransformer.nodes([]);
     }
-  }
-
-  addModalHandling(shape) {
-    shape.on("dblclick", () => {
-      const eventName = shape.modalEventName;
-      if (eventName) {
-        const data = {
-          room: shape,
-          map: this,
-        };
-        const event = new CustomEvent(eventName, { detail: data });
-        window.dispatchEvent(event);
-      }
-    });
   }
 
   rotateShapesBy90Deg(e) {
@@ -562,6 +544,11 @@ export class MapBuilder {
   async loadMap(mapName,username,floorNum) {
     const httpService = new HttpService();
     httpService.setAuthenticated();
+
+    floorNum = floorNum == null ? 0 : floorNum;
+
+    console.log("Floor num draw: " + floorNum)
+
     const resp = await httpService.get(`/protected/my-maps/load?mapName=${mapName}&username=${username}&floorNum=${floorNum}`);
     console.log("RESPONSE FROM LOAD --->", resp);
     this.deserializeMap(resp.mapData);
@@ -593,14 +580,10 @@ export class MapBuilder {
           fromLoad: true,
         };
 
-        console.log("ATTTTTS",attrs);
-
         const loadedShape = Factory.createShape(shape.className,attrs);
-        console.log("SCALE:",shape.attrs.scaleX,shape.attrs.scaleY);
-        console.log("attrs: ",shape.attrs);
         loadedShape.loadInfo(shape.attrs);
         this.shapes.push(loadedShape);
-        this.addModalHandling(loadedShape);
+        addEventHandling(loadedShape,this,"dblclick");
       });
     }
 

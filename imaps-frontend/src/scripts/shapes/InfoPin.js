@@ -26,7 +26,8 @@ export default class InfoPin extends MapShape {
 
     this.id = id;
 
-    this.modalEventName = "openPinModalEvent";
+    this.eventName = "openPinModalEvent";
+
     this.type = "InfoPin";
     this._info = {
       name: `Pin ${id}`,

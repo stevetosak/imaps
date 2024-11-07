@@ -8,8 +8,8 @@ public interface MapService {
     void createMap(String mapName, String username);
     void updateMap(IndoorMap indoorMap);
     void deleteMap(IndoorMap indoorMap);
-    IndoorMap getMap(String mapName);
+    IndoorMap getMap(String mapName, String username);
     List<IndoorMap> getAllMapsForUser(String username);
     List<IndoorMap> getPublicMaps();
-    IndoorMap getMapForUser(String username, String mapId);
+    IndoorMap getMapForUser(String username, String mapName);
 }

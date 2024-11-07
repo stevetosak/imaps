@@ -13,7 +13,7 @@ export default class MapShape extends Konva.Shape {
         this._type = "";
         this.snappable = snap;
         this._info = {};
-        this.modalEventName = "";
+        this.eventName = "";
         this.infoText = null;
 
         this.shadowForStrokeEnabled(false);

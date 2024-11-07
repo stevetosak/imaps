@@ -3,6 +3,8 @@ import Factory from "../util/Factory.js";
 import HttpService from "../net/HttpService.js";
 import {zoomStage} from "../util/zoomStage.js";
 import {json} from "react-router-dom";
+import error from "eslint-plugin-react/lib/util/error.js";
+import {addEventHandling} from "../util/addEventHandling.js";
 
 export class MapDisplay {
     constructor(containerId) {
@@ -24,6 +26,7 @@ export class MapDisplay {
         this.stage.add(this.mainLayer);
         this.stage.add(this.routeLayer);
         this.stage.add(this.textLayer);
+
         this.navArrow = new Konva.Arrow({
             stroke: "#e91332",
             strokeWidth: 2.5,
@@ -47,13 +50,21 @@ export class MapDisplay {
         });
     }
 
+    clearMap() {
+        this.mainLayer.removeChildren();
+        this.shapes.forEach(shape => shape.clearText())
+        this.shapes = [];
+    }
+
     deserializeMap(data) {
+        this.clearMap();
 
         let dsrData = JSON.parse(data.jsonData);
         dsrData.forEach((child) => {
             const shape = JSON.parse(child);
             if (shape.className !== "InfoPin") {
                 const renderedShape = Factory.createRenderedShape(shape.className, shape.attrs);
+                addEventHandling(renderedShape,this,"click");
                 this.shapes.push(renderedShape);
             }
         });
@@ -65,29 +76,37 @@ export class MapDisplay {
             shape.displayName(this.textLayer);
         });
 
-        this.textLayer.children.forEach((child) => console.log(child, "DECAAA"));
     }
 
-    async loadMap(mapName,isPrivate) {
+    async loadMap(mapName,floorNum,username,isPrivate) {
         const httpService = new HttpService();
+        floorNum = floorNum == null ? 0 : floorNum;
         let resp;
-        if(!isPrivate){
-             resp = await httpService.get(`/public/map-data?mapName=${mapName}&floorNum=0`);
+        try{
+            if(!isPrivate){
+                resp = await httpService.get(`/public/map-data?mapName=${mapName}&floorNum=${floorNum}`);
+            }
+            else {
+                httpService.setAuthenticated();
+                resp = await httpService.get(`/protected/map-data?mapName=${mapName}&floorNum=${floorNum}&username=${username}`);
+            }
+
+            console.log(resp,"rsp view");
+            if(resp.mapData != null){
+                this.deserializeMap(resp.mapData);
+                this.shapes.forEach((shape) => {
+                    this.mainLayer.add(shape);
+                });
+                this.displayRoomNames();
+                this.initializeRoomTypes();
+            }
+
+        }catch(e){
+            throw new Error("Cant load map: " +  e)
         }
-        else {
-          httpService.setAuthenticated();
-          resp = await httpService.get(`/protected/map-data?mapName=${mapName}`)
+    }
 
-        }
-
-        console.log(resp);
-
-        this.deserializeMap(resp.mapData);
-        this.shapes.forEach((shape) => {
-            this.mainLayer.add(shape);
-        });
-        this.displayRoomNames();
-        this.initializeRoomTypes();
+    async loadFloor(floorNum){
 
     }
 
@@ -111,18 +130,6 @@ export class MapDisplay {
             count++;
 
             if (count % 4 === 0) {
-                // const line = new Konva.Arrow({
-                //   points: buff,
-                //   stroke: "#e91332",
-                //   strokeWidth: 2.5,
-                //   dash: [5, 4],
-                //   lineCap: "round",
-                //   lineJoin: "round",
-                //   pointerLength: 7,
-                //   pointerWidth: 7,
-                //   fill: "red",
-                // });
-
                 let line = this.navArrow.clone({
                     points: buff
                 })
