@@ -17,6 +17,9 @@ export default class RenderedMapShape extends Konva.Rect {
     this.infoText = null;
     this.textOffsetX = 0;
     this.textOffsetY = 0;
+
+    this.eventName = "";
+
   }
 
   initText() {
@@ -35,6 +38,14 @@ export default class RenderedMapShape extends Konva.Rect {
       this.infoText.x(this.x() + this.textOffsetX);
       this.infoText.y(this.y() + this.textOffsetY);
     }
+  }
+
+  clearText() {
+    if (this.infoText !== null) {
+      this.infoText.remove()
+      console.log("cleared text")
+    }
+
   }
 
   displayName(layer) {

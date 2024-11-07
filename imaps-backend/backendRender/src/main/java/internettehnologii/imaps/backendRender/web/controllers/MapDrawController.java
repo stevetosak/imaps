@@ -22,6 +22,8 @@ public class MapDrawController {
     private final MapService mapService;
     private final FloorService floorService;
 
+    private Floor currentFloor;
+
     @Autowired
     public MapDrawController(MapService mapService, FloorService floorService) {
         this.mapService = mapService;
@@ -73,6 +75,7 @@ public class MapDrawController {
         try{
             IndoorMap map = mapService.getMapForUser(username,mapName);
             Floor floor = floorService.getFloorByNum(floorNum,map);
+            currentFloor = floor;
             return ResponseEntity.ok().body(floor);
         } catch (Exception e) {
             System.out.println(e.getMessage());

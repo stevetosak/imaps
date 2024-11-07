@@ -7,6 +7,7 @@ import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.exceptions.EmptyMapException;
 import internettehnologii.imaps.backendRender.web.exceptions.FloorNotFoundException;
+import internettehnologii.imaps.backendRender.web.security.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class MapViewController {
     private RouteGraph graph;
     private List<Floor> floors = new ArrayList<>();
     private Floor currentFloor = new Floor();
+    private boolean loaded = false;
 
     private final MapService mapService;
     private final FloorService floorService;
@@ -81,20 +83,26 @@ public class MapViewController {
     }
 
     @GetMapping("/protected/map-data")
-    public ResponseEntity<Floor> getMapDataProtected(@RequestParam String mapName) {
+    public ResponseEntity<Floor> getMapDataProtected(@RequestParam String mapName,@RequestParam String username, @RequestParam int floorNum) {
         try{
-            this.floors = floorService.getAllFloorsForMap(mapName);
-            this.currentFloor = getFloorByNum(0);
-            this.loadGraph(currentFloor.getMapData().getJsonData());
+            if(!loaded){
+                IndoorMap map = mapService.getMapForUser(username, mapName); // namesto ova samo proverka dali postoet dadena mapa za user, za da ne morat za dzabe mapa promenliva da se cuvat
+                this.floors = floorService.getAllFloorsForMap(mapName);
+                JsonMapData mapData = currentFloor.getMapData();
+                if(mapData != null) {
+                    this.loadGraph(currentFloor.getMapData().getJsonData());
+                }
+                loaded = true;
+            }
+
+            this.currentFloor = getFloorByNum(floorNum);
             return ResponseEntity.ok(currentFloor);
-        } catch (EmptyMapException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
-
 
 
 
@@ -110,7 +118,10 @@ public class MapViewController {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
+    }
+    @GetMapping("/public/floors/load")
+    public ResponseEntity<List<Floor>> getFloors() {
+        return ResponseEntity.ok(floors);
     }
 
     private Floor getFloorByNum(int num){

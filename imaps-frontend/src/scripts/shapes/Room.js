@@ -35,7 +35,7 @@ export default class Room extends MapShape {
     };
 
     this.type = "Room";
-    this.modalEventName = "openRoomModalEvent";
+    this.eventName = "openRoomModalEvent";
     this.id = id;
 
     this.initText();

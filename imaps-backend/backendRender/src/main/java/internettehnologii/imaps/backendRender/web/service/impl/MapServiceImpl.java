@@ -66,7 +66,7 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public IndoorMap getMap(String mapName) {
+    public IndoorMap getMap(String mapName, String username) {
         return mapRepository.findMapByName(mapName).orElseThrow(() -> new MapNotFoundException(mapName));
     }
 
@@ -90,6 +90,7 @@ public class MapServiceImpl implements MapService {
 
         return mapRepository.getMapForUser(user, map.getId()).orElseThrow(() -> new MapNotFoundException("No map found for user: " + username));
     }
+
 
 //    public List<IndoorMap> getMaps() {
 //        return mapRepository.findAll();

@@ -28,7 +28,7 @@ export default class Entrance extends MapShape {
       attrs.snap
     );
     this.type = "Entrance";
-    this.modalEventName = "openEntranceModalEvent";
+    this.eventName = "openEntranceModalEvent";
 
     this.id = id;
 
