@@ -20,18 +20,32 @@
 }
 
 .saveMapButton {
-  background-color: #e67e22;
-  color: white;
+  width: 100%;
+  height: 50px;
+  background-color: #e67e22 !important;
+  color: #ffffff !important;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
   cursor: pointer;
-  width: 8vw;
-  height: 2vw;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .saveMapButton:hover {
-  background-color: #b35418;
+  background-color: #d2691e !important;
+  transform: scale(1.05);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.saveMapButton:active {
+  background-color: #b35418 !important;
   transform: scale(0.98);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
