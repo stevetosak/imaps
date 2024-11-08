@@ -1,0 +1,40 @@
+.logoContainer {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.logoImage {
+  width: 50px; /* Adjust the size as needed */
+  height: auto;
+  transition: opacity 0.2s ease;
+}
+
+.logoImage:hover {
+  opacity: 0.8; /* Slight hover effect */
+}
+
+.fixedLogoContainer {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.inlineLogoContainer {
+  display: inline-block; /* Allows the logo to be placed inline within other elements */
+  cursor: pointer;
+}
+
+.logoImage {
+  width: 50px; /* Adjust size as needed */
+  height: auto;
+  transition: opacity 0.2s ease;
+}
+
+.logoImage:hover {
+  opacity: 0.8; /* Hover effect */
+}
