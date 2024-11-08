@@ -3,6 +3,7 @@ import Konva from "konva";
 import HttpService from "../net/HttpService.js";
 import { zoomStage } from "../util/zoomStage.js";
 import {addEventHandling} from "../util/addEventHandling.js";
+import ConnectionGraph from "../util/ConnectionGraph.js";
 
 export class MapBuilder {
   constructor(containerId) {
@@ -25,6 +26,7 @@ export class MapBuilder {
     this.textLayer = new Konva.Layer();
     this.gridLayer.listening(false);
 
+    this.connectionGraph = new ConnectionGraph();
 
     this.shapes = [];
     this.blockSize = 10;
@@ -242,6 +244,9 @@ export class MapBuilder {
     this.shapes.push(infoPin);
     this.mainLayer.add(infoPin)
     infoPin.displayName(this.textLayer);
+    this.connectionGraph.addNode(infoPin);
+
+    console.log("graph: ", this.connectionGraph.nodes)
     console.log(infoPin.name());
   }
 
@@ -352,7 +357,7 @@ export class MapBuilder {
     if (e.key === "Delete") {
       this.mainTransformer.nodes().forEach((node) => {
         node.remove();
-        node.clearText();
+        node.destroyShape();
         this.shapes.splice(this.shapes.indexOf(node), 1);
       });
       this.mainTransformer.nodes([]);
@@ -517,6 +522,18 @@ export class MapBuilder {
     });
   }
 
+  drawConnection(node1Name,node2Name){
+    let pins = this.shapes.filter(shape => shape.className === "InfoPin");
+    let node1 = pins.find(pin => pin.info.name === node1Name);
+    let node2 = pins.find(pin => pin.info.name === node2Name);
+
+    console.log("node1",node1,"node2",node2);
+
+    this.connectionGraph.addConnection(node1,node2);
+
+    console.log("Added connection: ")
+  }
+
   removeConnection(from, to) {
     this.shapes
       .filter((s) => s.info.name === from || s.info.name === to)
@@ -536,7 +553,7 @@ export class MapBuilder {
 
   clearMap() {
     this.mainLayer.removeChildren();
-    this.shapes.forEach(shape => shape.clearText())
+    this.shapes.forEach(shape => shape.destroyShape())
     this.shapes = [];
     this.hoverObj = null;
   }
@@ -585,6 +602,18 @@ export class MapBuilder {
         this.shapes.push(loadedShape);
         addEventHandling(loadedShape,this,"dblclick");
       });
+
+      // TODO BRISENJE DA SA BRISAT LINES
+
+      let pins = this.shapes.filter(shape => shape.className === "InfoPin");
+      pins.forEach(pin => {
+        let connectedPins = pin.info.selectedPins;
+        if(connectedPins){
+          connectedPins.forEach(slPin => {
+            this.drawConnection(pin.info.name,slPin)
+          })
+        }
+      })
     }
 
     this.mainTransformer.nodes([]);

@@ -28,6 +28,8 @@ export default class InfoPin extends MapShape {
 
     this.eventName = "openPinModalEvent";
 
+    this.connectionLines = [];
+
     this.type = "InfoPin";
     this._info = {
       name: `Pin ${id}`,
@@ -41,6 +43,16 @@ export default class InfoPin extends MapShape {
     this.on("mouseout", () => {
       this.fill("red");
     });
+
+    this.on("dragend",() => {
+      this.connectionLines.forEach(lineWrapper => {
+        console.log("pred",lineWrapper.line.points())
+        console.log("other",lineWrapper.otherShape)
+        let updatedPoints = [this.x(),this.y(),lineWrapper.otherShape.x(),lineWrapper.otherShape.y()]
+        lineWrapper.line.points(updatedPoints);
+        console.log("posle",lineWrapper.line.points())
+      })
+    })
 
     this.initText();
   }
@@ -61,10 +73,45 @@ export default class InfoPin extends MapShape {
     context.fillStrokeShape(shape);
   }
 
+  connectTo(shape){
+    let line = new Konva.Line({
+      points: [this.x(),this.y(),shape.x(),shape.y()],
+      stroke: "red",
+      strokeWidth: 2,
+      fill: "red",
+    })
+
+    let lineWrapper = {
+      line: line,
+      otherShape: shape
+    };
+
+    this.connectionLines.push(lineWrapper);
+
+    let lineWrapperSend = {
+      line: line,
+      otherShape: this
+    };
+
+    shape.addLine(lineWrapperSend);
+    this.layer.add(lineWrapper.line);
+  }
+
+  addLine(line){
+    this.connectionLines.push(line);
+  }
+
   loadInfo(attrs) {
     this.info.name = attrs.obj_name;
     this.info.selectedPins = attrs.connected_pins;
     this.info.description = attrs.description;
+  }
+
+  destroyShape() {
+    super.destroyShape();
+    if(this.info.selectedPins != null){
+
+    }
   }
 
   saveShapeDetails() {

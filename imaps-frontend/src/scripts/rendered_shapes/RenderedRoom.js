@@ -18,8 +18,8 @@ export default class RenderedRoom extends RenderedMapShape {
     });
 
     this.info.name = attrs.obj_name;
-    this.info.description = attrs.description;
     this.info.type = attrs.room_type;
+    this.info.description = attrs.description;
     this.class = "Room";
     this.textOffsetX = -50;
 
