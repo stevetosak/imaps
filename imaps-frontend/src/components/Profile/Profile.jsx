@@ -1,12 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import profile from "../../assets/person_icon.png";
 import styles from "./Profile.module.css";
+import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
 
 function Profile() {
-  const menus = ["Profile", "Settings", "Support", "Logout"];
+  const menus = ["My Maps", "Logout"];
+  const { username } = useContext(AuthContext); // Get username from AuthContext
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
   const imgRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -24,6 +28,16 @@ function Profile() {
     };
   }, []);
 
+  const handleMenuClick = (menu) => {
+    if (menu === "My Maps") {
+      navigate("/MyMaps");
+    } else if (menu === "Logout") {
+      localStorage.removeItem("token");
+      window.location.reload();
+    }
+    setOpen(false);
+  };
+
   return (
     <div className={styles.profileContainer}>
       <div className={styles.profileWrapper}>
@@ -36,9 +50,10 @@ function Profile() {
         />
         {open && (
           <div ref={menuRef} className={styles.dropdownMenu}>
+            <div className={styles.username}>{username}</div>
             <ul className={styles.menuList}>
               {menus.map((menu) => (
-                <li key={menu} onClick={() => setOpen(false)} className={styles.menuItem}>
+                <li key={menu} onClick={() => handleMenuClick(menu)} className={styles.menuItem}>
                   {menu}
                 </li>
               ))}
