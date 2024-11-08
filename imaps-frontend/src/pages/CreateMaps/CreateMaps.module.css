@@ -65,7 +65,7 @@ h1 {
   align-items: center;
   justify-content: center;
   color: #2c3e50;
-  background-color: #f5f5e6;
+  background-color: #fbaffe;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 15px;
   transition: all 300ms ease-in-out;
   padding: 10px;
@@ -157,6 +157,12 @@ h1 {
 h2 {
   font-size: 1.75rem;
   margin-bottom: 20px;
+  color: #333;
+}
+
+h3 {
+  margin-bottom: 20px;
+  text-align: start;
   color: #333;
 }
 

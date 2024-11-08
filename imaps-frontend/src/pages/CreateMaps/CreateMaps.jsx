@@ -3,13 +3,15 @@ import "react-tiles-dnd/esm/index.css";
 import { TilesContainer } from "react-tiles-dnd";
 import { Link } from "react-router-dom";
 import card from "../../assets/card-map.png";
-import {useContext, useEffect, useState} from "react";
+import { useContext, useEffect, useState } from "react";
 import HttpService from "../../scripts/net/HttpService.js";
 import MapDetailsModal from "../../components/Modals/CreateMapModal/CreateMapModal.jsx";
-import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
+import { AuthContext } from "../../components/AuthContext/AuthContext.jsx";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import edit_icon from "../../assets/edit_icon.png";
-import view_icon from "../../assets/view_icon.png";
+import edit_icon from "../../assets/edit_icon_black.png";
+import view_icon from "../../assets/view_icon_black.png";
+import Logo from "../../components/Logo/Logo.jsx";
+import Profile from "../../components/Profile/Profile.jsx";
 
 const loadedTiles = [];
 
@@ -88,6 +90,7 @@ export default function CreateMaps() {
         mapName: elem.name,
         cols: 1,
         rows: 1,
+        status: elem.status,
       }));
 
       setTiles(mapTiles);
@@ -104,11 +107,15 @@ export default function CreateMaps() {
     setTiles(loadedTiles.filter((tile) => tile.mapName.toLowerCase().includes(value)));
   };
 
+  const publicMaps = tiles.filter((tile) => tile.status === "PUBLIC");
+  const privateMaps = tiles.filter((tile) => tile.status === "PRIVATE");
+
   return (
     <>
       <div className={styles.container}>
         <h1>Your Maps</h1>
-        <p>{username}</p>
+        <Logo />
+        <Profile />
 
         <div className={styles.actionButtons}>
           <button className={styles.button} onClick={openCreateModal}>
@@ -128,13 +135,31 @@ export default function CreateMaps() {
           />
         </div>
 
+        <h3>Public Maps:</h3>
+        <hr />
         <TilesContainer
-          data={tiles}
+          data={publicMaps}
           renderTile={renderTile}
           tileSize={tileSize}
           forceTileWidth={150}
           forceTileHeight={170}
         />
+
+        <br />
+        <h3>Private Maps:</h3>
+        <hr />
+        <TilesContainer
+          data={privateMaps}
+          renderTile={renderTile}
+          tileSize={tileSize}
+          forceTileWidth={150}
+          forceTileHeight={170}
+        />
+
+        <br />
+        <h3>Pending Approval:</h3>
+        <button>PENDING APPROVAL TODO</button>
+        <hr />
       </div>
 
       <MapDetailsModal isOpen={isModalOpen} onClose={closeCreateModal} onSubmit={setMapDetails} />
