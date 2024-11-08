@@ -1,28 +1,22 @@
 PRIORITY HIGH
 
--Search (trim)
--Search suggestions
 -Linii za connections
--Multiple floor (Prerabotka na baza)
 -Filter na prostorii (Ke zemame od roomType modal)
-
-uste floors za view da imat.
-
+-Implementacija na stairs
 
 PRIORITY MEDIUM
 
--Modluarnost za pojke mapi (ne samo finkimap)
--Refactor na kod
--Implementacija na stairs
--Shape sho ke selektiras za klavanje da sejt celo vreme ko selektiran, duri ne kliknis drug shape ili escape.
--Nacin da znes dodeka crtas koi sobi ti se povrzani
--Ako kliknis na room vo view, da ta odnesit do toj room (navigacija);
+-Profile funkcionalno
+-Click Event Za soba na View so Highlight
+-Sredvenje MyMaps i BrowseMaps
+-Namesto sideBar da imat logo sho nosit do home
+-Draw izgled
 
+-History toska da popravit
 
 PRIORITY LOW
 
--Page za pregled na svoi mapi
--Refactor (Da se koristit net util klasa za pustanje do backend)
+-Link do view vo draw
+-Ako kliknis na room vo view, da ta odnesit do toj room (navigacija)
 -AutoSave na draw duri crtas (Da se pret update request do baza)
-
-
+-Cuvanje floor vo Room
