@@ -42,6 +42,8 @@ export default function InfoPinModal(props) {
         selectedPins: updatedPins,
       }));
 
+      props.map.drawConnection(formData.name,formData.selectedPin);
+
       return updatedPins;
     });
   };
