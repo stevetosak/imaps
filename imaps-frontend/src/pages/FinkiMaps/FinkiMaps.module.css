@@ -1,9 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap");
+
 .main {
   position: relative;
   width: 100vw;
-  height: 100vh; /* Full screen height */
-  overflow: hidden; /* Prevent scrolling */
-  background-color: white;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .toolbar {
@@ -12,11 +17,20 @@
   align-items: center;
   padding: 10px;
   position: absolute;
-  top: 0; /* Position toolbar at the top */
-  z-index: 10; /* Ensure the toolbar is above the map */
-  background-color: rgba(255, 255, 255, 1); /* Optional: translucent background */
-  backdrop-filter: blur(5px); /* Optional: blur effect */
-  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+  top: 0;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+  flex-wrap: wrap;
+}
+
+.toolbar h1 {
+  font-size: 3em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #333333;
+  font-family: "Oswald", sans-serif;
+  padding-right: 20px;
 }
 
 .left {
@@ -25,33 +39,33 @@
   padding-left: 10vw;
   display: flex;
   flex-direction: row;
-  align-items: flex-end; /* Align items at the bottom */
-  /* flex-wrap: nowrap; */
+  align-items: flex-end;
+  flex-wrap: nowrap;
   gap: 20px;
   padding-right: 100px;
-  height: 100%; /* Ensure the .left container takes full height of the parent */
+  height: 100%;
 }
 
 .right {
   position: absolute;
-  top: 1.2em; /* Positioned at the top-right in desktop */
-  right: 50px;
-  z-index: 10; /* Ensure the profile is floating over the map */
+  top: 1.2em;
+  right: 60px;
+  z-index: 10;
 }
 
 .mapContainer {
   position: relative;
-  top: 80px;
+  top: 0px;
   left: 0;
-  width: 100vw; /* Make the map fill the entire width of the screen */
-  height: 100vh; /* Make the map fill the entire height of the screen */
-  z-index: 1; /* Ensure the map is behind the toolbar */
-  background-color: beige; /* Set your map's background color */
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  background-color: beige;
 }
 
 .mapControlsContainer {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  z-index: 10; /* Ensure the map controls are above the map */
+  z-index: 10;
 }
