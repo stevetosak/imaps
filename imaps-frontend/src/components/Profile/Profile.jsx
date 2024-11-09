@@ -41,13 +41,9 @@ function Profile({ position = "fixed" }) {
   return (
     <div className={position === "fixed" ? styles.fixedProfileContainer : styles.inlineProfileContainer}>
       <div className={styles.profileWrapper}>
-        <img
-          onClick={() => setOpen(!open)}
-          src={profile}
-          alt="profile"
-          className={styles.profileImage}
-          ref={imgRef}
-        />
+        <div className={styles.profileIconContainer} onClick={() => setOpen(!open)}>
+          <img src={profile} alt="profile" className={styles.profileImage} ref={imgRef} />
+        </div>
         {open && (
           <div ref={menuRef} className={styles.dropdownMenu}>
             <div className={styles.username}>{username}</div>
