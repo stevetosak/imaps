@@ -1,212 +1,53 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import styles from "./InfoPinModal.module.css";
 import PropTypes from "prop-types";
 import {MapBuilder} from "../../../scripts/main/MapBuilder.js";
+import useModalState from "../Hooks/useModalState.jsx";
+import ModalNameField from "../Components/ModalNameField.jsx";
+import ModalSelectRoom from "../Components/ModalSelectRoom.jsx";
+import ModalSelectConnections from "../Components/ModalSelectConnections.jsx";
+import ModalDisplayConnections from "../Components/ModalDisplayConnections.jsx";
+import ModalDescriptionField from "../Components/ModalDescriptionField.jsx";
+import ModalSaveButton from "../Components/ModalSaveButton.jsx";
+import Modal from "../Components/Modal.jsx";
 
 export default function InfoPinModal({map}) {
-  const [modal, setModal] = useState(false);
-  const [pins, setPins] = useState([]);
-  const [room, setRoom] = useState(null);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    selectedPin: "",
-    availablePins: [],
-    selectedPins: [],
-  });
-
-  const toggleModal = () => {
-    if (modal) {
-      room.info = formData;
-      map.updateRoomNames();
-    }
-    setModal(!modal);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const addPinToList = () => {
-    if (!formData.selectedPin || pins.includes(formData.selectedPin)) return;
-
-    setPins((prevPins) => {
-      const updatedPins = [...prevPins, formData.selectedPin];
-
-      setFormData((prevFormData) => ({
-        ...prevFormData,
+    const [formData, setFormData] = useState({
+        name: "",
+        description: "",
         selectedPin: "",
-        selectedPins: updatedPins,
-      }));
-
-      map.drawConnection(formData.name,formData.selectedPin);
-
-      return updatedPins;
+        availablePins: [],
+        selectedPins: [],
     });
-  };
 
-  const removePinFromList = (pinToRemove) => {
-    setPins((prevPins) => {
-      const updatedPins = prevPins.filter((pin) => pin !== pinToRemove);
-
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        selectedPins: updatedPins,
-      }));
-
-      map.removeConnection(formData.name, pinToRemove);
-      return updatedPins;
-    });
-  };
-
-  const saveDetails = () => {
-    room.info = formData;
-    toggleModal();
-  };
-
-  useEffect(() => {
-    const openModalHandler = (event) => {
-      const roomObj = event.detail.room;
-
-      setRoom(roomObj);
-
-      // Populate formData and pins based on the room information
-      setFormData({
+    const getInitialFormData = (event, roomObj, savedPins) => ({
         name: roomObj.info.name || "", // Room name
         description: roomObj.info.description || "",
         selectedPin: "",
-        availablePins: event.detail.map.getConnections(),
+        availablePins: event.detail.map.getConnections() || [],
         selectedPins: roomObj.info.selectedPins,
-      });
+    })
 
-      setPins(roomObj.info.selectedPins || []); // Set the already connected pins
+    const {
+        modalState: {isOpen, toggleModal, saveDetails, updateModalData},
+        connectionsState: {connections, addPinToList, removePinFromList},
+    } = useModalState(formData, setFormData, map, getInitialFormData, 'openPinModalEvent');
 
-      setModal(true); // Open the modal
-      event.detail.map.updateConnections();
-    };
 
-    // Add event listener to open modal
-    window.addEventListener("openPinModalEvent", openModalHandler);
 
-    return () => {
-      // Cleanup the event listener when the component unmounts
-      window.removeEventListener("openPinModalEvent", openModalHandler);
-    };
-  }, []);
+    return (
+        <Modal isOpen={isOpen} toggleModal={toggleModal} title={"Enter Pin Details"}>
+            <ModalNameField formData={formData} updateModalData={updateModalData}/>
+            <ModalSelectConnections formData={formData} updateModalData={updateModalData} addPinToList={addPinToList}/>
+            <ModalDisplayConnections connections={connections} removePinFromList={removePinFromList}/>
+            <ModalDescriptionField updateModalData={updateModalData} formData={formData}/>
+            <ModalSaveButton saveDetails={saveDetails}/>
+        </Modal>
 
-  if (modal) {
-    document.body.classList.add(styles.activeModal);
-  } else {
-    document.body.classList.remove(styles.activeModal);
-  }
-
-  return (
-    <>
-      {/* <button onClick={toggleModal} className={styles.btnModal}>
-        Info Pin Modal
-      </button> */}
-
-      {modal && (
-        <div className={styles.modal}>
-          <div onClick={toggleModal} className={styles.overlay}></div>
-          <div className={styles.modalContent}>
-            <h2>Enter Pin Details</h2>
-            <form className={styles.form}>
-              <div className={styles.formGroup}>
-                <label htmlFor="name">Name:</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter the pin name"
-                  required
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="selectedPin">Select connections:</label>
-                <select
-                  id="selectedPin"
-                  name="selectedPin"
-                  value={formData.selectedPin}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="">Select Connection</option>
-                  {formData.availablePins
-                    .filter(
-                      (pin) =>
-                        formData.selectedPins.includes(pin.name) === false &&
-                        pin.name !== "" &&
-                        pin.name !== formData.name
-                    )
-                    .map((pin, index) => (
-                      <option key={index} value={pin.name}>
-                        {pin.name}
-                      </option>
-                    ))}
-                </select>
-                <button type="button" onClick={addPinToList} className={styles.addButton}>
-                  Add Connection
-                </button>
-              </div>
-
-              <h3>Connections:</h3>
-              <ul className={styles.pinList}>
-                {pins.length > 0 ? (
-                  pins.map((pin, index) => (
-                    <li key={index} className={styles.pinItem}>
-                      {pin}
-                      <button onClick={() => removePinFromList(pin)} className={styles.removeButton}>
-                        Remove
-                      </button>
-                    </li>
-                  ))
-                ) : (
-                  <li>No connections added</li>
-                )}
-              </ul>
-              <br />
-              <div className={styles.formGroup}>
-                <label htmlFor="description">Description:</label>
-                <textarea
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  rows="3"
-                  placeholder="Enter description for the pin"
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <button
-                  type="button"
-                  id="submit-details"
-                  onClick={saveDetails}
-                  className={styles.submitButton}
-                >
-                  Save
-                </button>
-              </div>
-            </form>
-            <button className={styles.closeModal} onClick={toggleModal}>
-              CLOSE
-            </button>
-          </div>
-        </div>
-      )}
-    </>
-  );
+    );
 }
 
 InfoPinModal.propTypes = {
-  map: PropTypes.objectOf(MapBuilder)
+    map: PropTypes.objectOf(MapBuilder)
 };
