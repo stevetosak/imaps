@@ -8,7 +8,8 @@ import DrawGuide from "../../components/DrawGuide/DrawGuide.jsx";
 import RoomTypeModal from "../../components/Modals/RoomTypeModal/RoomTypeModal.jsx";
 import InfoPinModal from "../../components/Modals/InfoPinModal/InfoPinModal.jsx";
 import SaveMap from "../../components/SaveMap/SaveMap.jsx";
-import logo from "../../assets/logo_icon.png";
+import Logo from "../../components/Logo/Logo.jsx";
+import logo_img from "../../assets/logo_icon.png";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Profile from "../../components/Profile/Profile.jsx";
 import { AuthContext } from "../../components/AuthContext/AuthContext.jsx";
@@ -114,59 +115,68 @@ function Draw() {
 
   return (
     <div className={styles.wrapper} id="wrapper">
-      <SideBar></SideBar>
+      {/* <SideBar></SideBar> */}
+      <Logo></Logo>
       <div id="container" className={styles.cont}></div>
       <div className={styles.panel}>
         <div className={styles.topPanelH}>
-          <Link to="/">
-            <img src={logo} alt="Finki Logo" className={styles.logo} />
-          </Link>
-          <Profile></Profile>
+          {/* <Link to="/">
+            <img src={logo_img} alt="Finki Logo" className={styles.logo_img} />
+          </Link> */}
+          <Profile position="inline"></Profile>
         </div>
-
-        <h1 className={styles.title}>Map Builder</h1>
+        <Link to={`/myMaps/${mapName}/View`} className={styles.titleLink}>
+          <h1 className={styles.title}>{mapName}</h1>
+        </Link>
         {/* <div id="fpscont" className={styles.fpscounter}>
           <p id="fpsCounter"></p>
         </div> */}
         <div className={styles.guideWrapper}>
           <DrawGuide />
         </div>
-        {
-          <div className={styles.floorSelector}>
-            <label htmlFor="floorSelect">Select Floor:</label>
-            <select
-              id="floorSelect"
-              value={searchParams.get("floor")}
-              onChange={handleFloorChange}
-              className={styles.floorDropdown}
-            >
-              {floors?.map((floor) => (
-                <option key={floor.floorNumber} value={floor.floorNumber}>
-                  Floor {floor.floorNumber}
-                </option>
-              ))}
-            </select>
-          </div>
-        }
-        <div>
+        <hr />
+        <br />
+        {/* {<h2 className={styles.paragraph}>Objects:</h2>} */}
+        <ul className={styles.shapeOptions} id="shapeOptions">
+          <li data-info="Entrance" className={`${styles.shapeOption} ${styles.entrance}`}></li>
+          <li data-info="Wall" className={`${styles.shapeOption} ${styles.wall}`} id="wall"></li>
+          <li data-info="Room" className={`${styles.shapeOption} ${styles.room}`} id="room"></li>
+          <li data-info="Stairs" className={`${styles.shapeOption} ${styles.stairs}`} id="stairs"></li>
+        </ul>
+        <RoomTypeModal map={app}></RoomTypeModal>
+        <br />
+        <hr />
+        <br />
+        <div className={styles.floorSection}>
+          <label htmlFor="floorSelect">Select Floor:</label>
+          <select
+            id="floorSelect"
+            value={searchParams.get("floor")}
+            onChange={handleFloorChange}
+            className={styles.floorDropdown}
+          >
+            {floors?.map((floor) => (
+              <option key={floor.floorNumber} value={floor.floorNumber}>
+                Floor {floor.floorNumber}
+              </option>
+            ))}
+          </select>
+
           <label htmlFor="newFloorInput">Add Floor:</label>
           <input
             type="number"
             id="newFloorInput"
             value={newFloorNumber}
             onChange={(e) => setNewFloorNumber(Number(e.target.value))}
+            className={styles.floorInput}
           />
-          <button onClick={addFloor}>Add Floor</button>
+          <button onClick={addFloor} className={styles.addFloorButton}>
+            Add Floor
+          </button>
         </div>
-        {<h2 className={styles.paragraph}>Objects:</h2>}
-        <ul className={styles.shapeOptions} id="shapeOptions">
-          <li data-info="Entrance" className={`${styles.shapeOption} ${styles.entrance}`}></li>
-          <li data-info="Wall" className={`${styles.shapeOption} ${styles.wall}`} id="wall"></li>
-          <li data-info="Room" className={`${styles.shapeOption} ${styles.room}`} id="room"></li>
-        </ul>
-        <br />
-        <RoomTypeModal map={app}></RoomTypeModal>
 
+        <hr />
+        <br />
         <div className={styles.templateCont}>
           <SaveMap submitHandler={handleSaveClick}></SaveMap>
           {/*<MapTemplateSelector loadHandler={handleLoadMapClick}></MapTemplateSelector>*/}
@@ -190,5 +200,4 @@ function Draw() {
     </div>
   );
 }
-
 export default Draw;
