@@ -3,6 +3,8 @@ import Konva from "konva";
 import HttpService from "../net/HttpService.js";
 import { zoomStage } from "../util/zoomStage.js";
 import {addEventHandling} from "../util/addEventHandling.js";
+import ConnectionGraph from "../util/ConnectionGraph.js";
+import {shape} from "prop-types";
 
 export class MapBuilder {
   constructor(containerId) {
@@ -25,6 +27,9 @@ export class MapBuilder {
     this.textLayer = new Konva.Layer();
     this.gridLayer.listening(false);
 
+    this.nodeConnections = new Map(); // map <nodeName, map<node,[]#connected nodes>>
+
+    this.connectionGraph = new ConnectionGraph();
 
     this.shapes = [];
     this.blockSize = 10;
@@ -242,6 +247,9 @@ export class MapBuilder {
     this.shapes.push(infoPin);
     this.mainLayer.add(infoPin)
     infoPin.displayName(this.textLayer);
+    this.connectionGraph.addNode(infoPin);
+
+    console.log("graph: ", this.connectionGraph.nodes)
     console.log(infoPin.name());
   }
 
@@ -282,6 +290,13 @@ export class MapBuilder {
     this.mainLayer.draw();
     placedObj.displayName(this.textLayer);
     placedObj.snapToGrid();
+
+
+
+    if(placedObj.type === "Entrance"){
+      console.log("placed obj type: " + placedObj.type)
+      this.connectionGraph.addNode(placedObj);
+    }
 
 
     if (!this.efficientDrawingMode) {
@@ -352,7 +367,12 @@ export class MapBuilder {
     if (e.key === "Delete") {
       this.mainTransformer.nodes().forEach((node) => {
         node.remove();
-        node.clearText();
+        node.destroyShape(this.connectionGraph);
+        this.shapes.filter(shape => shape.className === "InfoPin").forEach(pin => {
+          console.log(pin.info.name);
+          console.log(pin.info.selectedPins)
+
+        });
         this.shapes.splice(this.shapes.indexOf(node), 1);
       });
       this.mainTransformer.nodes([]);
@@ -504,8 +524,7 @@ export class MapBuilder {
       if (shape.className === "InfoPin" || shape.className === "Entrance") {
         shape.info.selectedPins.forEach((connectedShapeName) => {
           const connectedShape = this.shapes.find((s) => s.info.name === connectedShapeName);
-          if (
-            connectedShape &&
+          if (connectedShape &&
             (connectedShape.className === "InfoPin" || connectedShape.className === "Entrance")
           ) {
             if (!connectedShape.info.selectedPins.includes(shape.info.name)) {
@@ -515,6 +534,18 @@ export class MapBuilder {
         });
       }
     });
+  }
+
+  drawConnection(node1Name,node2Name){
+    let connections = this.shapes.filter(shape => shape.className === "InfoPin" || shape.className === "Entrance");
+    let node1 = connections.find(pin => pin.info.name === node1Name);
+    let node2 = connections.find(pin => pin.info.name === node2Name);
+
+    console.log("node1",node1,"node2",node2);
+
+    this.connectionGraph.addConnection(node1,node2);
+
+    console.log("Added connection: ")
   }
 
   removeConnection(from, to) {
@@ -536,7 +567,7 @@ export class MapBuilder {
 
   clearMap() {
     this.mainLayer.removeChildren();
-    this.shapes.forEach(shape => shape.clearText())
+    this.shapes.forEach(shape => shape.destroyShape())
     this.shapes = [];
     this.hoverObj = null;
   }
@@ -585,6 +616,18 @@ export class MapBuilder {
         this.shapes.push(loadedShape);
         addEventHandling(loadedShape,this,"dblclick");
       });
+
+      // TODO BRISENJE DA SA BRISAT LINES
+
+      let pins = this.shapes.filter(shape => shape.className === "InfoPin");
+      pins.forEach(pin => {
+        let connectedPins = pin.info.selectedPins;
+        if(connectedPins){
+          connectedPins.forEach(slPin => {
+            this.drawConnection(pin.info.name,slPin)
+          })
+        }
+      })
     }
 
     this.mainTransformer.nodes([]);

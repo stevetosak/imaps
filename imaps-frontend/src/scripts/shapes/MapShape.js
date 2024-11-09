@@ -15,6 +15,7 @@ export default class MapShape extends Konva.Shape {
         this._info = {};
         this.eventName = "";
         this.infoText = null;
+        // this.connectionLines = null;
 
         this.shadowForStrokeEnabled(false);
         this.on("mouseover", () => (document.body.style.cursor = "pointer"));
@@ -28,7 +29,7 @@ export default class MapShape extends Konva.Shape {
 
         if (snap) {
             this.on("dragend", this.snapToGrid.bind(this));
-            this.on('dblclick', this.snapToGrid.bind(this))
+            this.on('dblclick', this.snapToGrid.bind(this));
         }
 
         this.on("transform", () => {
@@ -37,7 +38,8 @@ export default class MapShape extends Konva.Shape {
             this.strokeWidth(1 / Math.max(scaleX, scaleY));
         });
 
-        this.on('dragend', () => {
+
+        this.on('dragmove', () => {
             if (this.infoText) {
                 this.updateTextPosition();
             }
@@ -77,6 +79,16 @@ export default class MapShape extends Konva.Shape {
         }
     }
 
+    destroyShape() {
+        if (this.infoText !== null) {
+            this.infoText.remove()
+            console.log("cleared text")
+        }
+        // if(this.connectionLines != null){
+        //     this.connectionLines.forEach(lineWrapper => lineWrapper.line.remove());
+        // }
+    }
+
     _sceneFunc(context) {
         let width = this.width();
         let height = this.height();
@@ -95,15 +107,11 @@ export default class MapShape extends Konva.Shape {
     }
 
     snapToGrid() {
-
-        console.log("pos in snap",this.position())
-        console.log("bl size",this.blockSize)
         this.position({
             x: Math.round(this.x() / this.blockSize) * this.blockSize,
             y: Math.round(this.y() / this.blockSize) * this.blockSize,
         });
 
-        console.log("pos after snap",this.position())
     }
 
     saveShapeDetails() {

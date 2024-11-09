@@ -71,7 +71,6 @@ export class MapDisplay {
     }
 
     displayRoomNames() {
-        console.log("VLEZE");
         this.shapes.forEach((shape) => {
             shape.displayName(this.textLayer);
         });
