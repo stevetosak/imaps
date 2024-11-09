@@ -2,16 +2,16 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import React, { useContext, useEffect, useState } from "react";
 import { MapDisplay } from "../../scripts/main/MapDisplay.js";
 import styles from "./MapView.module.css";
-import SideBar from "../SideBar/SideBar.jsx";
-import SearchBar from "../SearchBar/SearchBar.jsx";
-import FilterBar from "../FilterBar/FilterBar.jsx";
-import Profile from "../Profile/Profile.jsx";
-import MapControls from "../MapControls/MapControls.jsx";
-import { AuthContext } from "../AuthContext/AuthContext.jsx";
-import RoomInfoPanel from "../RoomInfoPanel/RoomInfoPanel.jsx";
+import SideBar from "../../components/SideBar/SideBar.jsx";
+import SearchBar from "../../components/SearchBar/SearchBar.jsx";
+import FilterBar from "../../components/FilterBar/FilterBar.jsx";
+import Profile from "../../components/Profile/Profile.jsx";
+import MapControls from "../../components/MapControls/MapControls.jsx";
+import { AuthContext } from "../../components/AuthContext/AuthContext.jsx";
+import RoomInfoPanel from "../../components/RoomInfoPanel/RoomInfoPanel.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
 import floorIcon from "../../assets/floor_icon.png";
-import Logo from "../Logo/Logo.jsx";
+import Logo from "../../components/Logo/Logo.jsx";
 
 const MapView = ({ isPrivate }) => {
   const { mapName } = useParams();
@@ -24,6 +24,12 @@ const MapView = ({ isPrivate }) => {
   const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // const  {
+  //   mapName,
+  //   username,
+  //   mapLoaded
+  // } = useMapViewHook()
 
   const selectedRoom = {
     id: 1,

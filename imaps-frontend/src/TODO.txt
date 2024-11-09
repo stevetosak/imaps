@@ -7,6 +7,7 @@ PRIORITY HIGH
 PRIORITY MEDIUM
 
 -Profile funkcionalno
+-Stairs da se dodavat avtomatski bez potreba za refresh
 -Click Event Za soba na View so Highlight
 -Sredvenje MyMaps i BrowseMaps
 -Namesto sideBar da imat logo sho nosit do home
