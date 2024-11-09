@@ -20,14 +20,16 @@ export default class MapNode extends MapShape{
         })
     }
 
-
     connect(node){
         let line = new Konva.Line({
             points: [this.x(),this.y(),node.x(),node.y()],
-            stroke: "red",
+            stroke: "#f80d38",
+            dash: [2,3],
             strokeWidth: 2,
-            fill: "red",
-        })
+            lineCap: 'round',
+            lineJoin: 'miter',
+            opacity: 0.8
+        });
 
         let lineWrapper = {
             line: line,
