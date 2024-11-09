@@ -11,7 +11,7 @@ export default class InfoPin extends MapNode {
         radiusX: attrs.blockSize * 0.5,
         radiusY: attrs.blockSize * 0.7,
         tailHeight: attrs.blockSize * 1.2,
-        fill: "#f84c0d",
+        fill: "#FFD700",
         stroke: "#1b1b1b",
         strokeWidth: 1,
         draggable: true,
@@ -35,10 +35,10 @@ export default class InfoPin extends MapNode {
     };
 
     this.on("mouseover", () => {
-      this.fill("#f6cd00");
+      this.fill("#f60000");
     });
     this.on("mouseout", () => {
-      this.fill("#f84c0d");
+      this.fill("#FFD700");
     });
 
 

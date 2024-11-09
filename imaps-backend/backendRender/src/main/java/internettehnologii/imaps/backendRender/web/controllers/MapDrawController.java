@@ -48,6 +48,7 @@ public class MapDrawController {
             f.setMapData(jsonMapData);
             floorService.updateFloor(f);
 
+
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.out.println(e.getMessage());

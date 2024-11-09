@@ -20,12 +20,15 @@ export default class MapShape extends Konva.Shape {
         this.shadowForStrokeEnabled(false);
         this.on("mouseover", () => (document.body.style.cursor = "pointer"));
         this.on("mouseout", () => (document.body.style.cursor = "default"));
-        // this.on("dblclick", (e) => {
-        //   this.moveToTop();
-        //   this.getLayer()
-        //     .find("Transformer")
-        //     .forEach((t) => t.moveToTop());
-        // });
+        this.on("click", (e) => {
+            if(e.evt.altKey){
+                this.moveToTop();
+                this.getLayer()
+                    .find("Transformer")
+                    .forEach((t) => t.moveToTop());
+            }
+
+        });
 
         if (snap) {
             this.on("dragend", this.snapToGrid.bind(this));

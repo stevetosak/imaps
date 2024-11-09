@@ -25,11 +25,6 @@ const MapView = ({ isPrivate }) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // const  {
-  //   mapName,
-  //   username,
-  //   mapLoaded
-  // } = useMapViewHook()
 
   const selectedRoom = {
     id: 1,
@@ -51,7 +46,9 @@ const MapView = ({ isPrivate }) => {
       .then(() => {
         setApp(appInstance);
         setMapLoaded(true);
-        loadFloors();
+        loadFloors()
+            .then(fs => console.log("loaded floors; " + fs))
+            .catch(reason => console.log("error loading floors: " + reason))
         console.log(mapName);
       })
       .catch((reason) => {
@@ -64,8 +61,9 @@ const MapView = ({ isPrivate }) => {
     const httpService = new HttpService();
 
     try {
-      const resp = await httpService.get(`/public/floors/load`);
+      const resp = await httpService.get(`/public/floors/get`);
       setFloors(resp);
+      return resp;
     } catch (error) {
       console.error("Error loading floors:", error);
     }
