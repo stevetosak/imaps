@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import profile from "../../assets/person_icon.png";
 import styles from "./Profile.module.css";
-import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
+import { AuthContext } from "../../components/AuthContext/AuthContext.jsx";
 
-function Profile() {
+function Profile({ position = "fixed" }) {
   const menus = ["My Maps", "Logout"];
   const { username } = useContext(AuthContext); // Get username from AuthContext
   const [open, setOpen] = useState(false);
@@ -39,7 +39,7 @@ function Profile() {
   };
 
   return (
-    <div className={styles.profileContainer}>
+    <div className={position === "fixed" ? styles.fixedProfileContainer : styles.inlineProfileContainer}>
       <div className={styles.profileWrapper}>
         <img
           onClick={() => setOpen(!open)}
