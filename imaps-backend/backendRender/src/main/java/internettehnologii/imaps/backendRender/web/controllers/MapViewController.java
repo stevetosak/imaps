@@ -39,8 +39,8 @@ public class MapViewController {
 
 
     @GetMapping("/public/maps/display")
-    public ResponseEntity<List<IndoorMap>> loadPublicMaps(){
-        try{
+    public ResponseEntity<List<IndoorMap>> loadPublicMaps() {
+        try {
             List<IndoorMap> publicMaps = mapService.getPublicMaps();
             return ResponseEntity.ok(publicMaps);
         } catch (Exception e) {
@@ -48,6 +48,7 @@ public class MapViewController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
     @GetMapping("/public/navigate")
     public ResponseEntity<List<MapNode>> navigate(@RequestParam String from, @RequestParam String to) {
 
@@ -69,8 +70,8 @@ public class MapViewController {
     }
 
     @GetMapping("/public/map-data")
-    public ResponseEntity<Floor> getMapData(@RequestParam String mapName,@RequestParam int floorNum) {
-        try{
+    public ResponseEntity<Floor> getMapData(@RequestParam String mapName, @RequestParam int floorNum) {
+        try {
             this.floors = floorService.getAllPublicFloors(mapName);
             this.currentFloor = getFloorByNum(floorNum);
             this.loadGraph(currentFloor.getMapData().getJsonData());
@@ -83,18 +84,15 @@ public class MapViewController {
     }
 
     @GetMapping("/protected/map-data")
-    public ResponseEntity<Floor> getMapDataProtected(@RequestParam String mapName,@RequestParam String username, @RequestParam int floorNum) {
-        try{
-            if(!loaded){
-                IndoorMap map = mapService.getMapForUser(username, mapName); // namesto ova samo proverka dali postoet dadena mapa za user, za da ne morat za dzabe mapa promenliva da se cuvat
-                this.floors = floorService.getAllFloorsForMap(mapName);
-                JsonMapData mapData = currentFloor.getMapData();
-                if(mapData != null) {
-                    this.loadGraph(currentFloor.getMapData().getJsonData());
-                }
-                loaded = true;
+    public ResponseEntity<Floor> getMapDataProtected(@RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
+        try {
+            IndoorMap map = mapService.getMapForUser(username, mapName); // namesto ova samo proverka dali postoet dadena mapa za user, za da ne morat za dzabe mapa promenliva da se cuvat
+            this.floors = floorService.getAllFloorsForMap(mapName);
+            JsonMapData mapData = currentFloor.getMapData();
+            if (mapData != null) {
+                this.loadGraph(currentFloor.getMapData().getJsonData());
+                System.out.println("graph loaded ==============================================");
             }
-
             this.currentFloor = getFloorByNum(floorNum);
             System.out.println("Current floor: " + currentFloor);
             return ResponseEntity.ok(currentFloor);
@@ -106,36 +104,37 @@ public class MapViewController {
     }
 
 
-
     @GetMapping("/public/load-floor")
     public ResponseEntity<Floor> loadFloor(@RequestParam int floorNum) {
-        try{
+        try {
             Floor floor = getFloorByNum(floorNum);
             currentFloor = floor;
             return ResponseEntity.ok(floor);
-        }
-        catch (FloorNotFoundException e) {
+        } catch (FloorNotFoundException e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-    @GetMapping("/public/floors/load")
+
+    @GetMapping("/public/floors/get")
     public ResponseEntity<List<Floor>> getFloors() {
         return ResponseEntity.ok(floors);
     }
 
-    private Floor getFloorByNum(int num){
-        for(Floor floor : floors){
-            if(floor.getFloorNumber() == num){
+    @GetMapping("public/")
+
+    private Floor getFloorByNum(int num) {
+        for (Floor floor : floors) {
+            if (floor.getFloorNumber() == num) {
                 return floor;
             }
         }
         throw new FloorNotFoundException("Floor: " + num + " not found.\n:");
     }
 
-    private void loadGraph(String mapData){
-        if(mapData == null || mapData.isEmpty()) return;
+    private void loadGraph(String mapData) {
+        if (mapData == null || mapData.isEmpty()) return;
 
         try {
             MapNodeParser parser = new MapNodeParser();

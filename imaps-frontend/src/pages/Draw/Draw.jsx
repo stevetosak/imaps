@@ -97,7 +97,7 @@ function Draw() {
 
   const handleSaveClick = async () => {
     const resp = await app
-      .saveMap(mapName, username, selectedFloor)
+      .saveMap(mapName, username, searchParams.get("floor"))
       .then((r) => {
         setIsPopupVisible(true);
 
