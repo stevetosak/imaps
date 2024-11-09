@@ -11,7 +11,7 @@ import Error from "./pages/Error/Error";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import "./App.css";
 import HttpService from "./scripts/net/HttpService";
-import MapView from "./components/MapView/MapView.jsx";
+import MapView from "./pages/MapView/MapView.jsx";
 import CreateMaps from "./pages/CreateMaps/CreateMaps.jsx";
 import {AuthContext, AuthProvider} from "./components/AuthContext/AuthContext.jsx";
 

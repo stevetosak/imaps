@@ -5,6 +5,7 @@
   margin: 0px auto;
   max-width: 600px;
   width: 100%;
+  padding: 10px;
 }
 
 .searchBar,
@@ -31,6 +32,7 @@
   margin-right: 10px;
   min-width: 0;
   position: relative;
+  margin-bottom: 0;
 }
 
 .dropdown {
@@ -86,7 +88,6 @@
 }
 
 .directionsContainer {
-  flex-direction: column;
   gap: 10px;
 }
 

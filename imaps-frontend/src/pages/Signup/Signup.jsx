@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import illustration from "../../assets/illustration_img.png";
 import styles from "./Signup.module.css";
+import Logo from "../../components/Logo/Logo";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -53,6 +54,7 @@ export default function Signup() {
 
   return (
     <div className={styles.wrapper}>
+      <Logo></Logo>
       <div className={styles.illustration}>
         <img src={illustration} alt="illustration" />
       </div>

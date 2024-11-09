@@ -1,8 +1,9 @@
-import React, {useContext, useState} from "react";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 import illustration from "../../assets/illustration_img.png";
-import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
+import { AuthContext } from "../../components/AuthContext/AuthContext.jsx";
+import Logo from "../../components/Logo/Logo.jsx";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -17,7 +18,7 @@ const LoginPage = () => {
 
   const payload = {
     username: username,
-    password: password
+    password: password,
   };
 
   const login = (e) => {
@@ -32,14 +33,14 @@ const LoginPage = () => {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Login failed: resp = " + response.statusText); 
+          throw new Error("Login failed: resp = " + response.statusText);
         }
         return response.json();
       })
       .then((data) => {
         if (data.token) {
-          navigate(targetPath)
-          handleLogin(data)
+          navigate(targetPath);
+          handleLogin(data);
         } else {
           setError("Invalid username or password.");
         }
@@ -48,11 +49,11 @@ const LoginPage = () => {
         console.error("Login failed", error);
         setError("Login failed. Please try again.");
       });
-    
   };
 
   return (
     <div className={styles.wrapper}>
+      <Logo></Logo>
       <div className={styles.illustration}>
         <img src={illustration} alt="illustration" />
       </div>

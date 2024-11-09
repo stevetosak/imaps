@@ -1,45 +1,53 @@
-img:hover,
-.menuItem:hover {
+.fixedProfileContainer {
+  position: fixed;
+  top: 20px;
+  right: 80px;
+  z-index: 1000;
+}
+
+.inlineProfileContainer {
+  display: inline-block;
   cursor: pointer;
 }
 
-.menuList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  text-align: center;
-}
-
-.profileContainer {
-  display: flex;
-  justify-content: center;
-}
-
 .profileWrapper {
-  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
 .profileImage {
-  height: 48px;
-  width: 48px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  /* border: 4px solid #d1d5db; */
-  object-fit: cover;
+  transition: box-shadow 0.3s ease;
 }
 
-/* Dropdown Menu */
+.profileImage:hover {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 .dropdownMenu {
   position: absolute;
-  top: 50px; /* Adjust according to image size and spacing */
-  left: 50%;
-  transform: translateX(-50%); /* Center the menu below the image */
-  width: 13rem;
-  background-color: white;
-  padding: 1rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  top: 70px;
+  right: 25px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 12px;
+  width: 180px;
+  transition: opacity 0.3s ease;
+  opacity: 1;
 }
 
-/* Menu List and Items */
+.username {
+  padding: 10px 0;
+  font-weight: 600;
+  text-align: center;
+  color: #333;
+  border-bottom: 1px solid #eee;
+}
+
 .menuList {
   list-style-type: none;
   padding: 0;
@@ -48,11 +56,15 @@ img:hover,
 
 .menuItem {
   padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
   text-align: center;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+  color: #333;
+  font-weight: 500;
+  border-radius: 8px;
 }
 
 .menuItem:hover {
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
+  color: #007bff; /* Optional: Adds a blue highlight on hover */
 }
