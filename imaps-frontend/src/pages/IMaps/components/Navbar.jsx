@@ -1,8 +1,10 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button } from "./Button";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
-import logo from "../../../assets/logo_icon.png";
+import logo_icon from "../../../assets/logo_icon.png";
+import { AuthContext } from "../../../components/AuthContext/AuthContext";
+import Logo from "../../../components/Logo/Logo.jsx";
 
 function Navbar() {
   const [click, setClick] = useState(false);
@@ -11,7 +13,7 @@ function Navbar() {
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
-  const {isAuthenticated} = useContext(AuthContext)
+  const { isAuthenticated } = useContext(AuthContext);
 
   const showButton = () => {
     if (window.innerWidth <= 960) {
