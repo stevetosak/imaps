@@ -69,10 +69,10 @@ public class MapViewController {
     }
 
     @GetMapping("/public/map-data")
-    public ResponseEntity<Floor> getMapData(@RequestParam String mapName) {
+    public ResponseEntity<Floor> getMapData(@RequestParam String mapName,@RequestParam int floorNum) {
         try{
             this.floors = floorService.getAllPublicFloors(mapName);
-            this.currentFloor = getFloorByNum(0);
+            this.currentFloor = getFloorByNum(floorNum);
             this.loadGraph(currentFloor.getMapData().getJsonData());
             return ResponseEntity.ok(currentFloor);
         } catch (EmptyMapException e) {
@@ -96,6 +96,7 @@ public class MapViewController {
             }
 
             this.currentFloor = getFloorByNum(floorNum);
+            System.out.println("Current floor: " + currentFloor);
             return ResponseEntity.ok(currentFloor);
         } catch (Exception e) {
             e.printStackTrace();

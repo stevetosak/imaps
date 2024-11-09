@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import styles from "./InfoPinModal.module.css"; // Reusing the same styles
+import styles from "./InfoPinModal.module.css";
+import PropTypes from "prop-types";
+import {MapBuilder} from "../../../scripts/main/MapBuilder.js";
 
-export default function InfoPinModal(props) {
+export default function InfoPinModal({map}) {
   const [modal, setModal] = useState(false);
   const [pins, setPins] = useState([]);
   const [room, setRoom] = useState(null);
@@ -17,7 +19,7 @@ export default function InfoPinModal(props) {
   const toggleModal = () => {
     if (modal) {
       room.info = formData;
-      props.map.updateRoomNames();
+      map.updateRoomNames();
     }
     setModal(!modal);
   };
@@ -42,7 +44,7 @@ export default function InfoPinModal(props) {
         selectedPins: updatedPins,
       }));
 
-      props.map.drawConnection(formData.name,formData.selectedPin);
+      map.drawConnection(formData.name,formData.selectedPin);
 
       return updatedPins;
     });
@@ -57,7 +59,7 @@ export default function InfoPinModal(props) {
         selectedPins: updatedPins,
       }));
 
-      props.map.removeConnection(formData.name, pinToRemove);
+      map.removeConnection(formData.name, pinToRemove);
       return updatedPins;
     });
   };
@@ -141,9 +143,9 @@ export default function InfoPinModal(props) {
                   {formData.availablePins
                     .filter(
                       (pin) =>
-                        formData.selectedPins.includes(pin.name) == false &&
-                        pin.name != "" &&
-                        pin.name != formData.name
+                        formData.selectedPins.includes(pin.name) === false &&
+                        pin.name !== "" &&
+                        pin.name !== formData.name
                     )
                     .map((pin, index) => (
                       <option key={index} value={pin.name}>
@@ -204,3 +206,7 @@ export default function InfoPinModal(props) {
     </>
   );
 }
+
+InfoPinModal.propTypes = {
+  map: PropTypes.objectOf(MapBuilder)
+};

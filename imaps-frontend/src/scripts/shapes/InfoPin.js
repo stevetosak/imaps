@@ -1,10 +1,8 @@
-import Konva from "konva";
-import MapShape from "./MapShape";
-import Factory from "../util/Factory";
-import { _registerNode } from "konva/lib/Global";
-export default class InfoPin extends MapShape {
-  constructor(attrs,id) {
 
+import { _registerNode } from "konva/lib/Global";
+import MapNode from "./MapNode.js";
+export default class InfoPin extends MapNode {
+  constructor(attrs,id) {
     attrs.snap = false;
     super(
       {
@@ -25,7 +23,6 @@ export default class InfoPin extends MapShape {
     );
 
     this.id = id;
-
     this.eventName = "openPinModalEvent";
 
     this.connectionLines = [];
@@ -44,15 +41,15 @@ export default class InfoPin extends MapShape {
       this.fill("red");
     });
 
-    this.on("dragend",() => {
-      this.connectionLines.forEach(lineWrapper => {
-        console.log("pred",lineWrapper.line.points())
-        console.log("other",lineWrapper.otherShape)
-        let updatedPoints = [this.x(),this.y(),lineWrapper.otherShape.x(),lineWrapper.otherShape.y()]
-        lineWrapper.line.points(updatedPoints);
-        console.log("posle",lineWrapper.line.points())
-      })
-    })
+    // this.on("dragmove",() => {
+    //   this.connectionLines.forEach(lineWrapper => {
+    //     console.log("pred",lineWrapper.line.points())
+    //     console.log("other",lineWrapper.otherShape)
+    //     let updatedPoints = [this.x(),this.y(),lineWrapper.otherShape.x(),lineWrapper.otherShape.y()]
+    //     lineWrapper.line.points(updatedPoints);
+    //     console.log("posle",lineWrapper.line.points())
+    //   })
+    // })
 
     this.initText();
   }
@@ -73,33 +70,33 @@ export default class InfoPin extends MapShape {
     context.fillStrokeShape(shape);
   }
 
-  connectTo(shape){
-    let line = new Konva.Line({
-      points: [this.x(),this.y(),shape.x(),shape.y()],
-      stroke: "red",
-      strokeWidth: 2,
-      fill: "red",
-    })
+  // connectTo(shape){
+  //   let line = new Konva.Line({
+  //     points: [this.x(),this.y(),shape.x(),shape.y()],
+  //     stroke: "red",
+  //     strokeWidth: 2,
+  //     fill: "red",
+  //   })
+  //
+  //   let lineWrapper = {
+  //     line: line,
+  //     otherShape: shape
+  //   };
+  //
+  //   this.connectionLines.push(lineWrapper);
+  //
+  //   let lineWrapperSend = {
+  //     line: line,
+  //     otherShape: this
+  //   };
+  //
+  //   shape.addLine(lineWrapperSend);
+  //   this.layer.add(lineWrapper.line);
+  // }
 
-    let lineWrapper = {
-      line: line,
-      otherShape: shape
-    };
-
-    this.connectionLines.push(lineWrapper);
-
-    let lineWrapperSend = {
-      line: line,
-      otherShape: this
-    };
-
-    shape.addLine(lineWrapperSend);
-    this.layer.add(lineWrapper.line);
-  }
-
-  addLine(line){
-    this.connectionLines.push(line);
-  }
+  // addLine(line){
+  //   this.connectionLines.push(line);
+  // }
 
   loadInfo(attrs) {
     this.info.name = attrs.obj_name;
@@ -107,12 +104,9 @@ export default class InfoPin extends MapShape {
     this.info.description = attrs.description;
   }
 
-  destroyShape() {
-    super.destroyShape();
-    if(this.info.selectedPins != null){
-
-    }
-  }
+  // destroyShape(graph = null) {
+  //   super.destroyShape();
+  // }
 
   saveShapeDetails() {
     this.setAttr("obj_name", this.info.name);

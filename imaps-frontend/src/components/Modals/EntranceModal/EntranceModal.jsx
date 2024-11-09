@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styles from "./EntranceModal.module.css";
+import PropTypes from "prop-types";
+import {MapBuilder} from "../../../scripts/main/MapBuilder.js";
 
-export default function EntranceModal(props) {
+export default function EntranceModal({map}) {
   const [modal, setModal] = useState(false);
   const [room, setRoom] = useState(null);
   const [pins, setPins] = useState([]);
@@ -20,7 +22,7 @@ export default function EntranceModal(props) {
   const toggleModal = () => {
     if (modal) {
       room.info = formData;
-      props.map.updateRoomNames();
+      map.updateRoomNames();
       console.log("Se vikna");
     }
     setModal(!modal);
@@ -48,6 +50,8 @@ export default function EntranceModal(props) {
         selectedPins: updatedPins,
       }));
 
+      console.log(formData.name,formData.selectedPin,"TEST")
+      map.drawConnection(formData.name,formData.selectedPin);
       return updatedPins;
     });
   };
@@ -61,7 +65,7 @@ export default function EntranceModal(props) {
       }));
       return updatedPins;
     });
-    props.map.removeConnection(formData.name, pinToRemove);
+    map.removeConnection(formData.name, pinToRemove);
   };
 
   const saveDetails = () => {
@@ -246,3 +250,7 @@ export default function EntranceModal(props) {
     </>
   );
 }
+
+EntranceModal.propTypes = {
+  map: PropTypes.objectOf(MapBuilder)
+};
