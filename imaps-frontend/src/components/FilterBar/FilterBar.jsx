@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styles from "./FilterBar.module.css";
 
-function FilterBar(props) {
+export default function FilterBar(props) {
   const [roomTypes, setRoomTypes] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
 
@@ -12,10 +12,10 @@ function FilterBar(props) {
     }
   }, [props.map]);
 
-  const filterLocation = (category) => {
+  const filterLocation = useCallback((category) => {
     console.log(`Filter locations by: ${category}`);
     setSelectedCategory(category);
-  };
+  },[])
 
   return (
     <div className={styles.wrapper}>
@@ -41,4 +41,3 @@ function FilterBar(props) {
   );
 }
 
-export default FilterBar;
