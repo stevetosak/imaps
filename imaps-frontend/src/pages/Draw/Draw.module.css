@@ -3,14 +3,14 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
   background-color: #141414;
 }
 
 .topPanelH {
   width: 100%;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   margin-bottom: 20px;
 }
@@ -20,19 +20,30 @@ body {
 }
 
 .title {
-  margin-top: 20px;
-  color: #804047;
-  font-size: 120%;
+  text-align: center;
+  font-size: 3em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #333333;
+  font-family: "Oswald", sans-serif;
+  margin-bottom: 0;
+  text-decoration: none;
+}
+
+.titleLink {
+  text-decoration: none;
 }
 
 .paragraph {
   color: #cccccc;
 }
+
 .guideWrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0;
+  width: 100%;
 }
 
 .wrapper {
@@ -56,6 +67,7 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center; /* Center elements horizontally */
   padding: 20px;
   background-color: #1c1c1c;
   color: #ffffff;
@@ -63,19 +75,17 @@ body {
   box-sizing: border-box;
   margin-right: 10px;
   border-radius: 20px;
+  overflow-x: hidden;
 }
 
 .buttonContainer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-top: 2rem;
   gap: 10px;
+  width: 100%;
 }
-
-/* .hide {
-  visibility: hidden;
-} */
 
 .renderButton {
   width: 100%;
@@ -109,10 +119,11 @@ body {
 .shapeOptions {
   list-style: none;
   padding: 0;
-  margin: 0 0;
-  display: flex;
-  flex-direction: column;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 15px;
+  justify-items: center;
   align-items: center;
 }
 
@@ -132,42 +143,53 @@ body {
   transition: background-color 0.3s, border-color 0.3s;
 }
 
-.templateCont {
-  display: flex;
-  flex-direction: column;
-}
-
 .shapeOption:hover {
   background-color: #94183b;
   border-color: #94183b;
 }
 
+.templateCont {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center section horizontally */
+  width: 100%;
+}
+
 .fpscounter {
   border: 1px solid #00b822;
   margin: 20px 0;
+  text-align: center;
+  width: 100%;
 }
 
 .fpscounter p {
   color: #00740c;
   font-weight: bold;
-  text-align: center;
   margin: 0;
   padding: 5px 0;
 }
 
-.floorSelector {
+.floorSection {
   margin-bottom: 20px;
+  padding: 12px;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  color: #ffffff;
+  gap: 10px;
 }
 
-.floorSelector label {
+.floorSection label {
   font-size: 14px;
+  color: #ffffff;
+  font-weight: bold;
 }
 
-.floorDropdown {
+.floorDropdown,
+.floorInput {
   padding: 8px;
   font-size: 14px;
   border-radius: 5px;
@@ -176,12 +198,31 @@ body {
   color: #ffffff;
   cursor: pointer;
   width: 100%;
+  box-sizing: border-box;
+  text-align: center;
   transition: border-color 0.3s;
 }
 
-.floorDropdown:focus {
+.floorDropdown:focus,
+.floorInput:focus {
   outline: none;
   border-color: #1e90ff;
+}
+
+.addFloorButton {
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  background-color: #e67e22;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.addFloorButton:hover {
+  background-color: #d2691e;
 }
 
 .popup {
@@ -230,4 +271,7 @@ body {
 
 .room {
   background-image: url("./shapeImages/room_icon.png");
+}
+.stairs {
+  background-image: url("./shapeImages/stairs_icon.png");
 }
