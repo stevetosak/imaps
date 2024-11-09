@@ -6,6 +6,7 @@ PRIORITY HIGH
 
 PRIORITY MEDIUM
 
+-Detach event na draw (keys: e, r)
 -Profile funkcionalno
 -Stairs da se dodavat avtomatski bez potreba za refresh
 -Click Event Za soba na View so Highlight
