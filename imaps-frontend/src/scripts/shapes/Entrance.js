@@ -1,7 +1,6 @@
-import Konva from "konva";
-import MapShape from "./MapShape";
 import { _registerNode } from "konva/lib/Global";
-export default class Entrance extends MapShape {
+import MapNode from "./MapNode.js";
+export default class Entrance extends MapNode {
 
   constructor(attrs,id) {
 
@@ -30,6 +29,7 @@ export default class Entrance extends MapShape {
     this.type = "Entrance";
     this.eventName = "openEntranceModalEvent";
 
+
     this.id = id;
 
     this._info = {
@@ -44,7 +44,7 @@ export default class Entrance extends MapShape {
     this.initText();
   }
 
-  loadInfo(attrs) {
+    loadInfo(attrs) {
     this.info.name = attrs.obj_name;
     this.info.connectedRoom = attrs.connected_room;
     this.info.description = attrs.description;

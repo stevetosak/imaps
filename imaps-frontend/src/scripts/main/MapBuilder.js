@@ -4,6 +4,7 @@ import HttpService from "../net/HttpService.js";
 import { zoomStage } from "../util/zoomStage.js";
 import {addEventHandling} from "../util/addEventHandling.js";
 import ConnectionGraph from "../util/ConnectionGraph.js";
+import {shape} from "prop-types";
 
 export class MapBuilder {
   constructor(containerId) {
@@ -25,6 +26,8 @@ export class MapBuilder {
     this.infoPinLayer = new Konva.Layer();
     this.textLayer = new Konva.Layer();
     this.gridLayer.listening(false);
+
+    this.nodeConnections = new Map(); // map <nodeName, map<node,[]#connected nodes>>
 
     this.connectionGraph = new ConnectionGraph();
 
@@ -289,6 +292,13 @@ export class MapBuilder {
     placedObj.snapToGrid();
 
 
+
+    if(placedObj.type === "Entrance"){
+      console.log("placed obj type: " + placedObj.type)
+      this.connectionGraph.addNode(placedObj);
+    }
+
+
     if (!this.efficientDrawingMode) {
       this.stopDrawing();
     }
@@ -357,7 +367,12 @@ export class MapBuilder {
     if (e.key === "Delete") {
       this.mainTransformer.nodes().forEach((node) => {
         node.remove();
-        node.destroyShape();
+        node.destroyShape(this.connectionGraph);
+        this.shapes.filter(shape => shape.className === "InfoPin").forEach(pin => {
+          console.log(pin.info.name);
+          console.log(pin.info.selectedPins)
+
+        });
         this.shapes.splice(this.shapes.indexOf(node), 1);
       });
       this.mainTransformer.nodes([]);
@@ -509,8 +524,7 @@ export class MapBuilder {
       if (shape.className === "InfoPin" || shape.className === "Entrance") {
         shape.info.selectedPins.forEach((connectedShapeName) => {
           const connectedShape = this.shapes.find((s) => s.info.name === connectedShapeName);
-          if (
-            connectedShape &&
+          if (connectedShape &&
             (connectedShape.className === "InfoPin" || connectedShape.className === "Entrance")
           ) {
             if (!connectedShape.info.selectedPins.includes(shape.info.name)) {
@@ -523,9 +537,9 @@ export class MapBuilder {
   }
 
   drawConnection(node1Name,node2Name){
-    let pins = this.shapes.filter(shape => shape.className === "InfoPin");
-    let node1 = pins.find(pin => pin.info.name === node1Name);
-    let node2 = pins.find(pin => pin.info.name === node2Name);
+    let connections = this.shapes.filter(shape => shape.className === "InfoPin" || shape.className === "Entrance");
+    let node1 = connections.find(pin => pin.info.name === node1Name);
+    let node2 = connections.find(pin => pin.info.name === node2Name);
 
     console.log("node1",node1,"node2",node2);
 
