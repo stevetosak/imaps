@@ -537,7 +537,7 @@ export class MapBuilder {
   }
 
   drawConnection(node1Name, node2Name) {
-    let connections = this.getConnections()
+    let connections = this.shapes.filter(shape => shape.className === 'InfoPin' || shape.className === 'Entrance');
     let node1 = connections.find((pin) => pin.info.name === node1Name);
     let node2 = connections.find((pin) => pin.info.name === node2Name);
 
@@ -565,12 +565,16 @@ export class MapBuilder {
   }
 
   isMainEntranceSelected() {
-    console.log(this.getEntrances().forEach((en) => console.log(en.isMainEntrance)));
+    console.log(this.getEntrances().forEach((en) => console.log(en.isMainEntrance,"asdsad")));
+
+    let hasMainEntrance = false;
 
     this.getEntrances().forEach((entrance) => {
-      if (entrance.isMainEntrance === true) return true;
+      if (entrance.isMainEntrance === true) hasMainEntrance = true;
     });
-    return false;
+
+    return hasMainEntrance;
+
   }
 
   clearMap() {
