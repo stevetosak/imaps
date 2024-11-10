@@ -23,6 +23,8 @@ function Draw() {
   const { username } = useContext(AuthContext);
   const [floors, setFloors] = useState([]);
   const [newFloorNumber, setNewFloorNumber] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("Error");
+  const [hasError, setHasError] = useState(false);
   const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -96,6 +98,13 @@ function Draw() {
   };
 
   const handleSaveClick = async () => {
+    if (!app.isMainEntranceSelected()) {
+      setErrorMessage("Please select Main Entrance");
+      setHasError(true);
+      return;
+    } else {
+      setHasError(false);
+    }
     const resp = await app
       .saveMap(mapName, username, searchParams.get("floor"))
       .then((r) => {
@@ -177,6 +186,7 @@ function Draw() {
 
         <hr />
         <br />
+        {hasError && <p style={{ color: "red", textAlign: "center" }}>{errorMessage}</p>}
         <div className={styles.templateCont}>
           <SaveMap submitHandler={handleSaveClick}></SaveMap>
           {/*<MapTemplateSelector loadHandler={handleLoadMapClick}></MapTemplateSelector>*/}
