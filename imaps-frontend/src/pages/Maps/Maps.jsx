@@ -18,7 +18,7 @@ const renderTile = ({ data, isDragging }) => (
         style={{ width: "100%", height: "100%" }}
       >
         <img src={card} className={styles.imgStyle} alt="Map Thumbnail" />
-        <div>
+        <div style={{fontFamily: 'exo'}}>
           {data.text} {isDragging ? "DRAGGING" : null}
         </div>
       </div>
