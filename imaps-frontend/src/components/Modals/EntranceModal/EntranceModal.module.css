@@ -112,9 +112,18 @@ h3 {
 
 /* Checkbox alignment fix */
 .formGroupCheckbox {
+
   display: flex;
-  align-items: center; /* Vertical alignment */
-  color: #ffffff;
+  flex-direction: row;
+  vertical-align: middle;
+  align-items: flex-end;
+  /*justify-content: start;!* Vertical alignment *!*/
+  /*color: #ffffff;*/
+}
+
+.formGroupCheckbox input{
+  width: 10%;
+  margin-bottom: 0.88em;
 }
 
 /* Add button */
