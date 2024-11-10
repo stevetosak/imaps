@@ -1,24 +1,35 @@
 PRIORITY HIGH
 
--Linii za connections
--Filter na prostorii (Ke zemame od roomType modal)
--Implementacija na stairs
+- Search 
+- Filter na prostorii
+
+- Implementacija na stairs
+- Navigacija pomegju spratoj
+
+- Room Types ne rabotat vo Draw
+- Text na shape da se sredit
 
 PRIORITY MEDIUM
 
--Detach event na draw (keys: e, r)
--Profile funkcionalno
--Stairs da se dodavat avtomatski bez potreba za refresh
--Click Event Za soba na View so Highlight
--Sredvenje MyMaps i BrowseMaps
--Namesto sideBar da imat logo sho nosit do home
--Draw izgled
+- Delete endpoint /delete/mapId
+- Room Info Panel functionality
+- Detach event na draw (keys: e, r)
+- Text na shape vo Draw da e top layer
+- History toska da popravit
+- Click Event Za soba na View so Highlight
+- Search vo myMaps i BrowseMaps ne rabotat
 
--History toska da popravit
+- Floors da se dodavat vo dropdown avtomatski bez potreba za refresh na Draw
+- Zabrana za pregled na Private mapi na drug User
+
 
 PRIORITY LOW
 
--Link do view vo draw
--Ako kliknis na room vo view, da ta odnesit do toj room (navigacija)
--AutoSave na draw duri crtas (Da se pret update request do baza)
--Cuvanje floor vo Room
+- Map Controls da se sredit stilot
+- Pending Approval maps implement
+- Od ko ke si logiran na home page da izlezit profile logoto i da sa trgnat sign up login
+- Home page stil improve
+- Font sekade ist
+- AutoSave na draw duri crtas (Da se pret update request do baza)
+- Delete da e vnatre vo karti i dopolnitelna konfirmacija
+- Admin Page

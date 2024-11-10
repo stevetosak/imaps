@@ -2,9 +2,9 @@ import Factory from "../util/Factory.js";
 import Konva from "konva";
 import HttpService from "../net/HttpService.js";
 import { zoomStage } from "../util/zoomStage.js";
-import {addEventHandling} from "../util/addEventHandling.js";
+import { addEventHandling } from "../util/addEventHandling.js";
 import ConnectionGraph from "../util/ConnectionGraph.js";
-import {shape} from "prop-types";
+import { shape } from "prop-types";
 
 export class MapBuilder {
   constructor(containerId) {
@@ -172,8 +172,8 @@ export class MapBuilder {
   }
 
   zoom(e) {
-   zoomStage(e,this.stage);
-   this.drawGrid();
+    zoomStage(e, this.stage);
+    this.drawGrid();
   }
 
   drawGrid() {
@@ -240,16 +240,16 @@ export class MapBuilder {
       rotation: 0,
       scaleX: 1,
       scaleY: 1,
-      increment: true
+      increment: true,
     };
     let infoPin = Factory.createShape("InfoPin", attrs);
-    addEventHandling(infoPin,this,"dblclick");
+    addEventHandling(infoPin, this, "dblclick");
     this.shapes.push(infoPin);
-    this.mainLayer.add(infoPin)
+    this.mainLayer.add(infoPin);
     infoPin.displayName(this.textLayer);
     this.connectionGraph.addNode(infoPin);
 
-    console.log("graph: ", this.connectionGraph.nodes)
+    console.log("graph: ", this.connectionGraph.nodes);
     console.log(infoPin.name());
   }
 
@@ -277,27 +277,23 @@ export class MapBuilder {
       increment: true,
       snap: true,
       fromLoad: false,
-      blockSize: this.blockSize
+      blockSize: this.blockSize,
     };
 
-
-    const placedObj = Factory.createShape(this.hoverObj.type,attrs);
+    const placedObj = Factory.createShape(this.hoverObj.type, attrs);
     if (!placedObj) return;
 
     this.mainLayer.add(placedObj);
     this.shapes.push(placedObj);
-    addEventHandling(placedObj,this,"dblclick");
+    addEventHandling(placedObj, this, "dblclick");
     this.mainLayer.draw();
     placedObj.displayName(this.textLayer);
     placedObj.snapToGrid();
 
-
-
-    if(placedObj.type === "Entrance"){
-      console.log("placed obj type: " + placedObj.type)
+    if (placedObj.type === "Entrance") {
+      console.log("placed obj type: " + placedObj.type);
       this.connectionGraph.addNode(placedObj);
     }
-
 
     if (!this.efficientDrawingMode) {
       this.stopDrawing();
@@ -319,9 +315,8 @@ export class MapBuilder {
   }
 
   startDrawing(shapeType) {
-
     const attrs = {
-      position: {x:0,y:0},
+      position: { x: 0, y: 0 },
       width: this.blockSize,
       height: this.blockSize,
       layer: this.mainLayer,
@@ -332,7 +327,7 @@ export class MapBuilder {
       snap: true,
       fromLoad: false,
     };
-    this.hoverObj = Factory.createShape(shapeType,attrs);
+    this.hoverObj = Factory.createShape(shapeType, attrs);
 
     this.hoverObj.visible(false);
     this.dragLayer.add(this.hoverObj);
@@ -368,11 +363,12 @@ export class MapBuilder {
       this.mainTransformer.nodes().forEach((node) => {
         node.remove();
         node.destroyShape(this.connectionGraph);
-        this.shapes.filter(shape => shape.className === "InfoPin").forEach(pin => {
-          console.log(pin.info.name);
-          console.log(pin.info.selectedPins)
-
-        });
+        this.shapes
+          .filter((shape) => shape.className === "InfoPin")
+          .forEach((pin) => {
+            console.log(pin.info.name);
+            console.log(pin.info.selectedPins);
+          });
         this.shapes.splice(this.shapes.indexOf(node), 1);
       });
       this.mainTransformer.nodes([]);
@@ -446,11 +442,14 @@ export class MapBuilder {
     });
   }
 
-  async saveMap(mapName,username,selectedFloor) {
+  async saveMap(mapName, username, selectedFloor) {
     this.saveShapeDetails();
     const httpService = new HttpService("http://localhost:8080/api/protected", true);
     try {
-      const response = await httpService.put(`/my-maps/save?mapName=${mapName}&username=${username}&floorNum=${selectedFloor}`, this.shapes);
+      const response = await httpService.put(
+        `/my-maps/save?mapName=${mapName}&username=${username}&floorNum=${selectedFloor}`,
+        this.shapes
+      );
       console.log(response, "resp in builder");
     } catch (err) {
       console.log("ERROR --> Could not Save map --->", err);
@@ -524,7 +523,8 @@ export class MapBuilder {
       if (shape.className === "InfoPin" || shape.className === "Entrance") {
         shape.info.selectedPins.forEach((connectedShapeName) => {
           const connectedShape = this.shapes.find((s) => s.info.name === connectedShapeName);
-          if (connectedShape &&
+          if (
+            connectedShape &&
             (connectedShape.className === "InfoPin" || connectedShape.className === "Entrance")
           ) {
             if (!connectedShape.info.selectedPins.includes(shape.info.name)) {
@@ -536,16 +536,16 @@ export class MapBuilder {
     });
   }
 
-  drawConnection(node1Name,node2Name){
-    let connections = this.shapes.filter(shape => shape.className === "InfoPin" || shape.className === "Entrance");
-    let node1 = connections.find(pin => pin.info.name === node1Name);
-    let node2 = connections.find(pin => pin.info.name === node2Name);
+  drawConnection(node1Name, node2Name) {
+    let connections = this.getConnections()
+    let node1 = connections.find((pin) => pin.info.name === node1Name);
+    let node2 = connections.find((pin) => pin.info.name === node2Name);
 
-    console.log("node1",node1,"node2",node2);
+    console.log("node1", node1, "node2", node2);
 
-    this.connectionGraph.addConnection(node1,node2);
+    this.connectionGraph.addConnection(node1, node2);
 
-    console.log("Added connection: ")
+    console.log("Added connection: ");
   }
 
   removeConnection(from, to) {
@@ -562,25 +562,35 @@ export class MapBuilder {
     this.shapes.forEach((shape) => {
       shape.displayName(this.textLayer);
     });
-    this.textLayer.children.forEach((child) => console.log(child));
+  }
+
+  isMainEntranceSelected() {
+    console.log(this.getEntrances().forEach((en) => console.log(en.isMainEntrance)));
+
+    this.getEntrances().forEach((entrance) => {
+      if (entrance.isMainEntrance === true) return true;
+    });
+    return false;
   }
 
   clearMap() {
     this.mainLayer.removeChildren();
-    this.shapes.forEach(shape => shape.destroyShape())
+    this.shapes.forEach((shape) => shape.destroyShape());
     this.shapes = [];
     this.hoverObj = null;
   }
 
-  async loadMap(mapName,username,floorNum) {
+  async loadMap(mapName, username, floorNum) {
     const httpService = new HttpService();
     httpService.setAuthenticated();
 
     floorNum = floorNum == null ? 0 : floorNum;
 
-    console.log("Floor num draw: " + floorNum)
+    console.log("Floor num draw: " + floorNum);
 
-    const resp = await httpService.get(`/protected/my-maps/load?mapName=${mapName}&username=${username}&floorNum=${floorNum}`);
+    const resp = await httpService.get(
+      `/protected/my-maps/load?mapName=${mapName}&username=${username}&floorNum=${floorNum}`
+    );
     console.log("RESPONSE FROM LOAD --->", resp);
     this.deserializeMap(resp.mapData);
     this.shapes.forEach((shape) => {
@@ -592,13 +602,13 @@ export class MapBuilder {
     console.log("DESERIALIZING: ", data);
     this.clearMap();
 
-    if(data != null){
+    if (data != null) {
       const json = data.jsonData;
       let dsrData = JSON.parse(json);
       dsrData.forEach((child) => {
         const shape = JSON.parse(child);
         const attrs = {
-          position: {x:shape.attrs.x,y:shape.attrs.y},
+          position: { x: shape.attrs.x, y: shape.attrs.y },
           width: shape.attrs.width,
           height: shape.attrs.height,
           layer: this.mainLayer,
@@ -611,23 +621,23 @@ export class MapBuilder {
           fromLoad: true,
         };
 
-        const loadedShape = Factory.createShape(shape.className,attrs);
+        const loadedShape = Factory.createShape(shape.className, attrs);
         loadedShape.loadInfo(shape.attrs);
         this.shapes.push(loadedShape);
-        addEventHandling(loadedShape,this,"dblclick");
+        addEventHandling(loadedShape, this, "dblclick");
       });
 
       // TODO BRISENJE DA SA BRISAT LINES
 
-      let pins = this.shapes.filter(shape => shape.className === "InfoPin");
-      pins.forEach(pin => {
+      let pins = this.shapes.filter((shape) => shape.className === "InfoPin");
+      pins.forEach((pin) => {
         let connectedPins = pin.info.selectedPins;
-        if(connectedPins){
-          connectedPins.forEach(slPin => {
-            this.drawConnection(pin.info.name,slPin)
-          })
+        if (connectedPins) {
+          connectedPins.forEach((slPin) => {
+            this.drawConnection(pin.info.name, slPin);
+          });
         }
-      })
+      });
     }
 
     this.mainTransformer.nodes([]);
@@ -636,6 +646,4 @@ export class MapBuilder {
 
     this.shapes.forEach((shape) => shape.displayName(this.textLayer));
   }
-
-
 }
