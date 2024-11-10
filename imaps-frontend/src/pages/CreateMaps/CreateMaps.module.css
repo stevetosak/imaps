@@ -7,6 +7,10 @@
   font-family: "Roboto", sans-serif;
 }
 
+* {
+  font-family: exo, sans-serif;
+}
+
 h1 {
   font-size: 2.5rem;
   color: black;

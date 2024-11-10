@@ -9,7 +9,7 @@ export default class RenderedEntrance extends RenderedMapShape {
       y: attrs.y,
       width: attrs.width * scaleX,
       height: attrs.height * scaleY,
-      fill: "#1c3cff",
+      fill: "#4CAF50",
       stroke: "black",
       strokeWidth: 1,
       draggable: false,
