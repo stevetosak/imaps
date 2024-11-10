@@ -28,13 +28,12 @@ export class MapDisplay {
         this.stage.add(this.textLayer);
 
         this.navArrow = new Konva.Arrow({
-            stroke: "#e91332",
-            strokeWidth: 2.5,
-            dash: [5, 4],
+            stroke: "#DC143C",
+            strokeWidth: 3,
+            dash: [10, 7],
             lineCap: "round",
-            lineJoin: "round",
-            pointerLength: 7,
-            pointerWidth: 7,
+            pointerLength: 4,
+            pointerWidth: 3,
             fill: "red",
         });
 
@@ -67,6 +66,8 @@ export class MapDisplay {
                 addEventHandling(renderedShape,this,"click");
                 this.shapes.push(renderedShape);
             }
+            //console.log("SHAPE ATTRS: " + JSON.stringify(shape.attrs, null, 2));
+
         });
     }
 
@@ -103,10 +104,6 @@ export class MapDisplay {
         }catch(e){
             throw new Error("Cant load map: " +  e)
         }
-    }
-
-    async loadFloor(floorNum){
-
     }
 
     drawRoute(path) {
@@ -177,5 +174,9 @@ export class MapDisplay {
 
     search() {
         console.log("VLEZE VO SEARCH");
+    }
+
+    getMainEntrance(){
+        return this.shapes.filter(shape => shape.class === "Entrance").filter(el => el.info.isMainEntrance === true)[0];
     }
 }
