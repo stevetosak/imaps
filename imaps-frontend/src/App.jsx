@@ -41,11 +41,6 @@ function App() {
               <Route path="/myMaps/:mapName/View" element={<MapView isPrivate={true} />} />
             </Route>
 
-
-            <Route element={<ProtectedRoute />}>
-
-            </Route>
-            
             <Route path="*" element={<Error />} />
           </Routes>
         </Router>

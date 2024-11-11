@@ -14,7 +14,7 @@ export default class Wall extends MapShape {
           y: attrs.position.y,
           width: attrs.width * attrs.scaleX,
           height: attrs.height * attrs.scaleY,
-          fill: "#B0B0B0",
+          fill: "#d3d3d3",
           stroke: "grey",
           strokeWidth: 1,
           name: "mapObj",
