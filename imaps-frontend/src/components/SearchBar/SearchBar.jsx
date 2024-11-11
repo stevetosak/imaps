@@ -17,8 +17,13 @@ function SearchBar({map}) {
     setIsExpanded(!isExpanded);
   };
 
+  // Function to handle searching
   function searchRoom() {
-    map.search();
+    let selectedRoom = props.map.selectedRoom;
+    console.log(selectedRoom)
+    setFrom("")
+    setTo("")
+    handleDirectionsSubmit()
   }
 
   const handleDirectionsSubmit = () => {

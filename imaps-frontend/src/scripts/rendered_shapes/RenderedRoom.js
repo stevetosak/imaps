@@ -32,6 +32,7 @@ export default class RenderedRoom extends RenderedMapShape {
     this.on("mouseleave", () => {
       this.fill("#A2D9FF");
     });
+
     // console.log("ATTRS: " + attrs);
 
     this.initText();
