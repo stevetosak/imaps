@@ -36,6 +36,7 @@ export default class RenderedRoom extends RenderedMapShape {
       this.opacity(1);
       this.fill("white");
     });
+
     // console.log("ATTRS: " + attrs);
 
     this.initText();

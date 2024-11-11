@@ -19,7 +19,11 @@ function SearchBar(props) {
 
   // Function to handle searching
   function searchRoom() {
-    props.map.search();
+    let selectedRoom = props.map.selectedRoom;
+    console.log(selectedRoom)
+    setFrom("")
+    setTo("")
+    handleDirectionsSubmit()
   }
 
   // Function to handle directions submission
