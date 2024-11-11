@@ -15,6 +15,7 @@ import Profile from "../../components/Profile/Profile.jsx";
 
 const loadedTiles = [];
 
+
 const renderTile = ({ data, isDragging }) => (
   <div style={{ padding: "1rem", width: "100%" }}>
     <div
@@ -22,7 +23,7 @@ const renderTile = ({ data, isDragging }) => (
       style={{ width: "100%", height: "100%" }}
     >
       <img src={card} className={styles.imgStyle} alt="Map Thumbnail" />
-      <div>
+      <div style={{fontFamily: 'exo'}}>
         {data.mapName} {isDragging ? "DRAGGING" : null}
       </div>
       <div className={styles.iconContainer}>

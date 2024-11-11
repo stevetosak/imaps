@@ -4,7 +4,7 @@ import routeIcon from "../../assets/route_icon.png";
 import closeIcon from "../../assets/close_icon.png";
 import styles from "./SearchBar.module.css";
 
-function SearchBar(props) {
+function SearchBar({map}) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -26,12 +26,20 @@ function SearchBar(props) {
     handleDirectionsSubmit()
   }
 
-  // Function to handle directions submission
   const handleDirectionsSubmit = () => {
-    console.log(`From: ${from}, To: ${to}`);
+    let fromubav = from;
+    let toubav = to;
+
+    if(fromubav === null || fromubav === ""){
+      fromubav = map.getMainEntrance().info.name;
+    }
+    setFrom(fromubav.trim());
+    setTo(toubav.trim())
     const url = new URL("http://localhost:8080/api/public/navigate");
-    url.searchParams.append("from", from);
-    url.searchParams.append("to", to);
+    url.searchParams.append("from", fromubav);
+    url.searchParams.append("to", toubav);
+
+    console.log(`From: ${from}, To: ${to}`);
 
     fetch(url)
       .then((response) => {
@@ -43,7 +51,7 @@ function SearchBar(props) {
       .then((data) => {
         console.log("Success:", data);
         const points = data.map((item) => item.coordinates);
-        props.map.drawRoute(points);
+        map.drawRoute(points);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -52,9 +60,9 @@ function SearchBar(props) {
 
   // Load available rooms and entrances when the input field is focused
   const handleInputFocus = (field) => {
-    if (availableOptions.length === 0 && props.map) {
-      const rooms = props.map.getRooms() || [];
-      const entrances = props.map.getEntrances() || [];
+    if (availableOptions.length === 0 && map) {
+      const rooms = map.getRooms() || [];
+      const entrances = map.getEntrances() || [];
       setAvailableOptions([...rooms, ...entrances]);
     }
     setDropdownVisible(true);

@@ -15,17 +15,19 @@ export default class MapShape extends Konva.Shape {
         this._info = {};
         this.eventName = "";
         this.infoText = null;
-        // this.connectionLines = null;
 
         this.shadowForStrokeEnabled(false);
         this.on("mouseover", () => (document.body.style.cursor = "pointer"));
         this.on("mouseout", () => (document.body.style.cursor = "default"));
-        // this.on("dblclick", (e) => {
-        //   this.moveToTop();
-        //   this.getLayer()
-        //     .find("Transformer")
-        //     .forEach((t) => t.moveToTop());
-        // });
+        this.on("click", (e) => {
+            if(e.evt.altKey){
+                this.moveToTop();
+                this.getLayer()
+                    .find("Transformer")
+                    .forEach((t) => t.moveToTop());
+            }
+
+        });
 
         if (snap) {
             this.on("dragend", this.snapToGrid.bind(this));
@@ -84,9 +86,10 @@ export default class MapShape extends Konva.Shape {
             this.infoText.remove()
             console.log("cleared text")
         }
-        // if(this.connectionLines != null){
-        //     this.connectionLines.forEach(lineWrapper => lineWrapper.line.remove());
-        // }
+    }
+
+    load(){
+        console.log("Abstract function")
     }
 
     _sceneFunc(context) {

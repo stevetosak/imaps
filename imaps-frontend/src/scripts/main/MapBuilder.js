@@ -4,7 +4,6 @@ import HttpService from "../net/HttpService.js";
 import { zoomStage } from "../util/zoomStage.js";
 import { addEventHandling } from "../util/addEventHandling.js";
 import ConnectionGraph from "../util/ConnectionGraph.js";
-import { shape } from "prop-types";
 
 export class MapBuilder {
   constructor(containerId) {
@@ -24,10 +23,10 @@ export class MapBuilder {
     this.mainLayer = new Konva.Layer();
     this.dragLayer = new Konva.Layer();
     this.infoPinLayer = new Konva.Layer();
+    this.prioLayer = new Konva.Layer();
     this.textLayer = new Konva.Layer();
     this.gridLayer.listening(false);
 
-    this.nodeConnections = new Map(); // map <nodeName, map<node,[]#connected nodes>>
 
     this.connectionGraph = new ConnectionGraph();
 
@@ -50,7 +49,7 @@ export class MapBuilder {
       rotationSnaps: [0, 90, 180, 270],
       anchorSize: 5,
       padding: 2,
-      anchorFill: "#ef7539",
+      anchorFill: "#f6031f",
       borderStroke: "black",
       anchorStroke: "black",
       cornerRadius: 20,
@@ -59,7 +58,7 @@ export class MapBuilder {
     });
 
     this.selectionRectangle = new Konva.Rect({
-      fill: "rgba(200,0,255,0.5)",
+      fill: "rgba(56,194,245,0.5)",
       visible: false,
       listening: false,
       zIndex: 100,
@@ -247,6 +246,7 @@ export class MapBuilder {
     this.shapes.push(infoPin);
     this.mainLayer.add(infoPin);
     infoPin.displayName(this.textLayer);
+
     this.connectionGraph.addNode(infoPin);
 
     console.log("graph: ", this.connectionGraph.nodes);
@@ -287,6 +287,9 @@ export class MapBuilder {
     this.shapes.push(placedObj);
     addEventHandling(placedObj, this, "dblclick");
     this.mainLayer.draw();
+
+    // site ovie func da se vo edna funkcija vo shape.
+
     placedObj.displayName(this.textLayer);
     placedObj.snapToGrid();
 
@@ -537,18 +540,15 @@ export class MapBuilder {
   }
 
   drawConnection(node1Name, node2Name) {
-    let connections = this.getConnections()
-    let node1 = connections.find((pin) => pin.info.name === node1Name);
-    let node2 = connections.find((pin) => pin.info.name === node2Name);
 
-    console.log("node1", node1, "node2", node2);
-
-    this.connectionGraph.addConnection(node1, node2);
+    this.connectionGraph.addEdge(node1Name, node2Name);
 
     console.log("Added connection: ");
   }
 
   removeConnection(from, to) {
+    this.connectionGraph.removeConnection(from,to)
+
     this.shapes
       .filter((s) => s.info.name === from || s.info.name === to)
       .forEach((s) => {
@@ -565,12 +565,16 @@ export class MapBuilder {
   }
 
   isMainEntranceSelected() {
-    console.log(this.getEntrances().forEach((en) => console.log(en.isMainEntrance)));
+    console.log(this.getEntrances().forEach((en) => console.log(en.isMainEntrance,"asdsad")));
+
+    let hasMainEntrance = false;
 
     this.getEntrances().forEach((entrance) => {
-      if (entrance.isMainEntrance === true) return true;
+      if (entrance.isMainEntrance === true) hasMainEntrance = true;
     });
-    return false;
+
+    return hasMainEntrance;
+
   }
 
   clearMap() {
@@ -625,15 +629,17 @@ export class MapBuilder {
         loadedShape.loadInfo(shape.attrs);
         this.shapes.push(loadedShape);
         addEventHandling(loadedShape, this, "dblclick");
+        loadedShape.load(this.connectionGraph);
       });
 
       // TODO BRISENJE DA SA BRISAT LINES
 
-      let pins = this.shapes.filter((shape) => shape.className === "InfoPin");
+      let pins = this.shapes.filter((shape) => shape.className === "InfoPin" || shape.className === "Entrance" );
       pins.forEach((pin) => {
         let connectedPins = pin.info.selectedPins;
         if (connectedPins) {
           connectedPins.forEach((slPin) => {
+            console.log("CONN node1: " + pin + "conn node2: " + slPin )
             this.drawConnection(pin.info.name, slPin);
           });
         }

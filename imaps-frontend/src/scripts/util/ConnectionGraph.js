@@ -9,7 +9,10 @@ export default class ConnectionGraph {
         this.nodeNameMap.set(node.info.name,node);
     }
 
-    addConnection(node1, node2) {
+    addEdge(node1Name, node2Name) {
+
+        const node1 = this.nodeNameMap.get(node1Name);
+        const node2 = this.nodeNameMap.get(node2Name)
 
         if (!this.edges.has(node1)) {
             this.edges.set(node1, []);
@@ -24,6 +27,7 @@ export default class ConnectionGraph {
         console.log("edges " + node1.info.name + " :", this.edges.get(node1));
         console.log("edges " + node2.info.name + " :", this.edges.get(node2));
 
+
         node1.connect(node2);
 
         console.log("edges:", this.edges);
@@ -36,9 +40,10 @@ export default class ConnectionGraph {
         let node1ConnectionsUpdated =  this.edges.get(node1).filter(node => node !== node2);
         let node2ConnectionsUpdated =  this.edges.get(node2).filter(node => node !== node1);
 
+        node1.removeConnectionLine(node2);
+
         this.edges.set(node1,node1ConnectionsUpdated);
         this.edges.set(node2,node2ConnectionsUpdated);
-
 
         console.log("edges node1 delete:", this.edges.get(node1).length);
         console.log("edges node2 delete:", this.edges.get(node2).length);

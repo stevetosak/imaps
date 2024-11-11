@@ -21,6 +21,8 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 
+
+
 function App() {
 
   return (
@@ -39,11 +41,6 @@ function App() {
               <Route path="/myMaps/:mapName/View" element={<MapView isPrivate={true} />} />
             </Route>
 
-
-            <Route element={<ProtectedRoute />}>
-
-            </Route>
-            
             <Route path="*" element={<Error />} />
           </Routes>
         </Router>

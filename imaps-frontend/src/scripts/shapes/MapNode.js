@@ -20,14 +20,16 @@ export default class MapNode extends MapShape{
         })
     }
 
-
     connect(node){
         let line = new Konva.Line({
             points: [this.x(),this.y(),node.x(),node.y()],
-            stroke: "red",
+            stroke: "rgba(245,37,37,0.85)",
+            dash: [2,3],
             strokeWidth: 2,
-            fill: "red",
-        })
+            lineCap: 'round',
+            lineJoin: 'miter',
+            opacity: 0.8
+        });
 
         let lineWrapper = {
             line: line,
@@ -49,14 +51,31 @@ export default class MapNode extends MapShape{
         this.connectionLines.push(line);
     }
 
+    removeConnectionLine(target){
+        this.connectionLines.forEach(lineWrapper => {
+            if (lineWrapper.otherShape === target){
+                lineWrapper.line.remove();
+            }
+        })
+
+        this.connectionLines = this.connectionLines.filter(lineWrapper => lineWrapper.otherShape !== target);
+    }
+
     destroyShape(graph = null) {
         super.destroyShape();
-        this.connectionLines.forEach(lineWrapper => lineWrapper.line.remove());
+        this.connectionLines.forEach(lineWrapper => {
+            lineWrapper.line.remove()
+        });
         if(graph != null){
             this.info.selectedPins.forEach(pinName => {
                 graph.removeConnection(this.info.name,pinName)
             })
         }
+    }
+
+    load(graph){
+        graph.addNode(this);
+        console.log("added to graph name: " + this.info.name)
     }
 
 

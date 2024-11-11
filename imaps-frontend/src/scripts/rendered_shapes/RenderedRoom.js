@@ -8,7 +8,7 @@ export default class RenderedRoom extends RenderedMapShape {
       y: attrs.y,
       width: attrs.width * scaleX,
       height: attrs.height * scaleY,
-      fill: "white",
+      fill: "#A2D9FF",
       stroke: "black",
       strokeWidth: 1,
       draggable: false,
@@ -26,15 +26,11 @@ export default class RenderedRoom extends RenderedMapShape {
     this.eventName = "openRoomInfoPanel"
 
     this.on("mouseenter", () => {
-      console.log("HOVER ROOM IN", this.x());
       console.log(this.info.name, "NAME");
-      this.opacity(0.7);
-      this.fill("pink");
+      this.fill("#65c3f8");
     });
     this.on("mouseleave", () => {
-      console.log("HOVER ROOM OUT");
-      this.opacity(1);
-      this.fill("white");
+      this.fill("#A2D9FF");
     });
 
     // console.log("ATTRS: " + attrs);

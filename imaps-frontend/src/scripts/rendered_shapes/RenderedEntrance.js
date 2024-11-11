@@ -9,7 +9,7 @@ export default class RenderedEntrance extends RenderedMapShape {
       y: attrs.y,
       width: attrs.width * scaleX,
       height: attrs.height * scaleY,
-      fill: "#1c3cff",
+      fill: "#4CAF50",
       stroke: "black",
       strokeWidth: 1,
       draggable: false,
@@ -20,7 +20,10 @@ export default class RenderedEntrance extends RenderedMapShape {
 
     this.info.name = attrs.obj_name;
     this.info.description = attrs.description;
+    this.info.isMainEntrance = attrs.is_main_entrance;
     this.class = "Entrance";
+
+    console.log("ATTRS VIEW:  " + attrs)
 
     this.on("mouseenter", () => {
       console.log("HOVER ROOM IN", this.x());
