@@ -15,7 +15,6 @@ export default class MapShape extends Konva.Shape {
         this._info = {};
         this.eventName = "";
         this.infoText = null;
-        // this.connectionLines = null;
 
         this.shadowForStrokeEnabled(false);
         this.on("mouseover", () => (document.body.style.cursor = "pointer"));
@@ -87,9 +86,10 @@ export default class MapShape extends Konva.Shape {
             this.infoText.remove()
             console.log("cleared text")
         }
-        // if(this.connectionLines != null){
-        //     this.connectionLines.forEach(lineWrapper => lineWrapper.line.remove());
-        // }
+    }
+
+    load(){
+        console.log("Abstract function")
     }
 
     _sceneFunc(context) {

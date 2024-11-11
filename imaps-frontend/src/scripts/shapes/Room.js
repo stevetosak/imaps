@@ -16,7 +16,7 @@ export default class Room extends MapShape {
         y: attrs.position.y,
         width: attrs.width * attrs.scaleX,
         height: attrs.height * attrs.scaleY,
-        fill: "#87CEEB",
+        fill: "rgba(54,177,243,0.91)",
         stroke: "grey",
         strokeWidth: 1,
         name: "mapObj",
