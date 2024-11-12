@@ -33,9 +33,26 @@ export default class RenderedRoom extends RenderedMapShape {
       this.fill("#A2D9FF");
     });
 
+
+
+    // searched(){
+    //   this.fill("#b92d39")
+    // }
+    // unsearched(){
+    //   this.fill("#A2D9FF");
+    // }
+
     // console.log("ATTRS: " + attrs);
 
     this.initText();
+  }
+  highlight(){
+    this.fill("#901dee");
+    this.strokeWidth(2)
+  }
+  unHighlight(){
+    this.fill("#A2D9FF");
+    this.strokeWidth(1);
   }
 }
 RenderedRoom.prototype.className = "RenderedRoom";
