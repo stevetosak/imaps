@@ -28,7 +28,7 @@
   font-family: "Oswald", sans-serif;
   padding-right: 2em;
   margin-top: 0;
-}
+  white-space: nowrap;}
 
 .left {
   width: 100%;
