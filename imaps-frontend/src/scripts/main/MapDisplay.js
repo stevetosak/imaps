@@ -5,6 +5,7 @@ import {zoomStage} from "../util/zoomStage.js";
 import {json} from "react-router-dom";
 import error from "eslint-plugin-react/lib/util/error.js";
 import {addEventHandling} from "../util/addEventHandling.js";
+import log from "eslint-plugin-react/lib/util/log.js";
 
 export class MapDisplay {
     constructor(containerId) {
@@ -173,16 +174,38 @@ export class MapDisplay {
     getShapeInfoByType(type) {
         return this.shapes.filter((shape) => shape.class === type).map((shape) => shape.info.name);
     }
-
-    setSelectedRoom(room){
-        this.selectedRoom = room;
+    getShapeByType(type) {
+        return this.shapes.filter((shape) => shape.class === type)
     }
 
     toggleSearchRoom() {
         this.toggleSearch = !this.toggleSearch;
     }
 
+    findRoomByName(roomName){
+        let foundShape = this.shapes.filter((shape) => shape.info.name === roomName)[0];
+        console.log(foundShape,"111111111111111")
+        foundShape.highlight();
+        return foundShape;
+    }
+
     getMainEntrance(){
         return this.shapes.filter(shape => shape.class === "Entrance").filter(el => el.info.isMainEntrance === true)[0];
+    }
+
+    setFilter(filter){
+        let rooms = this.getShapeByType("Room")
+        if(filter === "All"){
+            rooms.forEach((shape) => {shape.unHighlight()})
+        }
+        else {
+            rooms.filter((shape) => shape.info.type === "").forEach((shape) => {
+                shape.highlight()
+            })
+            rooms.filter((shape) => shape.info.type !== "").forEach((shape) => {
+                shape.unHighlight()
+            })
+        }
+
     }
 }
