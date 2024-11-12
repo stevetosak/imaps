@@ -4,54 +4,26 @@ import routeIcon from "../../assets/route_icon.png";
 import closeIcon from "../../assets/close_icon.png";
 import styles from "./SearchBar.module.css";
 
-function SearchBar({map}) {
+function SearchBar({map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom}) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [availableOptions, setAvailableOptions] = useState([]);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [inputFieldType, setInputFieldType] = useState(""); // Track which input field is being typed in
+  const [inputFieldType, setInputFieldType] = useState("");
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
 
+  // Function to handle searching
   function searchRoom() {
-    map.search();
+    let foundRoom = map.findRoomByName(from)
+    setSelectedRoom(foundRoom)
+    isPanelOpen(true)
   }
 
-  const handleDirectionsSubmit = () => {
-    let fromubav = from;
-    let toubav = to;
-
-    if(fromubav === null || fromubav === ""){
-      fromubav = map.getMainEntrance().info.name;
-    }
-    setFrom(fromubav.trim());
-    setTo(toubav.trim())
-    const url = new URL("http://localhost:8080/api/public/navigate");
-    url.searchParams.append("from", fromubav);
-    url.searchParams.append("to", toubav);
-
-    console.log(`From: ${from}, To: ${to}`);
-
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Success:", data);
-        const points = data.map((item) => item.coordinates);
-        map.drawRoute(points);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
 
   // Load available rooms and entrances when the input field is focused
   const handleInputFocus = (field) => {
@@ -158,7 +130,7 @@ function SearchBar({map}) {
             )}
           </div>
           <div className={styles.buttons}>
-            <button type="button" className={styles.iconButton} onClick={handleDirectionsSubmit}>
+            <button type="button" className={styles.iconButton} onClick={() => handleDirectionsSubmit(from, to)}>
               <img src={searchIcon} alt="Submit Directions" />
             </button>
             <button type="button" className={styles.iconButton} onClick={toggleExpanded}>

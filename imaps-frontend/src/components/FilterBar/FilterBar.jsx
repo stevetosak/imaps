@@ -13,7 +13,7 @@ export default function FilterBar(props) {
   }, [props.map]);
 
   const filterLocation = useCallback((category) => {
-    console.log(`Filter locations by: ${category}`);
+    props.map.setFilter(category)
     setSelectedCategory(category);
   },[])
 
