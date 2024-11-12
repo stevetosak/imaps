@@ -63,6 +63,36 @@ const MapView = ({ isPrivate }) => {
     return () => window.removeEventListener("openRoomInfoPanel", openRoomInfoPanel);
   })
 
+  const handleDirectionsSubmit = (fromSearch = null, toSearch = null) => {
+    if(fromSearch === null && toSearch === null){
+      return;
+    }
+
+    if(fromSearch === null || fromSearch === ""){
+      fromSearch = app.getMainEntrance().info.name;
+    }
+    const url = new URL("http://localhost:8080/api/public/navigate");
+    url.searchParams.append("from", fromSearch.trim());
+    url.searchParams.append("to", toSearch.trim());
+
+
+    fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Success:", data);
+          const points = data.map((item) => item.coordinates);
+          app.drawRoute(points);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+  };
+
   const loadFloors = async () => {
     const httpService = new HttpService();
 
@@ -90,6 +120,7 @@ const MapView = ({ isPrivate }) => {
 
   const closePanel = () => {
     setIsPanelOpen(false);
+    selectedRoom.unHighlight()
   };
 
   const onNavigate = () => {
@@ -100,7 +131,7 @@ const MapView = ({ isPrivate }) => {
     <div id="main" className={styles.main}>
       <div id="map" className={styles.mapContainer}></div>
 
-      <RoomInfoPanel isOpen={isPanelOpen} onClose={closePanel} floor={searchParams.get("floor") } room={selectedRoom} />
+      <RoomInfoPanel isOpen={isPanelOpen} onClose={closePanel} floor={searchParams.get("floor") } room={selectedRoom} handleDirectionsSubmit={handleDirectionsSubmit}/>
       <div className={styles.toolbar}>
         {/* <h1>{username}</h1> */}
         {/* <SideBar /> */}
@@ -109,7 +140,7 @@ const MapView = ({ isPrivate }) => {
           <h1>{mapName}</h1>
           {mapLoaded && app && (
             <>
-              <SearchBar map={app} />
+              <SearchBar map={app} handleDirectionsSubmit={handleDirectionsSubmit} isPanelOpen={isPanelOpen} setSelectedRoom={setSelectedRoom}/>
               <FilterBar map={app} />
             </>
           )}
