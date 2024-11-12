@@ -11,6 +11,14 @@ export default class ConnectionGraph {
 
     addEdge(node1Name, node2Name) {
 
+
+        for (const key of this.nodeNameMap.keys()) {
+            console.log(key);
+        }
+
+
+
+
         const node1 = this.nodeNameMap.get(node1Name);
         const node2 = this.nodeNameMap.get(node2Name)
 
