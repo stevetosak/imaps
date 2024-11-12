@@ -33,3 +33,8 @@ PRIORITY LOW
 - AutoSave na draw duri crtas (Da se pret update request do baza)
 - Delete da e vnatre vo karti i dopolnitelna konfirmacija
 - Admin Page
+
+
+- IMAT BUG SO LINIITE KO KE PRES REMOVE NA DRAW
+- KO KE SMENIS IME VO MODAL,TREBIT VO GRAFOT DA SA UPDATE TOJ ENTRY
+- NAVIGACIJA DA SA IMPL POMEGJU SOBI OD RAZLICNI SPRATOVInpm
