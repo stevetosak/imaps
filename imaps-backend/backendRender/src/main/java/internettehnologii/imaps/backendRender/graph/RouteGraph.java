@@ -27,6 +27,7 @@ public class RouteGraph {
     private double getDistanceBetweenPoints(MapNode a, MapNode b){
         double x1 = a.getCoordinates().x;
         double y1 = a.getCoordinates().y;
+
         double x2 = b.getCoordinates().x;
         double y2 = b.getCoordinates().y;
 

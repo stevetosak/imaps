@@ -557,11 +557,15 @@ export class MapBuilder {
     console.log("Remove");
   }
 
-  updateRoomNames() {
+  updateRoomNames(oldShapeName,shape) {
+
+    this.connectionGraph.updateEntry(oldShapeName,shape);
+    // todo da vidam dali morat site da vaka reset ili mozit samo na toj
     this.textLayer.removeChildren();
     this.shapes.forEach((shape) => {
       shape.displayName(this.textLayer);
     });
+
   }
 
   isMainEntranceSelected() {
