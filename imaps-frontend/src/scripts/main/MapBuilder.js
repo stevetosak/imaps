@@ -93,6 +93,14 @@ export class MapBuilder {
     window.addEventListener("keydown", this.rotateShapesBy90Deg.bind(this));
     window.addEventListener("keydown", this.toggleEfficientDrawingMode.bind(this));
     window.addEventListener("resize", this.handleResize.bind(this));
+
+    this.boundEscapeEventListener = this.handleExitSelection.bind(this);
+    this.boundDeleteEventListener = this.handleDelete.bind(this);
+    this.boundRotateShapeEventListener = this.rotateShapesBy90Deg.bind(this)
+    this.boundEfficientDrawingModeEventListener = this.toggleEfficientDrawingMode.bind(this);
+
+    //this.attachKeyPressEventListeners();
+
     this.stage.on("mousedown touchstart", this.handleMouseDown.bind(this));
     this.stage.on("mousemove touchmove", this.handleMouseMove.bind(this));
     this.stage.on("mouseup touchend", this.handleMouseUp.bind(this));
@@ -103,16 +111,16 @@ export class MapBuilder {
   }
 
   detachKeyPressEventListeners() {
-    window.removeEventListener("keydown", this.handleExitSelection.bind(this));
-    window.removeEventListener("keydown", this.handleDelete.bind(this));
-    window.removeEventListener("keydown", this.rotateShapesBy90Deg.bind(this));
-    window.removeEventListener("keydown", this.toggleEfficientDrawingMode.bind(this));
+    window.removeEventListener("keydown", this.boundEscapeEventListener);
+    window.removeEventListener("keydown", this.boundDeleteEventListener);
+    window.removeEventListener("keydown", this.boundRotateShapeEventListener);
+    window.removeEventListener("keydown", this.boundEfficientDrawingModeEventListener);
   }
   attachKeyPressEventListeners() {
-    window.addEventListener("keydown", this.handleExitSelection.bind(this));
-    window.addEventListener("keydown", this.handleDelete.bind(this));
-    window.addEventListener("keydown", this.rotateShapesBy90Deg.bind(this));
-    window.addEventListener("keydown", this.toggleEfficientDrawingMode.bind(this));
+    window.addEventListener("keydown", this.boundEscapeEventListener);
+    window.addEventListener("keydown", this.boundDeleteEventListener);
+    window.addEventListener("keydown", this.boundRotateShapeEventListener);
+    window.addEventListener("keydown", this.boundEfficientDrawingModeEventListener);
   }
 
   dragStage(e) {
@@ -305,7 +313,7 @@ export class MapBuilder {
 
   stopDrawing() {
     this.mainTransformer.nodes([]);
-    this.hoverObj.remove();
+    if(this.hoverObj != null) this.hoverObj.remove();
     this.dragLayer.removeChildren();
     this.stage.off("mousemove", this.boundMouseMoveHandler);
     this.stage.off("click", this.boundPlaceShapeHandler);
