@@ -11,13 +11,9 @@ export default class ConnectionGraph {
 
     addEdge(node1Name, node2Name) {
 
-
         for (const key of this.nodeNameMap.keys()) {
             console.log(key);
         }
-
-
-
 
         const node1 = this.nodeNameMap.get(node1Name);
         const node2 = this.nodeNameMap.get(node2Name)
@@ -41,12 +37,24 @@ export default class ConnectionGraph {
         console.log("edges:", this.edges);
     }
 
+    updateEntry(oldName,shape){
+        console.log("OLD NAME IN UPDATE ENTRY: " + oldName )
+        console.log("NEW NAME IN UPDATE ENTRY: " + shape.info.name )
+
+        let removed = this.nodeNameMap.delete(oldName);
+        this.nodeNameMap.set(shape.info.name,shape);
+
+
+
+        console.log("REMOVED: " + removed,this.nodeNameMap,"MAP")
+    }
+
     removeConnection(node1Name, node2Name) {
         let node1 = this.nodeNameMap.get(node1Name);
         let node2 = this.nodeNameMap.get(node2Name);
 
-        let node1ConnectionsUpdated =  this.edges.get(node1).filter(node => node !== node2);
-        let node2ConnectionsUpdated =  this.edges.get(node2).filter(node => node !== node1);
+        let node1ConnectionsUpdated = this.edges.get(node1).filter(node => node !== node2);
+        let node2ConnectionsUpdated = this.edges.get(node2).filter(node => node !== node1);
 
         node1.removeConnectionLine(node2);
 

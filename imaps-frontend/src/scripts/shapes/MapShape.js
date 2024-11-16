@@ -109,6 +109,11 @@ export default class MapShape extends Konva.Shape {
 
     }
 
+    updateText(shapeName){
+            this.infoText.text = shapeName;
+            console.log("Updated text to : " + shapeName)
+    }
+
     snapToGrid() {
         this.position({
             x: Math.round(this.x() / this.blockSize) * this.blockSize,
