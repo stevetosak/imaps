@@ -10,6 +10,18 @@ export default class MapNode extends MapShape{
 
         super(config,layer,blockSize,snap);
         this.connectionLines = [];
+        this.connectedNodes = [];
+
+        this.connLine = new Konva.Line({
+            stroke: "rgba(245,37,37,0.85)",
+            dash: [2,3],
+            strokeWidth: 2,
+            lineCap: 'round',
+            lineJoin: 'miter',
+            opacity: 0.8
+        });
+
+        this.connLine.cache();
 
         this.on("dragmove",() => {
             this.connectionLines.forEach(lineWrapper => {
@@ -21,14 +33,9 @@ export default class MapNode extends MapShape{
     }
 
     connect(node){
-        let line = new Konva.Line({
-            points: [this.x(),this.y(),node.x(),node.y()],
-            stroke: "rgba(245,37,37,0.85)",
-            dash: [2,3],
-            strokeWidth: 2,
-            lineCap: 'round',
-            lineJoin: 'miter',
-            opacity: 0.8
+
+        const line = this.connLine.clone({
+            points: [this.x(),this.y(),node.x(),node.y()]
         });
 
         let lineWrapper = {
@@ -44,6 +51,7 @@ export default class MapNode extends MapShape{
         };
 
         node.addLineReference(lineWrapperSend);
+        //this.connectedNodes.push(node);
         this.layer.add(lineWrapper.line);
     }
 
@@ -51,31 +59,30 @@ export default class MapNode extends MapShape{
         this.connectionLines.push(line);
     }
 
+    removeLineWrapper(target){
+        this.connectionLines = this.connectionLines.filter(lineWrapper => lineWrapper.otherShape !== target);
+    }
+
+
     removeConnectionLine(target){
+
         this.connectionLines.forEach(lineWrapper => {
             if (lineWrapper.otherShape === target){
                 lineWrapper.line.remove();
             }
         })
 
-        this.connectionLines = this.connectionLines.filter(lineWrapper => lineWrapper.otherShape !== target);
+        target.removeLineWrapper(this);
+        this.removeLineWrapper(target);
     }
 
-    destroyShape(graph = null) {
-        super.destroyShape();
+
+    destroy() {
+        super.destroy();
         this.connectionLines.forEach(lineWrapper => {
             lineWrapper.line.remove()
+            lineWrapper.otherShape.removeLineWrapper(this);
         });
-        if(graph != null){
-            this.info.selectedPins.forEach(pinName => {
-                graph.removeConnection(this.info.name,pinName)
-            })
-        }
-    }
-
-    load(graph){
-        graph.addNode(this);
-        console.log("added to graph name: " + this.info.name)
     }
 
 

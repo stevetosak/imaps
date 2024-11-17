@@ -3,10 +3,12 @@ package internettehnologii.imaps.backendRender.graph;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Map;
 
 @Setter @Getter
+@ToString
 public class Edge{
   private MapNode node;
    private double weight;

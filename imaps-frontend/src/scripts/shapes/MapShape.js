@@ -82,6 +82,14 @@ export default class MapShape extends Konva.Shape {
     }
 
     destroyShape() {
+        // if (this.infoText !== null) {
+        //     this.infoText.remove()
+        //     console.log("cleared text")
+        // }
+    }
+
+    destroy() {
+        super.destroy();
         if (this.infoText !== null) {
             this.infoText.remove()
             console.log("cleared text")
