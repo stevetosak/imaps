@@ -1,9 +1,9 @@
 import React, {useContext, useState} from "react";
-import styles from "./CreateMapModal.module.css";
-
 import PropTypes from "prop-types";
+import styles from "./CreateMapModal.module.css";
 import HttpService from "../../../scripts/net/HttpService.js";
 import {AuthContext} from "../../AuthContext/AuthContext.jsx";
+
 const MapDetailsModal = ({ isOpen, onClose, onSubmit }) => {
     const [mapName, setMapName] = useState("");
     const [mapType, setMapType] = useState("");
@@ -20,10 +20,11 @@ const MapDetailsModal = ({ isOpen, onClose, onSubmit }) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
 
-        httpService.put(`/protected/my-maps/create?username=${username}`,mapDetails)
-            .then(resp => {
-                console.log("RESPONSE CREATE: ",resp);
-            })
+        httpService
+            .put(`/protected/my-maps/create?username=${username}`, mapDetails)
+            .then((resp) => {
+                console.log("RESPONSE CREATE: ", resp);
+            });
 
         onSubmit(mapDetails);
         onClose();
@@ -32,8 +33,8 @@ const MapDetailsModal = ({ isOpen, onClose, onSubmit }) => {
     if (!isOpen) return null;
 
     return (
-        <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
+        <div className={styles.modalOverlay} onClick={onClose}>
+            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                 <h2>Enter Map Details</h2>
                 <form onSubmit={handleSubmit} className={styles.formData}>
                     <label>
@@ -56,7 +57,9 @@ const MapDetailsModal = ({ isOpen, onClose, onSubmit }) => {
                     </label>
                     <div className={styles.modalButtons}>
                         <button type="submit">Submit</button>
-                        <button type="button" onClick={onClose}>Cancel</button>
+                        <button type="button" onClick={onClose}>
+                            Cancel
+                        </button>
                     </div>
                 </form>
             </div>
@@ -65,9 +68,9 @@ const MapDetailsModal = ({ isOpen, onClose, onSubmit }) => {
 };
 
 MapDetailsModal.propTypes = {
-    isOpen: PropTypes.bool,
-    onClose: PropTypes.func,
-    onSubmit: PropTypes.func
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
 };
 
 export default MapDetailsModal;

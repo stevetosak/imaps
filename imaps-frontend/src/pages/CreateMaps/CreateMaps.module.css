@@ -11,6 +11,13 @@
   font-family: exo, sans-serif;
 }
 
+.mapTitle{
+  /*font-family: exo;*/
+  color: white;
+  text-transform: uppercase;
+}
+
+
 h1 {
   font-size: 2.5rem;
   color: black;
@@ -167,7 +174,7 @@ h2 {
 h3 {
   margin-bottom: 20px;
   text-align: start;
-  color: #333;
+  color: #333 !important;
 }
 
 label {
