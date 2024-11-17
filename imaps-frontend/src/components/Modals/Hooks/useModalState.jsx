@@ -27,7 +27,7 @@ export default function useModalState(formData,setFormData,map,getInitialFormDat
         return () => {
             window.removeEventListener(eventName, openModalHandler);
         };
-    }, [getInitialFormData, setConnections, setFormData, setIsOpen, setShape]);
+    }, []);
 
     const addPinToList = () => {
         if (!formData.selectedPin || connections.includes(formData.selectedPin)) return;
@@ -64,16 +64,13 @@ export default function useModalState(formData,setFormData,map,getInitialFormDat
         if (isOpen) {
             const oldShapeName = shape.info.name;
             shape.info = formData;
-            map.updateRoomNames(oldShapeName,shape);
+            map.updateRoomNames();
             console.log("Se vikna");
-        } else {
         }
         setIsOpen(!isOpen);
     };
 
     const updateModalData = (e) => {
-
-        const oldName = formData.name;
 
         const { name, value, type, checked } = e.target;
         setFormData((prevData) => ({
@@ -81,9 +78,7 @@ export default function useModalState(formData,setFormData,map,getInitialFormDat
             [name]: type === "checkbox" ? checked : value,
         }));
 
-        shape.info = formData;
-        map.connectionGraph.updateEntry(oldName,shape)
-        console.log(formData,"<- curr",oldName,"<- prev");
+        shape.info.name = formData.name;
     };
 
     const saveDetails = () => {

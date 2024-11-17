@@ -33,3 +33,4 @@ PRIORITY LOW
 
 - KO KE SMENIS IME VO MODAL,TREBIT VO GRAFOT DA SA UPDATE TOJ ENTRY
 - NAVIGACIJA DA SA IMPL POMEGJU SOBI OD RAZLICNI SPRATOVI
+- VO room da sa cuvat entrances, za ko ke mrdas room isto entrance da sa mrdnit

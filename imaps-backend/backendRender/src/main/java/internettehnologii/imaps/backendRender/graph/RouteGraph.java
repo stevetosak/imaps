@@ -9,12 +9,21 @@ public class RouteGraph {
     public RouteGraph(List<MapNode> nodes) {
 
 
+
+
         for (MapNode node : nodes) {
             nameToNodeMap.put(node.getName(), node);
         }
 
+
+        System.out.println("NAME NODE MAP:");
+        for(Map.Entry<String,MapNode> entries : nameToNodeMap.entrySet()) {
+            System.out.println(entries.getKey() + " " + entries.getValue());
+        }
+
         for (MapNode mapNode : nodes) {
             for (String connectionName : mapNode.getConnectionNames()) {
+                System.out.println("CONN: " + mapNode.getName() + " " + connectionName);
                 MapNode connectedNode = nameToNodeMap.get(connectionName);
                 if (connectedNode != null) {
                     addEdge(mapNode, connectedNode);
@@ -145,6 +154,8 @@ public class RouteGraph {
         for (Map.Entry<MapNode, Set<Edge>> entry : graph.entrySet()) {
             MapNode node = entry.getKey();
             Set<Edge> connectedNodes = entry.getValue();
+
+            System.out.println("CONN NODES PRINT: " + connectedNodes);
 
             sb.append(node.getName()).append(" -> ");
 

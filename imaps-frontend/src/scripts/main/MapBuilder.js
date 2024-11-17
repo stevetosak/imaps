@@ -3,7 +3,7 @@ import Konva from "konva";
 import HttpService from "../net/HttpService.js";
 import { zoomStage } from "../util/zoomStage.js";
 import { addEventHandling } from "../util/addEventHandling.js";
-import ConnectionGraph from "../util/ConnectionGraph.js";
+import MapNode from "../shapes/MapNode.js";
 
 export class MapBuilder {
   constructor(containerId) {
@@ -27,8 +27,6 @@ export class MapBuilder {
     this.textLayer = new Konva.Layer();
     this.gridLayer.listening(false);
 
-
-    this.connectionGraph = new ConnectionGraph();
 
     this.shapes = [];
     this.blockSize = 10;
@@ -255,9 +253,6 @@ export class MapBuilder {
     this.mainLayer.add(infoPin);
     infoPin.displayName(this.textLayer);
 
-    this.connectionGraph.addNode(infoPin);
-
-    console.log("graph: ", this.connectionGraph.nodes);
     console.log(infoPin.name());
   }
 
@@ -300,11 +295,6 @@ export class MapBuilder {
 
     placedObj.displayName(this.textLayer);
     placedObj.snapToGrid();
-
-    if (placedObj.type === "Entrance") {
-      console.log("placed obj type: " + placedObj.type);
-      this.connectionGraph.addNode(placedObj);
-    }
 
     if (!this.efficientDrawingMode) {
       this.stopDrawing();
@@ -373,13 +363,7 @@ export class MapBuilder {
     if (e.key === "Delete") {
       this.mainTransformer.nodes().forEach((node) => {
         node.remove();
-        node.destroyShape(this.connectionGraph);
-        this.shapes
-          .filter((shape) => shape.className === "InfoPin")
-          .forEach((pin) => {
-            console.log(pin.info.name);
-            console.log(pin.info.selectedPins);
-          });
+        node.destroy();
         this.shapes.splice(this.shapes.indexOf(node), 1);
       });
       this.mainTransformer.nodes([]);
@@ -549,26 +533,33 @@ export class MapBuilder {
 
   drawConnection(node1Name, node2Name) {
 
-    this.connectionGraph.addEdge(node1Name, node2Name);
+    // ako imat primer room so isto ime kako node so go baras ke go zemit toj, znacit morat filter samo
+    let node1 = this.shapes.filter(shape => shape instanceof MapNode && shape.info.name === node1Name)[0];
+    let node2 = this.shapes.filter(shape => shape instanceof MapNode && shape.info.name === node2Name)[0];
 
-    console.log("Added connection: ");
+    node1.connect(node2)
+  }
+
+  getNodeByName(name){
+    return this.shapes.filter(shape => shape instanceof MapNode && shape.info.name === name)[0];
   }
 
   removeConnection(from, to) {
-    this.connectionGraph.removeConnection(from,to)
 
-    this.shapes
-      .filter((s) => s.info.name === from || s.info.name === to)
+    let node1 = this.getNodeByName(from);
+    let node2 = this.getNodeByName(to);
+
+    node1.removeConnectionLine(node2);
+
+    this.shapes.filter((s) => s.info.name === from || s.info.name === to)
       .forEach((s) => {
         s.info.selectedPins = s.info.selectedPins.filter((pin) => pin !== from && pin !== to);
       });
     console.log("Remove");
   }
 
-  updateRoomNames(oldShapeName,shape) {
+  updateRoomNames() {
 
-    this.connectionGraph.updateEntry(oldShapeName,shape);
-    // todo da vidam dali morat site da vaka reset ili mozit samo na toj
     this.textLayer.removeChildren();
     this.shapes.forEach((shape) => {
       shape.displayName(this.textLayer);
@@ -591,7 +582,7 @@ export class MapBuilder {
 
   clearMap() {
     this.mainLayer.removeChildren();
-    this.shapes.forEach((shape) => shape.destroyShape());
+    this.shapes.forEach((shape) => shape.destroy());
     this.shapes = [];
     this.hoverObj = null;
   }
@@ -641,7 +632,6 @@ export class MapBuilder {
         loadedShape.loadInfo(shape.attrs);
         this.shapes.push(loadedShape);
         addEventHandling(loadedShape, this, "dblclick");
-        loadedShape.load(this.connectionGraph);
       });
 
       // TODO BRISENJE DA SA BRISAT LINES
