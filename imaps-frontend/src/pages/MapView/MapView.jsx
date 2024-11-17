@@ -56,7 +56,7 @@ const MapView = ({ isPrivate }) => {
     const openRoomInfoPanel = (e) => {
       setSelectedRoom(e.detail.room);
       setIsPanelOpen(true)
-
+      
     }
     window.addEventListener("openRoomInfoPanel", openRoomInfoPanel);
 
