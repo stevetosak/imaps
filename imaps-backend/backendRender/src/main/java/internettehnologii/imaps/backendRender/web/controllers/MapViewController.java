@@ -11,6 +11,8 @@ import internettehnologii.imaps.backendRender.web.exceptions.FloorNotFoundExcept
 import internettehnologii.imaps.backendRender.web.security.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
+import internettehnologii.imaps.backendRender.web.util.FloorDTO;
+import internettehnologii.imaps.backendRender.web.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,8 +86,8 @@ public class MapViewController {
         }
     }
 
-    @GetMapping("/protected/map-data")
-    public ResponseEntity<Floor> getMapDataProtected(@RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
+    @GetMapping("/protected/load-map")
+    public ResponseEntity<List<FloorDTO>> getMapDataProtected(@RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
         try {
             IndoorMap map = mapService.getMapForUser(username, mapName); // namesto ova samo proverka dali postoet dadena mapa za user, za da ne morat za dzabe mapa promenliva da se cuvat
             this.floors = floorService.getAllFloorsForMap(mapName);
@@ -99,7 +101,7 @@ public class MapViewController {
             }
 
             System.out.println("Current floor: " + currentFloor);
-            return ResponseEntity.ok(currentFloor); // tuka return site floors trebit
+            return ResponseEntity.ok(Util.convertToFloorDTO(floors)); // tuka return site floors trebit
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
@@ -145,7 +147,8 @@ public class MapViewController {
         try {
             MapNodeParser parser = new MapNodeParser();
             List<MapNode> nodes = parser.parseAndCreateNodes(mapData);
-            graph = new RouteGraph(nodes);
+            graph = new RouteGraph();
+            graph.load(nodes); // tuka vo for ke trevbit parse pa load
             System.out.println("======================= CREATED GRAPH =======================\n" + graph);
         } catch (Exception e) {
             e.printStackTrace();

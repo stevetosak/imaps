@@ -23,7 +23,8 @@ class RouteGraphTest {
         MapNode nodeD = new MapNode("D", new Coordinates<>(9.0, 12.0), Arrays.asList("B","C"));
 
         List<MapNode> nodes = Arrays.asList(nodeA, nodeB, nodeC,nodeD);
-        routeGraph = new RouteGraph(nodes);
+        routeGraph = new RouteGraph();
+        routeGraph.load(nodes);
     }
 
     @Test

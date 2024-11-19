@@ -6,11 +6,8 @@ public class RouteGraph {
     private final Map<MapNode, Set<Edge>> graph = new HashMap<>();
     private final Map<String, MapNode> nameToNodeMap = new HashMap<>();
 
-    public RouteGraph(List<MapNode> nodes) {
 
-
-
-
+    public void load(List<MapNode> nodes){
         for (MapNode node : nodes) {
             nameToNodeMap.put(node.getName(), node);
         }
