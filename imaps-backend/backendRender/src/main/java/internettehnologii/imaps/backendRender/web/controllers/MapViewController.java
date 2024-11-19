@@ -3,6 +3,7 @@ package internettehnologii.imaps.backendRender.web.controllers;
 import internettehnologii.imaps.backendRender.graph.MapNode;
 import internettehnologii.imaps.backendRender.graph.MapNodeParser;
 import internettehnologii.imaps.backendRender.graph.RouteGraph;
+import internettehnologii.imaps.backendRender.graph.exceptions.InvalidMapDataException;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.exceptions.EmptyMapException;
@@ -88,14 +89,17 @@ public class MapViewController {
         try {
             IndoorMap map = mapService.getMapForUser(username, mapName); // namesto ova samo proverka dali postoet dadena mapa za user, za da ne morat za dzabe mapa promenliva da se cuvat
             this.floors = floorService.getAllFloorsForMap(mapName);
+            this.currentFloor = getFloorByNum(floorNum);
             JsonMapData mapData = currentFloor.getMapData();
             if (mapData != null) {
                 this.loadGraph(currentFloor.getMapData().getJsonData());
-                System.out.println("graph loaded ==============================================");
+                System.out.println("============================================== graph loaded ==============================================");
+            } else {
+                System.out.println("============================================== CANT LOAD GRAPH: MAP DATA NULL ==============================================");
             }
-            this.currentFloor = getFloorByNum(floorNum);
+
             System.out.println("Current floor: " + currentFloor);
-            return ResponseEntity.ok(currentFloor);
+            return ResponseEntity.ok(currentFloor); // tuka return site floors trebit
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
@@ -134,7 +138,9 @@ public class MapViewController {
     }
 
     private void loadGraph(String mapData) {
-        if (mapData == null || mapData.isEmpty()) return;
+        if (mapData == null || mapData.isEmpty()){
+            throw new InvalidMapDataException("Invalid map data(null or empty string)");
+        }
 
         try {
             MapNodeParser parser = new MapNodeParser();
