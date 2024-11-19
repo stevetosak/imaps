@@ -7,7 +7,13 @@ const config = {
         register: "/auth/register",
         verify: "/auth/verify",
         render: "/protected/render",
-        publicMapData: "/public/mapData"
+        public: {
+            load: "/public/load-map"
+        },
+        protect:{
+            load: "/protected/load-map"
+        }
+
     }
 };
 

@@ -69,7 +69,7 @@ export class MapDisplay {
     deserializeMap(data) {
         this.clearMap();
 
-        let dsrData = JSON.parse(data.jsonData);
+        let dsrData = JSON.parse(data);
         dsrData.forEach((child) => {
             const shape = JSON.parse(child);
             if (shape.className !== "InfoPin") {
@@ -116,6 +116,18 @@ export class MapDisplay {
         }
     }
 
+    loadMapN(floorData){
+        if(floorData != null){
+            this.deserializeMap(floorData);
+            this.shapes.forEach((shape) => {
+                this.mainLayer.add(shape);
+            });
+            this.displayRoomNames();
+            this.initializeRoomTypes();
+        }
+    }
+
+
     drawRoute(path) {
         this.routeLayer.removeChildren();
         console.log("====PATH====");
@@ -142,8 +154,6 @@ export class MapDisplay {
 
                 this.routeLayer.add(line);
                 this.routeLayer.draw();
-
-                console.log(buff, "BUFFER");
                 buff = [];
                 index -= 2;
             }

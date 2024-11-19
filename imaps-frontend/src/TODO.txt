@@ -22,6 +22,8 @@ PRIORITY MEDIUM
 
 - Floors da se dodavat vo dropdown avtomatski bez potreba za refresh na Draw
 - Zabrana za pregled na Private mapi na drug User
+- Modals na draw pomali i da mozis da gi gledas drugive shapes duri biras tramu vo modalot.
+    (mozit ova modalov primer desno da izlegvit kaj panelot)
 
 
 PRIORITY LOW
@@ -35,7 +37,7 @@ PRIORITY LOW
 - Admin Page
 
 
-- KO KE SMENIS IME VO MODAL,TREBIT VO GRAFOT DA SA UPDATE TOJ ENTRY
+- KO KE SMENIS IME VO MODAL,TREBIT VO GRAFOT DA SA UPDATE TOJ ENTRY // got
 - NAVIGACIJA DA SA IMPL POMEGJU SOBI OD RAZLICNI SPRATOVI **
 - VO room da sa cuvat entrances, za ko ke mrdas room isto entrance da sa mrdnit
 - za sekoja soba da pisit koj floor e, sort po floors. **
