@@ -60,8 +60,7 @@ export class MapDisplay {
         this.clearMap();
 
         let dsrData = JSON.parse(data);
-        dsrData.forEach((child) => {
-            const shape = JSON.parse(child);
+        dsrData.forEach((shape) => {
             if (shape.className !== "InfoPin") {
                 const renderedShape = Factory.createRenderedShape(shape.className, shape.attrs);
                 addEventHandling(renderedShape,this,"click");
@@ -77,6 +76,7 @@ export class MapDisplay {
 
     }
 
+    // ne se koristit ova pojke
     async loadMap(mapName,floorNum,username,isPrivate) {
         const httpService = new HttpService();
         floorNum = floorNum == null ? 0 : floorNum;

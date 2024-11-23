@@ -7,6 +7,6 @@ import java.util.List;
 public class Util {
 
     public static List<FloorDTO> convertToFloorDTO(List<Floor> floors){
-        return floors.stream().map(f -> new FloorDTO(f.getFloorNumber(),f.getIndoorMap().getName(), f.getMapData().getJsonData())).toList();
+        return floors.stream().map(f -> new FloorDTO(f.getFloorNumber(),f.getIndoorMap().getName(), (String) f.getMapData().getShapeData())).toList();
     }
 }

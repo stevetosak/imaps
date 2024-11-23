@@ -2,6 +2,7 @@ package internettehnologii.imaps.backendRender.web.controllers;
 
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
+import internettehnologii.imaps.backendRender.web.util.SaveMapDTO;
 import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
@@ -36,17 +37,18 @@ public class MapDrawController {
 
     @PutMapping("/my-maps/save")
     public ResponseEntity<Map<String,Object>> updateMapData
-            (@RequestBody String mapData, @RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
+            (@RequestBody SaveMapDTO mapDTO, @RequestParam String username) {
+
+        System.out.println("MAP DTO: " + mapDTO);
 
         Map<String,Object> response = new HashMap<>();
         try {
-            IndoorMap map = mapService.getMapForUser(username,mapName);
-            Floor f = floorService.getFloorByNum(floorNum, map);
+            IndoorMap map = mapService.getMapForUser(username, mapDTO.getMapName());
+            Floor f = floorService.getFloorByNum(mapDTO.getFloorNum(), map);
 
-            JsonMapData jsonMapData = new JsonMapData(mapData);
+            JsonMapData jsonMapData = new JsonMapData(mapDTO.getShapes().toString(), mapDTO.getRoomTypes().toString());
             f.setMapData(jsonMapData);
             floorService.updateFloor(f);
-
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {

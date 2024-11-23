@@ -452,8 +452,8 @@ export class MapBuilder {
     const httpService = new HttpService("http://localhost:8080/api/protected", true);
     try {
       const response = await httpService.put(
-        `/my-maps/save?mapName=${mapName}&username=${username}&floorNum=${selectedFloor}`,
-        this.shapes
+        `/my-maps/save?username=${username}`,
+        payload
       );
       console.log(response, "resp in builder");
     } catch (err) {
@@ -620,10 +620,11 @@ export class MapBuilder {
     this.clearMap();
 
     if (data != null) {
-      const json = data.jsonData;
+      const json = data.shapeData;
+      console.log("TPYPE: " + typeof json)
       let dsrData = JSON.parse(json);
-      dsrData.forEach((child) => {
-        const shape = JSON.parse(child);
+      console.log("JSPN PARSE: " + dsrData)
+      dsrData.forEach((shape) => {
         const attrs = {
           position: { x: shape.attrs.x, y: shape.attrs.y },
           width: shape.attrs.width,
