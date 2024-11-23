@@ -1,5 +1,5 @@
 import {_registerNode} from "konva/lib/Global";
-import MapNode from "./MapNode.js";
+import MapNode from "../base/MapNode.js";
 
 export default class Entrance extends MapNode {
 

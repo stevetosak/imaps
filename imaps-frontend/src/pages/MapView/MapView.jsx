@@ -29,72 +29,58 @@ const MapView = ({isPrivate}) => {
 
 
     useEffect(() => {
+        if (!searchParams.has("floor")) {
+            setSearchParams({floor: "0"}); // Ensure searchParams is initialized
+        }
+    }, [setSearchParams, searchParams]);
+
+
+    useEffect(() => {
         const appInstance = new MapDisplay("map");
 
-        if (!searchParams.has("floor")) {
-            setSearchParams({floor: "0"});
-        }
+        const floorNum = parseInt(searchParams.get("floor"));
 
-        let floorNum = parseInt(searchParams.get("floor"));
+        const load = async () => {
+            const httpService = new HttpService();
+
+            try {
+                const endpoint = isPrivate
+                    ? netconfig.endpoints.protect.load
+                    : netconfig.endpoints.public.load;
+
+                const params = isPrivate ?
+                    `?mapName=${mapName}&floorNum=${floorNum}&username=${username}` :
+                    `?mapName=${mapName}&floorNum=${floorNum}`;
+
+                if (isPrivate) {
+                    httpService.setAuthenticated(); // auth header
+                }
+
+                return httpService.get(`${endpoint}${params}`);
+            } catch (e) {
+                throw new Error("Can't load map: " + e.message);
+            }
+        };
 
         load()
             .then(respFloors => {
-                console.log("re",respFloors)
-                 setFloors(respFloors);
-                console.log("fnm:",floorNum)
+                console.log("re", respFloors)
+                setFloors(respFloors);
+                console.log("fnm:", floorNum)
                 let tlFloor = respFloors.filter(f => f.num === floorNum)[0];
-                console.log("loaded floor: ",tlFloor)
-                 appInstance.loadMapN(tlFloor.mapData)
-                 setApp(appInstance);
-                 setMapLoaded(true);
+                console.log("loaded floor: ", tlFloor)
+                appInstance.loadMapN(tlFloor.mapData)
+                setApp(appInstance);
+                setMapLoaded(true);
             })
             .catch(reason => {
-            console.log("ERROR LOADING MAP VIEW: " + reason)
-        });
+                console.log("ERROR LOADING MAP VIEW: " + reason)
+            });
 
 
-        // appInstance
-        //     .loadMap(mapName, searchParams.get("floor"), username, isPrivate)
-        //     .then(() => {
-        //         setApp(appInstance);
-        //         setMapLoaded(true);
-        //         loadFloors()
-        //             .then(fs => console.log("loaded floors; " + fs))
-        //             .catch(reason => console.log("error loading floors: " + reason))
-        //         console.log(mapName);
-        //     })
-        //     .catch((reason) => {
-        //         console.log("Error loading map: ", reason);
-        //         navigate("/myMaps");
-        //     });
+    }, [searchParams, isPrivate, mapName, setSearchParams]);
 
-
-    }, [isPrivate, mapName]);
-
-    //nova load, ne vo MapView
-    const load = async () => {
-        const httpService = new HttpService();
-        const floorNum = searchParams.get("floor") || 0;
-
-        try {
-            const endpoint = isPrivate
-                ? netconfig.endpoints.protect.load
-                : netconfig.endpoints.public.load;
-
-            const params =  isPrivate ?
-                `?mapName=${mapName}&floorNum=${floorNum}&username=${username}` :
-                `?mapName=${mapName}&floorNum=${floorNum}`;
-
-            if (isPrivate) {
-                httpService.setAuthenticated(); // auth header
-            }
-
-            return await httpService.get(`${endpoint}${params}`);
-        } catch (e) {
-            throw new Error("Can't load map: " + e.message);
-        }
-    };
-
+    //nova load, ne vo MapDisplay
 
 
     useEffect(() => {

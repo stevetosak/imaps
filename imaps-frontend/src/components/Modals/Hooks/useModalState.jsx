@@ -62,7 +62,6 @@ export default function useModalState(formData,setFormData,map,getInitialFormDat
 
     const toggleModal = () => {
         if (isOpen) {
-            const oldShapeName = shape.info.name;
             shape.info = formData;
             map.updateRoomNames();
             console.log("Se vikna");

@@ -2,7 +2,7 @@ package internettehnologii.imaps.backendRender.web.controllers;
 
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
-import internettehnologii.imaps.backendRender.web.security.json.JsonMapData;
+import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import internettehnologii.imaps.backendRender.web.util.FloorDTO;
@@ -22,7 +22,6 @@ public class MapDrawController {
     private final MapService mapService;
     private final FloorService floorService;
 
-    private Floor currentFloor;
 
     @Autowired
     public MapDrawController(MapService mapService, FloorService floorService) {
@@ -76,7 +75,6 @@ public class MapDrawController {
         try{
             IndoorMap map = mapService.getMapForUser(username,mapName);
             Floor floor = floorService.getFloorByNum(floorNum,map);
-            currentFloor = floor;
             return ResponseEntity.ok().body(floor);
         } catch (Exception e) {
             System.out.println(e.getMessage());

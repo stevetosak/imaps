@@ -24,6 +24,7 @@ export default function RoomModal({map}) {
   const {
     modalState: {isOpen, toggleModal, saveDetails, updateModalData},
   } = useModalState(formData, setFormData, map,getInitialFormData,"openRoomModalEvent");
+
   return (
       <Modal isOpen={isOpen} toggleModal={toggleModal} title={"Enter Room Details"}>
         <ModalNameField formData={formData} updateModalData={updateModalData}/>

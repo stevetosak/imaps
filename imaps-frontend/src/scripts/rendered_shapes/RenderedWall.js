@@ -1,4 +1,4 @@
-import RenderedMapShape from "./RenderedMapShape.js";
+import RenderedMapShape from "../base/RenderedMapShape.js";
 import {_registerNode} from "konva/lib/Global";
 
 export default class RenderedWall extends RenderedMapShape{

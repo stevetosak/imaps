@@ -1,6 +1,6 @@
 
 import { _registerNode } from "konva/lib/Global";
-import MapNode from "./MapNode.js";
+import MapNode from "../base/MapNode.js";
 export default class InfoPin extends MapNode {
   constructor(attrs,id) {
     attrs.snap = false;
@@ -45,7 +45,7 @@ export default class InfoPin extends MapNode {
     this.initText();
   }
   _sceneFunc(context, shape) {
-    const { radiusX, radiusY, tailHeight } = this.attrs;
+    const { radiusX, radiusY, tailHeight } = this.attrs; // attrs od konva
 
     context.beginPath();
     context.ellipse(0, 0, radiusX, radiusY, 0, 0, Math.PI * 2);

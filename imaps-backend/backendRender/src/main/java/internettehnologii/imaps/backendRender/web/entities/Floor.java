@@ -1,6 +1,6 @@
 package internettehnologii.imaps.backendRender.web.entities;
 
-import internettehnologii.imaps.backendRender.web.security.json.JsonMapData;
+import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

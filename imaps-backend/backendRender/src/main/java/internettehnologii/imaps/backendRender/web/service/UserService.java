@@ -42,7 +42,7 @@ public class UserService {
             throw new EmailTakenException("User with email: " + u.getEmail() + " already exists");
         });
         userRepository.findUserByName(user.getUsername()).ifPresent((u) -> {
-            throw new EmailTakenException("User with email: " + u.getEmail() + " already exists");
+            throw new EmailTakenException("User with name: " + u.getUsername() + " already exists");
         });
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));

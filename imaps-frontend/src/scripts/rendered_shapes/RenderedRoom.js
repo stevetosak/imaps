@@ -1,4 +1,4 @@
-import RenderedMapShape from "./RenderedMapShape.js";
+import RenderedMapShape from "../base/RenderedMapShape.js";
 import {_registerNode} from "konva/lib/Global";
 
 export default class RenderedRoom extends RenderedMapShape {
@@ -13,8 +13,7 @@ export default class RenderedRoom extends RenderedMapShape {
       strokeWidth: 1,
       draggable: false,
       rotation: attrs.rotation,
-      cornerRadius: 3,
-      zIndex: 0,
+      cornerRadius: 3
     });
 
     this.info.name = attrs.obj_name;

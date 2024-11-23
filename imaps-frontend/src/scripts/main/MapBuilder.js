@@ -3,7 +3,7 @@ import Konva from "konva";
 import HttpService from "../net/HttpService.js";
 import { zoomStage } from "../util/zoomStage.js";
 import { addEventHandling } from "../util/addEventHandling.js";
-import MapNode from "../shapes/MapNode.js";
+import MapNode from "../base/MapNode.js";
 
 export class MapBuilder {
   constructor(containerId) {
@@ -327,8 +327,11 @@ export class MapBuilder {
       increment: false,
       snap: true,
       fromLoad: false,
+      blockSize: this.blockSize
     };
     this.hoverObj = Factory.createShape(shapeType, attrs);
+
+    console.log("HOVBER OBK:",this.hoverObj)
 
     this.hoverObj.visible(false);
     this.dragLayer.add(this.hoverObj);
@@ -431,13 +434,20 @@ export class MapBuilder {
   }
 
   saveShapeDetails() {
-    this.shapes.forEach((room) => {
-      room.saveShapeDetails();
-      console.log(room.info);
+    this.shapes.forEach(shape => {
+      shape.saveShapeDetails();
+      console.log(shape.info);
     });
   }
 
   async saveMap(mapName, username, selectedFloor) {
+    const payload = {
+      shapes: this.shapes,
+      roomTypes: this.roomTypes,
+      mapName: mapName,
+      floorNum: selectedFloor
+    }
+
     this.saveShapeDetails();
     const httpService = new HttpService("http://localhost:8080/api/protected", true);
     try {
@@ -634,7 +644,6 @@ export class MapBuilder {
         addEventHandling(loadedShape, this, "dblclick");
       });
 
-      // TODO BRISENJE DA SA BRISAT LINES
 
       let pins = this.shapes.filter((shape) => shape.className === "InfoPin" || shape.className === "Entrance" );
       pins.forEach((pin) => {
