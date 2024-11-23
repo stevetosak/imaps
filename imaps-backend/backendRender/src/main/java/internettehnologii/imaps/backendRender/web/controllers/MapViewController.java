@@ -76,7 +76,7 @@ public class MapViewController {
         try {
             this.floors = floorService.getAllPublicFloors(mapName);
             this.currentFloor = getFloorByNum(floorNum);
-            this.loadGraph(currentFloor.getMapData().getJsonData());
+            this.loadGraph((String) currentFloor.getMapData().getShapeData());
             return ResponseEntity.ok(currentFloor);
         } catch (EmptyMapException e) {
             e.printStackTrace();
@@ -93,7 +93,7 @@ public class MapViewController {
             this.currentFloor = getFloorByNum(floorNum);
             JsonMapData mapData = currentFloor.getMapData();
             if (mapData != null) {
-                this.loadGraph(currentFloor.getMapData().getJsonData());
+                this.loadGraph((String) currentFloor.getMapData().getShapeData());
                 System.out.println("============================================== graph loaded ==============================================");
             } else {
                 System.out.println("============================================== CANT LOAD GRAPH: MAP DATA NULL ==============================================");
