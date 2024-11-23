@@ -2,7 +2,7 @@ package internettehnologii.imaps.backendRender.web.repo;
 
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
-import internettehnologii.imaps.backendRender.web.security.json.JsonMapData;
+import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

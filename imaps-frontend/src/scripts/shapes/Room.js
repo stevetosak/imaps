@@ -1,5 +1,5 @@
 import Konva from "konva";
-import MapShape from "./MapShape";
+import MapShape from "../base/MapShape.js";
 import { _registerNode } from "konva/lib/Global";
 export default class Room extends MapShape {
   constructor(attrs,id){

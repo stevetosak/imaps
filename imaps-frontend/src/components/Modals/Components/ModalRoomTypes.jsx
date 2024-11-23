@@ -2,6 +2,8 @@ import styles from "../RoomModal/RoomModal.module.css";
 import React from "react";
 
 export default function ModalRoomTypes({formData,updateModalData,roomTypes}){
+    console.log("ROOM TYPES: " + roomTypes)
+
     return (
         <div className={styles.formGroup}>
             <label htmlFor="type">Type:</label>

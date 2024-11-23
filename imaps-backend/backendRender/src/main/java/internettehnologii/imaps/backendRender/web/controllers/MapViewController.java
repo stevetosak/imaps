@@ -8,7 +8,7 @@ import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.exceptions.EmptyMapException;
 import internettehnologii.imaps.backendRender.web.exceptions.FloorNotFoundException;
-import internettehnologii.imaps.backendRender.web.security.json.JsonMapData;
+import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import internettehnologii.imaps.backendRender.web.util.FloorDTO;
@@ -29,7 +29,6 @@ public class MapViewController {
     private RouteGraph graph;
     private List<Floor> floors = new ArrayList<>();
     private Floor currentFloor = new Floor();
-    private boolean loaded = false;
 
     private final MapService mapService;
     private final FloorService floorService;
@@ -128,8 +127,7 @@ public class MapViewController {
         return ResponseEntity.ok(floors);
     }
 
-    @GetMapping("public/")
-
+    
     private Floor getFloorByNum(int num) {
         for (Floor floor : floors) {
             if (floor.getFloorNumber() == num) {

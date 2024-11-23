@@ -14,8 +14,12 @@ import java.util.Optional;
 
 @Service
 public class MapUserDetailsService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public MapUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
        Optional<IMapsUser> user = userRepository.findUserByName(username);

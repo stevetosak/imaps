@@ -58,15 +58,16 @@ public class AuthController {
             String username = jwtService.extractUsername(token);
             UserDetails userDetails = context.getBean(MapUserDetailsService.class).loadUserByUsername(username);
             boolean auth = jwtService.validateToken(token, userDetails);
+
             if(!auth){
-                response.put("error", "Invalid Token");
+                response.put("error", "Token could not be validated");
                 return ResponseEntity.status(403).body(response);
             }
 
             response.put("username", username);
             System.out.println("Authenticated user: " + username);
-
         } catch (Exception e){
+            response.put("auth",false);
             System.out.println("ERROR: NOT AUTHENTICATED: " + e.getMessage());
         }
 

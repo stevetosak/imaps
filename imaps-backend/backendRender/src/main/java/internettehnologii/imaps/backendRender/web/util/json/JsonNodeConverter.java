@@ -1,4 +1,4 @@
-package internettehnologii.imaps.backendRender.web.security.json;
+package internettehnologii.imaps.backendRender.web.util.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
