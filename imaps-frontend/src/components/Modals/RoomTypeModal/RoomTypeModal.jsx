@@ -3,7 +3,7 @@ import styles from "./RoomTypeModal.module.css";
 import useRoomTypes from "../Hooks/useRoomTypes.jsx";
 
 export default function RoomTypeModal({map}) {
-  const [modal, setModal] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [roomTypes, setRoomTypes] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -12,7 +12,12 @@ export default function RoomTypeModal({map}) {
   });
 
   const toggleModal = () => {
-    setModal(!modal);
+    if(!modalIsOpen){
+      console.log("RTPS TOG: " + map.roomTypes);
+      setRoomTypes(map.roomTypes)
+    }
+
+    setModalIsOpen(!modalIsOpen);
   };
 
   const {addRoomType,removeRoomType} = useRoomTypes(formData,setFormData,roomTypes,setRoomTypes,map)
@@ -33,7 +38,7 @@ export default function RoomTypeModal({map}) {
         Room Types
       </button>
 
-      {modal && (
+      {modalIsOpen && (
         <div className={styles.modal}>
           <div onClick={toggleModal} className={styles.overlay}></div>
           <div className={styles.modalContent}>

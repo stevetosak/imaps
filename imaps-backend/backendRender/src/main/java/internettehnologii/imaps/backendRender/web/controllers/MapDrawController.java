@@ -1,5 +1,6 @@
 package internettehnologii.imaps.backendRender.web.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.util.SaveMapDTO;
@@ -43,10 +44,21 @@ public class MapDrawController {
 
         Map<String,Object> response = new HashMap<>();
         try {
+
+            System.out.println("=================================");
+            System.out.println("MAPDTO: " + mapDTO);
+            System.out.println("USERNAME:" + username);
             IndoorMap map = mapService.getMapForUser(username, mapDTO.getMapName());
             Floor f = floorService.getFloorByNum(mapDTO.getFloorNum(), map);
 
-            JsonMapData jsonMapData = new JsonMapData(mapDTO.getShapes().toString(), mapDTO.getRoomTypes().toString());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            String roomTypesJson = objectMapper.writeValueAsString(mapDTO.getRoomTypes());
+
+            JsonMapData jsonMapData = new JsonMapData(mapDTO.getShapes().toString(), roomTypesJson);
+
+            System.out.println("ROOM TYPES JSON : " + roomTypesJson);
             f.setMapData(jsonMapData);
             floorService.updateFloor(f);
 

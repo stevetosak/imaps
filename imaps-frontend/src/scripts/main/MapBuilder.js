@@ -4,6 +4,7 @@ import HttpService from "../net/HttpService.js";
 import { zoomStage } from "../util/zoomStage.js";
 import { addEventHandling } from "../util/addEventHandling.js";
 import MapNode from "../base/MapNode.js";
+import {json} from "react-router-dom";
 
 export class MapBuilder {
   constructor(containerId) {
@@ -441,6 +442,8 @@ export class MapBuilder {
   }
 
   async saveMap(mapName, username, selectedFloor) {
+    this.saveShapeDetails();
+    
     const payload = {
       shapes: this.shapes,
       roomTypes: this.roomTypes,
@@ -448,7 +451,7 @@ export class MapBuilder {
       floorNum: selectedFloor
     }
 
-    this.saveShapeDetails();
+
     const httpService = new HttpService("http://localhost:8080/api/protected", true);
     try {
       const response = await httpService.put(
@@ -491,8 +494,11 @@ export class MapBuilder {
     }
   }
 
-  addRoomType(roomType) {
-    this.roomTypes.push(roomType);
+  addRoomType(type) {
+    this.roomTypes.push(type);
+  }
+  removeRoomType(targetType){
+    this.roomTypes = this.roomTypes.filter(type => type !== targetType);
   }
 
   getRoomTypes() {
@@ -624,6 +630,8 @@ export class MapBuilder {
       console.log("TPYPE: " + typeof json)
       let dsrData = JSON.parse(json);
       console.log("JSPN PARSE: " + dsrData)
+
+      //load shapes
       dsrData.forEach((shape) => {
         const attrs = {
           position: { x: shape.attrs.x, y: shape.attrs.y },
@@ -645,7 +653,16 @@ export class MapBuilder {
         addEventHandling(loadedShape, this, "dblclick");
       });
 
+      //load room types
+      let roomTypesParsed = JSON.parse(data.roomTypes);
+      console.log("ROOM TPYES PARSED: " + roomTypesParsed)
+      roomTypesParsed.forEach(type => {
+        this.roomTypes.push(type);
+      })
 
+      console.log("room types arr loaded: " + this.roomTypes)
+
+      // draw connections
       let pins = this.shapes.filter((shape) => shape.className === "InfoPin" || shape.className === "Entrance" );
       pins.forEach((pin) => {
         let connectedPins = pin.info.selectedPins;
