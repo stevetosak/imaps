@@ -49,5 +49,5 @@ export default function InfoPinModal({map}) {
 }
 
 InfoPinModal.propTypes = {
-    map: PropTypes.objectOf(MapBuilder)
+    map: PropTypes.instanceOf(MapBuilder),
 };

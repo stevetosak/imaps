@@ -60,5 +60,5 @@ export default function EntranceModal({map}) {
 }
 
 EntranceModal.propTypes = {
-    map: PropTypes.objectOf(MapBuilder),
+    map: PropTypes.instanceOf(MapBuilder),
 };

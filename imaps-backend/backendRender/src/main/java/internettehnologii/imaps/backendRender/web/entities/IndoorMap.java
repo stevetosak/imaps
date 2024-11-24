@@ -34,6 +34,7 @@ public class IndoorMap {
     @Column(name = "image_url")
     private String imageUrl;
 
+
     @ManyToOne
     @JoinColumn(name = "usr_id",referencedColumnName = "id", nullable = false)
     private IMapsUser user;

@@ -27,17 +27,24 @@ function Draw() {
   const [hasError, setHasError] = useState(false);
   const navigate = useNavigate();
 
+  let activityTimeout;
+
   const [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
+  const getSelectedFloor = () => {
     if (!searchParams.has("floor")) {
       setSearchParams({ floor: "0" });
     }
 
+    return searchParams.get("floor");
+  }
+
+
+  useEffect(() => {
     const app = new MapBuilder("container");
     setApp(app);
     app
-      .loadMap(mapName, username, searchParams.get("floor"))
+      .loadMap(mapName, username, getSelectedFloor())
       .then(() => {
         loadFloors();
       })
@@ -46,8 +53,9 @@ function Draw() {
         navigate("/myMaps");
       });
 
-    // fpsCounterLoop();
   }, []);
+
+
 
   const updateFloors = (floors) => {
     setFloors(floors);

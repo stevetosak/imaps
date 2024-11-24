@@ -76,7 +76,7 @@ public class MapViewController {
         try {
             this.floors = floorService.getAllPublicFloors(mapName);
             this.currentFloor = getFloorByNum(floorNum);
-            this.loadGraph((String) currentFloor.getMapData().getShapeData());
+            this.loadGraph(currentFloor.getMapData().getShapeData());
             return ResponseEntity.ok(currentFloor);
         } catch (EmptyMapException e) {
             e.printStackTrace();
