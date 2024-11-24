@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-export default function useModalState(formData,setFormData,map,getInitialFormData,eventName = null){
+export default function useModalState(formData,setFormData,map,getInitialFormData,eventName = null,setRoomTypes = null){
     const [isOpen, setIsOpen] = useState(false);
     const [shape, setShape] = useState(null);
     const [connections, setConnections] = useState([]);
