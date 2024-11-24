@@ -443,10 +443,10 @@ export class MapBuilder {
 
   async saveMap(mapName, username, selectedFloor) {
     this.saveShapeDetails();
-    
+
     const payload = {
       shapes: this.shapes,
-      roomTypes: this.roomTypes,
+      roomTypes: JSON.stringify(this.roomTypes),
       mapName: mapName,
       floorNum: selectedFloor
     }
@@ -655,8 +655,11 @@ export class MapBuilder {
 
       //load room types
       let roomTypesParsed = JSON.parse(data.roomTypes);
-      console.log("ROOM TPYES PARSED: " + roomTypesParsed)
-      roomTypesParsed.forEach(type => {
+      console.log("TYPE OF PARSE " + typeof roomTypesParsed)
+
+
+
+      JSON.parse(roomTypesParsed).forEach(type => {
         this.roomTypes.push(type);
       })
 

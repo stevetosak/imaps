@@ -21,6 +21,14 @@ export default function RoomModal({map}) {
     description: roomObj.info.description || "",
   })
 
+
+    useEffect(() => {
+        if(map != null){
+            setRoomTypes(map.roomTypes)
+            console.log("VLEZE EF")
+        }
+    }, [map]);
+
   const {
     modalState: {isOpen, toggleModal, saveDetails, updateModalData},
   } = useModalState(formData, setFormData, map,getInitialFormData,"openRoomModalEvent");
