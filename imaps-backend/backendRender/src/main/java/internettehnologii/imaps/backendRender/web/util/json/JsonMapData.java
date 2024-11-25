@@ -16,6 +16,8 @@ public class JsonMapData implements Serializable {
         this.roomTypes = roomTypes;
     }
     public JsonMapData() {
+        shapeData = "";
+        roomTypes = "";
     }
 
 }

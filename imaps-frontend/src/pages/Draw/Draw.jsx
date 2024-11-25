@@ -14,6 +14,9 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import Profile from "../../components/Profile/Profile.jsx";
 import { AuthContext } from "../../components/AuthContext/AuthContext.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
+import StairsModal from "../../components/Modals/StairsModal/StairsModal.jsx";
+import {MapDisplay} from "../../scripts/main/MapDisplay.js";
+import netconfig from "../../scripts/net/netconfig.js";
 
 function Draw() {
   const { mapName } = useParams();
@@ -25,9 +28,9 @@ function Draw() {
   const [newFloorNumber, setNewFloorNumber] = useState(0);
   const [errorMessage, setErrorMessage] = useState("Error");
   const [hasError, setHasError] = useState(false);
+  const [mapLoaded,setMapLoaded] = useState(true);
   const navigate = useNavigate();
 
-  let activityTimeout;
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -54,6 +57,51 @@ function Draw() {
       });
 
   }, []);
+
+  // useEffect(() => {
+  //   if (!searchParams.has("floor")) {
+  //     setSearchParams({floor: "0"}); // Ensure searchParams is initialized
+  //   }
+  // }, [setSearchParams, searchParams]);
+  //
+  // useEffect(() => {
+  //   const appInstance = new MapBuilder("container");
+  //
+  //   const floorNum = parseInt(searchParams.get("floor"));
+  //
+  //   const load = async () => {
+  //     const httpService = new HttpService();
+  //
+  //     try {
+  //
+  //       const endpoint = netconfig.endpoints.protect.load;
+  //       const params = `?mapName=${mapName}&floorNum=${floorNum}&username=${username}` ;
+  //
+  //       return httpService.get(`${endpoint}${params}`);
+  //     } catch (e) {
+  //       throw new Error("Can't load map: " + e.message);
+  //     }
+  //   };
+  //
+  //   load()
+  //       .then(respFloors => {
+  //         console.log("re", respFloors)
+  //         setFloors(respFloors);
+  //         console.log("fnm:", floorNum)
+  //         let tlFloor = respFloors.filter(f => f.num === floorNum)[0];
+  //         console.log("loaded floor: ", tlFloor)
+  //         appInstance.loadMapN(tlFloor?.mapData)
+  //         setApp(appInstance);
+  //         setMapLoaded(true);
+  //       })
+  //       .catch(reason => {
+  //         console.log("ERROR LOADING MAP VIEW: " + reason)
+  //       });
+  //
+  //
+  // }, [searchParams, mapName, setSearchParams]);
+
+
 
 
 
@@ -137,17 +185,11 @@ function Draw() {
       <div id="container" className={styles.cont}></div>
       <div className={styles.panel}>
         <div className={styles.topPanelH}>
-          {/* <Link to="/">
-            <img src={logo_img} alt="Finki Logo" className={styles.logo_img} />
-          </Link> */}
           <Profile position="inline"></Profile>
         </div>
         <Link to={`/myMaps/${mapName}/View`} className={styles.titleLink}>
           <h1 className={styles.title}>{mapName}</h1>
         </Link>
-        {/* <div id="fpscont" className={styles.fpscounter}>
-          <p id="fpsCounter"></p>
-        </div> */}
         <div className={styles.guideWrapper}>
           <DrawGuide />
         </div>
@@ -204,6 +246,7 @@ function Draw() {
           <RoomModal map={app}></RoomModal>
           <EntranceModal map={app}></EntranceModal>
           <InfoPinModal map={app}></InfoPinModal>
+          <StairsModal map = {app}></StairsModal>
         </div>
       </div>
 

@@ -517,11 +517,19 @@ export class MapBuilder {
     return this.getShapeInfoByType("Entrance");
   }
 
-  getConnections() {
+  getConnections(includeStairs = false) {
     const pins = this.getShapeInfoByType("InfoPin");
     const entrances = this.getShapeInfoByType("Entrance");
-    return [...pins, ...entrances];
+    const stairs = this.getShapeInfoByType("Stairs");
+    if(!includeStairs){
+      return [...pins, ...entrances];
+    } else {
+      return [...pins, ...entrances,...stairs];
+    }
+
   }
+
+
 
   getShapeInfoByType(type) {
     return this.shapes.filter((shape) => shape.className === type).map((shape) => shape.info);
@@ -621,6 +629,17 @@ export class MapBuilder {
     });
   }
 
+  // ova  klasa i map display da nasledbat od glavna klasa
+
+  loadMapN(floorData) {
+    if (floorData != null) {
+      this.deserializeMap(floorData);
+      this.shapes.forEach((shape) => {
+        this.mainLayer.add(shape);
+      });
+    }
+  }
+
   deserializeMap(data) {
     console.log("DESERIALIZING: ", data);
     this.clearMap();
@@ -666,7 +685,8 @@ export class MapBuilder {
       console.log("room types arr loaded: " + this.roomTypes)
 
       // draw connections
-      let pins = this.shapes.filter((shape) => shape.className === "InfoPin" || shape.className === "Entrance" );
+      // 
+      let pins = this.shapes.filter((shape) => shape.className === "InfoPin" || shape.className === "Entrance" || shape.className === "Stairs");
       pins.forEach((pin) => {
         let connectedPins = pin.info.selectedPins;
         if (connectedPins) {
@@ -684,4 +704,65 @@ export class MapBuilder {
 
     this.shapes.forEach((shape) => shape.displayName(this.textLayer));
   }
+
+
+  //nov
+  // deserializeMap(data) {
+  //   console.log("DESERIALIZING: ", data);
+  //   this.clearMap();
+  //
+  //   if (data != null) {
+  //     const dsrData = JSON.parse(data);
+  //     //load shapes
+  //     dsrData.forEach((shape) => {
+  //       const attrs = {
+  //         position: { x: shape.attrs.x, y: shape.attrs.y },
+  //         width: shape.attrs.width,
+  //         height: shape.attrs.height,
+  //         layer: this.mainLayer,
+  //         blockSize: this.blockSize,
+  //         rotation: shape.attrs.rotation,
+  //         scaleX: shape.attrs.scaleX,
+  //         scaleY: shape.attrs.scaleY,
+  //         increment: false,
+  //         snap: true,
+  //         fromLoad: true,
+  //       };
+  //
+  //       const loadedShape = Factory.createShape(shape.className, attrs);
+  //       loadedShape.loadInfo(shape.attrs);
+  //       this.shapes.push(loadedShape);
+  //       addEventHandling(loadedShape, this, "dblclick");
+  //     });
+  //
+  //     //load room types
+  //     //vo baza trebit da sa cuvaat room types za sekoja mapa
+  //
+  //     // let roomTypesParsed = JSON.parse(data.roomTypes);
+  //     // console.log("TYPE OF PARSE " + typeof roomTypesParsed)
+  //     // JSON.parse(roomTypesParsed).forEach(type => {
+  //     //   this.roomTypes.push(type);
+  //     // })
+  //     //
+  //     // console.log("room types arr loaded: " + this.roomTypes)
+  //
+  //     // draw connections
+  //     let pins = this.shapes.filter((shape) => shape.className === "InfoPin" || shape.className === "Entrance" );
+  //     pins.forEach((pin) => {
+  //       let connectedPins = pin.info.selectedPins;
+  //       if (connectedPins) {
+  //         connectedPins.forEach((slPin) => {
+  //           console.log("CONN node1: " + pin + "conn node2: " + slPin )
+  //           this.drawConnection(pin.info.name, slPin);
+  //         });
+  //       }
+  //     });
+  //   }
+  //
+  //   this.mainTransformer.nodes([]);
+  //   this.mainLayer.add(this.mainTransformer);
+  //   this.mainLayer.add(this.selectionRectangle);
+  //
+  //   this.shapes.forEach((shape) => shape.displayName(this.textLayer));
+  // }
 }

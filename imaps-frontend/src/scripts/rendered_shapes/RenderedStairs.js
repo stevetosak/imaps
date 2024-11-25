@@ -15,7 +15,11 @@ export default class RenderedStairs extends RenderedMapShape{
             name: "mapObj",
             rotation: attrs.rotation,
         });
+
+        this.info.name = attrs.obj_name;
+        this.initText()
     }
+
 
 
 

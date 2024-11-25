@@ -76,7 +76,7 @@ public class MapViewController {
         try {
             this.floors = floorService.getAllPublicFloors(mapName);
             this.currentFloor = getFloorByNum(floorNum);
-            this.loadGraph(currentFloor.getMapData().getShapeData());
+            this.loadGraph((String) currentFloor.getMapData().getShapeData());
             return ResponseEntity.ok(currentFloor);
         } catch (EmptyMapException e) {
             e.printStackTrace();
@@ -98,6 +98,10 @@ public class MapViewController {
             } else {
                 System.out.println("============================================== CANT LOAD GRAPH: MAP DATA NULL ==============================================");
             }
+
+            floors.forEach(floor -> {
+                System.out.println(floor);
+            });
 
             System.out.println("Current floor: " + currentFloor);
             return ResponseEntity.ok(Util.convertToFloorDTO(floors)); // tuka return site floors trebit
