@@ -53,9 +53,7 @@ public class MapDrawController {
 
 
             ObjectMapper objectMapper = new ObjectMapper();
-
             String roomTypesJson = objectMapper.writeValueAsString(mapDTO.getRoomTypes());
-
             JsonMapData jsonMapData = new JsonMapData(mapDTO.getShapes().toString(), roomTypesJson);
 
             System.out.println("ROOM TYPES JSON : " + roomTypesJson);

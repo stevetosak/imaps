@@ -4,6 +4,7 @@ import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -11,6 +12,7 @@ import org.hibernate.type.SqlTypes;
 @Table(name = "floors")
 @Getter @Setter
 @IdClass(FloorId.class)
+@ToString
 public class Floor {
 
 

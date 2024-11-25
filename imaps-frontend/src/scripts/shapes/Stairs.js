@@ -29,8 +29,8 @@ export default class Stairs extends MapNode{
         this.type = "Stairs"
         this._info = {
             name: `Stairs ${id}`,
-            from: "",
-            to: "",
+            description: "",
+            selectedPins: []
         };
 
         this.id = id;
@@ -49,6 +49,18 @@ export default class Stairs extends MapNode{
             context.fillStrokeShape(shape);
         }
         context.closePath()
+    }
+
+    loadInfo(attrs) {
+        this.info.name = attrs.obj_name;
+        this.info.description = attrs.description;
+        this.info.selectedPins = attrs.connected_pins;
+    }
+
+    saveShapeDetails() {
+        this.setAttr("connected_pins", this.info.selectedPins);
+        this.setAttr("obj_name", this.info.name);
+        this.setAttr("description", this.info.description);
     }
 }
 

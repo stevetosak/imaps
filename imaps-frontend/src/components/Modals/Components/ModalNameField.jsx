@@ -1,7 +1,7 @@
 import styles from "../EntranceModal/EntranceModal.module.css";
 import React from "react";
 
-export default function ModalNameField({formData,updateModalData}) {
+export default function ModalNameField({formData,updateModalData,phtext}) {
     return (
         <div className={styles.formGroup}>
             <label htmlFor="name">Name:</label>
@@ -11,7 +11,7 @@ export default function ModalNameField({formData,updateModalData}) {
                 name="name"
                 value={formData.name}
                 onChange={updateModalData}
-                placeholder="Enter the entrance name" // Suggest user input
+                placeholder={phtext}
                 required
             />
         </div>

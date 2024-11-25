@@ -82,7 +82,7 @@ const MapView = ({isPrivate}) => {
 
     //nova load, ne vo MapDisplay
 
-
+    //loso
     useEffect(() => {
         const openRoomInfoPanel = (e) => {
             setSelectedRoom(e.detail.room);

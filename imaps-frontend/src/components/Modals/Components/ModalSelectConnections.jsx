@@ -1,7 +1,7 @@
 import styles from "../EntranceModal/EntranceModal.module.css";
 import React from "react";
 
-export default function ModalSelectConnections({formData,updateModalData,addPinToList}) {
+export default function ModalSelectConnections({formData,updateModalData,addPinToList,display = "only_current"}) {
 
     return (
         <>

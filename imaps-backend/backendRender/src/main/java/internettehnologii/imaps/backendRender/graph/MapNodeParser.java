@@ -19,45 +19,48 @@ public class MapNodeParser {
 //        }
 
         ObjectMapper objectMapper = new ObjectMapper();
-            String[] shapes = objectMapper.readValue(mapJson, String[].class);
+        List<Shape> shapes = objectMapper.readValue(mapJson, objectMapper.getTypeFactory().constructCollectionType(List.class, Shape.class));
 
-            Arrays.stream(shapes).forEach(shape -> {
-                try {
-                    JsonNode parsedNode = objectMapper.readTree(shape);
-                    String type = parsedNode.get("className").asText();
+        shapes.forEach(shape -> {
+            System.out.println(shape.toString() + " -----------sgap");
+            try {
+                String type = shape.getClassName();
 
-                    // Wall i room ne se bitni za navigacija
-                    if(Objects.equals(type,"Wall") || Objects.equals(type,"Room")) return;
+                System.out.println("CLASSNAME " + type);
 
-                    JsonNode attrs = parsedNode.get("attrs");
-                    MapNode mapNode = createMapNode(attrs);
+                // Wall i room ne se bitni za navigacija
+                if (Objects.equals(type, "Wall") || Objects.equals(type, "Room")) return;
 
-                    if(attrs.has("connected_pins")){
-                        JsonNode connectedPins = attrs.get("connected_pins");
-                        if (connectedPins.isArray()) {
-                            for (JsonNode pin : connectedPins) {
-                                System.out.println("Connected node (markup) : " + pin.asText() + " to: " + attrs.get("obj_name"));
-                                mapNode.addConnectionName(pin.asText());
-                            }
-                        }
+                Map<String, Object> attrs = shape.getAttrs();
+                MapNode mapNode = createMapNode(attrs);
+
+                List<String> connectedPins = (List<String>) attrs.get("connected_pins");
+
+
+                if (connectedPins != null) {
+                    for (String pin : connectedPins) {
+                        System.out.println("Connected node (markup) : " + pin + " to: " + attrs.get("obj_name"));
+                        mapNode.addConnectionName(pin);
                     }
 
-                    mapNodes.add(mapNode);
-
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
                 }
-            });
 
-           mapNodes.forEach(node -> System.out.println("Added node: ----> " + node.toString()));
+                mapNodes.add(mapNode);
 
-           return mapNodes;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        mapNodes.forEach(node -> System.out.println("Added node: ----> " + node.toString()));
+
+        return mapNodes;
 
     }
 
 
-    private static String findAttr(String key,JsonNode attrs){
-        if(attrs.has(key)){
+    private static String findAttr(String key, JsonNode attrs) {
+        if (attrs.has(key)) {
             return attrs.get(key).asText();
         } else {
             System.out.println("No attribute found for key:" + key);
@@ -67,16 +70,16 @@ public class MapNodeParser {
     }
 
 
-    private static MapNode createMapNode(JsonNode attrs) {
-        String name = findAttr("obj_name",attrs);
-        String description = findAttr("description",attrs);
-        String connectedRoom = findAttr("connected_room",attrs);
-        double x = Double.parseDouble(Objects.requireNonNull(findAttr("x", attrs)));
-        double y = Double.parseDouble(Objects.requireNonNull(findAttr("y", attrs)));
-        Coordinates<Double,Double> coordinates = new Coordinates<>(x,y);
+    private static MapNode createMapNode(Map<String, Object> attrs) {
+        String name = (String) attrs.get("obj_name");
+        String description = (String) attrs.get("description");
+        String connectedRoom = (String) attrs.get("connected_room");
+        double x = Double.parseDouble(Objects.requireNonNull(attrs.get("x")).toString());
+        double y = Double.parseDouble(Objects.requireNonNull(attrs.get("y")).toString());
+        Coordinates<Double, Double> coordinates = new Coordinates<>(x, y);
 
         MapNode mapNode = new MapNode(name, description, coordinates);
-        if(connectedRoom != null){
+        if (connectedRoom != null) {
             mapNode.setConnectedRoom(connectedRoom);
         }
 

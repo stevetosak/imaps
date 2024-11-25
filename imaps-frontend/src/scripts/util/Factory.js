@@ -39,7 +39,8 @@ export default class Factory {
         if(attrs.increment) this.infoPinCount++;
           return new InfoPin(attrs,this.infoPinCount);
       case "Stairs":
-        return new Stairs(attrs,this.stairCount++)
+        if(attrs.increment) this.stairCount++;
+        return new Stairs(attrs,this.stairCount)
       default:
         throw new Error("Invalid shape type: " + shapeType);
     }
