@@ -1,4 +1,4 @@
-package internettehnologii.imaps.backendRender.web.service;
+package internettehnologii.imaps.backendRender.web.service.impl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -8,15 +8,12 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.prefs.BackingStoreException;
 
 
 @Service
