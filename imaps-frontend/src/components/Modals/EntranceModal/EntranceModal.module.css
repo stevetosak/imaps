@@ -27,7 +27,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #2c2f33; /* Darker background for modal content */
-  color: #ffffff; /* White text for contrast */
+  color: #ffffff !important; /* White text for contrast */
   padding: 20px;
   border-radius: 8px;
   max-width: 600px;
@@ -37,10 +37,9 @@
 }
 
 /* Heading styles */
-h2,
-h3 {
+.title {
   margin-bottom: 15px;
-  color: #ffffff !important;
+  color: #ffffff ;
 }
 
 /* Button for opening the modal */

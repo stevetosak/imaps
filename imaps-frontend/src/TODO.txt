@@ -7,9 +7,13 @@ PRIORITY HIGH
 
 - Room Types ne rabotat vo Draw
 - Text na shape da se sredit
+- Toska smeni go backendot, ne gi cuvaj keshirani floors
+- Id fix na shapes vo Draw
 
 PRIORITY MEDIUM
 
+- Render kopce
+- MapType da imat vo baza
 - Delete endpoint /delete/mapId
 - Detach event na draw (keys: e, r)
 - Text na shape vo Draw da e top layer

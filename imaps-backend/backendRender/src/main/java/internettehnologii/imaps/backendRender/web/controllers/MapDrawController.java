@@ -119,5 +119,34 @@ public class MapDrawController {
         }
     }
 
+    @DeleteMapping("/my-maps/delete")
+    public ResponseEntity<Map<String, Object>> deleteMap(
+            @RequestParam String mapName,
+            @RequestParam String username) {
+        System.out.println("AAAAAAAAAAAAAAAAAA: " + username + " " + mapName);
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // Check if the map exists and belongs to the user
+            IndoorMap map = mapService.getMapForUser(username, mapName);
+            if (map == null) {
+                response.put("error", "Map not found or does not belong to the user.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+            // Delete the map using the service
+            mapService.deleteMap(map);
+            response.put("deleted", true);
+            response.put("mapName", mapName);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.out.println("Error during map deletion: " + e.getMessage());
+            e.printStackTrace();
+            response.put("error", "An error occurred while deleting the map.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+
+
 
 }
