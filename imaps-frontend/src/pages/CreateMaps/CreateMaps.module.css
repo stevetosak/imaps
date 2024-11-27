@@ -14,7 +14,7 @@
 
 /* Map Title Styling */
 .mapTitle {
-  color: white;
+  color: #2c2f33;
   text-transform: uppercase;
 }
 
@@ -43,7 +43,7 @@ h1 {
 .createMapsButton {
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #1e90ff;
+  background-color: #f1153b;
   color: white;
   border: none;
   border-radius: 8px;
@@ -52,7 +52,7 @@ h1 {
 }
 
 .createMapsButton:hover {
-  background-color: #155a8a;
+  background-color: #b70526;
   transform: translateY(-2px);
 }
 
@@ -85,18 +85,19 @@ h1 {
   align-items: center;
   justify-content: center;
   color: #2c3e50;
-  background-color: #fbaffe;
+  background-color: #ffffff;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 15px;
   transition: all 300ms ease-in-out;
   padding: 10px;
-  border: 1px solid #dcdcdc;
+  border: 2px solid #232323;
   border-radius: 12px;
   margin-bottom: 20px;
 }
 
 .tile:hover {
   transform: scale(1.05);
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 18px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 8px 18px;
+  background: #F1153BFF;
 }
 
 .imgStyle {
