@@ -37,10 +37,9 @@
 }
 
 /* Heading styles */
-h2,
-h3 {
+.title {
   margin-bottom: 15px;
-  color: #ffffff !important;
+  color: #ffffff ;
 }
 
 /* Button for opening the modal */
