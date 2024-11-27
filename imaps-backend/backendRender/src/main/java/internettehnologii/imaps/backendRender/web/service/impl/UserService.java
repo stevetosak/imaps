@@ -1,4 +1,4 @@
-package internettehnologii.imaps.backendRender.web.service;
+package internettehnologii.imaps.backendRender.web.service.impl;
 
 import internettehnologii.imaps.backendRender.web.exceptions.EmailTakenException;
 import internettehnologii.imaps.backendRender.web.exceptions.UserNotFoundException;

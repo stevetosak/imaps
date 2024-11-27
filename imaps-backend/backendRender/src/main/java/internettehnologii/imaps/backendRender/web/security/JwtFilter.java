@@ -1,7 +1,7 @@
 package internettehnologii.imaps.backendRender.web.security;
 
-import internettehnologii.imaps.backendRender.web.service.JWTService;
-import internettehnologii.imaps.backendRender.web.service.MapUserDetailsService;
+import internettehnologii.imaps.backendRender.web.service.impl.JWTService;
+import internettehnologii.imaps.backendRender.web.service.impl.MapUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

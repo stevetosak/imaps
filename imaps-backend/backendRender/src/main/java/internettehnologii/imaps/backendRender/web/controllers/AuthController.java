@@ -1,9 +1,9 @@
 package internettehnologii.imaps.backendRender.web.controllers;
 
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
-import internettehnologii.imaps.backendRender.web.service.JWTService;
-import internettehnologii.imaps.backendRender.web.service.MapUserDetailsService;
-import internettehnologii.imaps.backendRender.web.service.UserService;
+import internettehnologii.imaps.backendRender.web.service.impl.JWTService;
+import internettehnologii.imaps.backendRender.web.service.impl.MapUserDetailsService;
+import internettehnologii.imaps.backendRender.web.service.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
