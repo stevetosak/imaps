@@ -1,3 +1,4 @@
+/* Modal Overlay */
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -12,14 +13,7 @@
     backdrop-filter: blur(5px);
 }
 
-h2 {
-    color: #333 !important;
-    text-transform: uppercase;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
+/* Modal Content */
 .modalContent {
     background-color: #fff;
     padding: 2rem;
@@ -30,42 +24,59 @@ h2 {
     animation: fadeIn 0.3s ease-out;
 }
 
+/* Modal Title */
+.title {
+    color: #333;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* Modal Buttons Container */
 .modalButtons {
     margin-top: 1.5rem;
     display: flex;
     justify-content: space-between;
 }
 
-button {
+/* Submit Button */
+.modalSubmitButton {
     padding: 0.8rem 1.5rem;
     font-size: 1rem;
     font-weight: bold;
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    background-color: #007bff;
+    color: white;
     transition: background-color 0.3s, transform 0.2s;
 }
 
-button[type="submit"] {
-    background-color: #007bff;
-    color: white;
-}
-
-button[type="submit"]:hover {
+.modalSubmitButton:hover {
     background-color: #0056b3;
     transform: scale(1.05);
 }
 
-button[type="button"] {
+/* Cancel Button */
+.modalCancelButton {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
     background-color: #f1f1f1;
     color: #333;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-button[type="button"]:hover {
+.modalCancelButton:hover {
     background-color: #e0e0e0;
     transform: scale(1.05);
 }
 
+/* Form Data */
 .formData {
     display: flex;
     flex-direction: column;
@@ -93,6 +104,7 @@ input:focus {
     box-shadow: 0px 0px 4px rgba(0, 123, 255, 0.5);
 }
 
+/* Fade In Animation */
 @keyframes fadeIn {
     from {
         opacity: 0;

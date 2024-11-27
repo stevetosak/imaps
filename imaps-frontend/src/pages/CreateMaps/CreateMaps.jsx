@@ -1,23 +1,21 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./CreateMaps.module.css";
-import {TilesContainer} from "react-tiles-dnd";
+import { TilesContainer } from "react-tiles-dnd";
 import MapInfoModal from "../../components/MapInfoModal/MapInfoModal.jsx";
 import MapDetailsModal from "../../components/Modals/CreateMapModal/CreateMapModal.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
-import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
+import { AuthContext } from "../../components/AuthContext/AuthContext.jsx";
 import card from "../../assets/card-map.png";
 
-const renderTile = ({data, isDragging}, openMapInfo) => (
-    <div style={{padding: "1rem", width: "100%"}}>
+const renderTile = ({ data, isDragging }, openMapInfo) => (
+    <div style={{ padding: "1rem", width: "100%" }}>
         <div
             className={`${styles.tile} ${isDragging ? styles.dragging : ""}`}
-            style={{width: "100%", height: "100%"}}
+            style={{ width: "100%", height: "100%" }}
             onClick={() => openMapInfo(data)}
         >
-            <img src={card} className={styles.imgStyle} alt="Map Thumbnail"/>
-            <div className={styles.mapTitle}>
-                {data.mapName}
-            </div>
+            <img src={card} className={styles.imgStyle} alt="Map Thumbnail" />
+            <div className={styles.mapTitle}>{data.mapName}</div>
         </div>
     </div>
 );
@@ -30,7 +28,7 @@ const tileSize = (tile) => ({
 export default function CreateMaps() {
     const [tiles, setTiles] = useState([]);
     const [allTiles, setAllTiles] = useState([]);
-    const {username} = useContext(AuthContext);
+    const { username } = useContext(AuthContext);
     const [selectedMap, setSelectedMap] = useState(null);
     const [isMapInfoModalOpen, setIsMapInfoModalOpen] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -56,7 +54,7 @@ export default function CreateMaps() {
     const deleteMap = (mapName) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
-        console.log("USER: ", username)
+        console.log("USER: ", username);
         const url = `/protected/my-maps/delete?mapName=${mapName}&username=${username}`;
 
         httpService
@@ -74,10 +72,6 @@ export default function CreateMaps() {
                 alert(`Error deleting the map: ${errorMessage}`);
             });
     };
-
-
-
-
 
     useEffect(() => {
         const loadPublicMaps = async () => {
@@ -118,7 +112,7 @@ export default function CreateMaps() {
             <h1>Your Maps</h1>
 
             <div className={styles.actionButtons}>
-                <button className={styles.button} onClick={openCreateModal}>
+                <button className={styles.createMapsButton} onClick={openCreateModal}>
                     Create Map
                 </button>
             </div>
@@ -131,8 +125,8 @@ export default function CreateMaps() {
                 />
             </div>
 
-            <h3>Public Maps:</h3>
-            <hr/>
+            <h3 className={styles.categories}>Public Maps:</h3>
+            <hr />
             <TilesContainer
                 data={publicMaps}
                 renderTile={(tileProps) => renderTile(tileProps, openMapInfoModal)}
@@ -141,8 +135,8 @@ export default function CreateMaps() {
                 forceTileHeight={170}
             />
 
-            <h3>Private Maps:</h3>
-            <hr/>
+            <h3 className={styles.categories}>Private Maps:</h3>
+            <hr />
             <TilesContainer
                 data={privateMaps}
                 renderTile={(tileProps) => renderTile(tileProps, openMapInfoModal)}
@@ -151,8 +145,8 @@ export default function CreateMaps() {
                 forceTileHeight={170}
             />
 
-            <h3>Pending Approval:</h3>
-            <hr/>
+            <h3 className={styles.categories}>Pending Approval:</h3>
+            <hr />
             <TilesContainer
                 data={pendingMaps}
                 renderTile={(tileProps) => renderTile(tileProps, openMapInfoModal)}

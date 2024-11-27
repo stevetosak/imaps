@@ -1,13 +1,13 @@
-import React, {useContext, useState} from "react";
+import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./CreateMapModal.module.css";
 import HttpService from "../../../scripts/net/HttpService.js";
-import {AuthContext} from "../../AuthContext/AuthContext.jsx";
+import { AuthContext } from "../../AuthContext/AuthContext.jsx";
 
 const MapDetailsModal = ({ isOpen, onClose, onSubmit }) => {
     const [mapName, setMapName] = useState("");
     const [mapType, setMapType] = useState("");
-    const {username} = useContext(AuthContext);
+    const { username } = useContext(AuthContext);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -35,7 +35,7 @@ const MapDetailsModal = ({ isOpen, onClose, onSubmit }) => {
     return (
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                <h2>Enter Map Details</h2>
+                <h2 className={styles.title}>Enter Map Details</h2>
                 <form onSubmit={handleSubmit} className={styles.formData}>
                     <label>
                         Map Name:
@@ -56,8 +56,10 @@ const MapDetailsModal = ({ isOpen, onClose, onSubmit }) => {
                         />
                     </label>
                     <div className={styles.modalButtons}>
-                        <button type="submit">Submit</button>
-                        <button type="button" onClick={onClose}>
+                        <button type="submit" className={styles.modalSubmitButton}>
+                            Submit
+                        </button>
+                        <button type="button" className={styles.modalCancelButton} onClick={onClose}>
                             Cancel
                         </button>
                     </div>
