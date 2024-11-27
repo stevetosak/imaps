@@ -53,6 +53,32 @@ export default function CreateMaps() {
         setIsCreateModalOpen(false);
     };
 
+    const deleteMap = (mapName) => {
+        const httpService = new HttpService();
+        httpService.setAuthenticated();
+        console.log("USER: ", username)
+        const url = `/protected/my-maps/delete?mapName=${mapName}&username=${username}`;
+
+        httpService
+            .delete(url)
+            .then((response) => {
+                console.log(`Map "${mapName}" deleted successfully.`, response);
+
+                // Remove the deleted map from the tiles
+                setTiles((prevTiles) => prevTiles.filter((tile) => tile.mapName !== mapName));
+                setAllTiles((prevTiles) => prevTiles.filter((tile) => tile.mapName !== mapName));
+            })
+            .catch((error) => {
+                const errorMessage = error.response?.data?.error || error.message || "Unknown error";
+                console.error(`Failed to delete map "${mapName}".`, errorMessage);
+                alert(`Error deleting the map: ${errorMessage}`);
+            });
+    };
+
+
+
+
+
     useEffect(() => {
         const loadPublicMaps = async () => {
             const httpService = new HttpService();
@@ -140,6 +166,7 @@ export default function CreateMaps() {
                 isOpen={isMapInfoModalOpen}
                 onClose={closeMapInfoModal}
                 map={selectedMap}
+                onDelete={deleteMap}
             />
 
             <MapDetailsModal
