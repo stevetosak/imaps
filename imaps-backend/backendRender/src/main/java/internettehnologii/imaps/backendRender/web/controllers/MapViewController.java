@@ -99,11 +99,6 @@ public class MapViewController {
                 System.out.println("============================================== CANT LOAD GRAPH: MAP DATA NULL ==============================================");
             }
 
-            floors.forEach(floor -> {
-                System.out.println(floor);
-            });
-
-            System.out.println("Current floor: " + currentFloor);
             return ResponseEntity.ok(Util.convertToFloorDTO(floors)); // tuka return site floors trebit
         } catch (Exception e) {
             e.printStackTrace();

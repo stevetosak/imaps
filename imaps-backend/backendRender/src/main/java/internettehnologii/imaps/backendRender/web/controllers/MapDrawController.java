@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.util.SaveMapDTO;
+import internettehnologii.imaps.backendRender.web.util.Util;
 import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
@@ -83,11 +84,12 @@ public class MapDrawController {
     }
 
     @GetMapping("/my-maps/load")
-    public ResponseEntity<Floor> loadPersonalMap(@RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
+    public ResponseEntity<List<FloorDTO>> loadPersonalMap(@RequestParam String mapName, @RequestParam String username) {
         try{
+            // ovde logikava so servisive refaktor
             IndoorMap map = mapService.getMapForUser(username,mapName);
-            Floor floor = floorService.getFloorByNum(floorNum,map);
-            return ResponseEntity.ok().body(floor);
+            List<Floor> floors = floorService.getAllFloorsForMap(map.getName());
+            return ResponseEntity.ok().body(Util.convertToFloorDTO(floors));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
