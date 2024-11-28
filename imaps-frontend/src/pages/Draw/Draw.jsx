@@ -17,133 +17,73 @@ import HttpService from "../../scripts/net/HttpService.js";
 import StairsModal from "../../components/Modals/StairsModal/StairsModal.jsx";
 import {MapDisplay} from "../../scripts/main/MapDisplay.js";
 import netconfig from "../../scripts/net/netconfig.js";
+import useMapLoader from "./Hooks/useMapLoader.js";
 
 function Draw() {
   const { mapName } = useParams();
-  const [selectedFloor, setSelectedFloor] = useState(0);
-  const [app, setApp] = useState(null);
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
   const { username } = useContext(AuthContext);
-  const [floors, setFloors] = useState([]);
-  const [newFloorNumber, setNewFloorNumber] = useState(0);
+
+  //const [app, setApp] = useState(null);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  //const [floors, setFloors] = useState([]);
+  const [formNewFloorNum, setFormNewFloorNum] = useState(0);
   const [errorMessage, setErrorMessage] = useState("Error");
   const [hasError, setHasError] = useState(false);
-  const [mapLoaded,setMapLoaded] = useState(true);
-  const navigate = useNavigate();
-
-
+  const [mapLoaded,setMapLoaded] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const getSelectedFloor = () => {
-    if (!searchParams.has("floor")) {
-      setSearchParams({ floor: "0" });
-    }
-
-    return searchParams.get("floor");
-  }
+  const {app,floors,setFloors} = useMapLoader(mapName,username,searchParams,setSearchParams)
 
 
-  useEffect(() => {
-    const app = new MapBuilder("container");
-    setApp(app);
-    app
-      .loadMap(mapName, username, getSelectedFloor())
-      .then(() => {
-        loadFloors();
-      })
-      .catch((reason) => {
-        console.log("ERRR: ", reason);
-        navigate("/myMaps");
-      });
 
-  }, []);
+  //v1
+  // const handleFloorChange = (event) => {
+  //   let fnum = event.target.value;
+  //
+  //   setSelectedFloor(fnum); //updateSearchParam("floor",event.target.value)
+  //
+  //   setSearchParams({ floor: fnum });
+  //   console.log("FLOORS CHANGE",floors)
+  //   let found = floors.find(fl => fl.num == fnum);
+  //
+  //   console.log("FOUND: " + found)
+  //   app.loadMapN(found);
+  //   setApp(app);
+  //
+  //   console.log(`Floor changed to: ${event.target.value}`);
+  // };
 
-  // useEffect(() => {
-  //   if (!searchParams.has("floor")) {
-  //     setSearchParams({floor: "0"}); // Ensure searchParams is initialized
+  //v2
+  // const handleFloorChange = (event) => {
+  //   const floorNum = parseInt(event.target.value);
+  //   setSelectedFloor(floorNum); // Update state for selected floor
+  //   setSearchParams({ floor: floorNum }); // Update searchParams to trigger floor change
+  //
+  //   const selectedFloor = floors.find((f) => f.num === floorNum);
+  //
+  //   if (!selectedFloor) {
+  //     console.error(`Floor ${floorNum} not found`);
+  //     return;
   //   }
-  // }, [setSearchParams, searchParams]);
   //
-  // useEffect(() => {
-  //   const appInstance = new MapBuilder("container");
-  //
-  //   const floorNum = parseInt(searchParams.get("floor"));
-  //
-  //   const load = async () => {
-  //     const httpService = new HttpService();
-  //
-  //     try {
-  //
-  //       const endpoint = netconfig.endpoints.protect.load;
-  //       const params = `?mapName=${mapName}&floorNum=${floorNum}&username=${username}` ;
-  //
-  //       return httpService.get(`${endpoint}${params}`);
-  //     } catch (e) {
-  //       throw new Error("Can't load map: " + e.message);
-  //     }
-  //   };
-  //
-  //   load()
-  //       .then(respFloors => {
-  //         console.log("re", respFloors)
-  //         setFloors(respFloors);
-  //         console.log("fnm:", floorNum)
-  //         let tlFloor = respFloors.filter(f => f.num === floorNum)[0];
-  //         console.log("loaded floor: ", tlFloor)
-  //         appInstance.loadMapN(tlFloor?.mapData)
-  //         setApp(appInstance);
-  //         setMapLoaded(true);
-  //       })
-  //       .catch(reason => {
-  //         console.log("ERROR LOADING MAP VIEW: " + reason)
-  //       });
-  //
-  //
-  // }, [searchParams, mapName, setSearchParams]);
+  //   if (app) {
+  //     // Reuse the existing MapBuilder instance
+  //     app.loadNewFloor(selectedFloor); // Update with the new floor data
+  //   } else {
+  //     // Fallback: Create a new instance (should be rare, only in case of an issue)
+  //     const appInstance = new MapBuilder("container", floorNum);
+  //     appInstance.loadNewFloor(selectedFloor);
+  //     setApp(appInstance);
+  //   }
+  // };
 
-
-
-
-
-  const updateFloors = (floors) => {
-    setFloors(floors);
-  };
-
-  const loadFloors = async () => {
-    const httpService = new HttpService();
-    httpService.setAuthenticated();
-
-    try {
-      const resp = await httpService.get(`/protected/floors/load?mapName=${mapName}`);
-      setFloors(resp);
-      console.log("RESPONSE FLOORS:", resp);
-      console.log("SET", floors);
-    } catch (error) {
-      console.error("Error loading floors:", error);
-    }
-  };
-
-  const handleFloorChange = (event) => {
-    setSelectedFloor(event.target.value); //updateSearchParam("floor",event.target.value)
-
-    setSearchParams({ floor: event.target.value });
-    app
-      .loadMap(mapName, username, event.target.value)
-      .then((resp) => {
-        console.log(resp);
-      })
-      .catch((reason) => {
-        console.log("ERRR: ", reason);
-      });
-    console.log(`Floor changed to: ${event.target.value}`);
-  };
 
   const addFloor = () => {
     const httpService = new HttpService();
     httpService.setAuthenticated();
 
     const payload = {
-      num: newFloorNumber,
+      num: formNewFloorNum,
       mapName: mapName,
     };
 
@@ -173,9 +113,6 @@ function Draw() {
       .catch((reason) => {
         console.log("Error saving map:", reason);
       });
-  };
-  const handleLoadMapClick = (data) => {
-    app.deserializeMap(data);
   };
 
   return (
@@ -211,12 +148,12 @@ function Draw() {
           <select
             id="floorSelect"
             value={searchParams.get("floor")}
-            onChange={handleFloorChange}
+            onChange={(e) => {setSearchParams({floor: e.target.value})}}
             className={styles.floorDropdown}
           >
             {floors?.map((floor) => (
-              <option key={floor.floorNumber} value={floor.floorNumber}>
-                Floor {floor.floorNumber}
+              <option key={floor.num} value={floor.num}>
+                Floor {floor.num}
               </option>
             ))}
           </select>
@@ -225,8 +162,8 @@ function Draw() {
           <input
             type="number"
             id="newFloorInput"
-            value={newFloorNumber}
-            onChange={(e) => setNewFloorNumber(Number(e.target.value))}
+            value={formNewFloorNum}
+            onChange={(e) => setFormNewFloorNum(Number(e.target.value))}
             className={styles.floorInput}
           />
           <button onClick={addFloor} className={styles.addFloorButton}>

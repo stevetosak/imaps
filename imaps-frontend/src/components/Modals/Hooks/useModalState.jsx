@@ -1,5 +1,7 @@
 import {useEffect, useState} from "react";
 
+
+// NE TREBIT OVA DA SA KORSITIT POJKE
 export default function useModalState(formData,setFormData,map,getInitialFormData,eventName = null,setRoomTypes = null){
     const [isOpen, setIsOpen] = useState(false);
     const [shape, setShape] = useState(null);

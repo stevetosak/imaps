@@ -6,13 +6,12 @@ const config = {
         login: "/auth/login",
         register: "/auth/register",
         verify: "/auth/verify",
-        render: "/protected/render",
         public: {
             load: "/public/load-map"
         },
         protect:{
             load: "/protected/load-map"
-        }
+        },
 
     }
 };
