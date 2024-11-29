@@ -87,6 +87,7 @@ export class MapDisplay {
 
     }
 
+
     // ne se koristit ova pojke
     async loadMap(mapName,floorNum,username,isPrivate) {
         const httpService = new HttpService();

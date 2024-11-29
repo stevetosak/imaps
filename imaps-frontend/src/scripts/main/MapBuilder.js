@@ -8,7 +8,7 @@ import {json} from "react-router-dom";
 import log from "eslint-plugin-react/lib/util/log.js";
 
 export class MapBuilder {
-    constructor(containerId, floorNum) {
+    constructor(containerId, floorNum,mapName) {
         this.container = document.getElementById(containerId);
         this.stage = new Konva.Stage({
             container: containerId,
@@ -22,7 +22,7 @@ export class MapBuilder {
         // TODO text na top layer sekogas
 
         this._floorNum = floorNum;
-
+        this.mapName = mapName;
 
         this.gridLayer = new Konva.Layer();
         this.mainLayer = new Konva.Layer();
@@ -303,6 +303,8 @@ export class MapBuilder {
         const placedObj = Factory.createShape(this.hoverObj.type, attrs);
         if (!placedObj) return;
 
+        console.info("ATTRS FNUM",attrs.floorNum)
+
         this.mainLayer.add(placedObj);
         this.shapes.push(placedObj);
         addEventHandling(placedObj, this, "dblclick");
@@ -455,6 +457,16 @@ export class MapBuilder {
             shape.saveShapeDetails();
             console.log(shape.info);
         });
+    }
+
+    getPayload(){
+        this.saveShapeDetails();
+        return {
+            shapes: this.shapes,
+            roomTypes: JSON.stringify(this.roomTypes),
+            mapName: this.mapName,
+            floorNum: this.floorNum
+        }
     }
 
     async saveMap(mapName, username, selectedFloor) {
