@@ -16,8 +16,6 @@ export default class RenderedStairs extends RenderedMapShape{
             rotation: attrs.rotation,
         });
 
-
-        this.floorNum = attrs.floor_num;
         this.info.name = attrs.obj_name;
         this.initText()
     }

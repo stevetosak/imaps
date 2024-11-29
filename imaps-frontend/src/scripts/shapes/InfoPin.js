@@ -25,6 +25,7 @@ export default class InfoPin extends MapNode {
     this.id = id;
     this.eventName = "openPinModalEvent";
 
+
     this.type = "InfoPin";
     this._info = {
       name: `Pin ${id}`,

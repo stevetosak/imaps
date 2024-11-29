@@ -22,8 +22,6 @@ export default class RenderedEntrance extends RenderedMapShape {
     this.info.description = attrs.description;
     this.info.isMainEntrance = attrs.is_main_entrance;
 
-    this.floorNum = attrs.floor_num
-
     this.class = "Entrance";
 
     console.log("ATTRS VIEW:  " + attrs)
