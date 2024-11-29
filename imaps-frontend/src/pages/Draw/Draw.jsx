@@ -36,6 +36,48 @@ function Draw() {
 
 
 
+  //v1
+  // const handleFloorChange = (event) => {
+  //   let fnum = event.target.value;
+  //
+  //   setSelectedFloor(fnum); //updateSearchParam("floor",event.target.value)
+  //
+  //   setSearchParams({ floor: fnum });
+  //   console.log("FLOORS CHANGE",floors)
+  //   let found = floors.find(fl => fl.num == fnum);
+  //
+  //   console.log("FOUND: " + found)
+  //   app.loadMapN(found);
+  //   setApp(app);
+  //
+  //   console.log(`Floor changed to: ${event.target.value}`);
+  // };
+
+  //v2
+  // const handleFloorChange = (event) => {
+  //   const floorNum = parseInt(event.target.value);
+  //   setSelectedFloor(floorNum); // Update state for selected floor
+  //   setSearchParams({ floor: floorNum }); // Update searchParams to trigger floor change
+  //
+  //   const selectedFloor = floors.find((f) => f.num === floorNum);
+  //
+  //   if (!selectedFloor) {
+  //     console.error(`Floor ${floorNum} not found`);
+  //     return;
+  //   }
+  //
+  //   if (app) {
+  //     // Reuse the existing MapBuilder instance
+  //     app.loadNewFloor(selectedFloor); // Update with the new floor data
+  //   } else {
+  //     // Fallback: Create a new instance (should be rare, only in case of an issue)
+  //     const appInstance = new MapBuilder("container", floorNum);
+  //     appInstance.loadNewFloor(selectedFloor);
+  //     setApp(appInstance);
+  //   }
+  // };
+
+
   const addFloor = () => {
     const httpService = new HttpService();
     httpService.setAuthenticated();
@@ -52,30 +94,37 @@ function Draw() {
   };
 
   const handleSaveClick = async () => {
-
-    const payload = app.getPayload();
-    const httpService = new HttpService("http://localhost:8080/api/protected", true);
-    try {
-      await httpService.put(`/my-maps/save?username=${username}`, payload);
-      setIsPopupVisible(true);
-      setTimeout(() => {
-        setIsPopupVisible(false);
-      }, 3000);
-
-    } catch (err) {
-      console.log("ERROR --> Could not Save map --->", err);
+    if (!app.isMainEntranceSelected()) {
+      setErrorMessage("Please select Main Entrance");
+      setHasError(true);
+      return;
+    } else {
+      setHasError(false);
     }
+    const resp = await app
+      .saveMap(mapName, username, searchParams.get("floor"))
+      .then((r) => {
+        setIsPopupVisible(true);
+
+        setTimeout(() => {
+          setIsPopupVisible(false);
+        }, 3000);
+      })
+      .catch((reason) => {
+        console.log("Error saving map:", reason);
+      });
   };
 
   return (
     <div className={styles.wrapper} id="wrapper">
+      {/* <SideBar></SideBar> */}
       <Logo></Logo>
       <div id="container" className={styles.cont}></div>
       <div className={styles.panel}>
         <div className={styles.topPanelH}>
           <Profile position="inline"></Profile>
         </div>
-        <Link to={`/myMaps/View/${mapName}`} className={styles.titleLink}>
+        <Link to={`/myMaps/${mapName}/View`} className={styles.titleLink}>
           <h1 className={styles.title}>{mapName}</h1>
         </Link>
         <div className={styles.guideWrapper}>
@@ -83,6 +132,7 @@ function Draw() {
         </div>
         <hr />
         <br />
+        {/* {<h2 className={styles.paragraph}>Objects:</h2>} */}
         <ul className={styles.shapeOptions} id="shapeOptions">
           <li data-info="Entrance" className={`${styles.shapeOption} ${styles.entrance}`}></li>
           <li data-info="Wall" className={`${styles.shapeOption} ${styles.wall}`} id="wall"></li>
@@ -120,11 +170,13 @@ function Draw() {
             Add Floor
           </button>
         </div>
+
         <hr />
         <br />
         {hasError && <p style={{ color: "red", textAlign: "center" }}>{errorMessage}</p>}
         <div className={styles.templateCont}>
           <SaveMap submitHandler={handleSaveClick}></SaveMap>
+          {/*<MapTemplateSelector loadHandler={handleLoadMapClick}></MapTemplateSelector>*/}
         </div>
 
         <div className={styles.hide}>

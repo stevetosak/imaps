@@ -13,7 +13,6 @@ import HttpService from "../../scripts/net/HttpService.js";
 import floorIcon from "../../assets/floor_icon.png";
 import Logo from "../../components/Logo/Logo.jsx";
 import netconfig from "../../scripts/net/netconfig.js";
-import parseMapData from "../../scripts/util/parseMapData.js";
 
 const MapView = ({isPrivate}) => {
     const {mapName} = useParams();
@@ -25,7 +24,7 @@ const MapView = ({isPrivate}) => {
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [floors, setFloors] = useState([]); // ova trebit da sa objekti
     const navigate = useNavigate();
-    const [shapes,setShapes] = useState([]);
+
     const [searchParams, setSearchParams] = useSearchParams();
 
 
@@ -65,24 +64,12 @@ const MapView = ({isPrivate}) => {
 
         load()
             .then(respFloors => {
-                let tlFloor = respFloors.filter(f => f.num === floorNum)[0];
-
-                let parsedShapes = [];
-
-                respFloors.forEach(flr => {
-                    const parsed = parseMapData(flr.mapData,(shape => shape.className !== "InfoPin"))
-                    parsedShapes = [...parsedShapes,...parsed];
-                })
-
-                setShapes(parsedShapes)
-
-                parsedShapes.forEach(shape => {
-                    console.info("PARSED Shapes: " + shape.info.name)
-                })
-
-
+                console.log("re", respFloors)
                 setFloors(respFloors);
-                appInstance.loadMapN(tlFloor?.mapData)
+                console.log("fnm:", floorNum)
+                let tlFloor = respFloors.filter(f => f.num === floorNum)[0];
+                console.log("loaded floor: ", tlFloor)
+                appInstance.loadMapN(tlFloor.mapData)
                 setApp(appInstance);
                 setMapLoaded(true);
             })
@@ -149,9 +136,6 @@ const MapView = ({isPrivate}) => {
         }
     };
 
-    /**
-     *
-     */
     const handleFloorChange = (floorNum) => {
         setSearchParams({floor: floorNum});
         app
@@ -186,7 +170,7 @@ const MapView = ({isPrivate}) => {
                     {mapLoaded && app && (
                         <>
                             <SearchBar map={app} handleDirectionsSubmit={handleDirectionsSubmit}
-                                       isPanelOpen={isPanelOpen} setSelectedRoom={setSelectedRoom} availableShapes={shapes}/>
+                                       isPanelOpen={isPanelOpen} setSelectedRoom={setSelectedRoom}/>
                             <FilterBar map={app}/>
                         </>
                     )}
