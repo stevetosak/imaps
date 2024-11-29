@@ -7,16 +7,25 @@ import HttpService from "../../scripts/net/HttpService.js";
 import { AuthContext } from "../../components/AuthContext/AuthContext.jsx";
 import card from "../../assets/card-map.png";
 
-const renderTile = ({ data, isDragging }, openMapInfo) => (
-    <div style={{ padding: "1rem", width: "100%" }}>
-        <div
-            className={`${styles.tile} ${isDragging ? styles.dragging : ""}`}
-            style={{ width: "100%", height: "100%" }}
-            onClick={() => openMapInfo(data)}
-        >
-            <img src={card} className={styles.imgStyle} alt="Map Thumbnail" />
-            <div className={styles.mapTitle}>{data.mapName}</div>
-        </div>
+
+const renderTile = ({ data, isDragging }) => (
+  <div style={{ padding: "1rem", width: "100%" }}>
+    <div
+      className={`${styles.tile} ${isDragging ? styles.dragging : ""}`}
+      style={{ width: "100%", height: "100%" }}
+    >
+      <img src={card} className={styles.imgStyle} alt="Map Thumbnail" />
+      <div style={{fontFamily: 'exo'}}>
+        {data.mapName} {isDragging ? "DRAGGING" : null}
+      </div>
+      <div className={styles.iconContainer}>
+        <Link to={`/myMaps/Draw/${data.mapName}`} className={styles.linkStyle}>
+          <img src={edit_icon} className={styles.icon} alt="Edit" />
+        </Link>
+        <Link to={`/myMaps/View/${data.mapName}`} className={styles.linkStyle}>
+          <img src={view_icon} className={styles.icon} alt="View" />
+        </Link>
+      </div>
     </div>
 );
 

@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import FinkiMaps from "./pages/FinkiMaps/FinkiMaps";
 import Maps from "./pages/Maps/Maps";
 import LoginPage from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
@@ -30,15 +29,15 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<IMaps />} />
-            <Route path="/Maps/:mapName/View" element={<MapView isPrivate={false}/>} />
+            <Route path="/Maps/View/:mapName" element={<MapView isPrivate={false}/>} />
             <Route path="/Maps" element={<Maps />} />
             <Route path="/Login" element={<LoginPage />} />
             <Route path="/Signup" element={<Signup />} />
 
             <Route element={<ProtectedRoute />}>
-              <Route path="/myMaps/:mapName/Draw" element={<Draw />} />
+              <Route path="/myMaps/Draw/:mapName" element={<Draw />} />
               <Route path="/myMaps" element={<CreateMaps />} />
-              <Route path="/myMaps/:mapName/View" element={<MapView isPrivate={true} />} />
+              <Route path="/myMaps/View/:mapName" element={<MapView isPrivate={true} />} />
             </Route>
 
             <Route path="*" element={<Error />} />
