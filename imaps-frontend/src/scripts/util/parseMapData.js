@@ -5,11 +5,11 @@ export default function parseMapData(data,predicate){
 
     let result = [];
 
-    dsrData.filter(predicate)
-        .forEach(s => {
-            const shape = Factory.createRenderedShape(s.className,s.attrs)
-            result.push(shape)
-        })
+   dsrData.filter(predicate)
+       .forEach(s => {
+           const shape = Factory.createRenderedShape(s.className,s.attrs)
+           result.push(shape)
+       })
 
     return result;
 }
