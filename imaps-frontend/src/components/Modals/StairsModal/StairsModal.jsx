@@ -10,8 +10,10 @@ import ModalDescriptionField from "../Components/ModalDescriptionField.jsx";
 import ModalMainEntranceCheckbox from "../Components/ModalMainEntranceCheckbox.jsx";
 import ModalSaveButton from "../Components/ModalSaveButton.jsx";
 import Modal from "../Components/Modal.jsx";
+import ShapeQuery from "../../../scripts/util/ShapeQuery.js";
+import ModalSelectConnections2 from "../Components/ModalSelectConnections2.jsx";
 
-export default function StairsModal({map}){
+export default function StairsModal({map,shapes}){
     const [formData,setFormData] = useState({
         name: "",
         description: "",
@@ -43,22 +45,26 @@ export default function StairsModal({map}){
         console.log(roomObj.info.selectedPins, "Loaded pins on modal open");
     },"openStairsModalEvent")
 
-    const getInitialFormData = (event, roomObj) => ({
+    const getInitialFormData = (event, roomObj) => (
+        {
         name: roomObj.info.name || "",
         description: roomObj.info.description || "", // todo
         selectedPins: roomObj.info.selectedPins || [],
         selectedPin: "",
-        availablePins: event.detail.map.getConnections(true) || []
+        //availabel pins ustvari info obj e
+        availablePins: [...event.detail.map.getConnections()] || []
     });
+
 
     return (
 
         <Modal isOpen={isOpen} toggleModal={toggleModal} title={"Enter Stair Details"}>
             <ModalNameField formData={formData} updateModalData={updateModalData} phtext={"Enter name of stairs"}/>
-            <ModalSelectConnections
+            <ModalSelectConnections2
                 formData={formData}
                 updateModalData={updateModalData}
                 addPinToList={addConnection}
+                shapes={shapes.filter(sh => sh.className === "Stairs")}
             />
             <ModalDisplayConnections connections={connections} removePinFromList={removeConnection}/>
             <ModalDescriptionField updateModalData={updateModalData} formData={formData}/>

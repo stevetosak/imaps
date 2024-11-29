@@ -6,6 +6,7 @@ import {addEventHandling} from "../util/addEventHandling.js";
 import MapNode from "../base/MapNode.js";
 import {json} from "react-router-dom";
 import log from "eslint-plugin-react/lib/util/log.js";
+import ShapeRegistry from "../util/ShapeRegistry.js";
 
 export class MapBuilder {
     constructor(containerId, floorNum,mapName) {
@@ -266,6 +267,7 @@ export class MapBuilder {
         let infoPin = Factory.createShape("InfoPin", attrs);
         addEventHandling(infoPin, this, "dblclick");
         this.shapes.push(infoPin);
+        //ShapeRegistry.updateShapes(infoPin)
         this.mainLayer.add(infoPin);
         infoPin.displayName(this.textLayer);
 
@@ -546,19 +548,13 @@ export class MapBuilder {
         return this.getShapeInfoByType("Entrance");
     }
 
+    //vrakjat info
     getConnections(includeStairs = false) {
         const pins = this.getShapeInfoByType("InfoPin");
         const entrances = this.getShapeInfoByType("Entrance");
         const stairs = this.getShapeInfoByType("Stairs");
-        if (!includeStairs) {
-            return [...pins, ...entrances];
-        } else {
-            let othstrs = this.othStairs.map(str => str.info);
-            return [...pins, ...entrances, ...stairs,...othstrs];
-        }
-
+        return [...pins, ...entrances];
     }
-
 
     getShapeInfoByType(type) {
         return this.shapes.filter((shape) => shape.className === type).map((shape) => shape.info);

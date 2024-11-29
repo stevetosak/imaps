@@ -1,5 +1,8 @@
 export default class ShapeQuery{
-    static findAll(map,type){
-        return map.shapes.filter(shape => shape.className === type);
+    static findAll(shapes,type){
+        shapes.forEach(sh => console.log("ShapeQyuery",sh.info))
+        let res = shapes.filter(shape => shape.className === type);
+
+        return res;
     }
 }

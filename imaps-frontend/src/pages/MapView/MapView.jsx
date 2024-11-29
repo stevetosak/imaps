@@ -68,7 +68,7 @@ const MapView = ({isPrivate}) => {
                 let parsedShapes = [];
 
                 respFloors.forEach(flr => {
-                    const parsed = parseMapData(flr.mapData,(shape => shape.className !== "InfoPin"))
+                    const parsed = parseMapData(flr.mapData,(shape => shape.className !== "InfoPin" && shape.className !=="Wall"),true)
                     parsedShapes = [...parsedShapes,...parsed];
                 })
 
