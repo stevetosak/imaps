@@ -22,7 +22,7 @@ export default function InfoPinModal({map}) {
     });
 
     const getInitialFormData = (event, roomObj, savedPins) => ({
-        name: roomObj.info.name || "", // Room name
+        name: roomObj.info.name || "",
         description: roomObj.info.description || "",
         selectedPin: "",
         availablePins: event.detail.map.getConnections() || [],
@@ -49,5 +49,5 @@ export default function InfoPinModal({map}) {
 }
 
 InfoPinModal.propTypes = {
-    map: PropTypes.objectOf(MapBuilder)
+    map: PropTypes.instanceOf(MapBuilder),
 };

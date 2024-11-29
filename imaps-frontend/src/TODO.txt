@@ -22,6 +22,8 @@ PRIORITY MEDIUM
 
 - Floors da se dodavat vo dropdown avtomatski bez potreba za refresh na Draw
 - Zabrana za pregled na Private mapi na drug User
+- Modals na draw pomali i da mozis da gi gledas drugive shapes duri biras tramu vo modalot.
+    (mozit ova modalov primer desno da izlegvit kaj panelot)
 
 
 PRIORITY LOW
@@ -35,7 +37,22 @@ PRIORITY LOW
 - Admin Page
 
 
-- KO KE SMENIS IME VO MODAL,TREBIT VO GRAFOT DA SA UPDATE TOJ ENTRY
+- KO KE SMENIS IME VO MODAL,TREBIT VO GRAFOT DA SA UPDATE TOJ ENTRY // got
 - NAVIGACIJA DA SA IMPL POMEGJU SOBI OD RAZLICNI SPRATOVI **
 - VO room da sa cuvat entrances, za ko ke mrdas room isto entrance da sa mrdnit
-- za sekoja soba da pisit koj floor e, sort po floors. **
+
+REFACTOR:
+    - za sekoja soba da pisit koj floor e, sort po floors. **
+    - tek za site floors da sa loadbat: od backend trebit da
+        sa vratit MapDTO so ke imat floors vo nego pa vo frontend vo
+        MapDisplay da sa deserijalizirat site floors ama da sa prikazit samo segasniot,
+        to znacit deka trebit da sa cuvaat site shapes od site floors vnatre vo map display,
+        taka sho ke imat eden poseben shapes arr za segasniot floor(toj ke sa prikazvit)
+        i drug shapes arr so site shapes od site floors. (Mozit nekako da sa particionirat
+        da ne e vo list ili arr)
+    - stairs obj trebit da imat koj shape e povrzan so
+        nego od segasniot sprat i so koj shape od koj sprat povrzvit.
+    - ko ke napres save sa pustaat site shapes od site spratovi i sa pret
+    eden graph za celata mapa
+
+bug: selectiras eden shape pa drug, pa celo vreme sa klavat posle shape

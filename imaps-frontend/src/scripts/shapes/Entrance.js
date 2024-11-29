@@ -1,5 +1,5 @@
 import {_registerNode} from "konva/lib/Global";
-import MapNode from "./MapNode.js";
+import MapNode from "../base/MapNode.js";
 
 export default class Entrance extends MapNode {
 
@@ -29,7 +29,7 @@ export default class Entrance extends MapNode {
         );
         this.type = "Entrance";
         this.eventName = "openEntranceModalEvent";
-
+        this.floorNum = attrs.floorNum
 
         this.id = id;
 
@@ -52,14 +52,18 @@ export default class Entrance extends MapNode {
         this.info.description = attrs.description;
         this.info.isMainEntrance = attrs.is_main_entrance;
         this.info.selectedPins = attrs.connected_pins;
+        this.floorNum = attrs.floor_num;
     }
 
     saveShapeDetails() {
+        console.info("fnum entrance",this.attrs.floorNum)
+
         this.setAttr("connected_pins", this.info.selectedPins);
         this.setAttr("obj_name", this.info.name);
         this.setAttr("description", this.info.description);
         this.setAttr("is_main_entrance", this.info.isMainEntrance);
         this.setAttr("connected_room", this.info.connectedRoom);
+        this.setAttr("floor_num",this.floorNum);
     }
 }
 

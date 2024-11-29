@@ -28,7 +28,6 @@ public class IMapsUser {
     private String profileImageUrl;
 
 
-
     public IMapsUser() {}
 
     public IMapsUser(int id, String name, String email, String password) {

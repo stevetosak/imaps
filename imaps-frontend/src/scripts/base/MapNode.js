@@ -10,7 +10,6 @@ export default class MapNode extends MapShape{
 
         super(config,layer,blockSize,snap);
         this.connectionLines = [];
-        this.connectedNodes = [];
 
         this.connLine = new Konva.Line({
             stroke: "rgba(245,37,37,0.85)",
@@ -20,7 +19,6 @@ export default class MapNode extends MapShape{
             lineJoin: 'miter',
             opacity: 0.8
         });
-
         this.connLine.cache();
 
         this.on("dragmove",() => {

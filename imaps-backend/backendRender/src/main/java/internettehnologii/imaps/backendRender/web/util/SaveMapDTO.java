@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
 @ToString
-public class FloorDTO {
-    int num;
+public class SaveMapDTO {
+
+    Object shapes;
+    Object roomTypes;
     String mapName;
-    String mapData; //json
+    int floorNum;
 }

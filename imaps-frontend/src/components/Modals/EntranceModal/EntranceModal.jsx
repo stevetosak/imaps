@@ -12,6 +12,9 @@ import ModalDisplayConnections from "../Components/ModalDisplayConnections.jsx";
 import ModalDescriptionField from "../Components/ModalDescriptionField.jsx";
 import ModalSaveButton from "../Components/ModalSaveButton.jsx";
 import ModalMainEntranceCheckbox from "../Components/ModalMainEntranceCheckbox.jsx";
+import {useModalEvent} from "../Hooks/useModalEvent.jsx";
+import useModalState2 from "../Hooks/useModalState2.jsx";
+import useConnections from "../Hooks/useConnections.jsx";
 
 export default function EntranceModal({map}) {
     const [formData, setFormData] = useState({
@@ -26,6 +29,31 @@ export default function EntranceModal({map}) {
         selectedPin: "",
     });
 
+
+
+    const {
+        modalState: {isOpen,setIsOpen,shape,setShape},
+        handlers: {toggleModal,updateModalData,saveDetails}
+    } = useModalState2(map,formData,setFormData);
+
+    const {
+        connectionState: {connections,setConnections},
+        handlers: {addConnection,removeConnection}
+    } = useConnections(map,formData,setFormData)
+
+
+    useModalEvent((event) => {
+        const roomObj = event.detail.room;
+        setShape(roomObj);
+        const savedPins = roomObj.info.selectedPins || [];
+        setFormData(getInitialFormData(event,roomObj,savedPins));
+        setConnections(savedPins);
+        setIsOpen(true);
+        event.detail.map.updateConnections();
+
+        console.log(savedPins, "Loaded pins on modal open");
+    },"openEntranceModalEvent")
+
     const getInitialFormData = (event, roomObj, savedPins) => ({
         name: roomObj.info.name || "",
         connectedRoom: roomObj.info.connectedRoom || "",
@@ -37,10 +65,11 @@ export default function EntranceModal({map}) {
         selectedPins: savedPins,
     });
 
-    const {
-        modalState: {isOpen, toggleModal, saveDetails, updateModalData},
-        connectionsState: {connections, addPinToList, removePinFromList},
-    } = useModalState(formData, setFormData, map, getInitialFormData, "openEntranceModalEvent");
+    // const {
+    //     modalState: {isOpen, toggleModal, saveDetails, updateModalData},
+    //     connectionsState: {connections, addPinToList, removePinFromList},
+    // } = useModalState(formData, setFormData, map, getInitialFormData, "openEntranceModalEvent");
+
 
     return (
         <Modal isOpen={isOpen} toggleModal={toggleModal} title={"Enter Entrance Details"}>
@@ -49,9 +78,9 @@ export default function EntranceModal({map}) {
             <ModalSelectConnections
                 formData={formData}
                 updateModalData={updateModalData}
-                addPinToList={addPinToList}
+                addPinToList={addConnection}
             />
-            <ModalDisplayConnections connections={connections} removePinFromList={removePinFromList}/>
+            <ModalDisplayConnections connections={connections} removePinFromList={removeConnection}/>
             <ModalDescriptionField updateModalData={updateModalData} formData={formData}/>
             <ModalMainEntranceCheckbox formData={formData} updateModalData={updateModalData}></ModalMainEntranceCheckbox>
             <ModalSaveButton saveDetails={saveDetails}/>
@@ -60,5 +89,5 @@ export default function EntranceModal({map}) {
 }
 
 EntranceModal.propTypes = {
-    map: PropTypes.objectOf(MapBuilder),
+    map: PropTypes.instanceOf(MapBuilder),
 };

@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class MapDTO {
-
     private String name;
     private String type;
 

@@ -1,6 +1,7 @@
 import Konva from "konva";
+import config from "../net/netconfig.js";
 
-export default class RenderedMapShape extends Konva.Rect {
+export default class RenderedMapShape extends Konva.Shape {
   constructor(config) {
     if (new.target === RenderedMapShape) {
       throw new Error("Cannot instantiate abstract class RenderedMapShape directly.");
@@ -45,6 +46,26 @@ export default class RenderedMapShape extends Konva.Rect {
       this.infoText.remove()
       console.log("cleared text")
     }
+
+  }
+  _sceneFunc(context) {
+
+    let width = this.width();
+    let height = this.height();
+
+    const cornerRadius = this.attrs.cornerRadius;
+
+    context.beginPath();
+
+    if(!cornerRadius){
+      context.rect(0, 0, width, height)
+    } else {
+      Konva.Util.drawRoundedRectPath(context,width,height,cornerRadius)
+    }
+
+    context.closePath();
+    context.fillStrokeShape(this);
+
 
   }
 

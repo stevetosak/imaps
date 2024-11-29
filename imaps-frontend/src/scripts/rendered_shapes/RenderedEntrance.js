@@ -1,4 +1,4 @@
-import RenderedMapShape from "./RenderedMapShape.js";
+import RenderedMapShape from "../base/RenderedMapShape.js";
 import {_registerNode} from "konva/lib/Global";
 import RenderedRoom from "./RenderedRoom.js";
 
@@ -21,17 +21,17 @@ export default class RenderedEntrance extends RenderedMapShape {
     this.info.name = attrs.obj_name;
     this.info.description = attrs.description;
     this.info.isMainEntrance = attrs.is_main_entrance;
+
+    this.floorNum = attrs.floor_num
+
     this.class = "Entrance";
 
     console.log("ATTRS VIEW:  " + attrs)
 
     this.on("mouseenter", () => {
-      console.log("HOVER ROOM IN", this.x());
-      console.log(this.info.name, "NAME");
       this.stroke("purple");
     });
     this.on("mouseleave", () => {
-      console.log("HOVER ROOM OUT");
       this.opacity(1);
       this.stroke("black");
     });

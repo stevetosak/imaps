@@ -1,6 +1,8 @@
 import {useEffect, useState} from "react";
 
-export default function useModalState(formData,setFormData,map,getInitialFormData,eventName = null){
+
+// NE TREBIT OVA DA SA KORSITIT POJKE
+export default function useModalState(formData,setFormData,map,getInitialFormData,eventName = null,setRoomTypes = null){
     const [isOpen, setIsOpen] = useState(false);
     const [shape, setShape] = useState(null);
     const [connections, setConnections] = useState([]);
@@ -62,7 +64,6 @@ export default function useModalState(formData,setFormData,map,getInitialFormDat
 
     const toggleModal = () => {
         if (isOpen) {
-            const oldShapeName = shape.info.name;
             shape.info = formData;
             map.updateRoomNames();
             console.log("Se vikna");

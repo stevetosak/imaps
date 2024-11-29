@@ -14,80 +14,34 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import Profile from "../../components/Profile/Profile.jsx";
 import { AuthContext } from "../../components/AuthContext/AuthContext.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
+import StairsModal from "../../components/Modals/StairsModal/StairsModal.jsx";
+import {MapDisplay} from "../../scripts/main/MapDisplay.js";
+import netconfig from "../../scripts/net/netconfig.js";
+import useMapLoader from "./Hooks/useMapLoader.js";
 
 function Draw() {
   const { mapName } = useParams();
-  const [selectedFloor, setSelectedFloor] = useState(0);
-  const [app, setApp] = useState(null);
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
   const { username } = useContext(AuthContext);
-  const [floors, setFloors] = useState([]);
-  const [newFloorNumber, setNewFloorNumber] = useState(0);
+
+  //const [app, setApp] = useState(null);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  //const [floors, setFloors] = useState([]);
+  const [formNewFloorNum, setFormNewFloorNum] = useState(0);
   const [errorMessage, setErrorMessage] = useState("Error");
   const [hasError, setHasError] = useState(false);
-  const navigate = useNavigate();
-
+  const [mapLoaded,setMapLoaded] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    if (!searchParams.has("floor")) {
-      setSearchParams({ floor: "0" });
-    }
+  const {app,floors,setFloors} = useMapLoader(mapName,username,searchParams,setSearchParams)
 
-    const app = new MapBuilder("container");
-    setApp(app);
-    app
-      .loadMap(mapName, username, searchParams.get("floor"))
-      .then(() => {
-        loadFloors();
-      })
-      .catch((reason) => {
-        console.log("ERRR: ", reason);
-        navigate("/myMaps");
-      });
 
-    // fpsCounterLoop();
-  }, []);
-
-  const updateFloors = (floors) => {
-    setFloors(floors);
-  };
-
-  const loadFloors = async () => {
-    const httpService = new HttpService();
-    httpService.setAuthenticated();
-
-    try {
-      const resp = await httpService.get(`/protected/floors/load?mapName=${mapName}`);
-      setFloors(resp);
-      console.log("RESPONSE FLOORS:", resp);
-      console.log("SET", floors);
-    } catch (error) {
-      console.error("Error loading floors:", error);
-    }
-  };
-
-  const handleFloorChange = (event) => {
-    setSelectedFloor(event.target.value); //updateSearchParam("floor",event.target.value)
-
-    setSearchParams({ floor: event.target.value });
-    app
-      .loadMap(mapName, username, event.target.value)
-      .then((resp) => {
-        console.log(resp);
-      })
-      .catch((reason) => {
-        console.log("ERRR: ", reason);
-      });
-    console.log(`Floor changed to: ${event.target.value}`);
-  };
 
   const addFloor = () => {
     const httpService = new HttpService();
     httpService.setAuthenticated();
 
     const payload = {
-      num: newFloorNumber,
+      num: formNewFloorNum,
       mapName: mapName,
     };
 
@@ -98,54 +52,37 @@ function Draw() {
   };
 
   const handleSaveClick = async () => {
-    if (!app.isMainEntranceSelected()) {
-      setErrorMessage("Please select Main Entrance");
-      setHasError(true);
-      return;
-    } else {
-      setHasError(false);
-    }
-    const resp = await app
-      .saveMap(mapName, username, searchParams.get("floor"))
-      .then((r) => {
-        setIsPopupVisible(true);
 
-        setTimeout(() => {
-          setIsPopupVisible(false);
-        }, 3000);
-      })
-      .catch((reason) => {
-        console.log("Error saving map:", reason);
-      });
-  };
-  const handleLoadMapClick = (data) => {
-    app.deserializeMap(data);
+    const payload = app.getPayload();
+    const httpService = new HttpService("http://localhost:8080/api/protected", true);
+    try {
+      await httpService.put(`/my-maps/save?username=${username}`, payload);
+      setIsPopupVisible(true);
+      setTimeout(() => {
+        setIsPopupVisible(false);
+      }, 3000);
+
+    } catch (err) {
+      console.log("ERROR --> Could not Save map --->", err);
+    }
   };
 
   return (
     <div className={styles.wrapper} id="wrapper">
-      {/* <SideBar></SideBar> */}
       <Logo></Logo>
       <div id="container" className={styles.cont}></div>
       <div className={styles.panel}>
         <div className={styles.topPanelH}>
-          {/* <Link to="/">
-            <img src={logo_img} alt="Finki Logo" className={styles.logo_img} />
-          </Link> */}
           <Profile position="inline"></Profile>
         </div>
-        <Link to={`/myMaps/${mapName}/View`} className={styles.titleLink}>
+        <Link to={`/myMaps/View/${mapName}`} className={styles.titleLink}>
           <h1 className={styles.title}>{mapName}</h1>
         </Link>
-        {/* <div id="fpscont" className={styles.fpscounter}>
-          <p id="fpsCounter"></p>
-        </div> */}
         <div className={styles.guideWrapper}>
           <DrawGuide />
         </div>
         <hr />
         <br />
-        {/* {<h2 className={styles.paragraph}>Objects:</h2>} */}
         <ul className={styles.shapeOptions} id="shapeOptions">
           <li data-info="Entrance" className={`${styles.shapeOption} ${styles.entrance}`}></li>
           <li data-info="Wall" className={`${styles.shapeOption} ${styles.wall}`} id="wall"></li>
@@ -161,12 +98,12 @@ function Draw() {
           <select
             id="floorSelect"
             value={searchParams.get("floor")}
-            onChange={handleFloorChange}
+            onChange={(e) => {setSearchParams({floor: e.target.value})}}
             className={styles.floorDropdown}
           >
             {floors?.map((floor) => (
-              <option key={floor.floorNumber} value={floor.floorNumber}>
-                Floor {floor.floorNumber}
+              <option key={floor.num} value={floor.num}>
+                Floor {floor.num}
               </option>
             ))}
           </select>
@@ -175,27 +112,26 @@ function Draw() {
           <input
             type="number"
             id="newFloorInput"
-            value={newFloorNumber}
-            onChange={(e) => setNewFloorNumber(Number(e.target.value))}
+            value={formNewFloorNum}
+            onChange={(e) => setFormNewFloorNum(Number(e.target.value))}
             className={styles.floorInput}
           />
           <button onClick={addFloor} className={styles.addFloorButton}>
             Add Floor
           </button>
         </div>
-
         <hr />
         <br />
         {hasError && <p style={{ color: "red", textAlign: "center" }}>{errorMessage}</p>}
         <div className={styles.templateCont}>
           <SaveMap submitHandler={handleSaveClick}></SaveMap>
-          {/*<MapTemplateSelector loadHandler={handleLoadMapClick}></MapTemplateSelector>*/}
         </div>
 
         <div className={styles.hide}>
           <RoomModal map={app}></RoomModal>
           <EntranceModal map={app}></EntranceModal>
           <InfoPinModal map={app}></InfoPinModal>
+          <StairsModal map = {app}></StairsModal>
         </div>
       </div>
 

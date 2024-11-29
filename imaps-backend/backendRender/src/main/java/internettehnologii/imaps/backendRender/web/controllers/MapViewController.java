@@ -8,9 +8,11 @@ import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.exceptions.EmptyMapException;
 import internettehnologii.imaps.backendRender.web.exceptions.FloorNotFoundException;
-import internettehnologii.imaps.backendRender.web.security.json.JsonMapData;
+import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
+import internettehnologii.imaps.backendRender.web.util.FloorDTO;
+import internettehnologii.imaps.backendRender.web.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,6 @@ public class MapViewController {
     private RouteGraph graph;
     private List<Floor> floors = new ArrayList<>();
     private Floor currentFloor = new Floor();
-    private boolean loaded = false;
 
     private final MapService mapService;
     private final FloorService floorService;
@@ -75,7 +76,7 @@ public class MapViewController {
         try {
             this.floors = floorService.getAllPublicFloors(mapName);
             this.currentFloor = getFloorByNum(floorNum);
-            this.loadGraph(currentFloor.getMapData().getJsonData());
+            this.loadGraph((String) currentFloor.getMapData().getShapeData());
             return ResponseEntity.ok(currentFloor);
         } catch (EmptyMapException e) {
             e.printStackTrace();
@@ -84,22 +85,21 @@ public class MapViewController {
         }
     }
 
-    @GetMapping("/protected/map-data")
-    public ResponseEntity<Floor> getMapDataProtected(@RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
+    @GetMapping("/protected/load-map")
+    public ResponseEntity<List<FloorDTO>> getMapDataProtected(@RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
         try {
             IndoorMap map = mapService.getMapForUser(username, mapName); // namesto ova samo proverka dali postoet dadena mapa za user, za da ne morat za dzabe mapa promenliva da se cuvat
             this.floors = floorService.getAllFloorsForMap(mapName);
             this.currentFloor = getFloorByNum(floorNum);
             JsonMapData mapData = currentFloor.getMapData();
             if (mapData != null) {
-                this.loadGraph(currentFloor.getMapData().getJsonData());
+                this.loadGraph((String) currentFloor.getMapData().getShapeData());
                 System.out.println("============================================== graph loaded ==============================================");
             } else {
                 System.out.println("============================================== CANT LOAD GRAPH: MAP DATA NULL ==============================================");
             }
 
-            System.out.println("Current floor: " + currentFloor);
-            return ResponseEntity.ok(currentFloor); // tuka return site floors trebit
+            return ResponseEntity.ok(Util.convertToFloorDTO(floors)); // tuka return site floors trebit
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
@@ -126,8 +126,7 @@ public class MapViewController {
         return ResponseEntity.ok(floors);
     }
 
-    @GetMapping("public/")
-
+    
     private Floor getFloorByNum(int num) {
         for (Floor floor : floors) {
             if (floor.getFloorNumber() == num) {
@@ -145,7 +144,8 @@ public class MapViewController {
         try {
             MapNodeParser parser = new MapNodeParser();
             List<MapNode> nodes = parser.parseAndCreateNodes(mapData);
-            graph = new RouteGraph(nodes);
+            graph = new RouteGraph();
+            graph.load(nodes); // tuka vo for ke trevbit parse pa load
             System.out.println("======================= CREATED GRAPH =======================\n" + graph);
         } catch (Exception e) {
             e.printStackTrace();

@@ -59,9 +59,8 @@ export class MapDisplay {
     deserializeMap(data) {
         this.clearMap();
 
-        let dsrData = JSON.parse(data.jsonData);
-        dsrData.forEach((child) => {
-            const shape = JSON.parse(child);
+        let dsrData = JSON.parse(data);
+        dsrData.forEach((shape) => {
             if (shape.className !== "InfoPin") {
                 const renderedShape = Factory.createRenderedShape(shape.className, shape.attrs);
                 addEventHandling(renderedShape,this,"click");
@@ -77,6 +76,8 @@ export class MapDisplay {
 
     }
 
+
+    // ne se koristit ova pojke
     async loadMap(mapName,floorNum,username,isPrivate) {
         const httpService = new HttpService();
         floorNum = floorNum == null ? 0 : floorNum;
@@ -105,9 +106,17 @@ export class MapDisplay {
         }
     }
 
-    async loadFloor(floorNum){
-
+    loadMapN(floorData){
+        if(floorData != null){
+            this.deserializeMap(floorData);
+            this.shapes.forEach((shape) => {
+                this.mainLayer.add(shape);
+            });
+            this.displayRoomNames();
+            this.initializeRoomTypes();
+        }
     }
+
 
     drawRoute(path) {
         this.routeLayer.removeChildren();
@@ -135,8 +144,6 @@ export class MapDisplay {
 
                 this.routeLayer.add(line);
                 this.routeLayer.draw();
-
-                console.log(buff, "BUFFER");
                 buff = [];
                 index -= 2;
             }
@@ -170,6 +177,7 @@ export class MapDisplay {
     getEntrances() {
         return this.getShapeInfoByType("Entrance");
     }
+
 
     getShapeInfoByType(type) {
         return this.shapes.filter((shape) => shape.class === type).map((shape) => shape.info.name);

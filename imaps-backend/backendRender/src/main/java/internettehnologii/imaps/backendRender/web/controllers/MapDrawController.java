@@ -1,8 +1,11 @@
 package internettehnologii.imaps.backendRender.web.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
-import internettehnologii.imaps.backendRender.web.security.json.JsonMapData;
+import internettehnologii.imaps.backendRender.web.util.SaveMapDTO;
+import internettehnologii.imaps.backendRender.web.util.Util;
+import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import internettehnologii.imaps.backendRender.web.util.FloorDTO;
@@ -22,7 +25,6 @@ public class MapDrawController {
     private final MapService mapService;
     private final FloorService floorService;
 
-    private Floor currentFloor;
 
     @Autowired
     public MapDrawController(MapService mapService, FloorService floorService) {
@@ -37,17 +39,27 @@ public class MapDrawController {
 
     @PutMapping("/my-maps/save")
     public ResponseEntity<Map<String,Object>> updateMapData
-            (@RequestBody String mapData, @RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
+            (@RequestBody SaveMapDTO mapDTO, @RequestParam String username) {
+
+        System.out.println("MAP DTO: " + mapDTO);
 
         Map<String,Object> response = new HashMap<>();
         try {
-            IndoorMap map = mapService.getMapForUser(username,mapName);
-            Floor f = floorService.getFloorByNum(floorNum, map);
 
-            JsonMapData jsonMapData = new JsonMapData(mapData);
+            System.out.println("=================================");
+            System.out.println("MAPDTO: " + mapDTO);
+            System.out.println("USERNAME:" + username);
+            IndoorMap map = mapService.getMapForUser(username, mapDTO.getMapName());
+            Floor f = floorService.getFloorByNum(mapDTO.getFloorNum(), map);
+
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String roomTypesJson = objectMapper.writeValueAsString(mapDTO.getRoomTypes());
+            JsonMapData jsonMapData = new JsonMapData(mapDTO.getShapes().toString(), roomTypesJson);
+
+            System.out.println("ROOM TYPES JSON : " + roomTypesJson);
             f.setMapData(jsonMapData);
             floorService.updateFloor(f);
-
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -72,12 +84,12 @@ public class MapDrawController {
     }
 
     @GetMapping("/my-maps/load")
-    public ResponseEntity<Floor> loadPersonalMap(@RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
+    public ResponseEntity<List<FloorDTO>> loadPersonalMap(@RequestParam String mapName, @RequestParam String username) {
         try{
+            // ovde logikava so servisive refaktor
             IndoorMap map = mapService.getMapForUser(username,mapName);
-            Floor floor = floorService.getFloorByNum(floorNum,map);
-            currentFloor = floor;
-            return ResponseEntity.ok().body(floor);
+            List<Floor> floors = floorService.getAllFloorsForMap(map.getName());
+            return ResponseEntity.ok().body(Util.convertToFloorDTO(floors));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

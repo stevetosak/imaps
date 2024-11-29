@@ -1,6 +1,6 @@
 package internettehnologii.imaps.backendRender.web.security;
 
-import internettehnologii.imaps.backendRender.web.service.MapUserDetailsService;
+import internettehnologii.imaps.backendRender.web.service.impl.MapUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

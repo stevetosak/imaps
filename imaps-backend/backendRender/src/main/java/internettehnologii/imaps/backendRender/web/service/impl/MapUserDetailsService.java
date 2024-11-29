@@ -1,10 +1,9 @@
-package internettehnologii.imaps.backendRender.web.service;
+package internettehnologii.imaps.backendRender.web.service.impl;
 
 
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
 import internettehnologii.imaps.backendRender.web.repo.UserRepository;
 import internettehnologii.imaps.backendRender.web.util.UserPrincipal;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,8 +13,12 @@ import java.util.Optional;
 
 @Service
 public class MapUserDetailsService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public MapUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
        Optional<IMapsUser> user = userRepository.findUserByName(username);

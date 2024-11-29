@@ -1,9 +1,9 @@
 package internettehnologii.imaps.backendRender.web.controllers;
 
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
-import internettehnologii.imaps.backendRender.web.service.JWTService;
-import internettehnologii.imaps.backendRender.web.service.MapUserDetailsService;
-import internettehnologii.imaps.backendRender.web.service.UserService;
+import internettehnologii.imaps.backendRender.web.service.impl.JWTService;
+import internettehnologii.imaps.backendRender.web.service.impl.MapUserDetailsService;
+import internettehnologii.imaps.backendRender.web.service.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -58,15 +58,16 @@ public class AuthController {
             String username = jwtService.extractUsername(token);
             UserDetails userDetails = context.getBean(MapUserDetailsService.class).loadUserByUsername(username);
             boolean auth = jwtService.validateToken(token, userDetails);
+
             if(!auth){
-                response.put("error", "Invalid Token");
+                response.put("error", "Token could not be validated");
                 return ResponseEntity.status(403).body(response);
             }
 
             response.put("username", username);
             System.out.println("Authenticated user: " + username);
-
         } catch (Exception e){
+            response.put("auth",false);
             System.out.println("ERROR: NOT AUTHENTICATED: " + e.getMessage());
         }
 

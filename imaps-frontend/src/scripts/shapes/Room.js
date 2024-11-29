@@ -1,5 +1,5 @@
 import Konva from "konva";
-import MapShape from "./MapShape";
+import MapShape from "../base/MapShape.js";
 import { _registerNode } from "konva/lib/Global";
 export default class Room extends MapShape {
   constructor(attrs,id){
@@ -28,6 +28,8 @@ export default class Room extends MapShape {
         attrs.snap
     );
 
+      this.floorNum = attrs.floorNum;
+
     this._info = {
       name: `Room ${id}`,
       type: "",
@@ -45,12 +47,14 @@ export default class Room extends MapShape {
     this.info.name = attrs.obj_name;
     this.info.type = attrs.room_type;
     this.info.description = attrs.description;
+    this.floorNum = attrs.floor_num;
   }
 
   saveShapeDetails() {
     this.setAttr("obj_name", this.info.name);
     this.setAttr("room_type", this.info.type);
     this.setAttr("description", this.info.description);
+    this.setAttr("floor_num",this.floorNum);
   }
 }
 

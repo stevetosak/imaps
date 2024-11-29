@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styles from "./RoomTypeModal.module.css";
+import useRoomTypes from "../Hooks/useRoomTypes.jsx";
 
-export default function RoomTypeModal(props) {
-  const [modal, setModal] = useState(false);
+export default function RoomTypeModal({map}) {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [roomTypes, setRoomTypes] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -11,23 +12,16 @@ export default function RoomTypeModal(props) {
   });
 
   const toggleModal = () => {
-    setModal(!modal);
+    if(!modalIsOpen){
+      console.log("RTPS TOG: " + map.roomTypes);
+      setRoomTypes(map.roomTypes)
+    }
+
+    setModalIsOpen(!modalIsOpen);
   };
 
-  // Add new room type to the list
-  const addRoomType = () => {
-    if (!formData.type || roomTypes.includes(formData.type)) return; // Prevent empty or duplicate room types
-    setRoomTypes((prevTypes) => [...prevTypes, formData.type]);
-    setFormData({ ...formData, type: "" }); // Reset type input after adding
-    props.map.addRoomType(formData.type);
-    console.log("TYPES" + props.map.roomTypes);
-  };
+  const {addRoomType,removeRoomType} = useRoomTypes(formData,setFormData,roomTypes,setRoomTypes,map)
 
-  // Remove room type from the list
-  const removeRoomType = (typeToRemove) => {
-    setRoomTypes((prevTypes) => prevTypes.filter((type) => type !== typeToRemove));
-    props.map.removeRoomType(typeToRemove);
-  };
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -44,7 +38,7 @@ export default function RoomTypeModal(props) {
         Room Types
       </button>
 
-      {modal && (
+      {modalIsOpen && (
         <div className={styles.modal}>
           <div onClick={toggleModal} className={styles.overlay}></div>
           <div className={styles.modalContent}>
