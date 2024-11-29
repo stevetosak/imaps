@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import FinkiMaps from "./pages/FinkiMaps/FinkiMaps";
 import Maps from "./pages/Maps/Maps";
 import LoginPage from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
