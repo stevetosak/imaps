@@ -18,6 +18,7 @@ import StairsModal from "../../components/Modals/StairsModal/StairsModal.jsx";
 import {MapDisplay} from "../../scripts/main/MapDisplay.js";
 import netconfig from "../../scripts/net/netconfig.js";
 import useMapLoader from "./Hooks/useMapLoader.js";
+import {shape} from "prop-types";
 
 function Draw() {
   const { mapName } = useParams();
@@ -31,8 +32,9 @@ function Draw() {
   const [hasError, setHasError] = useState(false);
   const [mapLoaded,setMapLoaded] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [stairs,setStairs] = useState([]);
 
-  const {app,floors,setFloors} = useMapLoader(mapName,username,searchParams,setSearchParams)
+  const {app,floors,shapes} = useMapLoader(mapName,username,searchParams,setSearchParams)
 
 
 
@@ -183,7 +185,7 @@ function Draw() {
           <RoomModal map={app}></RoomModal>
           <EntranceModal map={app}></EntranceModal>
           <InfoPinModal map={app}></InfoPinModal>
-          <StairsModal map = {app}></StairsModal>
+          <StairsModal map = {app} shapes = {shapes}></StairsModal>
         </div>
       </div>
 

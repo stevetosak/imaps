@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import HttpService from "../../../scripts/net/HttpService.js";
 import {MapBuilder} from "../../../scripts/main/MapBuilder.js";
+import getAllShapes from "../../../scripts/util/getAllShapes.js";
 
 
 
@@ -8,6 +9,7 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
     const [floors, setFloors] = useState([]);
     const [mapLoaded, setMapLoaded] = useState(false);
     const [app, setApp] = useState(null);
+    const [shapes,setShapes] = useState([]);
 
     useEffect(() => {
         if (!searchParams.has("floor")) {
@@ -23,6 +25,10 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
                 console.log("Floors loaded:", respFloors);
                 setFloors(respFloors);
                 setMapLoaded(true);
+
+                const parsedShapes = getAllShapes(respFloors,false,(shape => shape.className !== "Wall"))
+                setShapes(parsedShapes)
+
             } catch (e) {
                 console.error("Can't load map:", e.message);
             }
@@ -62,7 +68,7 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
         };
     }, [app]);
 
-    return { app, floors, setFloors };
+    return { app, floors, shapes };
 };
 
 export default useMapLoader;
