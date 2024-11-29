@@ -19,7 +19,7 @@ export default class Stairs extends MapNode{
                 strokeWidth: 1,
                 name: "mapObj",
                 rotation: attrs.rotation,
-                draggable: true
+                draggable: true,
             },
             attrs.layer,
             attrs.blockSize,
@@ -32,9 +32,6 @@ export default class Stairs extends MapNode{
             description: "",
             selectedPins: []
         };
-
-        this.floorNum = attrs.floorNum;
-
 
         this.id = id;
         this.eventName = "openStairsModalEvent";
@@ -58,14 +55,12 @@ export default class Stairs extends MapNode{
         this.info.name = attrs.obj_name;
         this.info.description = attrs.description;
         this.info.selectedPins = attrs.connected_pins;
-        this.floorNum = attrs.floor_num;
     }
 
     saveShapeDetails() {
         this.setAttr("connected_pins", this.info.selectedPins);
         this.setAttr("obj_name", this.info.name);
         this.setAttr("description", this.info.description);
-        this.setAttr("floor_num",this.floorNum)
     }
 }
 

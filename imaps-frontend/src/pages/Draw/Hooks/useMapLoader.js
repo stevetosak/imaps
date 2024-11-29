@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import HttpService from "../../../scripts/net/HttpService.js";
 import {MapBuilder} from "../../../scripts/main/MapBuilder.js";
-import {useParams} from "react-router-dom";
 
 
 
@@ -9,7 +8,6 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
     const [floors, setFloors] = useState([]);
     const [mapLoaded, setMapLoaded] = useState(false);
     const [app, setApp] = useState(null);
-
 
     useEffect(() => {
         if (!searchParams.has("floor")) {
@@ -49,7 +47,7 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
 
         console.log("Changing to floor:", selectedFloor);
 
-        const appInstance = new MapBuilder("container", floorNum,mapName);
+        const appInstance = new MapBuilder("container", floorNum);
         appInstance.loadNewFloor(selectedFloor);
 
         setApp(appInstance);
