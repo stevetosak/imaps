@@ -5,7 +5,7 @@ import closeIcon from "../../assets/close_icon.png";
 import styles from "./SearchBar.module.css";
 import ShapeQuery from "../../scripts/util/ShapeQuery.js";
 
-function SearchBar({map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom}) {
+function SearchBar({map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom,availableShapes}) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -29,10 +29,9 @@ function SearchBar({map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom}) 
   // Load available rooms and entrances when the input field is focused
   const handleInputFocus = (field) => {
     if (availableOptions.length === 0 && map) {
-      const rooms = ShapeQuery.findAll(map,"RenderedRoom").map(r => r.info.name) || [];
-      const entrances = ShapeQuery.findAll(map,"RenderedEntrance").map(r => r.info.name) || [];
-      const stairs = ShapeQuery.findAll(map,"RenderedStairs").map(r => r.info.name) || [];
-      setAvailableOptions([...rooms, ...entrances,...stairs]);
+      setAvailableOptions(availableShapes.map(shape => {
+        return shape.info.name + ` [${shape.floorNum}F]`
+      }));
     }
     setDropdownVisible(true);
     setInputFieldType(field); // Set the current input field being typed into
