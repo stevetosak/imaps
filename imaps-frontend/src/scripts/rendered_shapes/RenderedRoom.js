@@ -16,6 +16,10 @@ export default class RenderedRoom extends RenderedMapShape {
       cornerRadius: 3
     });
 
+    console.info("FNUM RENDER:",attrs.floor_num)
+
+    this.floorNum = attrs.floor_num
+
     this.info.name = attrs.obj_name;
     this.info.type = attrs.room_type;
     this.info.description = attrs.description;
