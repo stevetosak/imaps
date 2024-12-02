@@ -1,4 +1,5 @@
 import {useState} from "react";
+import triggerMapSave from "../../../scripts/util/triggerMapSave.js";
 
 export default function useModalState2(map,formData,setFormData){
     const [isOpen,setIsOpen] = useState(false);
@@ -8,6 +9,7 @@ export default function useModalState2(map,formData,setFormData){
         if (isOpen) {
             shape.info = formData;
             map.updateRoomNames();
+            triggerMapSave();
             console.log("Se vikna");
         }
         setIsOpen(!isOpen);

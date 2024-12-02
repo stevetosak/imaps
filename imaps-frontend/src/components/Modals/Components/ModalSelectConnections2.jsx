@@ -3,6 +3,7 @@ import React from "react";
 
 export default function ModalSelectConnections2({formData,updateModalData,addPinToList,shapes}) {
 
+    console.log("shapes modal",shapes)
     return (
         <>
             <div className={styles.formGroup}>
@@ -18,9 +19,9 @@ export default function ModalSelectConnections2({formData,updateModalData,addPin
                     {shapes
                         .filter(
                             (shape) =>
-                                formData.selectedPins.includes(shape.name) === false &&
-                                shape.name !== "" &&
-                                shape.name !== formData.name
+                                formData.selectedPins.includes(shape.info.name) === false &&
+                                shape.info.name !== "" &&
+                                shape.info.name !== formData.name
                         )
                         .map((shape, index) => (
                             <option key={index} value={shape.info.name}>

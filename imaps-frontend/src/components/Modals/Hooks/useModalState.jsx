@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import ShapeRegistry from "../../../scripts/util/ShapeRegistry.js";
 
 
 // NE TREBIT OVA DA SA KORSITIT POJKE
@@ -17,7 +18,7 @@ export default function useModalState(formData,setFormData,map,getInitialFormDat
 
             setConnections(savedPins);
             setIsOpen(true);
-            event.detail.map.updateConnections(); // ova mozda da sa trgnit
+            ShapeRegistry.updateConnections(); // ova mozda da sa trgnit
 
             console.log(savedPins, "Loaded pins on modal open");
         };

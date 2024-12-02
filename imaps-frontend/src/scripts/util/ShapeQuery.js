@@ -1,8 +1,11 @@
-export default class ShapeQuery{
-    static findAll(shapes,type){
-        shapes.forEach(sh => console.log("ShapeQyuery",sh.info))
-        let res = shapes.filter(shape => shape.className === type);
+import MapNode from "../base/MapNode.js";
 
-        return res;
+export default class ShapeQuery{
+    static findAllByType(shapes, type){
+        shapes.forEach(sh => console.log("ShapeQyuery",sh.info))
+        return shapes.filter(shape => shape.className === type);
+    }
+    static findNodeByName(shapes, name){
+        return shapes.filter(shape => shape instanceof MapNode && shape.info.name === name)[0];
     }
 }

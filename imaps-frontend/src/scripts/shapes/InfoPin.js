@@ -24,6 +24,7 @@ export default class InfoPin extends MapNode {
 
     this.id = id;
     this.eventName = "openPinModalEvent";
+    this.floorNum = attrs.floorNum;
 
     this.type = "InfoPin";
     this._info = {
@@ -64,12 +65,14 @@ export default class InfoPin extends MapNode {
     this.info.name = attrs.obj_name;
     this.info.selectedPins = attrs.connected_pins;
     this.info.description = attrs.description;
+    this.floorNum = attrs.floor_num
   }
 
   saveShapeDetails() {
     this.setAttr("obj_name", this.info.name);
     this.setAttr("connected_pins", this.info.selectedPins);
     this.setAttr("description", this.info.description);
+    this.setAttr("floor_num",this.floorNum)
     console.log(this.info, "vnatre vo info");
   }
 }

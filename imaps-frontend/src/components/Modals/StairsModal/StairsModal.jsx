@@ -12,8 +12,9 @@ import ModalSaveButton from "../Components/ModalSaveButton.jsx";
 import Modal from "../Components/Modal.jsx";
 import ShapeQuery from "../../../scripts/util/ShapeQuery.js";
 import ModalSelectConnections2 from "../Components/ModalSelectConnections2.jsx";
+import ShapeRegistry from "../../../scripts/util/ShapeRegistry.js";
 
-export default function StairsModal({map,shapes}){
+export default function StairsModal({map}){
     const [formData,setFormData] = useState({
         name: "",
         description: "",
@@ -37,23 +38,20 @@ export default function StairsModal({map,shapes}){
     useModalEvent((event) => {
         const roomObj = event.detail.room;
         setShape(roomObj);
-        setFormData(getInitialFormData(event,roomObj));
+        setFormData( {
+            name: roomObj.info.name || "",
+            description: roomObj.info.description || "",
+            selectedPins: roomObj.info.selectedPins || [],
+            selectedPin: "",
+            availablePins: event.detail.map.getConnections() || []
+        });
         setConnections(roomObj.info.selectedPins || []);
         setIsOpen(true);
-        event.detail.map.updateConnections();
+        event.detail.map.updateConnections(); // ova vo use connections
 
         console.log(roomObj.info.selectedPins, "Loaded pins on modal open");
     },"openStairsModalEvent")
 
-    const getInitialFormData = (event, roomObj) => (
-        {
-        name: roomObj.info.name || "",
-        description: roomObj.info.description || "", // todo
-        selectedPins: roomObj.info.selectedPins || [],
-        selectedPin: "",
-        //availabel pins ustvari info obj e
-        availablePins: [...event.detail.map.getConnections()] || []
-    });
 
 
     return (
@@ -64,7 +62,7 @@ export default function StairsModal({map,shapes}){
                 formData={formData}
                 updateModalData={updateModalData}
                 addPinToList={addConnection}
-                shapes={shapes.filter(sh => sh.className === "Stairs")}
+                shapes={ShapeRegistry.getShapes().filter(sh => sh.className === "Stairs")}
             />
             <ModalDisplayConnections connections={connections} removePinFromList={removeConnection}/>
             <ModalDescriptionField updateModalData={updateModalData} formData={formData}/>

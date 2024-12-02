@@ -12,6 +12,7 @@ import floorIcon from "../../assets/floor_icon.png";
 import Logo from "../../components/Logo/Logo.jsx";
 import netconfig from "../../scripts/net/netconfig.js";
 import parseMapData from "../../scripts/util/parseMapData.js";
+import ShapeRegistry from "../../scripts/util/ShapeRegistry.js";
 
 const MapView = ({isPrivate}) => {
     const {mapName} = useParams();
@@ -68,7 +69,7 @@ const MapView = ({isPrivate}) => {
                 let parsedShapes = [];
 
                 respFloors.forEach(flr => {
-                    const parsed = parseMapData(flr.mapData,(shape => shape.className !== "InfoPin" && shape.className !=="Wall"),true)
+                    const parsed = parseMapData(flr.mapData,(shape => shape.className !== "InfoPin"),true)
                     parsedShapes = [...parsedShapes,...parsed];
                 })
 
@@ -98,6 +99,7 @@ const MapView = ({isPrivate}) => {
         const openRoomInfoPanel = (e) => {
             setSelectedRoom(e.detail.room);
             setIsPanelOpen(true)
+            console.log("SHAPES REG",ShapeRegistry.getShapes().length)
 
         }
         window.addEventListener("openRoomInfoPanel", openRoomInfoPanel);

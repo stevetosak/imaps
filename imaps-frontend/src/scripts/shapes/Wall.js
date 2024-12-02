@@ -27,8 +27,18 @@ export default class Wall extends MapShape {
         attrs.snap,
       );
       this.type = "Wall";
+
+        this.floorNum = attrs.floorNum;
     }
-  }
+
+    loadInfo(attrs) {
+        this.floorNum = attrs.floor_num;
+    }
+
+    saveShapeDetails() {
+        this.setAttr("floor_num",this.floorNum)
+    }
+}
 
   Wall.prototype.className = 'Wall'
   _registerNode(Wall);
