@@ -5,6 +5,9 @@ import ModalDescriptionField from "../Components/ModalDescriptionField.jsx";
 import ModalSaveButton from "../Components/ModalSaveButton.jsx";
 import Modal from "../Components/Modal.jsx";
 import ModalRoomTypes from "../Components/ModalRoomTypes.jsx";
+import useModalState2 from "../Hooks/useModalState2.jsx";
+import useConnections from "../Hooks/useConnections.jsx";
+import {useModalEvent} from "../Hooks/useModalEvent.jsx";
 
 export default function RoomModal({map}) {
     const [formData, setFormData] = useState({
@@ -15,11 +18,25 @@ export default function RoomModal({map}) {
 
     const [roomTypes, setRoomTypes] = useState([]);
 
-    const getInitialFormData = (event, roomObj, savedPins) => ({
-        name: roomObj.info.name || "",
-        type: roomObj.info.type || "",
-        description: roomObj.info.description || "",
-    })
+
+    const {
+        modalState: {isOpen,setIsOpen,setShape},
+        handlers: {toggleModal,updateModalData,saveDetails}
+    } = useModalState2(map,formData,setFormData);
+
+
+    useModalEvent((event) => {
+        const shape = event.detail.room;
+        setShape(shape);
+        setFormData({
+            name: shape.info.name || "",
+            type: shape.info.type || "",
+            description: shape.info.description || "",
+        })
+
+        setIsOpen(true);
+
+    },"openRoomModalEvent")
 
 
     useEffect(() => {
@@ -28,9 +45,6 @@ export default function RoomModal({map}) {
 
     }, [map]);
 
-    const {
-        modalState: {isOpen, toggleModal, saveDetails, updateModalData},
-    } = useModalState(formData, setFormData, map, getInitialFormData, "openRoomModalEvent");
 
     return (
         <Modal isOpen={isOpen} toggleModal={toggleModal} title={"Enter Room Details"}>

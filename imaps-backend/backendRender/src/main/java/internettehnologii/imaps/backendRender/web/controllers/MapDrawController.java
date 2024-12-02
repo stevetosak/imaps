@@ -38,7 +38,7 @@ public class MapDrawController {
     }
 
     @PutMapping("/my-maps/save")
-    public ResponseEntity<Map<String,Object>> updateMapData
+    public ResponseEntity<FloorDTO> updateMapData
             (@RequestBody SaveMapDTO mapDTO, @RequestParam String username) {
 
         System.out.println("MAP DTO: " + mapDTO);
@@ -61,11 +61,15 @@ public class MapDrawController {
             f.setMapData(jsonMapData);
             floorService.updateFloor(f);
 
-            return ResponseEntity.ok(response);
+            System.out.println("UPDATED FLOOR " + f.getFloorNumber());
+
+            FloorDTO floorDTO = new FloorDTO(f.getFloorNumber(), mapDTO.getMapName(),f.getMapData().getShapeData());
+
+            return ResponseEntity.ok(floorDTO);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

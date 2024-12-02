@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import HttpService from "../../../scripts/net/HttpService.js";
 import {MapBuilder} from "../../../scripts/main/MapBuilder.js";
 import getAllShapes from "../../../scripts/util/getAllShapes.js";
+import parseMapData from "../../../scripts/util/parseMapData.js";
+import ShapeRegistry from "../../../scripts/util/ShapeRegistry.js";
+import saveMap from "../../../components/SaveMap/SaveMap.jsx";
+import triggerMapSave from "../../../scripts/util/triggerMapSave.js";
 
 
 
@@ -26,8 +30,9 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
                 setFloors(respFloors);
                 setMapLoaded(true);
 
-                const parsedShapes = getAllShapes(respFloors,false,(shape => shape.className !== "Wall"))
-                setShapes(parsedShapes)
+                respFloors.forEach(flr => {
+                    parseMapData(flr.mapData,() => true,false)
+                })
 
             } catch (e) {
                 console.error("Can't load map:", e.message);
@@ -36,12 +41,13 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
 
         if (!mapLoaded) {
             loadFloors();
-        }
-    }, [mapLoaded, mapName, username]);
 
+        }
+    }, [mapName, username]);
+
+    // floor change
     useEffect(() => {
-        // Handle floor change
-        if (!mapLoaded || floors.length === 0) return;
+        if (!mapLoaded || floors === undefined || floors.length === 0) return;
 
         const floorNum = parseInt(searchParams.get("floor"));
         const selectedFloor = floors.find((f) => f.num === floorNum);
@@ -53,11 +59,46 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
 
         console.log("Changing to floor:", selectedFloor);
 
-        const appInstance = new MapBuilder("container", floorNum);
+        const appInstance = new MapBuilder("container", floorNum,mapName);
         appInstance.loadNewFloor(selectedFloor);
-
         setApp(appInstance);
-    }, [searchParams, floors, mapLoaded]);
+        console.log("Fchange");
+        triggerMapSave();
+
+        }, [searchParams, mapLoaded]);
+
+
+    const saveFloor = async () => {
+        const payload = app.saveShapeDetails();
+        const httpService = new HttpService("http://localhost:8080/api/protected", true);
+        try {
+            const responseFloor = await httpService.put(`/my-maps/save?username=${username}`, payload);
+            console.log("FLOORS",floors.length)
+
+            setFloors((prevFloors) =>
+                prevFloors.map(floor => floor.num === responseFloor.num ? responseFloor : floor)
+            )
+            console.log(responseFloor, "resp in builder");
+        } catch (err) {
+            console.log("ERROR --> Could not Save map --->", err);
+        }
+    }
+
+
+    useEffect(() => {
+        if (app) {
+            const handleSaveFloor = () => {
+                console.log("mapsave event triggered");
+                saveFloor();
+            };
+
+            window.addEventListener("mapsave", handleSaveFloor);
+            return () => {
+                window.removeEventListener("mapsave", handleSaveFloor);
+            };
+        }
+    }, [app]); // Add event listener only when app is set
+
 
     useEffect(() => {
         return () => {
@@ -68,7 +109,7 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
         };
     }, [app]);
 
-    return { app, floors, shapes };
+    return { app, floors, saveFloor };
 };
 
 export default useMapLoader;

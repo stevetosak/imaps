@@ -7,9 +7,11 @@ import MapNode from "../base/MapNode.js";
 import {json} from "react-router-dom";
 import log from "eslint-plugin-react/lib/util/log.js";
 import ShapeRegistry from "../util/ShapeRegistry.js";
+import shapeRegistry from "../util/ShapeRegistry.js";
+import triggerMapSave from "../util/triggerMapSave.js";
 
 export class MapBuilder {
-    constructor(containerId, floorNum,mapName) {
+    constructor(containerId,floorNum,mapName) {
         this.container = document.getElementById(containerId);
         this.stage = new Konva.Stage({
             container: containerId,
@@ -263,11 +265,12 @@ export class MapBuilder {
             scaleX: 1,
             scaleY: 1,
             increment: true,
+            floorNum: this.floorNum
         };
         let infoPin = Factory.createShape("InfoPin", attrs);
         addEventHandling(infoPin, this, "dblclick");
-        this.shapes.push(infoPin);
-        //ShapeRegistry.updateShapes(infoPin)
+        //this.shapes.push(infoPin);
+        ShapeRegistry.add(infoPin)
         this.mainLayer.add(infoPin);
         infoPin.displayName(this.textLayer);
 
@@ -308,7 +311,9 @@ export class MapBuilder {
         console.info("ATTRS FNUM",attrs.floorNum)
 
         this.mainLayer.add(placedObj);
-        this.shapes.push(placedObj);
+        //this.shapes.push(placedObj);
+        console.log("VO PLACED SHAEPS WALL ZITI SE: " + placedObj.className);
+        ShapeRegistry.add(placedObj);
         addEventHandling(placedObj, this, "dblclick");
         this.mainLayer.draw();
 
@@ -316,6 +321,8 @@ export class MapBuilder {
 
         placedObj.displayName(this.textLayer);
         placedObj.snapToGrid();
+
+        triggerMapSave();
 
         if (!this.efficientDrawingMode) {
             this.stopDrawing();
@@ -388,7 +395,8 @@ export class MapBuilder {
             this.mainTransformer.nodes().forEach((node) => {
                 node.remove();
                 node.destroy();
-                this.shapes.splice(this.shapes.indexOf(node), 1);
+                // this.shapes.splice(this.shapes.indexOf(node), 1);
+                ShapeRegistry.delete(node);
             });
             this.mainTransformer.nodes([]);
             this.mainLayer.batchDraw();
@@ -455,16 +463,24 @@ export class MapBuilder {
     }
 
     saveShapeDetails() {
-        this.shapes.forEach(shape => {
-            shape.saveShapeDetails();
-            console.log(shape.info);
-        });
+        // this.shapes.forEach(shape => {
+        //     shape.saveShapeDetails();
+        //     console.log(shape.info);
+        // });
+        ShapeRegistry.saveDetails();
+        console.log("thisflornum",this.floorNum)
+        return  {
+            shapes: ShapeRegistry.getShapes(this.floorNum),
+            roomTypes: JSON.stringify(this.roomTypes),
+            mapName: this.mapName,
+            floorNum: this.floorNum
+        }
     }
 
     getPayload(){
         this.saveShapeDetails();
         return {
-            shapes: this.shapes,
+            shapes: ShapeRegistry.getShapes(this.floorNum),
             roomTypes: JSON.stringify(this.roomTypes),
             mapName: this.mapName,
             floorNum: this.floorNum
@@ -474,8 +490,10 @@ export class MapBuilder {
     async saveMap(mapName, username, selectedFloor) {
         this.saveShapeDetails();
 
+        console.log("SHAPSDOASD!!!!!!: " + JSON.stringify(ShapeRegistry.getShapes(this.floorNum)));
+
         const payload = {
-            shapes: this.shapes,
+            shapes: ShapeRegistry.getShapes(this.floorNum),
             roomTypes: JSON.stringify(this.roomTypes),
             mapName: mapName,
             floorNum: selectedFloor
@@ -556,61 +574,66 @@ export class MapBuilder {
         return [...pins, ...entrances];
     }
 
+    //todo ova so info zemanje shapes vo dr klasas
+
     getShapeInfoByType(type) {
-        return this.shapes.filter((shape) => shape.className === type).map((shape) => shape.info);
+        return ShapeRegistry.getShapes(this.floorNum).filter((shape) => shape.className === type).map((shape) => shape.info);
     }
 
     updateConnections() {
         console.log("Update");
 
-        this.shapes.forEach((shape) => {
-            if (shape.className === "InfoPin" || shape.className === "Entrance") {
-                shape.info.selectedPins.forEach((connectedShapeName) => {
-                    const connectedShape = this.shapes.find((s) => s.info.name === connectedShapeName);
-                    if (
-                        connectedShape &&
-                        (connectedShape.className === "InfoPin" || connectedShape.className === "Entrance")
-                    ) {
-                        if (!connectedShape.info.selectedPins.includes(shape.info.name)) {
-                            connectedShape.info.selectedPins.push(shape.info.name);
-                        }
-                    }
-                });
-            }
-        });
+        // this.shapes.forEach((shape) => {
+        //     if (shape.className === "InfoPin" || shape.className === "Entrance") {
+        //         shape.info.selectedPins.forEach((connectedShapeName) => {
+        //             const connectedShape = this.shapes.find((s) => s.info.name === connectedShapeName);
+        //             if (
+        //                 connectedShape &&
+        //                 (connectedShape.className === "InfoPin" || connectedShape.className === "Entrance")
+        //             ) {
+        //                 if (!connectedShape.info.selectedPins.includes(shape.info.name)) {
+        //                     connectedShape.info.selectedPins.push(shape.info.name);
+        //                 }
+        //             }
+        //         });
+        //     }
+        // });
+
+        ShapeRegistry.updateConnections();
     }
 
     drawConnection(node1Name, node2Name) {
 
         // ako imat primer room so isto ime kako node so go baras ke go zemit toj, znacit morat filter samo
-        let node1 = this.shapes.filter(shape => shape instanceof MapNode && shape.info.name === node1Name)[0];
-        let node2 = this.shapes.filter(shape => shape instanceof MapNode && shape.info.name === node2Name)[0];
-
-        node1.connect(node2)
+        // let node1 = this.shapes.filter(shape => shape instanceof MapNode && shape.info.name === node1Name)[0];
+        // let node2 = this.shapes.filter(shape => shape instanceof MapNode && shape.info.name === node2Name)[0];
+        //
+        // node1.connect(node2)
+        ShapeRegistry.drawConnection(node1Name,node2Name);
     }
 
     getNodeByName(name) {
-        return this.shapes.filter(shape => shape instanceof MapNode && shape.info.name === name)[0];
+        return ShapeRegistry.getShapes(this.floorNum).filter(shape => shape instanceof MapNode && shape.info.name === name)[0];
     }
 
     removeConnection(from, to) {
 
-        let node1 = this.getNodeByName(from);
-        let node2 = this.getNodeByName(to);
-
-        node1.removeConnectionLine(node2);
-
-        this.shapes.filter((s) => s.info.name === from || s.info.name === to)
-            .forEach((s) => {
-                s.info.selectedPins = s.info.selectedPins.filter((pin) => pin !== from && pin !== to);
-            });
-        console.log("Remove");
+        // let node1 = this.getNodeByName(from);
+        // let node2 = this.getNodeByName(to);
+        //
+        // node1.removeConnectionLine(node2);
+        //
+        // this.shapes.filter((s) => s.info.name === from || s.info.name === to)
+        //     .forEach((s) => {
+        //         s.info.selectedPins = s.info.selectedPins.filter((pin) => pin !== from && pin !== to);
+        //     });
+        // console.log("Remove");
+        ShapeRegistry.removeConnection(from,to);
     }
 
     updateRoomNames() {
-
         this.textLayer.removeChildren();
-        this.shapes.forEach((shape) => {
+        ShapeRegistry.getShapes(this.floorNum).forEach((shape) => {
             shape.displayName(this.textLayer);
         });
 
@@ -631,37 +654,9 @@ export class MapBuilder {
 
     clearMap() {
         this.mainLayer.removeChildren();
-        this.shapes.forEach((shape) => shape.destroy());
-        this.shapes = [];
         this.hoverObj = null;
     }
 
-
-    // ne sa koristit ova pojke
-    async loadMap(mapName, username, floorNum) {
-        const httpService = new HttpService();
-        httpService.setAuthenticated();
-
-        floorNum = floorNum == null ? 0 : floorNum;
-
-        console.log("Floor num draw: " + floorNum);
-
-        const resp = await httpService.get(
-            `/protected/my-maps/load?mapName=${mapName}&username=${username}&floorNum=${floorNum}`
-        );
-        console.log("RESPONSE FROM LOAD --->", resp);
-
-        console.log("FNUM : " + floorNum);
-
-        const targetFloor = resp.filter(floor => floor.num === floorNum)[0];
-
-        console.log("tf: " + targetFloor.num)
-
-        this.deserializeMap(targetFloor.mapData);
-        this.shapes.forEach((shape) => {
-            this.mainLayer.add(shape);
-        });
-    }
 
     // ova  klasa i map display da nasledbat od glavna klasa
 
@@ -673,7 +668,7 @@ export class MapBuilder {
         if (data == null || data === "") return;
 
         this.deserializeMap(data);
-        this.shapes.forEach((shape) => {
+        shapeRegistry.getShapes(this.floorNum).forEach((shape) => {
             this.mainLayer.add(shape);
         });
 
@@ -683,7 +678,7 @@ export class MapBuilder {
     //nov
     deserializeMap(data) {
         console.log("DESERIALIZING: ", data);
-        //this.clearMap();
+        ShapeRegistry.clear(this.floorNum);
 
         if (data != null) {
             const dsrData = JSON.parse(data);
@@ -701,11 +696,12 @@ export class MapBuilder {
                     increment: false,
                     snap: true,
                     fromLoad: true,
+                    floorNum: this.floorNum
                 };
 
                 const loadedShape = Factory.createShape(shape.className, attrs);
                 loadedShape.loadInfo(shape.attrs);
-                this.shapes.push(loadedShape);
+                ShapeRegistry.add(loadedShape);
                 // na destroy trebit events da sa trgnat
                 addEventHandling(loadedShape, this, "dblclick");
             });
@@ -722,8 +718,8 @@ export class MapBuilder {
             // console.log("room types arr loaded: " + this.roomTypes)
 
             // draw connections
-            let pins = this.shapes.filter((shape) => shape.className === "InfoPin" || shape.className === "Entrance");
-            pins.forEach((pin) => {
+            let nodes = ShapeRegistry.getShapes(this.floorNum).filter((shape) => shape.className === "InfoPin" || shape.className === "Entrance" || shape.className === "Stairs");
+            nodes.forEach((pin) => {
                 let connectedPins = pin.info.selectedPins;
                 if (connectedPins) {
                     connectedPins.forEach((slPin) => {
@@ -738,7 +734,7 @@ export class MapBuilder {
         this.mainLayer.add(this.mainTransformer);
         this.mainLayer.add(this.selectionRectangle);
 
-        this.shapes.forEach((shape) => shape.displayName(this.textLayer));
+        ShapeRegistry.getShapes(this.floorNum).forEach((shape) => shape.displayName(this.textLayer));
     }
 
 }

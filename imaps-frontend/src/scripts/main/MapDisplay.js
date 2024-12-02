@@ -2,9 +2,8 @@ import Konva from "konva";
 import Factory from "../util/Factory.js";
 import HttpService from "../net/HttpService.js";
 import {zoomStage} from "../util/zoomStage.js";
-import {json} from "react-router-dom";
-import error from "eslint-plugin-react/lib/util/error.js";
-import {addEventHandling} from "../util/addEventHandling.js";
+import {addEventHandling} from "../util/addEventHandling.js";;
+import ShapeRegistry from "../util/ShapeRegistry.js";
 
 export class MapDisplay {
     constructor(containerId) {
@@ -89,6 +88,15 @@ export class MapDisplay {
 
 
     // ne se koristit ova pojke
+    /**
+     *
+     * @param mapName
+     * @param floorNum
+     * @param username
+     * @param isPrivate
+     * @returns {Promise<void>}
+     * @deprecated
+     */
     async loadMap(mapName,floorNum,username,isPrivate) {
         const httpService = new HttpService();
         floorNum = floorNum == null ? 0 : floorNum;

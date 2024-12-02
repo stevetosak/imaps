@@ -19,6 +19,7 @@ import {MapDisplay} from "../../scripts/main/MapDisplay.js";
 import netconfig from "../../scripts/net/netconfig.js";
 import useMapLoader from "./Hooks/useMapLoader.js";
 import {shape} from "prop-types";
+import ShapeRegistry from "../../scripts/util/ShapeRegistry.js";
 
 function Draw() {
   const { mapName } = useParams();
@@ -32,52 +33,8 @@ function Draw() {
   const [hasError, setHasError] = useState(false);
   const [mapLoaded,setMapLoaded] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [stairs,setStairs] = useState([]);
 
-  const {app,floors,shapes} = useMapLoader(mapName,username,searchParams,setSearchParams)
-
-
-
-  //v1
-  // const handleFloorChange = (event) => {
-  //   let fnum = event.target.value;
-  //
-  //   setSelectedFloor(fnum); //updateSearchParam("floor",event.target.value)
-  //
-  //   setSearchParams({ floor: fnum });
-  //   console.log("FLOORS CHANGE",floors)
-  //   let found = floors.find(fl => fl.num == fnum);
-  //
-  //   console.log("FOUND: " + found)
-  //   app.loadMapN(found);
-  //   setApp(app);
-  //
-  //   console.log(`Floor changed to: ${event.target.value}`);
-  // };
-
-  //v2
-  // const handleFloorChange = (event) => {
-  //   const floorNum = parseInt(event.target.value);
-  //   setSelectedFloor(floorNum); // Update state for selected floor
-  //   setSearchParams({ floor: floorNum }); // Update searchParams to trigger floor change
-  //
-  //   const selectedFloor = floors.find((f) => f.num === floorNum);
-  //
-  //   if (!selectedFloor) {
-  //     console.error(`Floor ${floorNum} not found`);
-  //     return;
-  //   }
-  //
-  //   if (app) {
-  //     // Reuse the existing MapBuilder instance
-  //     app.loadNewFloor(selectedFloor); // Update with the new floor data
-  //   } else {
-  //     // Fallback: Create a new instance (should be rare, only in case of an issue)
-  //     const appInstance = new MapBuilder("container", floorNum);
-  //     appInstance.loadNewFloor(selectedFloor);
-  //     setApp(appInstance);
-  //   }
-  // };
+  const {app,floors,saveFloor} = useMapLoader(mapName,username,searchParams,setSearchParams)
 
 
   const addFloor = () => {
@@ -95,26 +52,35 @@ function Draw() {
       .catch((reason) => console.log(reason));
   };
 
-  const handleSaveClick = async () => {
-    if (!app.isMainEntranceSelected()) {
-      setErrorMessage("Please select Main Entrance");
-      setHasError(true);
-      return;
-    } else {
-      setHasError(false);
-    }
-    const resp = await app
-      .saveMap(mapName, username, searchParams.get("floor"))
-      .then((r) => {
-        setIsPopupVisible(true);
 
-        setTimeout(() => {
-          setIsPopupVisible(false);
-        }, 3000);
-      })
-      .catch((reason) => {
-        console.log("Error saving map:", reason);
-      });
+
+
+  const handleSaveClick = async () => {
+    // const resp = await app
+    //   .saveMap(mapName, username, searchParams.get("floor"))
+    //   .then((rsp) => {
+    //     setIsPopupVisible(true);
+    //     console.log()
+    //
+    //     setTimeout(() => {
+    //       setIsPopupVisible(false);
+    //     }, 3000);
+    //   })
+    //   .catch((reason) => {
+    //     console.log("Error saving map:", reason);
+    //   });
+
+    saveFloor().then(r => {
+     floors.forEach(flr => {
+       setIsPopupVisible(true);
+       setTimeout(() => {
+         setIsPopupVisible(false);},
+           3000);
+       console.log("floor after save: " + JSON.stringify(flr))
+     })
+    });
+
+
   };
 
   return (
@@ -153,7 +119,7 @@ function Draw() {
             onChange={(e) => {setSearchParams({floor: e.target.value})}}
             className={styles.floorDropdown}
           >
-            {floors?.map((floor) => (
+            {floors.map((floor) => (
               <option key={floor.num} value={floor.num}>
                 Floor {floor.num}
               </option>
@@ -185,7 +151,7 @@ function Draw() {
           <RoomModal map={app}></RoomModal>
           <EntranceModal map={app}></EntranceModal>
           <InfoPinModal map={app}></InfoPinModal>
-          <StairsModal map = {app} shapes = {shapes}></StairsModal>
+          <StairsModal map = {app}></StairsModal>
         </div>
       </div>
 

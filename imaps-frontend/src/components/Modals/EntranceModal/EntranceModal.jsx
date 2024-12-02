@@ -29,8 +29,6 @@ export default function EntranceModal({map}) {
         selectedPin: "",
     });
 
-
-
     const {
         modalState: {isOpen,setIsOpen,shape,setShape},
         handlers: {toggleModal,updateModalData,saveDetails}
@@ -43,32 +41,26 @@ export default function EntranceModal({map}) {
 
 
     useModalEvent((event) => {
-        const roomObj = event.detail.room;
-        setShape(roomObj);
-        const savedPins = roomObj.info.selectedPins || [];
-        setFormData(getInitialFormData(event,roomObj,savedPins));
-        setConnections(savedPins);
+        const shape = event.detail.room;
+        setShape(shape);
+        const connections = shape.info.selectedPins || [];
+        setFormData({
+            name: shape.info.name || "",
+            connectedRoom: shape.info.connectedRoom || "",
+            description: shape.info.description || "",
+            availablePins: event.detail.map.getConnections() || [], // ova so ShapeQuery preku Registry
+            availableRooms: event.detail.map.getRooms() || [], //
+            isMainEntrance: shape.info.isMainEntrance || false,
+            selectedPin: "",
+            selectedPins: shape.info.selectedPins || []
+        });
+        setConnections(connections);
         setIsOpen(true);
         event.detail.map.updateConnections();
 
-        console.log(savedPins, "Loaded pins on modal open");
+        console.log(connections, "Loaded pins on modal open");
     },"openEntranceModalEvent")
 
-    const getInitialFormData = (event, roomObj, savedPins) => ({
-        name: roomObj.info.name || "",
-        connectedRoom: roomObj.info.connectedRoom || "",
-        description: roomObj.info.description || "",
-        availablePins: event.detail.map.getConnections() || [],
-        availableRooms: event.detail.map.getRooms() || [],
-        isMainEntrance: roomObj.info.isMainEntrance || false,
-        selectedPin: "",
-        selectedPins: savedPins,
-    });
-
-    // const {
-    //     modalState: {isOpen, toggleModal, saveDetails, updateModalData},
-    //     connectionsState: {connections, addPinToList, removePinFromList},
-    // } = useModalState(formData, setFormData, map, getInitialFormData, "openEntranceModalEvent");
 
 
     return (
