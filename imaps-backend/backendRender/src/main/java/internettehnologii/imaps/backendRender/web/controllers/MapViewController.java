@@ -8,6 +8,7 @@ import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.exceptions.EmptyMapException;
 import internettehnologii.imaps.backendRender.web.exceptions.FloorNotFoundException;
+import internettehnologii.imaps.backendRender.web.service.interfaces.GraphService;
 import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
@@ -25,18 +26,19 @@ import java.util.*;
 @CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = {"Authorization"})
 public class MapViewController {
 
-    private String currentFloorJsonData;
     private RouteGraph graph;
     private List<Floor> floors = new ArrayList<>();
     private Floor currentFloor = new Floor();
 
     private final MapService mapService;
     private final FloorService floorService;
+    private final GraphService graphService;
 
     @Autowired
-    public MapViewController(MapService mapService, FloorService floorService) {
+    public MapViewController(MapService mapService, FloorService floorService, GraphService graphService) {
         this.mapService = mapService;
         this.floorService = floorService;
+        this.graphService = graphService;
     }
 
 
@@ -71,6 +73,8 @@ public class MapViewController {
         return ResponseEntity.ok(path);
     }
 
+
+    @Deprecated
     @GetMapping("/public/map-data")
     public ResponseEntity<Floor> getMapData(@RequestParam String mapName, @RequestParam int floorNum) {
         try {
@@ -88,16 +92,16 @@ public class MapViewController {
     @GetMapping("/protected/load-map")
     public ResponseEntity<List<FloorDTO>> getMapDataProtected(@RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
         try {
-            IndoorMap map = mapService.getMapForUser(username, mapName); // namesto ova samo proverka dali postoet dadena mapa za user, za da ne morat za dzabe mapa promenliva da se cuvat
+            mapService.getMapForUser(username, mapName);// namesto ova samo proverka dali postoet dadena mapa za user, za da ne morat za dzabe mapa promenliva da se cuvat
             this.floors = floorService.getAllFloorsForMap(mapName);
             this.currentFloor = getFloorByNum(floorNum);
-            JsonMapData mapData = currentFloor.getMapData();
-            if (mapData != null) {
-                this.loadGraph((String) currentFloor.getMapData().getShapeData());
-                System.out.println("============================================== graph loaded ==============================================");
-            } else {
-                System.out.println("============================================== CANT LOAD GRAPH: MAP DATA NULL ==============================================");
-            }
+            this.graph = graphService.construct(floors);
+//            if (mapData != null) {
+//                this.loadGraph((String) currentFloor.getMapData().getShapeData());
+//                System.out.println("============================================== graph loaded ==============================================");
+//            } else {
+//                System.out.println("============================================== CANT LOAD GRAPH: MAP DATA NULL ==============================================");
+//            }
 
             return ResponseEntity.ok(Util.convertToFloorDTO(floors)); // tuka return site floors trebit
         } catch (Exception e) {
@@ -143,7 +147,7 @@ public class MapViewController {
 
         try {
             MapNodeParser parser = new MapNodeParser();
-            List<MapNode> nodes = parser.parseAndCreateNodes(mapData);
+            List<MapNode> nodes = parser.parseAndCreate(mapData);
             graph = new RouteGraph();
             graph.load(nodes); // tuka vo for ke trevbit parse pa load
             System.out.println("======================= CREATED GRAPH =======================\n" + graph);

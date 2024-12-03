@@ -13,11 +13,13 @@ public class MapNode {
     private String connectedRoom = "EMPTY";
     private Coordinates<Double,Double> coordinates;
     private List<String> connectionNames = new ArrayList<>();
+    private String className;
 
-    public MapNode(String name, String description, Coordinates<Double, Double> coordinates) {
+    public MapNode(String name, String description, Coordinates<Double, Double> coordinates,String className) {
         this.name = name;
         this.description = description;
         this.coordinates = coordinates;
+        this.className = className;
     }
 
     public MapNode(String name,Coordinates<Double, Double> coordinates,List<String> connectionNames) {
@@ -26,12 +28,6 @@ public class MapNode {
         this.connectionNames = connectionNames;
     }
 
-    public MapNode(String name, String description, Coordinates<Double, Double> coordinates, String connectedRoom) {
-        this.name = name;
-        this.description = description;
-        this.coordinates = coordinates;
-        this.connectedRoom = connectedRoom;
-    }
 
     public MapNode() {
     }

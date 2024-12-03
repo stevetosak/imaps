@@ -1,7 +1,6 @@
 package internettehnologii.imaps.backendRender.graph;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import internettehnologii.imaps.backendRender.graph.exceptions.MapParseException;
@@ -9,14 +8,14 @@ import internettehnologii.imaps.backendRender.graph.exceptions.MapParseException
 import java.util.*;
 
 public class MapNodeParser {
-    public List<MapNode> parseAndCreateNodes(String mapJson) throws Exception {
+    public List<MapNode> parseAndCreate(String mapJson) throws Exception {
         final List<MapNode> mapNodes = new ArrayList<>();
 
-        System.out.println("======= MAP JSON ====== " + mapJson);
+        //System.out.println("======= MAP JSON ====== " + mapJson);
 
-//        if(mapJson == null || mapJson.isEmpty() || mapJson.equals("[]")) {
-//            throw new MapParseException("Cannot parse empty map");
-//        }
+        if(mapJson == null || mapJson.isEmpty() || mapJson.equals("[]")) {
+            throw new MapParseException("Cannot parse empty map");
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
         List<Shape> shapes = objectMapper.readValue(mapJson, objectMapper.getTypeFactory().constructCollectionType(List.class, Shape.class));
@@ -29,15 +28,15 @@ public class MapNodeParser {
                 // Wall i room ne se bitni za navigacija
                 if (Objects.equals(type, "Wall") || Objects.equals(type, "Room")) return;
 
-                Map<String, Object> attrs = shape.getAttrs();
-                MapNode mapNode = createMapNode(attrs);
+                MapNode mapNode = createMapNode(shape);
 
-                List<String> connectedPins = (List<String>) attrs.get("connected_pins");
+                @SuppressWarnings("unchecked")
+                List<String> connectedPins = (List<String>) shape.getAttrs().get("connected_pins");
 
 
                 if (connectedPins != null) {
                     for (String pin : connectedPins) {
-                        System.out.println("Connected node (markup) : " + pin + " to: " + attrs.get("obj_name"));
+                        System.out.println("Connected node (markup) : " + pin + " to: " + shape.getAttrs().get("obj_name"));
                         mapNode.addConnectionName(pin);
                     }
 
@@ -57,26 +56,16 @@ public class MapNodeParser {
     }
 
 
-    private static String findAttr(String key, JsonNode attrs) {
-        if (attrs.has(key)) {
-            return attrs.get(key).asText();
-        } else {
-            System.out.println("No attribute found for key:" + key);
-            return null;
-        }
 
-    }
-
-
-    private static MapNode createMapNode(Map<String, Object> attrs) {
-        String name = (String) attrs.get("obj_name");
-        String description = (String) attrs.get("description");
-        String connectedRoom = (String) attrs.get("connected_room");
-        double x = Double.parseDouble(Objects.requireNonNull(attrs.get("x")).toString());
-        double y = Double.parseDouble(Objects.requireNonNull(attrs.get("y")).toString());
+    private static MapNode createMapNode(Shape shape) {
+        String name = (String) shape.getAttrs().get("obj_name");
+        String description = (String) shape.getAttrs().get("description");
+        String connectedRoom = (String) shape.getAttrs().get("connected_room");
+        double x = Double.parseDouble(Objects.requireNonNull(shape.getAttrs().get("x")).toString());
+        double y = Double.parseDouble(Objects.requireNonNull(shape.getAttrs().get("y")).toString());
         Coordinates<Double, Double> coordinates = new Coordinates<>(x, y);
 
-        MapNode mapNode = new MapNode(name, description, coordinates);
+        MapNode mapNode = new MapNode(name, description, coordinates,shape.getClassName());
         if (connectedRoom != null) {
             mapNode.setConnectedRoom(connectedRoom);
         }
