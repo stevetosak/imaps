@@ -1,38 +1,45 @@
 import styles from "../EntranceModal/EntranceModal.module.css";
 import React from "react";
+import PropTypes from "prop-types";
+import MapShape from "../../../scripts/base/MapShape.js";
 
-export default function ModalSelectConnections2({formData,updateModalData,addPinToList,shapes}) {
+export default function ModalSelectConnections2({shapeInfo,updateModalData,addConnection,availableShapes}) {
 
-    console.log("shapes modal",shapes)
+    console.log("shapes modal",availableShapes)
     return (
-        <>
             <div className={styles.formGroup}>
                 <label htmlFor="selectedPin">Select connections:</label>
                 <select
                     id="selectedPin"
                     name="selectedPin"
-                    value={formData.selectedPin}
+                    value={shapeInfo.selectedPin}
                     onChange={updateModalData}
                     required
                 >
                     <option value="">Select Connection</option>
-                    {shapes
+                    {availableShapes
                         .filter(
-                            (shape) =>
-                                formData.selectedPins.includes(shape.info.name) === false &&
-                                shape.info.name !== "" &&
-                                shape.info.name !== formData.name
+                            (s) =>
+                                !s.info.selectedPins.includes(shapeInfo.name) &&
+                                s.info.name !== "" &&
+                                s.info.name !== shapeInfo.name
                         )
-                        .map((shape, index) => (
-                            <option key={index} value={shape.info.name}>
-                                {shape.info.name + ` [${shape.floorNum}F]`}
+                        .map((othShape, index) => (
+                            <option key={index} value={othShape.info.name}>
+                                {othShape.info.name}
                             </option>
                         ))}
                 </select>
-                <button type="button" onClick={addPinToList} className={styles.addButton}>
+                <button type="button" onClick={addConnection} className={styles.addButton}>
                     Add Connection
                 </button>
             </div>
-        </>
     )
+}
+
+ModalSelectConnections2.propTypes = {
+    shapeInfo: PropTypes.object,
+    updateModalData: PropTypes.func,
+    addConnection: PropTypes.func,
+    availableShapes: PropTypes.arrayOf(MapShape),
 }

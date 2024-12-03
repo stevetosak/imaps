@@ -18,9 +18,9 @@ function SearchBar({map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom,av
     setIsExpanded(!isExpanded);
   };
 
-  // Function to handle searching
+  // trebit ova da rabotat i za sive shapes. higlight trebit site da impl
   function searchRoom() {
-    let foundRoom = map.findRoomByName(from)
+    let foundRoom = map.findRoomByName(from) // ova za sega vaka za da rabotat.
     setSelectedRoom(foundRoom)
     isPanelOpen(true)
   }
@@ -30,7 +30,7 @@ function SearchBar({map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom,av
   const handleInputFocus = (field) => {
     if (availableOptions.length === 0 && map) {
       setAvailableOptions(availableShapes.map(shape => {
-        return shape.info.name + ` [${shape.floorNum}F]`
+        return shape.info.name;
       }));
     }
     setDropdownVisible(true);

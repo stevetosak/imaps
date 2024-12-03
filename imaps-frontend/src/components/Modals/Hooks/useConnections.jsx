@@ -1,23 +1,25 @@
 import {useState} from "react";
 
-export default function useConnections(map,formData,setFormData){
+export default function useConnections(map,shapeInfo,setShapeInfo){
     const [connections,setConnections] = useState([])
 
     const addConnection = () => {
-        if (!formData.selectedPin || connections.includes(formData.selectedPin)) return;
+        console.log("TOSKA",shapeInfo)
+        if (!shapeInfo.selectedPin || connections.includes(shapeInfo.selectedPin)) return;
 
         setConnections((prevConn) => {
-            const updatedConnections = [...prevConn, formData.selectedPin];
+            const updatedConnections = [...prevConn, shapeInfo.selectedPin];
 
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                selectedPin: "",
-                selectedPins: updatedConnections,
+
+            setShapeInfo((prevShapeInfo) => ({
+                ...prevShapeInfo,
+                ["selectedPin"]: "",
+                ["selectedPins"]: updatedConnections,
             }));
 
-            console.log(formData.name,formData.selectedPin,"TEST")
+            console.log(shapeInfo.name,shapeInfo.selectedPin,"TEST")
 
-            map.drawConnection(formData.name,formData.selectedPin);
+            map.drawConnection(shapeInfo.name,shapeInfo.selectedPin);
             return updatedConnections;
         });
     };
@@ -25,13 +27,13 @@ export default function useConnections(map,formData,setFormData){
     const removeConnection = (connToRemove) => {
         setConnections((prevConn) => {
             const updatedPins = prevConn.filter((pin) => pin !== connToRemove);
-            setFormData((prevFormData) => ({
+            setShapeInfo((prevFormData) => ({
                 ...prevFormData,
                 selectedPins: updatedPins,
             }));
             return updatedPins;
         });
-        map.removeConnection(formData.name, connToRemove);
+        map.removeConnection(shapeInfo.name, connToRemove);
     };
 
 

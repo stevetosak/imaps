@@ -1,6 +1,8 @@
 
 import { _registerNode } from "konva/lib/Global";
 import MapNode from "../base/MapNode.js";
+import {node} from "prop-types";
+import draw from "../../pages/Draw/Draw.jsx";
 export default class InfoPin extends MapNode {
   constructor(attrs,id) {
     attrs.snap = false;
@@ -28,7 +30,7 @@ export default class InfoPin extends MapNode {
 
     this.type = "InfoPin";
     this._info = {
-      name: `Pin ${id}`,
+      name: `Pin${id} [${this.floorNum}F]`,
       selectedPins: [],
       description: "",
     };
@@ -74,6 +76,12 @@ export default class InfoPin extends MapNode {
     this.setAttr("description", this.info.description);
     this.setAttr("floor_num",this.floorNum)
     console.log(this.info, "vnatre vo info");
+  }
+
+  connect(node, draw = true) {
+    if(this.floorNum !== node.floorNum) return;
+
+    super.connect(node)
   }
 }
 

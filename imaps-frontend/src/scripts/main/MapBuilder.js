@@ -273,6 +273,7 @@ export class MapBuilder {
         ShapeRegistry.add(infoPin)
         this.mainLayer.add(infoPin);
         infoPin.displayName(this.textLayer);
+        triggerMapSave()
 
         console.log(infoPin.name());
     }
@@ -395,8 +396,8 @@ export class MapBuilder {
             this.mainTransformer.nodes().forEach((node) => {
                 node.remove();
                 node.destroy();
-                // this.shapes.splice(this.shapes.indexOf(node), 1);
                 ShapeRegistry.delete(node);
+                triggerMapSave();
             });
             this.mainTransformer.nodes([]);
             this.mainLayer.batchDraw();
@@ -580,35 +581,9 @@ export class MapBuilder {
         return ShapeRegistry.getShapes(this.floorNum).filter((shape) => shape.className === type).map((shape) => shape.info);
     }
 
-    updateConnections() {
-        console.log("Update");
-
-        // this.shapes.forEach((shape) => {
-        //     if (shape.className === "InfoPin" || shape.className === "Entrance") {
-        //         shape.info.selectedPins.forEach((connectedShapeName) => {
-        //             const connectedShape = this.shapes.find((s) => s.info.name === connectedShapeName);
-        //             if (
-        //                 connectedShape &&
-        //                 (connectedShape.className === "InfoPin" || connectedShape.className === "Entrance")
-        //             ) {
-        //                 if (!connectedShape.info.selectedPins.includes(shape.info.name)) {
-        //                     connectedShape.info.selectedPins.push(shape.info.name);
-        //                 }
-        //             }
-        //         });
-        //     }
-        // });
-
-        ShapeRegistry.updateConnections();
-    }
 
     drawConnection(node1Name, node2Name) {
 
-        // ako imat primer room so isto ime kako node so go baras ke go zemit toj, znacit morat filter samo
-        // let node1 = this.shapes.filter(shape => shape instanceof MapNode && shape.info.name === node1Name)[0];
-        // let node2 = this.shapes.filter(shape => shape instanceof MapNode && shape.info.name === node2Name)[0];
-        //
-        // node1.connect(node2)
         ShapeRegistry.drawConnection(node1Name,node2Name);
     }
 
@@ -617,17 +592,6 @@ export class MapBuilder {
     }
 
     removeConnection(from, to) {
-
-        // let node1 = this.getNodeByName(from);
-        // let node2 = this.getNodeByName(to);
-        //
-        // node1.removeConnectionLine(node2);
-        //
-        // this.shapes.filter((s) => s.info.name === from || s.info.name === to)
-        //     .forEach((s) => {
-        //         s.info.selectedPins = s.info.selectedPins.filter((pin) => pin !== from && pin !== to);
-        //     });
-        // console.log("Remove");
         ShapeRegistry.removeConnection(from,to);
     }
 

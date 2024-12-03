@@ -30,7 +30,13 @@ export default class MapNode extends MapShape{
         })
     }
 
-    connect(node){
+    connect(node,draw = true){
+
+        if(!node.info.selectedPins.includes(this.info.name)){
+            node.info.selectedPins.push(this.info.name);
+        }
+
+        if(!draw) return
 
         const line = this.connLine.clone({
             points: [this.x(),this.y(),node.x(),node.y()]
@@ -49,9 +55,14 @@ export default class MapNode extends MapShape{
         };
 
         node.addLineReference(lineWrapperSend);
+        
+
+
         //this.connectedNodes.push(node);
         this.layer.add(lineWrapper.line);
     }
+    
+    
 
     addLineReference(line){
         this.connectionLines.push(line);
