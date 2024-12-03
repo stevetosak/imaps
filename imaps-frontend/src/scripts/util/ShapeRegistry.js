@@ -107,13 +107,19 @@ class ShapeRegistry {
     }
 
     drawConnection(node1Name, node2Name) {
-        const node1 = Object.values(this.store.floors).flat().find(shape => shape instanceof MapNode && shape.info.name === node1Name);
-        const node2 = Object.values(this.store.floors).flat().find(shape => shape instanceof MapNode && shape.info.name === node2Name);
+        const node1 = Object.values(this.store.floors).flat()
+            .find(shape => shape instanceof MapNode && shape.info.name === node1Name);
+        const node2 = Object.values(this.store.floors).flat()
+            .find(shape => shape instanceof MapNode && shape.info.name === node2Name);
 
         if (node1 && node2) {
             node1.connect(node2);
+            console.log("N1",node1.info.selectedPins,"N2",node2.info.selectedPins)
+        } else {
+            console.error("Cant find node1 or node 2.","Node1: " + node1,"Node2: " + node2);
         }
     }
+
 
     removeConnection(from, to) {
         let shapes = Object.values(this.store.floors).flat();

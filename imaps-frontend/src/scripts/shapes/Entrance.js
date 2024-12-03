@@ -1,5 +1,6 @@
 import {_registerNode} from "konva/lib/Global";
 import MapNode from "../base/MapNode.js";
+import {node} from "prop-types";
 
 export default class Entrance extends MapNode {
 
@@ -34,7 +35,7 @@ export default class Entrance extends MapNode {
         this.id = id;
 
         this._info = {
-            name: `Entrance ${id}`,
+            name: `Entrance${id} [${this.floorNum}F]`,
             connectedRoom: "",
             description: "",
             isMainEntrance: false,
@@ -64,6 +65,12 @@ export default class Entrance extends MapNode {
         this.setAttr("is_main_entrance", this.info.isMainEntrance);
         this.setAttr("connected_room", this.info.connectedRoom);
         this.setAttr("floor_num",this.floorNum);
+    }
+
+    connect(node, draw = true) {
+        if(this.floorNum !== node.floorNum) return;
+
+        super.connect(node)
     }
 }
 

@@ -7,6 +7,7 @@ import RenderedEntrance from "../rendered_shapes/RenderedEntrance";
 import RenderedWall from "../rendered_shapes/RenderedWall.js";
 import Stairs from "../shapes/Stairs.js";
 import RenderedStairs from "../rendered_shapes/RenderedStairs.js";
+import {updateShapeCount, getShapeCount} from "./ShapeCount.js";
 export default class Factory {
   // BUG KO KE NAPRES REFRESH SA RESETVAT COUNTS!
 
@@ -28,19 +29,19 @@ export default class Factory {
 
     switch (shapeType) {
       case "Entrance":
-        if(attrs.increment) this.entranceCount++;
-        return new Entrance(attrs,this.entranceCount);
+        if(attrs.increment) updateShapeCount("entrance")
+        return new Entrance(attrs,getShapeCount("entrance"));
       case "Room":
-        if(attrs.increment) this.roomCount++;
-        return new Room(attrs,this.roomCount);
+        if(attrs.increment) updateShapeCount("room");
+        return new Room(attrs,getShapeCount("room"));
        case "Wall":
          return new Wall(attrs);
        case "InfoPin":
-        if(attrs.increment) this.infoPinCount++;
-          return new InfoPin(attrs,this.infoPinCount);
+        if(attrs.increment) updateShapeCount("infoPin")
+          return new InfoPin(attrs,getShapeCount("infoPin"));
       case "Stairs":
-        if(attrs.increment) this.stairCount++;
-        return new Stairs(attrs,this.stairCount)
+        if(attrs.increment) updateShapeCount("stairs")
+        return new Stairs(attrs,getShapeCount("stairs"))
       default:
         throw new Error("Invalid shape type: " + shapeType);
     }

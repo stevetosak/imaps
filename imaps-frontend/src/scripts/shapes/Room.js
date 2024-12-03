@@ -31,7 +31,7 @@ export default class Room extends MapShape {
       this.floorNum = attrs.floorNum;
 
     this._info = {
-      name: `Room ${id}`,
+      name: `Room${id} [${this.floorNum}F]`,
       type: "",
       description: "",
     };

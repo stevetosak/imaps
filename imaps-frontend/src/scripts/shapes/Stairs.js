@@ -26,14 +26,16 @@ export default class Stairs extends MapNode{
             attrs.snap
         );
 
+        this.floorNum = attrs.floorNum;
+
         this.type = "Stairs"
         this._info = {
-            name: `Stairs ${id}`,
+            name: `Stairs${id} [${this.floorNum}F]`,
             description: "",
             selectedPins: []
         };
 
-        this.floorNum = attrs.floorNum;
+
 
 
         this.id = id;
@@ -66,6 +68,10 @@ export default class Stairs extends MapNode{
         this.setAttr("obj_name", this.info.name);
         this.setAttr("description", this.info.description);
         this.setAttr("floor_num",this.floorNum)
+    }
+    connect(node) {
+        const draw = this.floorNum === node.floorNum;
+        super.connect(node,draw);
     }
 }
 
