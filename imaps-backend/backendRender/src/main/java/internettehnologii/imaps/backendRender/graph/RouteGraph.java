@@ -137,11 +137,6 @@ public class RouteGraph {
         return null;
     }
 
-    public String getNodeNameByName(String name){
-        return nameToNodeMap.get(name).getName();
-    }
-
-
 
     @Override
     public String toString() {
