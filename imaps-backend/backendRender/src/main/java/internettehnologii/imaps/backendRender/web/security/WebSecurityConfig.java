@@ -63,8 +63,6 @@ public class WebSecurityConfig {
     }
 
 
-    //TODO password encoding
-
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();

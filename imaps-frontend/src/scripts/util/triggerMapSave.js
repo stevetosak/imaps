@@ -15,7 +15,7 @@ const triggerMapSave = () => {
     setTimeout(() => {
         setCanSave(true);
         window.dispatchEvent(mapSaveEvent)
-    },3000)
+    },2000)
 }
 
 export default triggerMapSave;

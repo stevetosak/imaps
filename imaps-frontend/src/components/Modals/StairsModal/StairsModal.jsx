@@ -30,7 +30,6 @@ export default function StairsModal({map}){
         setShapeInfo(roomObj.info);
         setConnections(roomObj.info.selectedPins || []);
         setIsOpen(true);
-
         console.log(roomObj.info.selectedPins, "Loaded pins on modal open");
     },"openStairsModalEvent")
 

@@ -185,18 +185,6 @@ export class MapDisplay {
         return this.roomTypes;
     }
 
-    getRooms() {
-        return this.getShapeInfoByType("Room");
-    }
-
-    getPins() {
-        return this.getShapeInfoByType("InfoPin");
-    }
-
-    getEntrances() {
-        return this.getShapeInfoByType("Entrance");
-    }
-
 
     getShapeInfoByType(type) {
         return this.shapes.filter((shape) => shape.class === type).map((shape) => shape.info.name);
