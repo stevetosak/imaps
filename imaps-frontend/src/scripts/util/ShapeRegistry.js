@@ -6,7 +6,7 @@ class ShapeRegistry {
     constructor() {
         if (!ShapeRegistry.instance) {
             this.store = {
-                floors: {}
+                floors: {} // key brojka 0: shappes arr
             };
             ShapeRegistry.instance = this;
         }

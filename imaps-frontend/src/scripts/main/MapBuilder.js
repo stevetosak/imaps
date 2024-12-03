@@ -38,7 +38,6 @@ export class MapBuilder {
 
         this.othStairs = [];
 
-        this.shapes = [];
         this.blockSize = 10;
         this.efficientDrawingMode = false;
         this.roomTypes = [];

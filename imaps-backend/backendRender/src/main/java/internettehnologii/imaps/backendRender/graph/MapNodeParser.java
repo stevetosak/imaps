@@ -26,8 +26,6 @@ public class MapNodeParser {
             try {
                 String type = shape.getClassName();
 
-                System.out.println("CLASSNAME " + type);
-
                 // Wall i room ne se bitni za navigacija
                 if (Objects.equals(type, "Wall") || Objects.equals(type, "Room")) return;
 

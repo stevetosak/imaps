@@ -18,8 +18,6 @@ import StairsModal from "../../components/Modals/StairsModal/StairsModal.jsx";
 import {MapDisplay} from "../../scripts/main/MapDisplay.js";
 import netconfig from "../../scripts/net/netconfig.js";
 import useMapLoader from "./Hooks/useMapLoader.js";
-import {shape} from "prop-types";
-import ShapeRegistry from "../../scripts/util/ShapeRegistry.js";
 
 function Draw() {
   const { mapName } = useParams();
@@ -56,20 +54,6 @@ function Draw() {
 
 
   const handleSaveClick = async () => {
-    // const resp = await app
-    //   .saveMap(mapName, username, searchParams.get("floor"))
-    //   .then((rsp) => {
-    //     setIsPopupVisible(true);
-    //     console.log()
-    //
-    //     setTimeout(() => {
-    //       setIsPopupVisible(false);
-    //     }, 3000);
-    //   })
-    //   .catch((reason) => {
-    //     console.log("Error saving map:", reason);
-    //   });
-
     saveFloor().then(r => {
      floors.forEach(flr => {
        setIsPopupVisible(true);

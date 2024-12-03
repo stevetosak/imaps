@@ -11,12 +11,6 @@ import {updateShapeCount, getShapeCount} from "./ShapeCount.js";
 export default class Factory {
   // BUG KO KE NAPRES REFRESH SA RESETVAT COUNTS!
 
-  static infoPinCount = 0;
-  static wallCount = 0;
-  static entranceCount = 0;
-  static roomCount = 0;
-  static stairCount = 0;
-
   static createShape(shapeType,attrs) {
     console.log(attrs,"attrs in factory")
     console.log("position in factory: " + attrs.position.x)
