@@ -95,7 +95,7 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
                 window.removeEventListener("mapsave", handleSaveFloor);
             };
         }
-    }, [app]); // Add event listener only when app is set
+    }, [app]);
 
 
     useEffect(() => {

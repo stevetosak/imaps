@@ -64,8 +64,9 @@ public class MapNodeParser {
         double x = Double.parseDouble(Objects.requireNonNull(shape.getAttrs().get("x")).toString());
         double y = Double.parseDouble(Objects.requireNonNull(shape.getAttrs().get("y")).toString());
         Coordinates<Double, Double> coordinates = new Coordinates<>(x, y);
+        int floorNumber = (int) shape.getAttrs().get("floor_num");
 
-        MapNode mapNode = new MapNode(name, description, coordinates,shape.getClassName());
+        MapNode mapNode = new MapNode(name, description, coordinates,shape.getClassName(),floorNumber);
         if (connectedRoom != null) {
             mapNode.setConnectedRoom(connectedRoom);
         }

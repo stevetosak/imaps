@@ -74,7 +74,6 @@ public class MapViewController {
     }
 
 
-    @Deprecated
     @GetMapping("/public/map-data")
     public ResponseEntity<Floor> getMapData(@RequestParam String mapName, @RequestParam int floorNum) {
         try {

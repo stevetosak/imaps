@@ -14,12 +14,14 @@ public class MapNode {
     private Coordinates<Double,Double> coordinates;
     private List<String> connectionNames = new ArrayList<>();
     private String className;
+    private int floorNumber;
 
-    public MapNode(String name, String description, Coordinates<Double, Double> coordinates,String className) {
+    public MapNode(String name, String description, Coordinates<Double, Double> coordinates,String className,int floorNumber) {
         this.name = name;
         this.description = description;
         this.coordinates = coordinates;
         this.className = className;
+        this.floorNumber = floorNumber;
     }
 
     public MapNode(String name,Coordinates<Double, Double> coordinates,List<String> connectionNames) {
