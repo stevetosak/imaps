@@ -65,8 +65,10 @@ export default class RenderedMapShape extends Konva.Shape {
 
     context.closePath();
     context.fillStrokeShape(this);
+  }
 
-
+  addEvent(action,func){
+    this.on(action,func);
   }
 
   displayName(layer) {

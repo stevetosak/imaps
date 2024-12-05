@@ -1,5 +1,5 @@
 import {json, useNavigate, useParams, useSearchParams} from "react-router-dom";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {MapDisplay} from "../../scripts/main/MapDisplay.js";
 import styles from "./MapView.module.css";
 import SearchBar from "../../components/SearchBar/SearchBar.jsx";
@@ -13,6 +13,7 @@ import Logo from "../../components/Logo/Logo.jsx";
 import netconfig from "../../scripts/net/netconfig.js";
 import parseMapData from "../../scripts/util/parseMapData.js";
 import ShapeRegistry from "../../scripts/util/ShapeRegistry.js";
+import {Button} from "../IMaps/components/Button.jsx";
 
 const MapView = ({isPrivate}) => {
     const {mapName} = useParams();
@@ -24,21 +25,34 @@ const MapView = ({isPrivate}) => {
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [floors, setFloors] = useState([]); // ova trebit da sa objekti
     const navigate = useNavigate();
-    const [shapes,setShapes] = useState([]);
+    const [shapes, setShapes] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
+    const effectCount = useRef(0);
+
+    const defaultNavObj = {
+        enabled: false,
+        nextFloor: -100,
+        nodes: [],
+        offset: 0
+    }
+
+    const[navNext,setNavNext] = useState(defaultNavObj)
+
+
 
 
     useEffect(() => {
         if (!searchParams.has("floor")) {
-            setSearchParams({floor: "0"}); // Ensure searchParams is initialized
+            setSearchParams({floor: "0"});
         }
     }, [setSearchParams, searchParams]);
 
 
     useEffect(() => {
-        const appInstance = new MapDisplay("map");
 
-        const floorNum = parseInt(searchParams.get("floor"));
+
+        const floorNum = parseInt(searchParams.get("floor") || 0);
+        const appInstance = new MapDisplay("map",floorNum);
 
         const load = async () => {
             const httpService = new HttpService();
@@ -69,8 +83,9 @@ const MapView = ({isPrivate}) => {
                 let parsedShapes = [];
 
                 respFloors.forEach(flr => {
-                    const parsed = parseMapData(flr.mapData,(shape => shape.className !== "InfoPin"),true)
-                    parsedShapes = [...parsedShapes,...parsed];
+                    console.log("FLR", flr)
+                    const parsed = parseMapData(flr.mapData, (shape => shape.className !== "InfoPin"), true)
+                    parsedShapes = [...parsedShapes, ...parsed];
                 })
 
                 setShapes(parsedShapes)
@@ -80,7 +95,10 @@ const MapView = ({isPrivate}) => {
                 })
 
 
+
+
                 setFloors(respFloors);
+
                 appInstance.loadMapN(tlFloor?.mapData)
                 setApp(appInstance);
                 setMapLoaded(true);
@@ -90,7 +108,7 @@ const MapView = ({isPrivate}) => {
             });
 
 
-    }, [searchParams, isPrivate, mapName, setSearchParams]);
+    }, []);
 
     //nova load, ne vo MapDisplay
 
@@ -99,7 +117,7 @@ const MapView = ({isPrivate}) => {
         const openRoomInfoPanel = (e) => {
             setSelectedRoom(e.detail.room);
             setIsPanelOpen(true)
-            console.log("SHAPES REG",ShapeRegistry.getShapes().length)
+            console.log("SHAPES REG", ShapeRegistry.getShapes().length)
 
         }
         window.addEventListener("openRoomInfoPanel", openRoomInfoPanel);
@@ -108,6 +126,7 @@ const MapView = ({isPrivate}) => {
     })
 
     const handleDirectionsSubmit = (fromSearch = null, toSearch = null) => {
+
         if (fromSearch === null && toSearch === null) {
             return;
         }
@@ -115,6 +134,15 @@ const MapView = ({isPrivate}) => {
         if (fromSearch === null || fromSearch === "") {
             fromSearch = app.getMainEntrance().info.name;
         }
+
+        let shapeFrom = shapes.find(sh => sh.info.name === fromSearch)
+
+
+        if(shapeFrom.floorNum !== app.floorNum){
+            handleFloorChange(shapeFrom.floorNum);
+        }
+
+
         const url = new URL("http://localhost:8080/api/public/navigate");
         url.searchParams.append("from", fromSearch.trim());
         url.searchParams.append("to", toSearch.trim());
@@ -129,39 +157,63 @@ const MapView = ({isPrivate}) => {
             })
             .then((data) => {
                 console.log("Success:", data);
-                const points = data.map((item) => item.coordinates);
-                app.drawRoute(points);
+                app.drawRouteNEW(data);
             })
             .catch((error) => {
                 console.error("Error:", error);
             });
     };
 
-    const loadFloors = async () => {
-        const httpService = new HttpService();
+    const multiFloorNavigate = () => {
+        if(navNext && app){
+            handleFloorChange(navNext.nextFloor)
+            setTimeout(() => {
+                app.drawRouteNEW(navNext.nodes,navNext.offset)
+            },50)
+            setNavNext(defaultNavObj)
 
-        try {
-            const resp = await httpService.get(`/public/floors/get`);
-            setFloors(resp);
-            return resp;
-        } catch (error) {
-            console.error("Error loading floors:", error);
         }
-    };
+    }
 
-    /**
-     *
-     */
+
+    useEffect(() => {
+        effectCount.current += 1;
+
+        console.log(`useEffect called ${effectCount.current} times`);
+
+
+        const handleNavigate = (event) => {
+            console.log("SHAPES NAV",shapes)
+            // handleFloorChange(event.detail.changeFloorTo)
+            // setTimeout(() => {
+            //     app.drawRouteNEW(event.detail.nodes, event.detail.offset);
+            // },50)
+
+            setNavNext({
+                enabled: true,
+                nextFloor:event.detail.changeFloorTo,
+                nodes: event.detail.nodes,
+                offset: event.detail.offset
+            })
+
+            console.log("ROUTE LAYER",app.routeLayer);
+        }
+
+        window.addEventListener("navigate", handleNavigate)
+        return () => {
+            window.removeEventListener("navigate", handleNavigate);
+        };
+
+    }, [app,mapLoaded]);
+
     const handleFloorChange = (floorNum) => {
         setSearchParams({floor: floorNum});
-        app
-            .loadMap(mapName, floorNum, username, isPrivate)
-            .then((resp) => {
-                console.log(resp);
-            })
-            .catch((reason) => {
-                console.log("ERRR: ", reason);
-            });
+        const chFloor = floors.find(floor => floor.num === floorNum)
+
+        app.clearRoute()
+        app.loadMapN(chFloor.mapData)
+
+
         console.log(`Floor changed to: ${floorNum}`);
     };
 
@@ -178,17 +230,19 @@ const MapView = ({isPrivate}) => {
             <RoomInfoPanel isOpen={isPanelOpen} onClose={closePanel} floor={searchParams.get("floor")}
                            room={selectedRoom} handleDirectionsSubmit={handleDirectionsSubmit}/>
             <div className={styles.toolbar}>
-                {/* <h1>{username}</h1> */}
-                {/* <SideBar /> */}
                 <div className={styles.left}>
                     <Logo></Logo>
                     <h1>{mapName}</h1>
                     {mapLoaded && app && (
                         <>
                             <SearchBar map={app} handleDirectionsSubmit={handleDirectionsSubmit}
-                                       isPanelOpen={isPanelOpen} setSelectedRoom={setSelectedRoom} availableShapes={shapes}/>
+                                       isPanelOpen={isPanelOpen} setSelectedRoom={setSelectedRoom}
+                                       availableShapes={shapes}/>
                             <FilterBar map={app}/>
                         </>
+                    )}
+                    {navNext.enabled && (
+                        <Button onClick={multiFloorNavigate}>Next</Button>
                     )}
                 </div>
                 <Profile/>
