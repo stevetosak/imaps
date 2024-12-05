@@ -169,61 +169,6 @@ body {
   padding: 5px 0;
 }
 
-.floorSection {
-  margin-bottom: 20px;
-  padding: 12px;
-  background-color: #2d2d2d;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.floorSection label {
-  font-size: 14px;
-  color: #ffffff;
-  font-weight: bold;
-}
-
-.floorDropdown,
-.floorInput {
-  padding: 8px;
-  font-size: 14px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: #3a3a3a;
-  color: #ffffff;
-  cursor: pointer;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: center;
-  transition: border-color 0.3s;
-}
-
-.floorDropdown:focus,
-.floorInput:focus {
-  outline: none;
-  border-color: #1e90ff;
-}
-
-.addFloorButton {
-  padding: 10px;
-  width: 100%;
-  border-radius: 5px;
-  border: none;
-  background-color: #e67e22;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.addFloorButton:hover {
-  background-color: #d2691e;
-}
 
 .popup {
   position: fixed;
@@ -274,4 +219,172 @@ body {
 }
 .stairs {
   background-image: url("./shapeImages/stairs_icon.png");
+}
+.floorSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background-color: #2d2d2d;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  width: 100%;
+}
+
+.floorLabel {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.floorList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.floorItems {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.addFloorButton {
+  background-color: #e67e22;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.addFloorButton:hover {
+  background-color: #d2691e;
+  transform: scale(1.1);
+}
+
+.addFloorButton:active {
+  background-color: #b35418;
+  transform: scale(0.95);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  filter: invert(1);
+}
+
+.floorButton {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #ffffff;
+  background-color: #3a3a3a;
+  border: 1px solid #555555;
+  border-radius: 8px;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.floorButton:hover {
+  background-color: #4a4a4a;
+}
+
+.floorButton.active {
+  background-color: #1e90ff;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.floorInput {
+  width: 60%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #3a3a3a;
+  color: #ffffff;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+
+.floorInput:focus {
+  outline: none;
+  border-color: #1e90ff;
+}
+
+.floorActions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 12px;
+  margin-top: 10px;
+  text-align: center;
+}
+.floorItemWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.floorItem {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #ffffff;
+  background-color: #3a3a3a;
+  border: 1px solid #555555;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  flex-grow: 1;
+  transition: background-color 0.3s;
+}
+
+.floorItem:hover {
+  background-color: #4a4a4a;
+}
+
+.activeFloor {
+  background-color: #1e90ff;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.deleteFloorButton {
+  background-color: #ff4d4d;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.deleteFloorButton:hover {
+  background-color: #e60000;
+  transform: scale(1.1);
+}
+
+.deleteFloorButton:active {
+  background-color: #cc0000;
+  transform: scale(0.95);
 }
