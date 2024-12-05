@@ -250,12 +250,7 @@ const MapView = ({isPrivate}) => {
                 </div>
                 <Profile/>
             </div>
-            <div className={styles.mapControlsContainer}>
-                {/*<MapControls*/}
-                {/*    floors={floors}*/}
-                {/*    onFloorChange={handleFloorChange}*/}
-                {/*/>*/}
-
+            <div className={styles.floorSelectorContainer}>
                 <div className={styles.floorSelector}>
                     <img src={floorIcon} alt="Floor Icon" className={styles.floorIcon}/>
                     <select
@@ -265,12 +260,13 @@ const MapView = ({isPrivate}) => {
                     >
                         {floors?.map((floor) => (
                             <option key={floor.num} value={floor.num}>
-                                {floor.num}F
+                                Floor {floor.num}
                             </option>
                         ))}
                     </select>
                 </div>
             </div>
+
         </div>
     );
 };
