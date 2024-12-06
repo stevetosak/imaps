@@ -1,5 +1,5 @@
-export const zoomStage = (e,stage) => {
-    if (!e.evt.shiftKey) return;
+export const zoomStage = (e,stage,shift=false) => {
+    if (shift && !e.evt.shiftKey) return;
 
     e.evt.preventDefault();
 

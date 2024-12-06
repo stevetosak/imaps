@@ -187,7 +187,7 @@ export class MapBuilder {
     }
 
     zoom(e) {
-        zoomStage(e, this.stage);
+        zoomStage(e, this.stage, true);
         this.drawGrid();
     }
 

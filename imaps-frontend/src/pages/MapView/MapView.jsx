@@ -162,7 +162,8 @@ const MapView = ({isPrivate}) => {
 
     const multiFloorNavigate = () => {
         if (navNext && app) {
-            handleFloorChange(navNext.nextFloor)
+            const f = navNext.nextFloor;
+            handleFloorChange(f)
             setTimeout(() => {
                 app.drawRouteNEW(navNext.nodes, navNext.offset)
             }, 50)
@@ -173,17 +174,9 @@ const MapView = ({isPrivate}) => {
 
 
     useEffect(() => {
-        effectCount.current += 1;
-
-        console.log(`useEffect called ${effectCount.current} times`);
-
 
         const handleNavigate = (event) => {
             console.log("SHAPES NAV", shapes)
-            // handleFloorChange(event.detail.changeFloorTo)
-            // setTimeout(() => {
-            //     app.drawRouteNEW(event.detail.nodes, event.detail.offset);
-            // },50)
 
             setNavNext({
                 enabled: true,
@@ -206,6 +199,7 @@ const MapView = ({isPrivate}) => {
         setSearchParams({floor: floorNum});
         const chFloor = floors.find(floor => floor.num === floorNum)
 
+        console.log("FLOOR NUM:", floorNum, "CHFLOOR:",chFloor)
         app.clearRoute()
         app.loadMapN(chFloor.mapData)
 
