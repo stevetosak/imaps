@@ -55,21 +55,20 @@ function Draw() {
     }
   };
 
-  // const deleteFloorHandler = async (floorNum) => {
-  //   const httpService = new HttpService();
-  //   httpService.setAuthenticated();
-  //
-  //   try {
-  //     await httpService.delete(`/protected/floors/delete/${floorNum}`, {
-  //       data: { mapName: mapName },
-  //     });
-  //     console.log(`Deleted floor ${floorNum}`);
-  //     // setFloors((prevFloors) => prevFloors.filter((floor) => floor.num !== floorNum));
-  //   } catch (error) {
-  //     console.error("Error deleting floor:", error);
-  //   }
-  // };
-  //
+  const deleteFloorHandler = async (floorNum) => {
+    const httpService = new HttpService();
+    httpService.setAuthenticated();
+
+    try {
+      await httpService.delete(`/protected/floors/delete/${floorNum}`, {
+        data: { mapName: mapName },
+      });
+      console.log(`Deleted floor ${floorNum}`);
+    } catch (error) {
+      console.error("Error deleting floor:", error);
+    }
+  };
+
 
   const handleSaveClick = async () => {
     saveFloor().then(r => {

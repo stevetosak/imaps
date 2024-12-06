@@ -2,13 +2,12 @@ import Konva from "konva";
 import Factory from "../util/Factory.js";
 import HttpService from "../net/HttpService.js";
 import {zoomStage} from "../util/zoomStage.js";
-import {addEventHandling} from "../util/addEventHandling.js";;
+import {addEventHandling} from "../util/addEventHandling.js";
 import ShapeRegistry from "../util/ShapeRegistry.js";
-import {node} from "prop-types";
 import triggerNavigate from "../util/triggerNavigate.js";
 
 export class MapDisplay {
-    constructor(containerId,floorNum) {
+    constructor(containerId, floorNum) {
         this.container = document.getElementById(containerId);
         this.containerId = containerId;
         this.stage = new Konva.Stage({
@@ -41,13 +40,12 @@ export class MapDisplay {
         this.floorNum = floorNum;
 
         this.navArrow = new Konva.Arrow({
-            stroke: "#e91332",
-            strokeWidth: 2.5,
-            dash: [5, 4],
+            stroke: "#DC143C",
+            strokeWidth: 3,
+            dash: [10, 7],
             lineCap: "round",
-            lineJoin: "round",
-            pointerLength: 7,
-            pointerWidth: 7,
+            pointerLength: 4,
+            pointerWidth: 3,
             fill: "red",
         });
 
@@ -129,14 +127,15 @@ export class MapDisplay {
     }
 
     loadMapN(floorData) {
-        if (floorData != null) {
-            this.deserializeMap(floorData);
-            this.shapes.forEach((shape) => {
-                this.mainLayer.add(shape);
-            });
-            this.displayRoomNames();
-            this.initializeRoomTypes();
-        }
+        if (floorData == null || floorData === "") return;
+
+        this.deserializeMap(floorData);
+        this.shapes.forEach((shape) => {
+            this.mainLayer.add(shape);
+        });
+        this.displayRoomNames();
+        this.initializeRoomTypes();
+
     }
 
     clearRoute() {
@@ -184,7 +183,7 @@ export class MapDisplay {
 
                 buff.push(segmentX, segmentY);
 
-                let line = this.navArrow.clone({ points: [...buff] });
+                let line = this.navArrow.clone({points: [...buff]});
                 this.routeLayer.add(line);
                 this.routeLayer.draw();
 
@@ -208,7 +207,6 @@ export class MapDisplay {
     }
 
 
-
     initializeRoomTypes() {
         this.roomTypes = this.shapes
             .filter((shape) => shape.class === "Room" && shape.info.type !== "")
@@ -220,7 +218,7 @@ export class MapDisplay {
     }
 
 
-    getShapeByName(name){
+    getShapeByName(name) {
         return this.shapes.find(shape => shape.info.name === name)
     }
 

@@ -2,9 +2,6 @@ PRIORITY HIGH
 
 - Filter na prostorii
 
-- Implementacija na stairs
-- Navigacija pomegju spratoj
-
 - Room Types ne rabotat vo Draw
 - Text na shape da se sredit
 - Toska smeni go backendot, ne gi cuvaj keshirani floors
@@ -14,31 +11,22 @@ PRIORITY MEDIUM
 
 - Render kopce
 - MapType da imat vo baza
-- Delete endpoint /delete/mapId
 - Detach event na draw (keys: e, r)
 - Text na shape vo Draw da e top layer
 - History toska da popravit
-- Search vo myMaps i BrowseMaps ne rabotat
 
 - Floors da se dodavat vo dropdown avtomatski bez potreba za refresh na Draw
 - Zabrana za pregled na Private mapi na drug User
-- Modals na draw pomali i da mozis da gi gledas drugive shapes duri biras tramu vo modalot.
-    (mozit ova modalov primer desno da izlegvit kaj panelot)
 
 
 PRIORITY LOW
 
-- Map Controls da se sredit stilot
 - Pending Approval maps implement
-- Od ko ke si logiran na home page da izlezit profile logoto i da sa trgnat sign up login
 - Home page stil improve
-- AutoSave na draw duri crtas (Da se pret update request do baza)
-- Delete da e vnatre vo karti i dopolnitelna konfirmacija
 - Admin Page
 
 
 - KO KE SMENIS IME VO MODAL,TREBIT VO GRAFOT DA SA UPDATE TOJ ENTRY // got
-- NAVIGACIJA DA SA IMPL POMEGJU SOBI OD RAZLICNI SPRATOVI **
 - VO room da sa cuvat entrances, za ko ke mrdas room isto entrance da sa mrdnit
 
 REFACTOR:
