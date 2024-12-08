@@ -30,10 +30,9 @@ function Draw() {
   const [formNewFloorNum, setFormNewFloorNum] = useState(0);
   const [errorMessage, setErrorMessage] = useState("Error");
   const [hasError, setHasError] = useState(false);
-  const [mapLoaded,setMapLoaded] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const {app,floors,saveFloor} = useMapLoader(mapName,username,searchParams,setSearchParams)
+  const {app,floors,saveFloor,setFloors} = useMapLoader(mapName,username,searchParams,setSearchParams)
 
 
   const addFloorHandler = async (newFloorNum) => {
@@ -48,7 +47,6 @@ function Draw() {
     try {
       await httpService.put("/protected/floors/add", payload);
       console.log(`Added floor ${newFloorNum}`);
-      // Update the local floors state dynamically
       setFloors((prevFloors) => [...prevFloors, { num: newFloorNum }]);
     } catch (error) {
       console.error("Error adding floor:", error);
@@ -133,7 +131,7 @@ function Draw() {
                   .map((floor) => (
                       <div key={floor.num} className={styles.floorItemWrapper}>
                         <button
-                            onClick={() => setSearchParams({floor: floor.num})}
+                            onClick={() => setSearchParams({floor: floor.num},{replace:true})}
                             className={`${styles.floorItem} ${
                                 searchParams.get("floor") == floor.num ? styles.activeFloor : ""
                             }`}

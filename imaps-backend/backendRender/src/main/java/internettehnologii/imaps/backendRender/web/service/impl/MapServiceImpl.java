@@ -64,12 +64,7 @@ public class MapServiceImpl implements MapService {
     public void deleteMap(IndoorMap indoorMap) {
         mapRepository.delete(indoorMap);
     }
-
-    @Override
-    public IndoorMap getMap(String mapName, String username) {
-        return mapRepository.findMapByName(mapName).orElseThrow(() -> new MapNotFoundException(mapName));
-    }
-
+    
     @Override
     public List<IndoorMap> getAllMapsForUser(String username) {
         IMapsUser user = userRepository.findUserByName(username).orElseThrow(() -> new UsernameNotFoundException(username));

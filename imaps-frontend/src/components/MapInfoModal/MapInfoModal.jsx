@@ -1,15 +1,18 @@
 import React from "react";
 import styles from "./MapInfoModal.module.css";
+import {replace, useNavigate} from "react-router-dom";
 
 export default function MapInfoModal({ isOpen, onClose, map, onDelete }) {
+    const navigate = useNavigate();
+
     if (!isOpen || !map) return null;
 
     const handleView = () => {
-        window.location.href = `/myMaps/${map.mapName}/View`;
+        navigate(`/myMaps/${map.mapName}/View`)
     };
 
     const handleEdit = () => {
-        window.location.href = `/myMaps/${map.mapName}/Draw`;
+        navigate(`/myMaps/${map.mapName}/Draw`)
     };
 
     const handleDelete = () => {
