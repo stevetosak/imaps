@@ -35,4 +35,7 @@ public interface MapRepository extends JpaRepository<IndoorMap, Long> {
     boolean existsByName(String name);
 
 
+    Optional<IndoorMap> getIndoorMapByName(String name);
+    @Query(value = "FROM IndoorMap m where m.name = ?1 and m.status = ?2")
+    Optional<IndoorMap> getIndoorMapByNameAndStatus(String name, MAP_STATUS status);
 }

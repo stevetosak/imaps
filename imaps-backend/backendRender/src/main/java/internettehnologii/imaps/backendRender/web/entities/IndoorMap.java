@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -31,13 +32,18 @@ public class IndoorMap {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
+    @Column(name = "map_type")
+    private String mapType;
+
     @Column(name = "image_url")
     private String imageUrl;
-
 
     @ManyToOne
     @JoinColumn(name = "usr_id",referencedColumnName = "id", nullable = false)
     private IMapsUser user;
+
+    @OneToMany(mappedBy = "indoorMap")
+    private List<RoomType> roomTypes;
 
     @PrePersist
     protected void onCreate(){
@@ -48,8 +54,5 @@ public class IndoorMap {
     protected void onUpdate(){
         this.modifiedAt = LocalDateTime.now();
     }
-
-
-
 
 }

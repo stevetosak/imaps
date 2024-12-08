@@ -7,9 +7,7 @@ import ModalRoomTypes from "../Components/ModalRoomTypes.jsx";
 import useModalState from "../Hooks/useModalState.jsx";
 import {useModalEvent} from "../Hooks/useModalEvent.jsx";
 
-export default function RoomModal({map}) {
-    const [roomTypes, setRoomTypes] = useState([]);
-
+export default function RoomModal({map,roomTypes}) {
     const {
         modalState: {isOpen,setIsOpen,setShape,shapeInfo,setShapeInfo},
         handlers: {toggleModal,updateModalData,saveDetails}
@@ -24,12 +22,6 @@ export default function RoomModal({map}) {
 
     },"openRoomModalEvent")
 
-
-    useEffect(() => {
-        setRoomTypes(map?.roomTypes)
-        console.log("VLEZE EF")
-
-    }, [map]);
 
 
     return (

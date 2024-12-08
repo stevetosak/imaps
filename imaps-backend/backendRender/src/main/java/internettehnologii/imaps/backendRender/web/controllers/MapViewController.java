@@ -10,6 +10,7 @@ import internettehnologii.imaps.backendRender.web.service.interfaces.GraphServic
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import internettehnologii.imaps.backendRender.web.util.DTO.FloorDTO;
+import internettehnologii.imaps.backendRender.web.util.DTO.RoomTypeDTO;
 import internettehnologii.imaps.backendRender.web.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,15 @@ public class MapViewController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @GetMapping("/public/room-types")
+    public ResponseEntity<List<RoomTypeDTO>> loadRoomTypesPublic(@RequestParam String mapName) {
+        IndoorMap map = mapService.getPublicMapByName(mapName);
+
+        List<RoomTypeDTO> roomTypeDTOS = map.getRoomTypes().stream().map(r -> new RoomTypeDTO(r.getName())).toList();
+        return ResponseEntity.ok(roomTypeDTOS);
+    }
+
 
     @GetMapping("/public/navigate")
     public ResponseEntity<List<MapNode>> navigate(@RequestParam String from, @RequestParam String to) {

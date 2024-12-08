@@ -14,6 +14,7 @@ import netconfig from "../../scripts/net/netconfig.js";
 import parseMapData from "../../scripts/util/parseMapData.js";
 import ShapeRegistry from "../../scripts/util/ShapeRegistry.js";
 import {Button} from "../IMaps/components/Button.jsx";
+import {useRoomTypesLoader} from "../Draw/Hooks/useRoomTypesLoader.js";
 
 const MapView = ({isPrivate}) => {
     const {mapName} = useParams();
@@ -27,16 +28,35 @@ const MapView = ({isPrivate}) => {
     const navigate = useNavigate();
     const [shapes, setShapes] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
-    const effectCount = useRef(0);
+    const [mainEntrance,setMainEntrance] = useState({});
 
     const defaultNavObj = {
         enabled: false,
-        nextFloor: -100,
+        nextFloor: 0,
         nodes: [],
         offset: 0
     }
 
     const [navNext, setNavNext] = useState(defaultNavObj)
+    const [roomTypes,setRoomTypes] = useState([]);
+
+    useEffect(() => {
+        const loadRoomTypes = async () => {
+            const httpService = new HttpService();
+            let roomTypes;
+            if(isPrivate){
+                roomTypes = await httpService.get(`/protected/room-types?mapName=${mapName}&username=${username}`)
+            } else {
+                roomTypes = await httpService.get(`/public/room-types?mapName=${mapName}`)
+            }
+
+            console.log("loaded ROOM TYPES: " + roomTypes)
+            setRoomTypes(roomTypes);
+        }
+        loadRoomTypes().then(resp => {
+            console.log("LOADED ROOM TYPES")
+        })
+    }, []);
 
 
     useEffect(() => {
@@ -92,6 +112,11 @@ const MapView = ({isPrivate}) => {
                     console.info("PARSED Shapes: " + shape.info.name)
                 })
 
+                const mainEntrance = parsedShapes.find(shape => shape.info.isMainEntrance);
+                setMainEntrance(mainEntrance)
+
+                console.log("MAIN ENTRANCE: " + mainEntrance)
+
 
                 setFloors(respFloors);
 
@@ -119,7 +144,7 @@ const MapView = ({isPrivate}) => {
         window.addEventListener("openRoomInfoPanel", openRoomInfoPanel);
 
         return () => window.removeEventListener("openRoomInfoPanel", openRoomInfoPanel);
-    })
+    },[])
 
     const handleDirectionsSubmit = (fromSearch = null, toSearch = null) => {
 
@@ -128,7 +153,7 @@ const MapView = ({isPrivate}) => {
         }
 
         if (fromSearch === null || fromSearch === "") {
-            fromSearch = app.getMainEntrance().info.name;
+            fromSearch = mainEntrance.info.name;
         }
 
         let shapeFrom = shapes.find(sh => sh.info.name === fromSearch)
@@ -236,7 +261,7 @@ const MapView = ({isPrivate}) => {
                             <SearchBar map={app} handleDirectionsSubmit={handleDirectionsSubmit}
                                        isPanelOpen={isPanelOpen} setSelectedRoom={setSelectedRoom}
                                        availableShapes={shapes}/>
-                            <FilterBar map={app}/>
+                            <FilterBar map={app} roomTypes={roomTypes}/>
                         </>
                     )}
 

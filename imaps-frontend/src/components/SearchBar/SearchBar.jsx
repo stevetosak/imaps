@@ -26,10 +26,9 @@ function SearchBar({map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom,av
   }
 
 
-  // Load available rooms and entrances when the input field is focused
   const handleInputFocus = (field) => {
     if (availableOptions.length === 0 && map) {
-      setAvailableOptions(availableShapes.map(shape => {
+      setAvailableOptions(availableShapes.filter(sh => sh.className === 'RenderedRoom').map(shape => {
         return shape.info.name;
       }));
     }

@@ -1,43 +1,34 @@
 import { useContext, useEffect, useState } from "react";
-import { MapBuilder } from "../../scripts/main/MapBuilder.js";
 import styles from "./Draw.module.css";
 import RoomModal from "../../components/Modals/RoomModal/RoomModal.jsx";
-import SideBar from "../../components/SideBar/SideBar.jsx";
 import EntranceModal from "../../components/Modals/EntranceModal/EntranceModal.jsx";
 import DrawGuide from "../../components/DrawGuide/DrawGuide.jsx";
 import RoomTypeModal from "../../components/Modals/RoomTypeModal/RoomTypeModal.jsx";
 import InfoPinModal from "../../components/Modals/InfoPinModal/InfoPinModal.jsx";
 import SaveMap from "../../components/SaveMap/SaveMap.jsx";
 import Logo from "../../components/Logo/Logo.jsx";
-import logo_img from "../../assets/logo_icon.png";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Profile from "../../components/Profile/Profile.jsx";
 import { AuthContext } from "../../components/AuthContext/AuthContext.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
 import StairsModal from "../../components/Modals/StairsModal/StairsModal.jsx";
-import {MapDisplay} from "../../scripts/main/MapDisplay.js";
-import netconfig from "../../scripts/net/netconfig.js";
 import useMapLoader from "./Hooks/useMapLoader.js";
-import plus_icon from "../../assets/plus_icon.png"
 import {FloorSelector} from "./FloorSelector.jsx";
+import {useRoomTypesLoader} from "./Hooks/useRoomTypesLoader.js";
 
 function Draw() {
   const { mapName } = useParams();
   const { username } = useContext(AuthContext);
 
-  //const [app, setApp] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  //const [floors, setFloors] = useState([]);
-  const [formNewFloorNum, setFormNewFloorNum] = useState(0);
   const [errorMessage, setErrorMessage] = useState("Error");
   const [hasError, setHasError] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
-
+  const[roomTypes,setRoomTypes] = useState([]);
 
   const {app,floors,saveFloor,setFloors} = useMapLoader(mapName,username,searchParams,setSearchParams)
-
-
+  const {addRoomType} = useRoomTypesLoader(setRoomTypes,mapName,username);
 
   const addFloorHandler = async (newFloorNum) => {
     const httpService = new HttpService();
@@ -116,7 +107,7 @@ function Draw() {
           <li data-info="Room" className={`${styles.shapeOption} ${styles.room}`} id="room"></li>
           <li data-info="Stairs" className={`${styles.shapeOption} ${styles.stairs}`} id="stairs"></li>
         </ul>
-        <RoomTypeModal map={app}></RoomTypeModal>
+        <RoomTypeModal map={app} roomTypes={roomTypes} addRoomTypeDB={addRoomType}></RoomTypeModal>
         <br/>
         <hr/>
         <br/>
@@ -136,7 +127,7 @@ function Draw() {
         </div>
 
         <div className={styles.hide}>
-          <RoomModal map={app}></RoomModal>
+          <RoomModal map={app} roomTypes={roomTypes}></RoomModal>
           <EntranceModal map={app}></EntranceModal>
           <InfoPinModal map={app}></InfoPinModal>
           <StairsModal map={app}></StairsModal>

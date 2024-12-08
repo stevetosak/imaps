@@ -15,10 +15,10 @@ export default class Entrance extends MapNode {
                 y: attrs.position.y,
                 width: attrs.width,
                 height: attrs.height,
-                fill: "rgba(1,180,46,0.96)",
-                stroke: "grey",
+                fill: "rgb(126,238,167)",
+                stroke: "#252627",
                 strokeWidth: 1,
-                opacity: 0.7,
+                opacity: 0.9,
                 name: "mapObj",
                 draggable: true,
                 rotation: attrs.rotation,
@@ -71,6 +71,18 @@ export default class Entrance extends MapNode {
         if(this.floorNum !== node.floorNum) return;
 
         super.connect(node)
+    }
+
+    setInfo(infoObj) {
+        console.log("SA VIKNA SETINFO")
+        this.info = infoObj;
+        if(this.info.connectedRoom == null || this.info.connectedRoom === "" ){
+            this.strokeWidth(2);
+            this.stroke("#a10114")
+        }else{
+            this.strokeWidth(1)
+            this.stroke("black")
+        }
     }
 }
 
