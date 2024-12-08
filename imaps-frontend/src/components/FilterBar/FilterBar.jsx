@@ -1,19 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styles from "./FilterBar.module.css";
 
-export default function FilterBar(props) {
-  const [roomTypes, setRoomTypes] = useState([]);
+export default function FilterBar({roomTypes,map}) {
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  useEffect(() => {
-    if (props.map) {
-      const types = props.map.getRoomTypes() || [];
-      setRoomTypes(types);
-    }
-  }, [props.map]);
+
 
   const filterLocation = useCallback((category) => {
-    props.map.setFilter(category)
+    map.setFilter(category)
     setSelectedCategory(category);
   },[])
 
@@ -27,13 +21,13 @@ export default function FilterBar(props) {
           All
         </button>
 
-        {roomTypes.map((type, index) => (
+        {roomTypes?.map((roomType, index) => (
           <button
             key={index}
-            className={`${styles.buttonValue} ${selectedCategory === type ? styles.active : ""}`}
-            onClick={() => filterLocation(type)}
+            className={`${styles.buttonValue} ${selectedCategory === roomType.name ? styles.active : ""}`}
+            onClick={() => filterLocation(roomType.name)}
           >
-            {type}
+            {roomType.name}
           </button>
         ))}
       </div>

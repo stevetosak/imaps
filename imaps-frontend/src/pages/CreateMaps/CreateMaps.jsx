@@ -35,6 +35,10 @@ export default function CreateMaps() {
     const [isMapInfoModalOpen, setIsMapInfoModalOpen] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
+    const[publicMaps,setPublicMaps] = useState([]);
+    const[privateMaps,setPrivateMaps] = useState([])
+    const[pendingMaps,setPendingMaps] = useState([])
+
     const openMapInfoModal = (map) => {
         setSelectedMap(map);
         setIsMapInfoModalOpen(true);
@@ -70,19 +74,44 @@ export default function CreateMaps() {
             });
     };
 
+    const addMap = (mapDetails) => {
+        const httpService = new HttpService();
+        httpService.setAuthenticated();
+
+        httpService
+            .put(`/protected/my-maps/create?username=${username}`, mapDetails)
+            .then((respMap) => {
+                console.log("RESP NEW MAP: " + respMap)
+                const mapTile = {
+                    mapName: respMap.mapName,
+                    cols: 1,
+                    rows: 1,
+                    status: respMap.mapStatus,
+                    created_at: respMap.createdAt,
+                    modified_at: respMap.modifiedAt,
+                    published_at: respMap.published_at,
+                    gmaps_url: respMap.gmaps_url,
+                    image_url: card,
+                };
+
+                setAllTiles((prevTiles) => [...prevTiles,mapTile])
+                setTiles((prevTiles) => [...prevTiles,mapTile])
+            });
+    }
+
     useEffect(() => {
         const loadPublicMaps = async () => {
             const httpService = new HttpService();
             httpService.setAuthenticated();
-            const resp = await httpService.get(`/protected/my-maps/display?username=${username}`);
+            const respMaps = await httpService.get(`/protected/my-maps?username=${username}`);
 
-            const mapTiles = resp.map((elem) => ({
-                mapName: elem.name,
+            const mapTiles = respMaps.map((elem) => ({
+                mapName: elem.mapName,
                 cols: 1,
                 rows: 1,
-                status: elem.status,
-                created_at: elem.created_at,
-                modified_at: elem.modified_at,
+                status: elem.mapStatus,
+                created_at: elem.createdAt,
+                modified_at: elem.modifiedAt,
                 published_at: elem.published_at,
                 gmaps_url: elem.gmaps_url,
                 image_url: card,
@@ -99,9 +128,13 @@ export default function CreateMaps() {
         setTiles(allTiles.filter((tile) => tile.mapName.toLowerCase().includes(query)));
     };
 
-    const publicMaps = tiles.filter((tile) => tile.status === "PUBLIC");
-    const privateMaps = tiles.filter((tile) => tile.status === "PRIVATE");
-    const pendingMaps = tiles.filter((tile) => tile.status === "PENDING");
+    useEffect(() => {
+         setPublicMaps(tiles.filter((tile) => tile.status === "PUBLIC"));
+         setPrivateMaps(tiles.filter((tile) => tile.status === "PRIVATE"));
+         setPendingMaps(tiles.filter((tile) => tile.status === "PENDING"));
+    }, [tiles,allTiles]);
+
+
 
     return (
         <div className={styles.container}>
@@ -171,10 +204,7 @@ export default function CreateMaps() {
             <MapDetailsModal
                 isOpen={isCreateModalOpen}
                 onClose={closeCreateModal}
-                onSubmit={(newMap) => {
-                    setTiles((prevTiles) => [...prevTiles, newMap]);
-                    setAllTiles((prevTiles) => [...prevTiles, newMap]);
-                }}
+                addMap={addMap}
             />
         </div>
     );

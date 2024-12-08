@@ -1,6 +1,6 @@
 import MapNode from "../base/MapNode.js";
 import ShapeQuery from "./ShapeQuery.js";
-
+// TODO abstraktna klasa ova da stanit i za da napram za view registry, za da mozis search na floors globalno
 
 class ShapeRegistry {
     constructor() {
@@ -127,7 +127,8 @@ class ShapeRegistry {
         let node1 = ShapeQuery.findNodeByName(shapes, from);
         let node2 = ShapeQuery.findNodeByName(shapes, to);
 
-        node1.removeConnectionLine(node2);
+        if(node1.floorNum === node2.floorNum)
+            node1.removeConnectionLine(node2);
 
         Object.values(this.store.floors).flat().filter(s => s.info.name === from || s.info.name === to)
             .forEach(s => {

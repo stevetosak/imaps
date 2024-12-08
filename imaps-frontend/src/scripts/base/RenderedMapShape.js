@@ -24,15 +24,29 @@ export default class RenderedMapShape extends Konva.Shape {
   }
 
   initText() {
+    const rectWidth = this.width();
+    const rectHeight = this.height();
+
     this.infoText = new Konva.Text({
-      x: this.x() + this.textOffsetX,
-      y: this.y() + this.textOffsetY,
+      x: this.x(),
+      y: this.y(),
       text: this.info.name || "no name",
-      fontSize: 12,
-      fontFamily: "Verdana",
+      fontSize: 10,
+      fontFamily: "Exo",
       fill: "black",
+      align: "center",
+      verticalAlign: "middle",
     });
+
+    this.infoText.offsetX(this.infoText.width() / 2);
+    this.infoText.offsetY(this.infoText.height() / 2);
+
+    this.infoText.x(this.x() + rectWidth / 2);
+    this.infoText.y(this.y() + rectHeight / 2);
+
+    this.infoText.rotation(this.rotation());
   }
+
 
   updateTextPosition() {
     if (this.infoText) {
@@ -67,9 +81,6 @@ export default class RenderedMapShape extends Konva.Shape {
     context.fillStrokeShape(this);
   }
 
-  addEvent(action,func){
-    this.on(action,func);
-  }
 
   displayName(layer) {
     if (this.infoText != null) {

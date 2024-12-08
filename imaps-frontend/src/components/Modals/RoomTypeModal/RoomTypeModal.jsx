@@ -2,34 +2,22 @@ import React, { useState, useEffect } from "react";
 import styles from "./RoomTypeModal.module.css";
 import useRoomTypes from "../Hooks/useRoomTypes.jsx";
 
-export default function RoomTypeModal({map}) {
+export default function RoomTypeModal({map,roomTypes,addRoomTypeDB}) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [roomTypes, setRoomTypes] = useState([]);
-  const [formData, setFormData] = useState({
-    name: "",
-    type: "",
-    description: "",
-  });
+  const [roomTypeName, setRoomTypeName] = useState("");
 
   const toggleModal = () => {
-    if(!modalIsOpen){
-      console.log("RTPS TOG: " + map.roomTypes);
-      setRoomTypes(map.roomTypes)
-    }
-
     setModalIsOpen(!modalIsOpen);
   };
 
-  const {addRoomType,removeRoomType} = useRoomTypes(formData,setFormData,roomTypes,setRoomTypes,map)
-
-
+  const handleAddRoomType = async () => {
+    await addRoomTypeDB(roomTypeName);
+    setRoomTypeName("");
+  }
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setRoomTypeName(value);
   };
 
   return (
@@ -46,16 +34,16 @@ export default function RoomTypeModal({map}) {
 
             <form className={styles.form}>
               <div className={styles.formGroup}>
-                <label htmlFor="type">Add New Room Type:</label>
+                <label htmlFor="roomTypeName">Add New Room Type:</label>
                 <input
                   type="text"
-                  id="type"
-                  name="type"
-                  value={formData.type}
+                  id="roomTypeName"
+                  name="roomTypeName"
+                  value={roomTypeName}
                   onChange={handleInputChange}
                   placeholder="Enter a new room type (e.g., Office, Classroom)"
                 />
-                <button type="button" className={styles.addButton} onClick={addRoomType}>
+                <button type="button" className={styles.addButton} onClick={handleAddRoomType}>
                   Add Type
                 </button>
               </div>
@@ -64,10 +52,10 @@ export default function RoomTypeModal({map}) {
             <h3>Available Room Types:</h3>
             <ul className={styles.roomTypeList}>
               {roomTypes.length > 0 ? (
-                roomTypes.map((type, index) => (
+                roomTypes.map((roomType,index) => (
                   <li key={index} className={styles.roomTypeItem}>
-                    {type}
-                    <button className={styles.removeButton} onClick={() => removeRoomType(type)}>
+                    {roomType.name}
+                    <button className={styles.removeButton} >
                       Remove
                     </button>
                   </li>

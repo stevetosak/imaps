@@ -50,7 +50,7 @@ export default class RenderedRoom extends RenderedMapShape {
     this.initText();
   }
   highlight(){
-    this.fill("#901dee");
+    this.fill("rgba(29,238,78,0.49)");
     this.strokeWidth(2)
   }
   unHighlight(){

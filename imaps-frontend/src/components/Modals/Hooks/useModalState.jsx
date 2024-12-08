@@ -9,8 +9,7 @@ export default function useModalState(map) {
 
     const toggleModal = () => {
         if (isOpen) {
-            shape.info = shapeInfo;
-
+            shape.setInfo(shapeInfo);
             map.updateRoomNames();
             triggerMapSave();
             console.log("SHAPE BEF CLOSE:",shape.info)

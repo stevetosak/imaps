@@ -29,13 +29,13 @@ export class MapDisplay {
         this.floorNum = floorNum;
 
         this.navArrow = new Konva.Arrow({
-            stroke: "#DC143C",
+            stroke: "#bb0000",
             strokeWidth: 3,
-            dash: [10, 7],
+            dash: [12, 7],
             lineCap: "round",
-            pointerLength: 4,
+            tension: 10,
+            pointerLength: 2,
             pointerWidth: 3,
-            fill: "red",
         });
 
         this.navArrow.cache();
@@ -160,7 +160,7 @@ export class MapDisplay {
             const endX = nextNode.coordinates.x;
             const endY = nextNode.coordinates.y;
 
-            const numSegments = 8;
+            const numSegments = 12;
 
             const deltaX = (endX - startX) / numSegments;
             const deltaY = (endY - startY) / numSegments;

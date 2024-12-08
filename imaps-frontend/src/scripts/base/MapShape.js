@@ -91,6 +91,10 @@ export default class MapShape extends Konva.Shape {
         }
     }
 
+    setInfo(infoObj){
+        this.info = infoObj;
+    }
+
     load(){
         console.log("Abstract function")
     }

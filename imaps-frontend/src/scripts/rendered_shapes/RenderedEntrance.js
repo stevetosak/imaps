@@ -9,7 +9,7 @@ export default class RenderedEntrance extends RenderedMapShape {
       y: attrs.y,
       width: attrs.width * scaleX,
       height: attrs.height * scaleY,
-      fill: "#4CAF50",
+      fill: "#7fef83",
       stroke: "black",
       strokeWidth: 1,
       draggable: false,
@@ -36,7 +36,7 @@ export default class RenderedEntrance extends RenderedMapShape {
       this.stroke("black");
     });
 
-    this.initText();
+    //this.initText();
   }
 }
 

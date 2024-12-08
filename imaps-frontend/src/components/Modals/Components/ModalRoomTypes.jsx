@@ -9,9 +9,9 @@ export default function ModalRoomTypes({shapeInfo,updateModalData,roomTypes}){
             <label htmlFor="type">Type:</label>
             <select id="type" name="type" onChange={updateModalData} value={shapeInfo.type} required>
                 <option value="">Select Room Type</option>
-                {roomTypes.map((type, index) => (
-                    <option key={index} value={type}>
-                        {type}
+                {roomTypes?.map((roomType, index) => (
+                    <option key={index} value={roomType.name}>
+                        {roomType.name}
                     </option>
                 ))}
             </select>
