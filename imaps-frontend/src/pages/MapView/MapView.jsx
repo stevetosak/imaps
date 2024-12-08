@@ -158,8 +158,9 @@ const MapView = ({isPrivate}) => {
 
         let shapeFrom = shapes.find(sh => sh.info.name === fromSearch)
 
+        console.log("SGAPE FLOORNUM: " + shapeFrom.floorNum,"APP FLOOR NUM " + app.floorNum)
 
-        if (shapeFrom.floorNum !== app.floorNum) {
+        if (shapeFrom.floorNum != searchParams.get("floor")) {
             handleFloorChange(shapeFrom.floorNum);
         }
 
@@ -187,6 +188,7 @@ const MapView = ({isPrivate}) => {
 
     const multiFloorNavigate = () => {
         if (navNext && app) {
+            console.log("NAVNEXT F: " + navNext.nextFloor)
             const f = navNext.nextFloor;
             handleFloorChange(f)
             setTimeout(() => {
