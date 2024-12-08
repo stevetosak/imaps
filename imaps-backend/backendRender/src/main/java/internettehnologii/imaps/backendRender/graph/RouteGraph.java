@@ -101,7 +101,9 @@ public class RouteGraph {
             path.add(at);
         }
 
-        Collections.reverse(path); // deka se staveni vo obraten redosled, pa reverse ni dava pateka od pocetok do kraj.
+        Collections.reverse(path);// deka se staveni vo obraten redosled, pa reverse ni dava pateka od pocetok do kraj.
+
+        System.out.println("FOUND PATH: " + path);
 
         if (!path.isEmpty() && path.get(0).equals(sourceNode)) {
             return path;

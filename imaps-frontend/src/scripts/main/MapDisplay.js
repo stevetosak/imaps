@@ -144,19 +144,25 @@ export class MapDisplay {
 
 
     drawRouteNEW(nodes, offset = 0) {
+
         this.clearRoute();
         console.log("====PATH====");
         nodes.forEach((node) => console.log("NODE", node));
 
         let idx = offset;
         let buff = [nodes[idx].coordinates.x, nodes[idx].coordinates.y];
+
+
         ++idx;
 
         console.log("INIT BUFFER", buff);
         console.log("INIT IDX", idx);
 
         const drawNextSegment = () => {
-            if (idx >= nodes.length) return;
+
+            if (idx >= nodes.length){
+                return;
+            }
 
             const currentNode = nodes[idx - 1];
             const nextNode = nodes[idx];
@@ -166,6 +172,7 @@ export class MapDisplay {
                 triggerNavigate(nodes, idx, nextNode.floorNumber, nextNode);
                 return;
             }
+
 
             const startX = currentNode.coordinates.x;
             const startY = currentNode.coordinates.y;
