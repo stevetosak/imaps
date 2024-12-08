@@ -114,7 +114,7 @@ public class MapDrawController {
                                                           @RequestParam int floorNum) {
         try{
             floorService.deleteFloor(floorNum,mapName);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(new HashMap<>());
         } catch (Exception e){
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

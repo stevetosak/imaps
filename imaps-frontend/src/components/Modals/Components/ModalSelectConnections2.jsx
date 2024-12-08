@@ -41,5 +41,4 @@ ModalSelectConnections2.propTypes = {
     shapeInfo: PropTypes.object,
     updateModalData: PropTypes.func,
     addConnection: PropTypes.func,
-    availableShapes: PropTypes.arrayOf(MapShape),
 }

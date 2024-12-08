@@ -6,6 +6,7 @@ import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.repo.FloorRepository;
 import internettehnologii.imaps.backendRender.web.repo.MapRepository;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,7 @@ public class FloorServiceImpl implements FloorService {
         floorRepository.save(floor);
     }
 
+    @Transactional
     @Override
     public void deleteFloor(int floorNum,String mapName) {
         IndoorMap map = mapRepository.findMapByName(mapName).orElseThrow(() -> new MapNotFoundException(mapName));
