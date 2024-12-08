@@ -1,8 +1,8 @@
 .wrapper {
-  position: relative; /* Ensure dropdowns are positioned relative to the wrapper */
+  position: relative;
   display: flex;
   justify-content: center;
-  margin: 0px auto;
+  margin: 0 auto;
   max-width: 600px;
   width: 100%;
   padding: 10px;
@@ -12,7 +12,7 @@
 .directionsContainer {
   position: relative;
   display: flex;
-  align-items: end;
+  align-items: center;
   width: 100%;
   background-color: white;
   padding: 10px;
@@ -31,8 +31,7 @@
   outline: none;
   margin-right: 10px;
   min-width: 0;
-  position: relative;
-  margin-bottom: 0;
+
 }
 
 .dropdown {
@@ -44,11 +43,9 @@
   max-height: 150px;
   overflow-y: auto;
   z-index: 100;
-  top: calc(100% + 10px);
-  left: 10px;
 }
 
-.dropdownItem {
+  .dropdownItem {
   padding: 10px;
   cursor: pointer;
 }

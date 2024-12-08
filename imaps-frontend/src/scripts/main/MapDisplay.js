@@ -2,16 +2,11 @@ import Konva from "konva";
 import Factory from "../util/Factory.js";
 import HttpService from "../net/HttpService.js";
 import {zoomStage} from "../util/zoomStage.js";
-import {json} from "react-router-dom";
-import error from "eslint-plugin-react/lib/util/error.js";
 import {addEventHandling} from "../util/addEventHandling.js";
-import log from "eslint-plugin-react/lib/util/log.js";
-import ShapeRegistry from "../util/ShapeRegistry.js";
-import {node} from "prop-types";
 import triggerNavigate from "../util/triggerNavigate.js";
 
 export class MapDisplay {
-    constructor(containerId,floorNum) {
+    constructor(containerId, floorNum) {
         this.container = document.getElementById(containerId);
         this.containerId = containerId;
         this.stage = new Konva.Stage({
@@ -120,14 +115,15 @@ export class MapDisplay {
     }
 
     loadMapN(floorData) {
-        if (floorData != null) {
-            this.deserializeMap(floorData);
-            this.shapes.forEach((shape) => {
-                this.mainLayer.add(shape);
-            });
-            this.displayRoomNames();
-            this.initializeRoomTypes();
-        }
+        if (floorData == null || floorData === "") return;
+
+        this.deserializeMap(floorData);
+        this.shapes.forEach((shape) => {
+            this.mainLayer.add(shape);
+        });
+        this.displayRoomNames();
+        this.initializeRoomTypes();
+
     }
 
     clearRoute() {

@@ -1,4 +1,4 @@
-import {json, useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {MapDisplay} from "../../scripts/main/MapDisplay.js";
 import styles from "./MapView.module.css";
@@ -36,9 +36,7 @@ const MapView = ({isPrivate}) => {
         offset: 0
     }
 
-    const[navNext,setNavNext] = useState(defaultNavObj)
-
-
+    const [navNext, setNavNext] = useState(defaultNavObj)
 
 
     useEffect(() => {
@@ -52,7 +50,7 @@ const MapView = ({isPrivate}) => {
 
 
         const floorNum = parseInt(searchParams.get("floor") || 0);
-        const appInstance = new MapDisplay("map",floorNum);
+        const appInstance = new MapDisplay("map", floorNum);
 
         const load = async () => {
             const httpService = new HttpService();
@@ -93,8 +91,6 @@ const MapView = ({isPrivate}) => {
                 parsedShapes.forEach(shape => {
                     console.info("PARSED Shapes: " + shape.info.name)
                 })
-
-
 
 
                 setFloors(respFloors);
@@ -138,7 +134,7 @@ const MapView = ({isPrivate}) => {
         let shapeFrom = shapes.find(sh => sh.info.name === fromSearch)
 
 
-        if(shapeFrom.floorNum !== app.floorNum){
+        if (shapeFrom.floorNum !== app.floorNum) {
             handleFloorChange(shapeFrom.floorNum);
         }
 
@@ -165,11 +161,12 @@ const MapView = ({isPrivate}) => {
     };
 
     const multiFloorNavigate = () => {
-        if(navNext && app){
-            handleFloorChange(navNext.nextFloor)
+        if (navNext && app) {
+            const f = navNext.nextFloor;
+            handleFloorChange(f)
             setTimeout(() => {
-                app.drawRouteNEW(navNext.nodes,navNext.offset)
-            },50)
+                app.drawRouteNEW(navNext.nodes, navNext.offset)
+            }, 50)
             setNavNext(defaultNavObj)
 
         }
@@ -177,26 +174,18 @@ const MapView = ({isPrivate}) => {
 
 
     useEffect(() => {
-        effectCount.current += 1;
-
-        console.log(`useEffect called ${effectCount.current} times`);
-
 
         const handleNavigate = (event) => {
-            console.log("SHAPES NAV",shapes)
-            // handleFloorChange(event.detail.changeFloorTo)
-            // setTimeout(() => {
-            //     app.drawRouteNEW(event.detail.nodes, event.detail.offset);
-            // },50)
+            console.log("SHAPES NAV", shapes)
 
             setNavNext({
                 enabled: true,
-                nextFloor:event.detail.changeFloorTo,
+                nextFloor: event.detail.changeFloorTo,
                 nodes: event.detail.nodes,
                 offset: event.detail.offset
             })
 
-            console.log("ROUTE LAYER",app.routeLayer);
+            console.log("ROUTE LAYER", app.routeLayer);
         }
 
         window.addEventListener("navigate", handleNavigate)
@@ -204,12 +193,13 @@ const MapView = ({isPrivate}) => {
             window.removeEventListener("navigate", handleNavigate);
         };
 
-    }, [app,mapLoaded]);
+    }, [app, mapLoaded]);
 
     const handleFloorChange = (floorNum) => {
         setSearchParams({floor: floorNum});
         const chFloor = floors.find(floor => floor.num === floorNum)
 
+        console.log("FLOOR NUM:", floorNum, "CHFLOOR:",chFloor)
         app.clearRoute()
         app.loadMapN(chFloor.mapData)
 
@@ -225,6 +215,14 @@ const MapView = ({isPrivate}) => {
 
     return (
         <div id="main" className={styles.main}>
+            {navNext.enabled && (
+                <div className={styles.nextButtonContainer}>
+                    <button onClick={multiFloorNavigate} className={styles.nextButton}>
+                        NEXT FLOOR
+                    </button>
+                </div>
+            )}
+
             <div id="map" className={styles.mapContainer}></div>
 
             <RoomInfoPanel isOpen={isPanelOpen} onClose={closePanel} floor={searchParams.get("floor")}
@@ -241,18 +239,12 @@ const MapView = ({isPrivate}) => {
                             <FilterBar map={app}/>
                         </>
                     )}
-                    {navNext.enabled && (
-                        <Button onClick={multiFloorNavigate}>Next</Button>
-                    )}
+
+
                 </div>
                 <Profile/>
             </div>
-            <div className={styles.mapControlsContainer}>
-                {/*<MapControls*/}
-                {/*    floors={floors}*/}
-                {/*    onFloorChange={handleFloorChange}*/}
-                {/*/>*/}
-
+            <div className={styles.floorSelectorContainer}>
                 <div className={styles.floorSelector}>
                     <img src={floorIcon} alt="Floor Icon" className={styles.floorIcon}/>
                     <select
@@ -262,12 +254,13 @@ const MapView = ({isPrivate}) => {
                     >
                         {floors?.map((floor) => (
                             <option key={floor.num} value={floor.num}>
-                                {floor.num}F
+                                Floor {floor.num}
                             </option>
                         ))}
                     </select>
                 </div>
             </div>
+
         </div>
     );
 };

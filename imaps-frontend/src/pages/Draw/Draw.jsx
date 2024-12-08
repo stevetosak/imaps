@@ -18,6 +18,7 @@ import StairsModal from "../../components/Modals/StairsModal/StairsModal.jsx";
 import {MapDisplay} from "../../scripts/main/MapDisplay.js";
 import netconfig from "../../scripts/net/netconfig.js";
 import useMapLoader from "./Hooks/useMapLoader.js";
+import plus_icon from "../../assets/plus_icon.png"
 
 function Draw() {
   const { mapName } = useParams();
@@ -35,22 +36,38 @@ function Draw() {
   const {app,floors,saveFloor} = useMapLoader(mapName,username,searchParams,setSearchParams)
 
 
-  const addFloor = () => {
+  const addFloorHandler = async (newFloorNum) => {
     const httpService = new HttpService();
     httpService.setAuthenticated();
 
     const payload = {
-      num: formNewFloorNum,
+      num: newFloorNum,
       mapName: mapName,
     };
 
-    httpService
-      .put("/protected/floors/add", payload)
-      .then((resp) => console.log("Added new floor"))
-      .catch((reason) => console.log(reason));
+    try {
+      await httpService.put("/protected/floors/add", payload);
+      console.log(`Added floor ${newFloorNum}`);
+      // Update the local floors state dynamically
+      setFloors((prevFloors) => [...prevFloors, { num: newFloorNum }]);
+    } catch (error) {
+      console.error("Error adding floor:", error);
+    }
   };
 
+  const deleteFloorHandler = async (floorNum) => {
+    const httpService = new HttpService();
+    httpService.setAuthenticated();
 
+    try {
+      await httpService.delete(`/protected/floors/delete/${floorNum}`, {
+        data: { mapName: mapName },
+      });
+      console.log(`Deleted floor ${floorNum}`);
+    } catch (error) {
+      console.error("Error deleting floor:", error);
+    }
+  };
 
 
   const handleSaveClick = async () => {
@@ -80,10 +97,10 @@ function Draw() {
           <h1 className={styles.title}>{mapName}</h1>
         </Link>
         <div className={styles.guideWrapper}>
-          <DrawGuide />
+          <DrawGuide/>
         </div>
-        <hr />
-        <br />
+        <hr/>
+        <br/>
         {/* {<h2 className={styles.paragraph}>Objects:</h2>} */}
         <ul className={styles.shapeOptions} id="shapeOptions">
           <li data-info="Entrance" className={`${styles.shapeOption} ${styles.entrance}`}></li>
@@ -92,40 +109,65 @@ function Draw() {
           <li data-info="Stairs" className={`${styles.shapeOption} ${styles.stairs}`} id="stairs"></li>
         </ul>
         <RoomTypeModal map={app}></RoomTypeModal>
-        <br />
-        <hr />
-        <br />
+        <br/>
+        <hr/>
+        <br/>
         <div className={styles.floorSection}>
-          <label htmlFor="floorSelect">Select Floor:</label>
-          <select
-            id="floorSelect"
-            value={searchParams.get("floor")}
-            onChange={(e) => {setSearchParams({floor: e.target.value})}}
-            className={styles.floorDropdown}
-          >
-            {floors.map((floor) => (
-              <option key={floor.num} value={floor.num}>
-                Floor {floor.num}
-              </option>
-            ))}
-          </select>
+          <div className={styles.floorList}>
+            <label className={styles.floorLabel}>Available Floors:</label>
+            <div className={styles.floorItems}>
+              {/* Add new positive floor above */}
+              <button
+                  className={styles.addFloorButton}
+                  onClick={() => {
+                    const newFloor = Math.max(...floors.map((f) => f.num)) + 1;
+                    addFloorHandler(newFloor);
+                  }}
+              >
+                <img src={plus_icon} alt="Add Positive Floor" className={styles.icon}/>
+              </button>
 
-          <label htmlFor="newFloorInput">Add Floor:</label>
-          <input
-            type="number"
-            id="newFloorInput"
-            value={formNewFloorNum}
-            onChange={(e) => setFormNewFloorNum(Number(e.target.value))}
-            className={styles.floorInput}
-          />
-          <button onClick={addFloor} className={styles.addFloorButton}>
-            Add Floor
-          </button>
+              {/* Display editable floors */}
+              {floors
+                  .sort((a, b) => b.num - a.num)
+                  .map((floor) => (
+                      <div key={floor.num} className={styles.floorItemWrapper}>
+                        <button
+                            onClick={() => setSearchParams({floor: floor.num})}
+                            className={`${styles.floorItem} ${
+                                searchParams.get("floor") == floor.num ? styles.activeFloor : ""
+                            }`}
+                        >
+                          Floor {floor.num}
+                        </button>
+                        <button
+                            className={styles.deleteFloorButton}
+                            onClick={() => deleteFloorHandler(floor.num)}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                  ))}
+
+              {/* Add new negative floor below */}
+              <button
+                  className={styles.addFloorButton}
+                  onClick={() => {
+                    const newFloor = Math.min(...floors.map((f) => f.num)) - 1;
+                    addFloorHandler(newFloor);
+                  }}
+              >
+                <img src={plus_icon} alt="Add Negative Floor" className={styles.icon}/>
+              </button>
+            </div>
+          </div>
         </div>
 
-        <hr />
-        <br />
-        {hasError && <p style={{ color: "red", textAlign: "center" }}>{errorMessage}</p>}
+        <br/>
+
+        <hr/>
+        <br/>
+        {hasError && <p style={{color: "red", textAlign: "center"}}>{errorMessage}</p>}
         <div className={styles.templateCont}>
           <SaveMap submitHandler={handleSaveClick}></SaveMap>
           {/*<MapTemplateSelector loadHandler={handleLoadMapClick}></MapTemplateSelector>*/}
@@ -135,19 +177,20 @@ function Draw() {
           <RoomModal map={app}></RoomModal>
           <EntranceModal map={app}></EntranceModal>
           <InfoPinModal map={app}></InfoPinModal>
-          <StairsModal map = {app}></StairsModal>
+          <StairsModal map={app}></StairsModal>
         </div>
       </div>
 
       {isPopupVisible && (
-        <div className={styles.popup}>
-          <div className={styles.popupContent}>
-            <h2>Map Saved!</h2>
-            <p>Your map has been successfully saved.</p>
+          <div className={styles.popup}>
+            <div className={styles.popupContent}>
+              <h2>Map Saved!</h2>
+              <p>Your map has been successfully saved.</p>
+            </div>
           </div>
-        </div>
       )}
     </div>
   );
 }
+
 export default Draw;

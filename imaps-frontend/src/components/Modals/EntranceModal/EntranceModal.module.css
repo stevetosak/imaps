@@ -13,36 +13,42 @@
   height: 100vh;
 }
 
-/* Overlay: Dark background with optional blur */
 .overlay {
-  background: rgba(0, 0, 0, 0.7); /* Darken the background */
-  backdrop-filter: blur(5px); /* Optional blur effect */
-  z-index: 999; /* Ensure the overlay appears below the modal */
+  background: rgba(255, 255, 255, 0.05);
+  z-index: 999;
 }
 
-/* Modal content: Centered and styled */
+.draggableHeader {
+  cursor: move;
+  padding: 10px;
+  background-color: #2c2f33;
+  color: #ffffff;
+  border-bottom: 1px solid #444;
+}
+
+
+
 .modalContent {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #2c2f33; /* Darker background for modal content */
-  color: #ffffff !important; /* White text for contrast */
+  background-color: #2c2f33;
+  color: #ffffff !important;
   padding: 20px;
   border-radius: 8px;
   max-width: 600px;
   width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 1000; /* Ensure the modal appears above the overlay */
+  z-index: 1000;
 }
 
-/* Heading styles */
+
 .title {
   margin-bottom: 15px;
   color: #ffffff ;
 }
 
-/* Button for opening the modal */
 .btnModal {
   padding: 10px 20px;
   font-size: 18px;
@@ -59,7 +65,6 @@
   background-color: #0056b3;
 }
 
-/* Close button inside the modal */
 .closeModal {
   position: absolute;
   top: 10px;
@@ -76,7 +81,6 @@
   background-color: #c82333;
 }
 
-/* Form styles */
 .form {
   display: flex;
   flex-direction: column;
@@ -86,7 +90,6 @@
   margin-bottom: 15px;
 }
 
-/* Form labels */
 .formGroup label {
   display: block;
   margin-bottom: 5px;
