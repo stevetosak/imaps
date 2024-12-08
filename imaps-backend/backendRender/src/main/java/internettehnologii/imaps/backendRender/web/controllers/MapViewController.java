@@ -28,7 +28,6 @@ public class MapViewController {
 
     private RouteGraph graph;
     private List<Floor> floors = new ArrayList<>();
-    private Floor currentFloor = new Floor();
 
     private final MapService mapService;
     private final FloorService floorService;
@@ -74,13 +73,12 @@ public class MapViewController {
     }
 
 
-    @GetMapping("/public/map-data")
-    public ResponseEntity<Floor> getMapData(@RequestParam String mapName, @RequestParam int floorNum) {
+    @GetMapping("/public/load-map")
+    public ResponseEntity<List<FloorDTO>> getMapData(@RequestParam String mapName, @RequestParam int floorNum) {
         try {
             this.floors = floorService.getAllPublicFloors(mapName);
-            this.currentFloor = getFloorByNum(floorNum);
-            this.loadGraph((String) currentFloor.getMapData().getShapeData());
-            return ResponseEntity.ok(currentFloor);
+            this.graph = graphService.construct(floors);
+            return ResponseEntity.ok(Util.convertToFloorDTO(floors)); // tuka re
         } catch (EmptyMapException e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
@@ -93,14 +91,7 @@ public class MapViewController {
         try {
             mapService.getMapForUser(username, mapName);// namesto ova samo proverka dali postoet dadena mapa za user, za da ne morat za dzabe mapa promenliva da se cuvat
             this.floors = floorService.getAllFloorsForMap(mapName);
-            this.currentFloor = getFloorByNum(floorNum);
             this.graph = graphService.construct(floors);
-//            if (mapData != null) {
-//                this.loadGraph((String) currentFloor.getMapData().getShapeData());
-//                System.out.println("============================================== graph loaded ==============================================");
-//            } else {
-//                System.out.println("============================================== CANT LOAD GRAPH: MAP DATA NULL ==============================================");
-//            }
 
             return ResponseEntity.ok(Util.convertToFloorDTO(floors)); // tuka return site floors trebit
         } catch (Exception e) {
@@ -115,7 +106,6 @@ public class MapViewController {
     public ResponseEntity<Floor> loadFloor(@RequestParam int floorNum) {
         try {
             Floor floor = getFloorByNum(floorNum);
-            currentFloor = floor;
             return ResponseEntity.ok(floor);
         } catch (FloorNotFoundException e) {
             e.printStackTrace();
@@ -139,21 +129,5 @@ public class MapViewController {
         throw new FloorNotFoundException("Floor: " + num + " not found.\n:");
     }
 
-    private void loadGraph(String mapData) {
-        if (mapData == null || mapData.isEmpty()){
-            throw new InvalidMapDataException("Invalid map data(null or empty string)");
-        }
-
-        try {
-            MapNodeParser parser = new MapNodeParser();
-            List<MapNode> nodes = parser.parseAndCreate(mapData);
-            graph = new RouteGraph();
-            graph.load(nodes); // tuka vo for ke trevbit parse pa load
-            System.out.println("======================= CREATED GRAPH =======================\n" + graph);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-        }
-    }
 
 }
