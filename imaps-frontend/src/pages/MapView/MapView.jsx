@@ -41,7 +41,7 @@ const MapView = ({isPrivate}) => {
 
     useEffect(() => {
         if (!searchParams.has("floor")) {
-            setSearchParams({floor: "0"});
+            setSearchParams({floor: "0"},{replace: true});
         }
     }, [setSearchParams, searchParams]);
 
@@ -196,7 +196,7 @@ const MapView = ({isPrivate}) => {
     }, [app, mapLoaded]);
 
     const handleFloorChange = (floorNum) => {
-        setSearchParams({floor: floorNum});
+        setSearchParams({floor: floorNum},{replace:true});
         const chFloor = floors.find(floor => floor.num === floorNum)
 
         console.log("FLOOR NUM:", floorNum, "CHFLOOR:",chFloor)

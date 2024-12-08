@@ -15,7 +15,7 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
 
     useEffect(() => {
         if (!searchParams.has("floor")) {
-            setSearchParams({ floor: "0" });
+            setSearchParams({ floor: "0"},{replace:true});
         }
     }, [setSearchParams, searchParams]);
 
@@ -107,7 +107,7 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
         };
     }, [app]);
 
-    return { app, floors, saveFloor };
+    return { app, floors, saveFloor,setFloors};
 };
 
 export default useMapLoader;

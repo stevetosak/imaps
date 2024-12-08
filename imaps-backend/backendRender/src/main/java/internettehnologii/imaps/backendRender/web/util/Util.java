@@ -1,6 +1,7 @@
 package internettehnologii.imaps.backendRender.web.util;
 
 import internettehnologii.imaps.backendRender.web.entities.Floor;
+import internettehnologii.imaps.backendRender.web.util.DTO.FloorDTO;
 
 import java.util.List;
 

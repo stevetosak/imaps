@@ -3,13 +3,13 @@ package internettehnologii.imaps.backendRender.web.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
-import internettehnologii.imaps.backendRender.web.util.SaveMapDTO;
+import internettehnologii.imaps.backendRender.web.util.DTO.SaveMapDTO;
 import internettehnologii.imaps.backendRender.web.util.Util;
 import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
-import internettehnologii.imaps.backendRender.web.util.FloorDTO;
-import internettehnologii.imaps.backendRender.web.util.MapDTO;
+import internettehnologii.imaps.backendRender.web.util.DTO.FloorDTO;
+import internettehnologii.imaps.backendRender.web.util.DTO.MapDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,7 +90,6 @@ public class MapDrawController {
     @GetMapping("/my-maps/load")
     public ResponseEntity<List<FloorDTO>> loadPersonalMap(@RequestParam String mapName, @RequestParam String username) {
         try{
-            // ovde logikava so servisive refaktor
             IndoorMap map = mapService.getMapForUser(username,mapName);
             List<Floor> floors = floorService.getAllFloorsForMap(map.getName());
             return ResponseEntity.ok().body(Util.convertToFloorDTO(floors));
@@ -105,6 +104,17 @@ public class MapDrawController {
         try{
             List<Floor> floors = floorService.getAllFloorsForMap(mapName);
             return ResponseEntity.ok(floors);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    @DeleteMapping("/floors/delete")
+    public ResponseEntity<Map<String,Object>> deleteFloor(@RequestParam String mapName,
+                                                          @RequestParam int floorNum) {
+        try{
+            floorService.deleteFloor(floorNum,mapName);
+            return ResponseEntity.ok().build();
         } catch (Exception e){
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -135,12 +145,6 @@ public class MapDrawController {
         }
     }
 
-
-    /*
-    Ne trebit nigde da provervis za null,
-     deka sive repo vrakjaat optional,
-     to go provervis vo service, ako nemat frlas exception.
-     */
     @DeleteMapping("/my-maps/delete")
     public ResponseEntity<Map<String, Object>> deleteMap(
             @RequestParam String mapName,

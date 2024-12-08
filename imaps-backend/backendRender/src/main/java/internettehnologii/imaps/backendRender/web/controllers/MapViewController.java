@@ -1,18 +1,15 @@
 package internettehnologii.imaps.backendRender.web.controllers;
 
 import internettehnologii.imaps.backendRender.graph.MapNode;
-import internettehnologii.imaps.backendRender.graph.MapNodeParser;
 import internettehnologii.imaps.backendRender.graph.RouteGraph;
-import internettehnologii.imaps.backendRender.graph.exceptions.InvalidMapDataException;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.exceptions.EmptyMapException;
 import internettehnologii.imaps.backendRender.web.exceptions.FloorNotFoundException;
 import internettehnologii.imaps.backendRender.web.service.interfaces.GraphService;
-import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
-import internettehnologii.imaps.backendRender.web.util.FloorDTO;
+import internettehnologii.imaps.backendRender.web.util.DTO.FloorDTO;
 import internettehnologii.imaps.backendRender.web.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
