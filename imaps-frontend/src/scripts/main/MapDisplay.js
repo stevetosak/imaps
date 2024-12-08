@@ -173,7 +173,7 @@ export class MapDisplay {
             const endX = nextNode.coordinates.x;
             const endY = nextNode.coordinates.y;
 
-            const numSegments = 10;
+            const numSegments = 8;
 
             const deltaX = (endX - startX) / numSegments;
             const deltaY = (endY - startY) / numSegments;
