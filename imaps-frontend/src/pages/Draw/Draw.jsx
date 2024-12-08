@@ -19,6 +19,7 @@ import {MapDisplay} from "../../scripts/main/MapDisplay.js";
 import netconfig from "../../scripts/net/netconfig.js";
 import useMapLoader from "./Hooks/useMapLoader.js";
 import plus_icon from "../../assets/plus_icon.png"
+import {FloorSelector} from "./FloorSelector.jsx";
 
 function Draw() {
   const { mapName } = useParams();
@@ -32,7 +33,10 @@ function Draw() {
   const [hasError, setHasError] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
+
+
   const {app,floors,saveFloor,setFloors} = useMapLoader(mapName,username,searchParams,setSearchParams)
+
 
 
   const addFloorHandler = async (newFloorNum) => {
@@ -54,13 +58,19 @@ function Draw() {
   };
 
   const deleteFloorHandler = async (floorNum) => {
+    if(floorNum === 0) return
+
     const httpService = new HttpService();
     httpService.setAuthenticated();
 
     try {
-      await httpService.delete(`/protected/floors/delete/${floorNum}`, {
-        data: { mapName: mapName },
-      });
+      await httpService.delete(`/protected/floors/delete?floorNum=${floorNum}&mapName=${mapName}`);
+      setFloors((prevFloors) => prevFloors.filter(f => f.num !== floorNum))
+
+      const currFloor = searchParams.get("floor");
+      if(currFloor == floorNum){
+        setSearchParams({floor:"0"},{replace:true})
+      }
       console.log(`Deleted floor ${floorNum}`);
     } catch (error) {
       console.error("Error deleting floor:", error);
@@ -110,56 +120,11 @@ function Draw() {
         <br/>
         <hr/>
         <br/>
-        <div className={styles.floorSection}>
-          <div className={styles.floorList}>
-            <label className={styles.floorLabel}>Available Floors:</label>
-            <div className={styles.floorItems}>
-              {/* Add new positive floor above */}
-              <button
-                  className={styles.addFloorButton}
-                  onClick={() => {
-                    const newFloor = Math.max(...floors.map((f) => f.num)) + 1;
-                    addFloorHandler(newFloor);
-                  }}
-              >
-                <img src={plus_icon} alt="Add Positive Floor" className={styles.icon}/>
-              </button>
-
-              {/* Display editable floors */}
-              {floors
-                  .sort((a, b) => b.num - a.num)
-                  .map((floor) => (
-                      <div key={floor.num} className={styles.floorItemWrapper}>
-                        <button
-                            onClick={() => setSearchParams({floor: floor.num},{replace:true})}
-                            className={`${styles.floorItem} ${
-                                searchParams.get("floor") == floor.num ? styles.activeFloor : ""
-                            }`}
-                        >
-                          Floor {floor.num}
-                        </button>
-                        <button
-                            className={styles.deleteFloorButton}
-                            onClick={() => deleteFloorHandler(floor.num)}
-                        >
-                          🗑️
-                        </button>
-                      </div>
-                  ))}
-
-              {/* Add new negative floor below */}
-              <button
-                  className={styles.addFloorButton}
-                  onClick={() => {
-                    const newFloor = Math.min(...floors.map((f) => f.num)) - 1;
-                    addFloorHandler(newFloor);
-                  }}
-              >
-                <img src={plus_icon} alt="Add Negative Floor" className={styles.icon}/>
-              </button>
-            </div>
-          </div>
-        </div>
+        <FloorSelector floorConfig={{
+          floors,searchParams,
+          setSearchParams,addFloorHandler,
+          deleteFloorHandler
+        }}></FloorSelector>
 
         <br/>
 
@@ -168,7 +133,6 @@ function Draw() {
         {hasError && <p style={{color: "red", textAlign: "center"}}>{errorMessage}</p>}
         <div className={styles.templateCont}>
           <SaveMap submitHandler={handleSaveClick}></SaveMap>
-          {/*<MapTemplateSelector loadHandler={handleLoadMapClick}></MapTemplateSelector>*/}
         </div>
 
         <div className={styles.hide}>
