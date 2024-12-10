@@ -13,41 +13,91 @@
 
 .toolbar {
   width: 100%;
-  padding: 0px;
-  position: absolute;
+  padding: 10px 20px;
+  position: fixed;
   top: 0;
   z-index: 3;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
 }
 
-.toolbar h1 {
-  font-size: 3em;
-  font-weight: 700;
+.toolbarContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.mapTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
   text-transform: uppercase;
   color: #333333;
+  margin: 0 20px;
+  flex-grow: 1;
+  text-align: center;
   font-family: "Oswald", sans-serif;
-  padding-right: 2em;
-  margin-top: 0;
-  white-space: nowrap;}
-
-.left {
-  width: 100%;
-  max-width: 100%;
-  padding-left: 15vw;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  flex-wrap: nowrap;
-  gap: 20px;
-  padding-right: 10px;
-  height: 100%;
 }
 
-.right {
-  position: absolute;
-  top: 1.2em;
-  right: 60px;
-  z-index: 10;
+.searchFilterContainer {
+  flex-grow: 3;
+  display: flex;
+  align-items: center;
+  gap: 150px;
+  justify-content: flex-start;
+  padding: 0 10px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d6d6d6 transparent;
+}
+
+.searchFilterContainer::-webkit-scrollbar {
+  height: 6px;
+}
+
+.searchFilterContainer::-webkit-scrollbar-thumb {
+  background-color: #d6d6d6;
+  border-radius: 10px;
+}
+
+.profileContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+
+.mapTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #333333;
+  margin: 0 20px;
+  flex-grow: 1;
+  text-align: center;
+  font-family: "Oswald", sans-serif;
+}
+
+.searchFilterContainer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profileContainer {
+  display: flex;
+  align-items: center;
 }
 
 .mapContainer {
