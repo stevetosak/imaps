@@ -64,6 +64,13 @@ h1 {
   margin-bottom: 5px;
 }
 
+.favorite{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+
 /* When dragging a tile */
 .dragging {
   background-color: #1e90ff;
