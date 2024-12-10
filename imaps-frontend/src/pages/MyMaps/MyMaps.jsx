@@ -107,6 +107,7 @@ export default function MyMaps() {
                     published_at: respMap.published_at,
                     gmaps_url: respMap.gmaps_url,
                     image_url: card,
+                    is_published: respMap.is_published,
                 };
 
                 setAllTiles((prevTiles) => [...prevTiles,mapTile])
@@ -146,9 +147,9 @@ export default function MyMaps() {
     };
 
     useEffect(() => {
-         setPublicMaps(tiles.filter((tile) => tile.status === "PUBLIC"));
+         setPublicMaps(tiles.filter((tile) => tile.status === "PUBLIC" && tile.is_published));
          setPrivateMaps(tiles.filter((tile) => tile.status === "PRIVATE"));
-         setPendingMaps(tiles.filter((tile) => tile.status === "INVALID"));
+         setPendingMaps(tiles.filter((tile) => (tile.status === "INVALID")));
     }, [tiles,allTiles]);
 
 
