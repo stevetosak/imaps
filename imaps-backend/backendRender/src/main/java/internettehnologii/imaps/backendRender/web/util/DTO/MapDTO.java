@@ -18,5 +18,6 @@ public class MapDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifiedAt;
     private String mapStatus;
+    private int numFavourites;
 
 }

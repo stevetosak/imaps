@@ -2,9 +2,10 @@ import React, {useContext, useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import styles from "./Login.module.css";
 import illustration from "../../assets/illustration_img.png";
-import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
 import Logo from "../../components/Logo/Logo.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
+import {useAppContext} from "../../components/AppContext/AppContext.jsx";
+import config from "../../scripts/net/netconfig.js";
 
 const LoginPage = () => {
     const [formUsername, setFormUsername] = useState("");
@@ -13,21 +14,21 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const {setUsername, setIsAuthenticated} = useContext(AuthContext);
+    const {setUsername, setIsAuthenticated} = useAppContext();
 
     const {targetPath} = location.state || {targetPath: {pathname: "/"}};
-
-    const handleLogin = async () => {
-        const httpService = new HttpService();
-        return httpService.post("/auth/login", payload)
-
-    };
-
 
     const payload = {
         username: formUsername,
         password: password,
     };
+
+    const handleLogin = async () => {
+        const httpService = new HttpService();
+        return httpService.post(config.auth.login, payload)
+
+    };
+
 
     const login = async (e) => {
         e.preventDefault();

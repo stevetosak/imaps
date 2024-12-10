@@ -63,9 +63,16 @@ public class FloorServiceImpl implements FloorService {
 
     @Override
     public Floor getFloorByNum(Integer floorNum, IndoorMap indoorMap) throws InvalidParametersException {
-        return floorRepository.findFloorByFloorNumber(floorNum, indoorMap).orElseThrow(
-                () -> new InvalidParametersException("Could not find floor.\n floorNum: " + floorNum + "\n indoorMap: " + indoorMap)
-        );
+//        return floorRepository.findFloorByFloorNumber(floorNum, indoorMap).orElseThrow(
+//                () -> new InvalidParametersException("Could not find floor.\n floorNum: " + floorNum + "\n indoorMap: " + indoorMap)
+//        );
+
+        return indoorMap
+                .getFloors()
+                .stream()
+                .filter(floor -> floor.getFloorNumber() == floorNum)
+                .findFirst()
+                .orElseThrow(() -> new InvalidParametersException("Could not find floor.\n floorNum: " + floorNum + "\n indoorMap: " + indoorMap));
     }
 
     @Override
