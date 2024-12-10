@@ -4,6 +4,7 @@
   padding: 20px;
   text-align: center;
   font-family: "Roboto", sans-serif;
+  overflow: hidden;
 }
 
 * {
