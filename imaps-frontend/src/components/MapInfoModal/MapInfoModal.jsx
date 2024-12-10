@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./MapInfoModal.module.css";
+import edit_icon from "../../assets/edit_icon_black.png";
 import {replace, useNavigate} from "react-router-dom";
 
 export default function MapInfoModal({ isOpen, onClose, map, onDelete }) {
     const navigate = useNavigate();
+    const [isEditPopupOpen, setEditPopupOpen] = useState(false);
+    const [editedName, setEditedName] = useState(map?.mapName || "");
+    const [editedGmapsUrl, setEditedGmapsUrl] = useState(map?.gmaps_url || "");
 
     if (!isOpen || !map) return null;
 
@@ -24,25 +28,55 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete }) {
 
     const isInvalid = map.status === "INVALID";
 
+    const openEditPopup = () => {
+        setEditPopupOpen(true);
+    };
+
+    const closeEditPopup = () => {
+        setEditPopupOpen(false);
+    };
+
+    const handleEditSubmit = async () => {
+        const updatedMap = {
+            ...map,
+            mapName: editedName,
+            gmaps_url: editedGmapsUrl,
+        };
+
+        try {
+            await onUpdate(updatedMap);
+            setEditPopupOpen(false);
+        } catch (error) {
+            console.error("Error updating map:", error);
+        }
+    };
+
     return (
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                <img src={map.image_url} alt="Map Thumbnail" className={styles.mapImage}/>
-                <h2 className={styles.title}>{map.mapName}</h2>
+                <img src={map.image_url} alt="Map Thumbnail" className={styles.mapImage} />
+                <h2 className={styles.title}>
+                    {map.mapName}
+                    <img
+                        src={edit_icon}
+                        alt="Edit"
+                        className={styles.editIcon}
+                        onClick={openEditPopup}
+                    />
+                </h2>
                 <p><strong>Status:</strong> {isInvalid ? "Pending Approval" : map.status}</p>
 
                 {!isInvalid && (
                     <>
                         <p><strong>Created At:</strong> {new Date(map.created_at).toLocaleString()}</p>
                         <p><strong>Modified At:</strong> {new Date(map.modified_at).toLocaleString()}</p>
-                        <p><strong>Published
-                            At:</strong> {map.published_at ? new Date(map.published_at).toLocaleString() : "Not published yet"}
-                        </p>
+                        <p><strong>Published At:</strong> {map.published_at ? new Date(map.published_at).toLocaleString() : "Not published yet"}</p>
                         <p>
-                            <strong>Google Maps URL:</strong>{" "}
+                            <strong>Google Maps URL:</strong>
                             <a href={map.gmaps_url} target="_blank" rel="noopener noreferrer">
                                 Open in Google Maps
                             </a>
+
                         </p>
                     </>
                 )}
@@ -61,6 +95,41 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete }) {
                 <button className={styles.closeButton} onClick={onClose}>
                     Close
                 </button>
+
+                {isEditPopupOpen && (
+                    <div className={styles.editPopupOverlay} onClick={closeEditPopup}>
+                        <div
+                            className={styles.editPopupContent}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <h3 className={styles.title}>Edit Map Details</h3>
+                            <div className={styles.editField}>
+                                <label>Map Name:</label>
+                                <input
+                                    type="text"
+                                    value={editedName}
+                                    onChange={(e) => setEditedName(e.target.value)}
+                                />
+                            </div>
+                            <div className={styles.editField}>
+                                <label>Google Maps URL:</label>
+                                <input
+                                    type="text"
+                                    value={editedGmapsUrl}
+                                    onChange={(e) => setEditedGmapsUrl(e.target.value)}
+                                />
+                            </div>
+                            <div className={styles.editPopupButtons}>
+                                <button className={styles.submitButton} onClick={handleEditSubmit}>
+                                    Submit
+                                </button>
+                                <button className={styles.cancelButton} onClick={closeEditPopup}>
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -1,28 +1,16 @@
 PRIORITY HIGH
 
-- Filter na prostorii
-
-- Room Types ne rabotat vo Draw
 - Text na shape da se sredit
-- Toska smeni go backendot, ne gi cuvaj keshirani floors
 - Id fix na shapes vo Draw
 
 PRIORITY MEDIUM
 
 - Render kopce
-- MapType da imat vo baza
 - Detach event na draw (keys: e, r)
 - Text na shape vo Draw da e top layer
-- History toska da popravit
-
-- Floors da se dodavat vo dropdown avtomatski bez potreba za refresh na Draw
-- Zabrana za pregled na Private mapi na drug User
-
 
 PRIORITY LOW
 
-- Pending Approval maps implement
-- Home page stil improve
 - Admin Page
 
 
