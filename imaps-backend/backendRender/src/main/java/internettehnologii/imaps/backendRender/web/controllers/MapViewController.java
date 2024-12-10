@@ -24,7 +24,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = {"Authorization"})
+//@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = {"Authorization"})
 public class MapViewController {
 
     private RouteGraph graph;

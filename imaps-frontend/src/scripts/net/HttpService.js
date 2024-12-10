@@ -10,7 +10,7 @@ class HttpService {
         this.auth = true;
     }
 
-    async request(method, url, data = null) {
+    async request(method, endpoint, data = null) {
       const options = {
         method: method,
         headers: {
@@ -31,7 +31,7 @@ class HttpService {
         options.body = JSON.stringify(data);
       }
   
-      const response = await fetch(`${url}`, options);
+      const response = await fetch(`${endpoint}`, options);
       
       if (!response.ok) {
         switch (response.status) {

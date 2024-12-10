@@ -158,14 +158,17 @@ const MapView = ({isPrivate}) => {
             handleFloorChange(shapeFrom.floorNum);
         }
 
-
-        const url = new URL();
-        url.searchParams.append("from", fromSearch.trim());
-        url.searchParams.append("to", toSearch.trim());
-
-
        const httpService = new HttpService();
-       httpService.get(config.view_maps.navigate).then(path => {
+
+        if(isPrivate){
+            httpService.setAuthenticated();
+        }
+
+
+        const fromEncoded = encodeURIComponent(fromSearch).trimEnd()
+        const toEncoded = encodeURIComponent(toSearch).trimEnd()
+
+       httpService.get(`${config.view_maps.navigate}?from=${fromEncoded}&to=${toEncoded}`).then(path => {
            app.drawRouteNEW(path);
        }).catch(reason => {
            console.log("err",reason)
