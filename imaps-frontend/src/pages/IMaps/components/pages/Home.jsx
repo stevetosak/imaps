@@ -10,7 +10,7 @@ function Home() {
     <div className="home">
       <div className="hero-container">
         <h1>Map Your World</h1>
-        <h2>Create and explore detailed indoor maps.</h2>
+        <h2 className="description">Create and explore detailed indoor maps.</h2>
         <div className="hero-btns">
           <Link to="/myMaps">
             <Button className="btns" buttonSize="btn--large">
