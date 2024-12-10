@@ -61,7 +61,7 @@ export default function MyMaps() {
     const deleteMap = (mapName) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
-        const url = `/protected/my-maps/delete?mapName=${mapName}&username=${username}`;
+        const url = `${config.my_maps.delete}?mapName=${mapName}&username=${username}`;
 
         httpService
             .delete(url)
