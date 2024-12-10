@@ -101,7 +101,7 @@ export default function CreateMaps() {
 
     const publicMaps = tiles.filter((tile) => tile.status === "PUBLIC");
     const privateMaps = tiles.filter((tile) => tile.status === "PRIVATE");
-    const pendingMaps = tiles.filter((tile) => tile.status === "PENDING");
+    const pendingMaps = tiles.filter((tile) => tile.status === "INVALID");
 
     return (
         <div className={styles.container}>
