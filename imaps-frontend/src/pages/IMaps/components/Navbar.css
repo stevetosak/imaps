@@ -1,194 +1,77 @@
-.navbar {
-  /*background: linear-gradient(90deg, rgba(188,108,37,1) 19%, rgba(221,161,94,1) 50%, rgba(188,108,37,1) 81%);*/
-  background: rgb(37, 38, 39);
-  background: linear-gradient(
-    90deg,
-    rgba(37, 38, 39, 1) 20%,
-    rgba(51, 39, 40, 1) 28%,
-    rgba(62, 39, 42, 1) 40%,
-    rgba(73, 40, 43, 1) 59%,
-    rgba(37, 38, 39, 1) 79%
-  );
-  height: 4em;
+.modern-navbar {
+  background-color: #ffffff;
+  color: #333333;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
-
-  border-radius: 1em;
-  margin: 1em;
+  padding: 0.8rem 1.5rem;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
-  z-index: 999;
-}
-
-/* .signup {
-}
-.login {
-} */
-
-.navlogoCont h1 {
-  font-family: exo, sans-serif;
-  font-size: 1.5em;
-  color: #ffffff;
-  margin: 0;
-  text-shadow: #460616 2px 3px;
-  padding-left: 1em;
-}
-
-.navlogoCont {
-  display: flex;
-  align-items: center;
-  padding-left: 10%;
-}
-
-.linkCont {
-  display: flex;
-  width: 50%;
-  justify-content: space-evenly;
+  z-index: 1000;
+  border-radius: 8px;
 }
 
 .navbar-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
+  max-width: 1200px;
 }
 
-.navbar-logo {
-  color: #ffff;
-  justify-self: start;
-  margin-left: 20px;
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #4a4a4a;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar-btn {
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  border: 2px solid transparent;
+  border-radius: 20px;
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+  font-family: "Roboto", sans-serif;
   cursor: pointer;
-  text-decoration: none;
-  font-size: 2rem;
-  display: flex;
-  align-items: center;
 }
 
-.fa-typo3 {
-  margin-left: 0.5rem;
-  font-size: 1.8rem;
+.navbar-login {
+  background-color: #6c757d;
+  border: 2px solid #6c757d;
 }
 
-.nav-menu {
-  display: grid;
-  grid-template-columns: repeat(4, auto);
-  grid-gap: 10px;
-  list-style: none;
-  text-align: center;
-  width: 70vw;
-  justify-content: end;
-  margin-right: 2rem;
+.navbar-login:hover {
+  background-color: #ffffff;
+  color: #6c757d;
+  border: 2px solid #6c757d;
 }
 
-.nav-item {
-  height: 50px;
-  padding-top: 30px;
+.navbar-signup {
+  background-color: #343a40;
+  color: #ffffff;
+  border: 2px solid #343a40;
 }
 
-.nav-links {
-  color: #fff;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-
-.nav-links:hover {
-  border-bottom: 4px solid #fff;
-  transition: all 0.2s ease-out;
-}
-
-.fa-bars {
-  color: #fff;
-}
-
-.nav-links-mobile {
-  display: none;
-}
-
-.menu-icon {
-  display: none;
-}
-
-@media screen and (max-width: 960px) {
-  .NavbarItems {
-    position: relative;
-  }
-
-  .nav-menu {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 90vh;
-    position: absolute;
-    top: 80px;
-    left: -100%;
-    opacity: 1;
-    transition: all 0.5s ease;
-  }
-
-  .nav-menu.active {
-    background: #242222;
-    left: 0;
-    opacity: 1;
-    transition: all 0.5s ease;
-    z-index: 1;
-  }
-
-  .nav-links {
-    text-align: center;
-    padding: 2rem;
-    width: 100%;
-    display: table;
-  }
-
-  .nav-links:hover {
-    background-color: #fff;
-    color: #242424;
-    border-radius: 0;
-  }
-
-  .navbar-logo {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translate(25%, 50%);
-  }
-
-  .menu-icon {
-    display: block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    transform: translate(-100%, 60%);
-    font-size: 1.8rem;
-    cursor: pointer;
-  }
-
-  .fa-times {
-    color: #fff;
-    font-size: 2rem;
-  }
-
-  .nav-links-mobile {
-    display: block;
-    text-align: center;
-    margin: 2rem auto;
-    border-radius: 4px;
-    width: 80%;
-    text-decoration: none;
-    font-size: 1.5rem;
-    background-color: transparent;
-    color: #fff;
-    padding: 14px 20px;
-    border: 1px solid #fff;
-    transition: all 0.3s ease-out;
-  }
-
-  .nav-links-mobile:hover {
-    background: #fff;
-    color: #242424;
-    transition: 250ms;
-  }
+.navbar-signup:hover {
+  background-color: #ffffff;
+  color: #343a40;
+  border: 2px solid #343a40;
 }
