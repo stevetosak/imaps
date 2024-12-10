@@ -13,4 +13,5 @@ public interface MapService {
     List<IndoorMap> getPublicMaps();
     IndoorMap getMapForUser(String username, String mapName);
     IndoorMap getPublicMapByName(String mapName);
+    IndoorMap getMapByName(String mapName);
 }

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import HttpService from "../../scripts/net/HttpService.js";
 import Logo from "../../components/Logo/Logo.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
+import config from "../../scripts/net/netconfig.js";
 
 const loadedTiles = [];
 
@@ -31,15 +32,15 @@ const tileSize = (tile) => ({
   rowSpan: tile.rows,
 });
 
-export default function Maps() {
+export default function BrowseMaps() {
   useEffect(() => {
     const loadPublicMaps = async () => {
       const httpService = new HttpService();
-      const resp = await httpService.get("/public/maps/display");
+      const resp = await httpService.get(config.view_maps.display);
       console.log("RESPONSE MAPS PUBLIC", resp);
 
       const mapTiles = resp.map((elem) => ({
-        text: elem.name,
+        text: elem.mapName,
         cols: 1,
         rows: 1,
       }));

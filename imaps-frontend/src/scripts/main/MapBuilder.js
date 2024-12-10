@@ -487,30 +487,6 @@ export class MapBuilder {
         }
     }
 
-    async saveMap(mapName, username, selectedFloor) {
-        this.saveShapeDetails();
-
-        console.log("SHAPSDOASD!!!!!!: " + JSON.stringify(ShapeRegistry.getShapes(this.floorNum)));
-
-        const payload = {
-            shapes: ShapeRegistry.getShapes(this.floorNum),
-            roomTypes: JSON.stringify(this.roomTypes),
-            mapName: mapName,
-            floorNum: selectedFloor
-        }
-
-
-        const httpService = new HttpService("http://localhost:8080/api/protected", true);
-        try {
-            const response = await httpService.put(
-                `/my-maps/save?username=${username}`,
-                payload
-            );
-            console.log(response, "resp in builder");
-        } catch (err) {
-            console.log("ERROR --> Could not Save map --->", err);
-        }
-    }
 
     handleStageClick(e) {
         if (this.selectionRectangle.visible()) {

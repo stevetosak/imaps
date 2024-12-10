@@ -3,13 +3,16 @@ package internettehnologii.imaps.backendRender.web.controllers;
 import internettehnologii.imaps.backendRender.graph.MapNode;
 import internettehnologii.imaps.backendRender.graph.RouteGraph;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
+import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.exceptions.EmptyMapException;
 import internettehnologii.imaps.backendRender.web.exceptions.FloorNotFoundException;
 import internettehnologii.imaps.backendRender.web.service.interfaces.GraphService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
+import internettehnologii.imaps.backendRender.web.service.interfaces.UserService;
 import internettehnologii.imaps.backendRender.web.util.DTO.FloorDTO;
+import internettehnologii.imaps.backendRender.web.util.DTO.MapDTO;
 import internettehnologii.imaps.backendRender.web.util.DTO.RoomTypeDTO;
 import internettehnologii.imaps.backendRender.web.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,20 +33,30 @@ public class MapViewController {
     private final MapService mapService;
     private final FloorService floorService;
     private final GraphService graphService;
+    private final UserService userService;
 
     @Autowired
-    public MapViewController(MapService mapService, FloorService floorService, GraphService graphService) {
+    public MapViewController(MapService mapService, FloorService floorService, GraphService graphService, UserService userService) {
         this.mapService = mapService;
         this.floorService = floorService;
         this.graphService = graphService;
+        this.userService = userService;
     }
 
 
-    @GetMapping("/public/maps/display")
-    public ResponseEntity<List<IndoorMap>> loadPublicMaps() {
+    @GetMapping("/public/maps")
+    public ResponseEntity<List<MapDTO>> loadPublicMaps() {
         try {
-            List<IndoorMap> publicMaps = mapService.getPublicMaps();
-            return ResponseEntity.ok(publicMaps);
+            List<IndoorMap> maps = mapService.getPublicMaps();
+            List<MapDTO> mapDTOS = maps.stream()
+                    .map(imap -> new MapDTO(imap.getName(),
+                            imap.getMapType(),
+                            imap.getCreatedAt(),
+                            imap.getModifiedAt(),
+                            imap.getStatus().name(),
+                            imap.getFavouriteCount()))
+                    .toList();
+            return ResponseEntity.ok(mapDTOS);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -108,32 +121,29 @@ public class MapViewController {
         }
     }
 
-
-    @GetMapping("/public/load-floor")
-    public ResponseEntity<Floor> loadFloor(@RequestParam int floorNum) {
-        try {
-            Floor floor = getFloorByNum(floorNum);
-            return ResponseEntity.ok(floor);
-        } catch (FloorNotFoundException e) {
+    @PostMapping("/protected/favourites/add")
+    public ResponseEntity<Map<String,Object>> addFavourites(@RequestParam String username, @RequestParam String mapName) {
+        try{
+            IndoorMap map = mapService.getMapByName(mapName);
+            IMapsUser user = userService.getUser(username);
+            userService.addToFavorites(user, map);
+            return ResponseEntity.ok(new HashMap<>());
+        } catch (Exception e){
             e.printStackTrace();
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(404).body(new HashMap<>());
         }
     }
-
-    @GetMapping("/public/floors/get")
-    public ResponseEntity<List<Floor>> getFloors() {
-        return ResponseEntity.ok(floors);
-    }
-
-    
-    private Floor getFloorByNum(int num) {
-        for (Floor floor : floors) {
-            if (floor.getFloorNumber() == num) {
-                return floor;
-            }
+    @DeleteMapping("/protected/favourites/delete")
+    public ResponseEntity<Map<String,Object>> removeFavourites(@RequestParam String username, @RequestParam String mapName) {
+        try{
+            IndoorMap map = mapService.getMapByName(mapName);
+            IMapsUser user = userService.getUser(username);
+            userService.removeFromFavorites(user, map);
+            return ResponseEntity.ok(new HashMap<>());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(404).body(new HashMap<>());
         }
-        throw new FloorNotFoundException("Floor: " + num + " not found.\n:");
     }
 
 

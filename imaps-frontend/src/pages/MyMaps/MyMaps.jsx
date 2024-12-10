@@ -4,10 +4,11 @@ import {TilesContainer} from "react-tiles-dnd";
 import MapInfoModal from "../../components/MapInfoModal/MapInfoModal.jsx";
 import MapDetailsModal from "../../components/Modals/CreateMapModal/CreateMapModal.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
-import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
 import card from "../../assets/card-map.png";
 import Logo from "../../components/Logo/Logo.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
+import {useAppContext} from "../../components/AppContext/AppContext.jsx";
+import config from "../../scripts/net/netconfig.js";
 
 const renderTile = ({data, isDragging}, openMapInfo) => (
     <div style={{padding: "1rem", width: "100%"}}>
@@ -27,10 +28,10 @@ const tileSize = (tile) => ({
     rowSpan: tile.rows,
 });
 
-export default function CreateMaps() {
+export default function MyMaps() {
     const [tiles, setTiles] = useState([]);
     const [allTiles, setAllTiles] = useState([]);
-    const {username} = useContext(AuthContext);
+    const {username} = useAppContext();
     const [selectedMap, setSelectedMap] = useState(null);
     const [isMapInfoModalOpen, setIsMapInfoModalOpen] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -79,7 +80,7 @@ export default function CreateMaps() {
         httpService.setAuthenticated();
 
         httpService
-            .put(`/protected/my-maps/create?username=${username}`, mapDetails)
+            .put(`${config.my_maps.add}?username=${username}`, mapDetails)
             .then((respMap) => {
                 console.log("RESP NEW MAP: " + respMap)
                 const mapTile = {
@@ -100,10 +101,11 @@ export default function CreateMaps() {
     }
 
     useEffect(() => {
-        const loadPublicMaps = async () => {
+        const loadMaps = async () => {
             const httpService = new HttpService();
             httpService.setAuthenticated();
-            const respMaps = await httpService.get(`/protected/my-maps?username=${username}`);
+
+            const respMaps = await httpService.get(`${config.my_maps.display}?username=${username}`);
 
             const mapTiles = respMaps.map((elem) => ({
                 mapName: elem.mapName,
@@ -115,12 +117,13 @@ export default function CreateMaps() {
                 published_at: elem.published_at,
                 gmaps_url: elem.gmaps_url,
                 image_url: card,
+                numFavourites: elem.numFavourites
             }));
 
             setTiles(mapTiles);
             setAllTiles(mapTiles);
         };
-        loadPublicMaps();
+        loadMaps();
     }, [username]);
 
     const handleSearch = (e) => {

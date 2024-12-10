@@ -5,20 +5,18 @@ import styles from "./MapView.module.css";
 import SearchBar from "../../components/SearchBar/SearchBar.jsx";
 import FilterBar from "../../components/FilterBar/FilterBar.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
-import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
 import RoomInfoPanel from "../../components/RoomInfoPanel/RoomInfoPanel.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
 import floorIcon from "../../assets/floor_icon.png";
 import Logo from "../../components/Logo/Logo.jsx";
-import netconfig from "../../scripts/net/netconfig.js";
+import config from "../../scripts/net/netconfig.js";
 import parseMapData from "../../scripts/util/parseMapData.js";
 import ShapeRegistry from "../../scripts/util/ShapeRegistry.js";
-import {Button} from "../IMaps/components/Button.jsx";
-import {useRoomTypesLoader} from "../Draw/Hooks/useRoomTypesLoader.js";
+import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 
 const MapView = ({isPrivate}) => {
     const {mapName} = useParams();
-    const {username} = useContext(AuthContext);
+    const {username} = useAppContext();
 
     const [mapLoaded, setMapLoaded] = useState(false);
     const [app, setApp] = useState(null);
@@ -45,9 +43,9 @@ const MapView = ({isPrivate}) => {
             const httpService = new HttpService();
             let roomTypes;
             if(isPrivate){
-                roomTypes = await httpService.get(`/protected/room-types?mapName=${mapName}&username=${username}`)
+                roomTypes = await httpService.get(`${config.room_types.display(true)}?mapName=${mapName}&username=${username}`)
             } else {
-                roomTypes = await httpService.get(`/public/room-types?mapName=${mapName}`)
+                roomTypes = await httpService.get(`${config.room_types.display(false)}?mapName=${mapName}`)
             }
 
             console.log("loaded ROOM TYPES: " + roomTypes)
@@ -76,19 +74,15 @@ const MapView = ({isPrivate}) => {
             const httpService = new HttpService();
 
             try {
-                const endpoint = isPrivate
-                    ? netconfig.endpoints.protect.load
-                    : netconfig.endpoints.public.load;
-
-                const params = isPrivate ?
-                    `?mapName=${mapName}&floorNum=${floorNum}&username=${username}` :
-                    `?mapName=${mapName}&floorNum=${floorNum}`;
-
-                if (isPrivate) {
-                    httpService.setAuthenticated(); // auth header
+                let url;
+                if(isPrivate){
+                    httpService.setAuthenticated();
+                    url = `${config.view_maps.load(true)}?mapName=${mapName}&floorNum=${floorNum}&username=${username}`
+                } else {
+                    url = `${config.view_maps.load(false)}?mapName=${mapName}&floorNum=${floorNum}`
                 }
 
-                return httpService.get(`${endpoint}${params}`);
+                return httpService.get(url);
             } catch (e) {
                 throw new Error("Can't load map: " + e.message);
             }
@@ -165,25 +159,17 @@ const MapView = ({isPrivate}) => {
         }
 
 
-        const url = new URL("http://localhost:8080/api/public/navigate");
+        const url = new URL();
         url.searchParams.append("from", fromSearch.trim());
         url.searchParams.append("to", toSearch.trim());
 
 
-        fetch(url)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                console.log("Success:", data);
-                app.drawRouteNEW(data);
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-            });
+       const httpService = new HttpService();
+       httpService.get(config.view_maps.navigate).then(path => {
+           app.drawRouteNEW(path);
+       }).catch(reason => {
+           console.log("err",reason)
+       })
     };
 
     const multiFloorNavigate = () => {

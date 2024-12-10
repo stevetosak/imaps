@@ -5,6 +5,7 @@ import parseMapData from "../../../scripts/util/parseMapData.js";
 import ShapeRegistry from "../../../scripts/util/ShapeRegistry.js";
 import saveMap from "../../../components/SaveMap/SaveMap.jsx";
 import triggerMapSave from "../../../scripts/util/triggerMapSave.js";
+import config from "../../../scripts/net/netconfig.js";
 
 
 
@@ -23,7 +24,7 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
         const loadFloors = async () => {
             const httpService = new HttpService();
             try {
-                const respFloors = await httpService.get(`/protected/my-maps/load?mapName=${mapName}&username=${username}`);
+                const respFloors = await httpService.get(`${config.my_maps.load}?mapName=${mapName}&username=${username}`);
                 console.log("Floors loaded:", respFloors);
                 setFloors(respFloors);
                 setMapLoaded(true);
@@ -68,9 +69,9 @@ const useMapLoader = (mapName, username, searchParams, setSearchParams) => {
 
     const saveFloor = async () => {
         const payload = app.saveShapeDetails();
-        const httpService = new HttpService("http://localhost:8080/api/protected", true);
+        const httpService = new HttpService(true);
         try {
-            const responseFloor = await httpService.put(`/my-maps/save?username=${username}`, payload);
+            const responseFloor = await httpService.put(`${config.my_maps.save}?username=${username}`, payload);
             console.log("FLOORS",floors.length)
 
             setFloors((prevFloors) =>

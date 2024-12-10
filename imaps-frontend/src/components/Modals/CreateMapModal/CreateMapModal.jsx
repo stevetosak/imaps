@@ -1,14 +1,10 @@
 import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./CreateMapModal.module.css";
-import HttpService from "../../../scripts/net/HttpService.js";
-import { AuthContext } from "../../AuthContext/AuthContext.jsx";
-import card from "../../../assets/card-map.png";
 
 const MapDetailsModal = ({ isOpen, onClose,addMap}) => {
     const [mapName, setMapName] = useState("");
     const [mapType, setMapType] = useState("");
-    const { username } = useContext(AuthContext);
 
     const handleSubmit = (e) => {
         const mapDetails = {

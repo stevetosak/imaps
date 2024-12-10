@@ -9,16 +9,17 @@ import SaveMap from "../../components/SaveMap/SaveMap.jsx";
 import Logo from "../../components/Logo/Logo.jsx";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Profile from "../../components/Profile/Profile.jsx";
-import { AuthContext } from "../../components/AuthContext/AuthContext.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
 import StairsModal from "../../components/Modals/StairsModal/StairsModal.jsx";
 import useMapLoader from "./Hooks/useMapLoader.js";
 import {FloorSelector} from "./FloorSelector.jsx";
 import {useRoomTypesLoader} from "./Hooks/useRoomTypesLoader.js";
+import {useAppContext} from "../../components/AppContext/AppContext.jsx";
+import config from "../../scripts/net/netconfig.js";
 
 function Draw() {
   const { mapName } = useParams();
-  const { username } = useContext(AuthContext);
+  const { username } = useAppContext();
 
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("Error");
@@ -40,7 +41,7 @@ function Draw() {
     };
 
     try {
-      await httpService.put("/protected/floors/add", payload);
+      await httpService.put(`${config.floors.add}`, payload);
       console.log(`Added floor ${newFloorNum}`);
       setFloors((prevFloors) => [...prevFloors, { num: newFloorNum }]);
     } catch (error) {
@@ -55,7 +56,7 @@ function Draw() {
     httpService.setAuthenticated();
 
     try {
-      await httpService.delete(`/protected/floors/delete?floorNum=${floorNum}&mapName=${mapName}`);
+      await httpService.delete(`${config.floors.delete}?floorNum=${floorNum}&mapName=${mapName}`);
       setFloors((prevFloors) => prevFloors.filter(f => f.num !== floorNum))
 
       const currFloor = searchParams.get("floor");

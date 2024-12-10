@@ -4,6 +4,7 @@ import HttpService from "../net/HttpService.js";
 import {zoomStage} from "../util/zoomStage.js";
 import {addEventHandling} from "../util/addEventHandling.js";
 import triggerNavigate from "../util/triggerNavigate.js";
+import config from "../net/netconfig.js";
 
 export class MapDisplay {
     constructor(containerId, floorNum) {
@@ -77,42 +78,6 @@ export class MapDisplay {
     }
 
 
-    // ne se koristit ova pojke
-    /**
-     *
-     * @param mapName
-     * @param floorNum
-     * @param username
-     * @param isPrivate
-     * @returns {Promise<void>}
-     * @deprecated
-     */
-    async loadMap(mapName, floorNum, username, isPrivate) {
-        const httpService = new HttpService();
-        floorNum = floorNum == null ? 0 : floorNum;
-        let resp;
-        try {
-            if (!isPrivate) {
-                resp = await httpService.get(`/public/map-data?mapName=${mapName}&floorNum=${floorNum}`);
-            } else {
-                httpService.setAuthenticated();
-                resp = await httpService.get(`/protected/map-data?mapName=${mapName}&floorNum=${floorNum}&username=${username}`);
-            }
-
-            console.log(resp, "rsp view");
-            if (resp.mapData != null) {
-                this.deserializeMap(resp.mapData);
-                this.shapes.forEach((shape) => {
-                    this.mainLayer.add(shape);
-                });
-                this.displayRoomNames();
-                this.initializeRoomTypes();
-            }
-
-        } catch (e) {
-            throw new Error("Cant load map: " + e)
-        }
-    }
 
     loadMapN(floorData) {
         if (floorData == null || floorData === "") return;

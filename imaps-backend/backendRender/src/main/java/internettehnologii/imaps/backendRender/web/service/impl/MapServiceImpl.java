@@ -89,6 +89,11 @@ public class MapServiceImpl implements MapService {
         return mapRepository.getIndoorMapByNameAndStatus(mapName, MAP_STATUS.PUBLIC).orElseThrow(() -> new MapNotFoundException(mapName));
     }
 
+    @Override
+    public IndoorMap getMapByName(String mapName) {
+       return mapRepository.getIndoorMapByName(mapName).orElseThrow(() -> new MapNotFoundException(mapName));
+    }
+
 
 //    public List<IndoorMap> getMaps() {
 //        return mapRepository.findAll();

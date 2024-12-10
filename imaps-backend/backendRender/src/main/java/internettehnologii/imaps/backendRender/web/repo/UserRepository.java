@@ -20,6 +20,9 @@ public interface UserRepository extends JpaRepository<IMapsUser, Long> {
     value = "SELECT * FROM users u WHERE u.username = ?1 LIMIT 1")
     Optional<IMapsUser> findUserByName(String usrname);
 
+    @Query(value = "FROM IMapsUser u WHERE u.username = ?1 OR u.email = ?1")
+    Optional<IMapsUser> getIMapsUserByUsernameOrEmail(String usernameOrEmail);
+
     @Query(nativeQuery = true,
     value = "SELECT * FROM users u WHERE u.id= ?1")
     Optional<IMapsUser> getUserById(Long usrid);

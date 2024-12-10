@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -26,6 +27,14 @@ public class IMapsUser {
 
     @Column(name = "profile_image_url")
     private String profileImageUrl;
+
+    @ManyToMany
+    @JoinTable(
+            name = "favourites",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "map_id")
+    )
+    private Set<IndoorMap> favoriteMaps;
 
 
     public IMapsUser() {}
