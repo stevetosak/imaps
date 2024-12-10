@@ -73,6 +73,12 @@ button:active {
     transform: scale(0.95);
 }
 
+button:disabled {
+    background-color: #d3d3d3;
+    color: #888;
+    cursor: not-allowed;
+}
+
 .viewButton {
     background-color: #1e90ff;
     color: white;
@@ -82,6 +88,11 @@ button:active {
     background-color: #155a8a;
 }
 
+button:disabled.viewButton {
+    background-color: #d3d3d3;
+    color: #888;
+}
+
 .editButton {
     background-color: #ffa500;
     color: white;
@@ -89,6 +100,11 @@ button:active {
 
 .editButton:hover {
     background-color: #cc8400;
+}
+
+button:disabled.editButton {
+    background-color: #d3d3d3;
+    color: #888;
 }
 
 .deleteButton {

@@ -22,26 +22,36 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete }) {
         }
     };
 
+    const isInvalid = map.status === "INVALID";
+
     return (
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                <img src={map.image_url} alt="Map Thumbnail" className={styles.mapImage} />
+                <img src={map.image_url} alt="Map Thumbnail" className={styles.mapImage}/>
                 <h2 className={styles.title}>{map.mapName}</h2>
-                <p><strong>Status:</strong> {map.status}</p>
-                <p><strong>Created At:</strong> {new Date(map.created_at).toLocaleString()}</p>
-                <p><strong>Modified At:</strong> {new Date(map.modified_at).toLocaleString()}</p>
-                <p><strong>Published At:</strong> {map.published_at ? new Date(map.published_at).toLocaleString() : "Not published yet"}</p>
-                <p>
-                    <strong>Google Maps URL:</strong>{" "}
-                    <a href={map.gmaps_url} target="_blank" rel="noopener noreferrer">
-                        Open in Google Maps
-                    </a>
-                </p>
+                <p><strong>Status:</strong> {isInvalid ? "Pending Approval" : map.status}</p>
+
+                {!isInvalid && (
+                    <>
+                        <p><strong>Created At:</strong> {new Date(map.created_at).toLocaleString()}</p>
+                        <p><strong>Modified At:</strong> {new Date(map.modified_at).toLocaleString()}</p>
+                        <p><strong>Published
+                            At:</strong> {map.published_at ? new Date(map.published_at).toLocaleString() : "Not published yet"}
+                        </p>
+                        <p>
+                            <strong>Google Maps URL:</strong>{" "}
+                            <a href={map.gmaps_url} target="_blank" rel="noopener noreferrer">
+                                Open in Google Maps
+                            </a>
+                        </p>
+                    </>
+                )}
+
                 <div className={styles.buttonContainer}>
-                    <button className={styles.viewButton} onClick={handleView}>
+                    <button className={styles.viewButton} onClick={handleView} disabled={isInvalid}>
                         View
                     </button>
-                    <button className={styles.editButton} onClick={handleEdit}>
+                    <button className={styles.editButton} onClick={handleEdit} disabled={isInvalid}>
                         Edit
                     </button>
                     <button className={styles.deleteButton} onClick={handleDelete}>
