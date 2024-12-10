@@ -53,6 +53,20 @@ export default function CreateMaps() {
         setIsCreateModalOpen(false);
     };
 
+    const handleUpdate = async (updatedMap) => {
+        // try {
+        //     await fetch(`/api/maps/${updatedMap.id}`, {
+        //         method: "PUT",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify(updatedMap),
+        //     });
+        //     console.log("Map updated successfully:", updatedMap);
+        // } catch (error) {
+        //     console.error("Error updating map:", error);
+        // }
+    };
+
+
     const deleteMap = (mapName) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
@@ -166,6 +180,7 @@ export default function CreateMaps() {
                 onClose={closeMapInfoModal}
                 map={selectedMap}
                 onDelete={deleteMap}
+                onUpdate={handleUpdate}
             />
 
             <MapDetailsModal

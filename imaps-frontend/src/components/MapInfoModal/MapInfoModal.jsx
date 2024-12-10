@@ -6,6 +6,7 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete, onUpdate 
     const [isEditPopupOpen, setEditPopupOpen] = useState(false);
     const [editedName, setEditedName] = useState(map?.mapName || "");
     const [editedGmapsUrl, setEditedGmapsUrl] = useState(map?.gmaps_url || "");
+    const [editedStatus, setEditedStatus] = useState(map?.status || "PUBLIC");
 
     if (!isOpen || !map) return null;
 
@@ -21,6 +22,19 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete, onUpdate 
         if (window.confirm(`Are you sure you want to delete the map "${map.mapName}"?`)) {
             onDelete(map.mapName);
             onClose();
+        }
+    };
+
+    const handleStatusChange = async (newStatus) => {
+        try {
+            const updatedMap = {
+                ...map,
+                status: newStatus,
+            };
+            await onUpdate(updatedMap);
+            setEditedStatus(newStatus);
+        } catch (error) {
+            console.error("Error updating status:", error);
         }
     };
 
@@ -62,7 +76,16 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete, onUpdate 
                         onClick={openEditPopup}
                     />
                 </h2>
-                <p><strong>Status:</strong> {isInvalid ? "Pending Approval" : map.status}</p>
+                <p><strong>Status:</strong> {isInvalid ? "Pending Approval" : (
+                    <select
+                        value={editedStatus}
+                        onChange={(e) => handleStatusChange(e.target.value)}
+                        className={styles.statusDropdown}
+                    >
+                        <option value="PUBLIC">Public</option>
+                        <option value="PRIVATE">Private</option>
+                    </select>
+                )}</p>
 
                 {!isInvalid && (
                     <>
@@ -74,7 +97,6 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete, onUpdate 
                             <a href={map.gmaps_url} target="_blank" rel="noopener noreferrer">
                                 Open in Google Maps
                             </a>
-
                         </p>
                     </>
                 )}
