@@ -1,32 +1,19 @@
 import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./CreateMapModal.module.css";
-import HttpService from "../../../scripts/net/HttpService.js";
-import { AuthContext } from "../../AuthContext/AuthContext.jsx";
 
-const MapDetailsModal = ({ isOpen, onClose, onSubmit }) => {
+const MapDetailsModal = ({ isOpen, onClose,addMap}) => {
     const [mapName, setMapName] = useState("");
     const [mapType, setMapType] = useState("");
-    const { username } = useContext(AuthContext);
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-
         const mapDetails = {
             name: mapName,
             type: mapType,
         };
 
-        const httpService = new HttpService();
-        httpService.setAuthenticated();
+        addMap(mapDetails);
 
-        httpService
-            .put(`/protected/my-maps/create?username=${username}`, mapDetails)
-            .then((resp) => {
-                console.log("RESPONSE CREATE: ", resp);
-            });
-
-        onSubmit(mapDetails);
         onClose();
     };
 
@@ -72,7 +59,6 @@ const MapDetailsModal = ({ isOpen, onClose, onSubmit }) => {
 MapDetailsModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired,
 };
 
 export default MapDetailsModal;

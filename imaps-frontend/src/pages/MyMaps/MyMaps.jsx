@@ -4,10 +4,11 @@ import {TilesContainer} from "react-tiles-dnd";
 import MapInfoModal from "../../components/MapInfoModal/MapInfoModal.jsx";
 import MapDetailsModal from "../../components/Modals/CreateMapModal/CreateMapModal.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
-import {AuthContext} from "../../components/AuthContext/AuthContext.jsx";
 import card from "../../assets/card-map.png";
 import Logo from "../../components/Logo/Logo.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
+import {useAppContext} from "../../components/AppContext/AppContext.jsx";
+import config from "../../scripts/net/netconfig.js";
 
 const renderTile = ({data, isDragging}, openMapInfo) => (
     <div style={{padding: "1rem", width: "100%"}}>
@@ -27,13 +28,17 @@ const tileSize = (tile) => ({
     rowSpan: tile.rows,
 });
 
-export default function CreateMaps() {
+export default function MyMaps() {
     const [tiles, setTiles] = useState([]);
     const [allTiles, setAllTiles] = useState([]);
-    const {username} = useContext(AuthContext);
+    const {username} = useAppContext();
     const [selectedMap, setSelectedMap] = useState(null);
     const [isMapInfoModalOpen, setIsMapInfoModalOpen] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+    const[publicMaps,setPublicMaps] = useState([]);
+    const[privateMaps,setPrivateMaps] = useState([])
+    const[pendingMaps,setPendingMaps] = useState([])
 
     const openMapInfoModal = (map) => {
         setSelectedMap(map);
@@ -70,7 +75,7 @@ export default function CreateMaps() {
     const deleteMap = (mapName) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
-        const url = `/protected/my-maps/delete?mapName=${mapName}&username=${username}`;
+        const url = `${config.my_maps.delete}?mapName=${mapName}&username=${username}`;
 
         httpService
             .delete(url)
@@ -84,28 +89,55 @@ export default function CreateMaps() {
             });
     };
 
+    const addMap = (mapDetails) => {
+        const httpService = new HttpService();
+        httpService.setAuthenticated();
+
+        httpService
+            .put(`${config.my_maps.add}?username=${username}`, mapDetails)
+            .then((respMap) => {
+                console.log("RESP NEW MAP: " + respMap)
+                const mapTile = {
+                    mapName: respMap.mapName,
+                    cols: 1,
+                    rows: 1,
+                    status: respMap.mapStatus,
+                    created_at: respMap.createdAt,
+                    modified_at: respMap.modifiedAt,
+                    published_at: respMap.published_at,
+                    gmaps_url: respMap.gmaps_url,
+                    image_url: card,
+                };
+
+                setAllTiles((prevTiles) => [...prevTiles,mapTile])
+                setTiles((prevTiles) => [...prevTiles,mapTile])
+            });
+    }
+
     useEffect(() => {
-        const loadPublicMaps = async () => {
+        const loadMaps = async () => {
             const httpService = new HttpService();
             httpService.setAuthenticated();
-            const resp = await httpService.get(`/protected/my-maps/display?username=${username}`);
 
-            const mapTiles = resp.map((elem) => ({
-                mapName: elem.name,
+            const respMaps = await httpService.get(`${config.my_maps.display}?username=${username}`);
+
+            const mapTiles = respMaps.map((elem) => ({
+                mapName: elem.mapName,
                 cols: 1,
                 rows: 1,
-                status: elem.status,
-                created_at: elem.created_at,
-                modified_at: elem.modified_at,
+                status: elem.mapStatus,
+                created_at: elem.createdAt,
+                modified_at: elem.modifiedAt,
                 published_at: elem.published_at,
                 gmaps_url: elem.gmaps_url,
                 image_url: card,
+                numFavourites: elem.numFavourites
             }));
 
             setTiles(mapTiles);
             setAllTiles(mapTiles);
         };
-        loadPublicMaps();
+        loadMaps();
     }, [username]);
 
     const handleSearch = (e) => {
@@ -113,9 +145,13 @@ export default function CreateMaps() {
         setTiles(allTiles.filter((tile) => tile.mapName.toLowerCase().includes(query)));
     };
 
-    const publicMaps = tiles.filter((tile) => tile.status === "PUBLIC");
-    const privateMaps = tiles.filter((tile) => tile.status === "PRIVATE");
-    const pendingMaps = tiles.filter((tile) => tile.status === "INVALID");
+    useEffect(() => {
+         setPublicMaps(tiles.filter((tile) => tile.status === "PUBLIC"));
+         setPrivateMaps(tiles.filter((tile) => tile.status === "PRIVATE"));
+         setPendingMaps(tiles.filter((tile) => tile.status === "INVALID"));
+    }, [tiles,allTiles]);
+
+
 
     return (
         <div className={styles.container}>
@@ -186,10 +222,7 @@ export default function CreateMaps() {
             <MapDetailsModal
                 isOpen={isCreateModalOpen}
                 onClose={closeCreateModal}
-                onSubmit={(newMap) => {
-                    setTiles((prevTiles) => [...prevTiles, newMap]);
-                    setAllTiles((prevTiles) => [...prevTiles, newMap]);
-                }}
+                addMap={addMap}
             />
         </div>
     );

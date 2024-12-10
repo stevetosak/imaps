@@ -1,18 +1,21 @@
 package internettehnologii.imaps.backendRender.web.controllers;
 
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
+import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.service.impl.JWTService;
 import internettehnologii.imaps.backendRender.web.service.impl.MapUserDetailsService;
-import internettehnologii.imaps.backendRender.web.service.impl.UserService;
+import internettehnologii.imaps.backendRender.web.service.impl.UserServiceImpl;
+import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
+import internettehnologii.imaps.backendRender.web.util.DTO.UserLoginDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/api/auth")
@@ -21,7 +24,7 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
     @Autowired
     private JWTService jwtService;
     @Autowired
@@ -34,21 +37,22 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody IMapsUser user, HttpServletRequest request) {
+    public Map<String, Object> login(@RequestBody UserLoginDTO user) {
         System.out.println(user);
         Map<String, Object> response = new HashMap<>();
-        String token = userService.verify(user);
-        response.put("token", token);
-        response.put("username", user.getUsername());
+
+        try{
+            String token = userService.login(user);
+            response.put("token", token);
+            response.put("username", user.getUsername());
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            response.put("error", e.getMessage());
+        }
+
         return response;
     }
 
-
-    //ZA TESTIRANJE
-    @GetMapping("/list")
-    public List<IMapsUser> showUsers() {
-        return userService.getUsers();
-    }
 
     @GetMapping("/verify")
     public ResponseEntity<Map<String,Object>> authenticateUser(@RequestParam String token) {
@@ -73,5 +77,8 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
 
+
+
     }
+
 }

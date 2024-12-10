@@ -14,7 +14,6 @@ export default function ModalSelectConnections2({shapeInfo,updateModalData,addCo
                     name="selectedPin"
                     value={shapeInfo.selectedPin}
                     onChange={updateModalData}
-                    required
                 >
                     <option value="">Select Connection</option>
                     {availableShapes
@@ -41,5 +40,4 @@ ModalSelectConnections2.propTypes = {
     shapeInfo: PropTypes.object,
     updateModalData: PropTypes.func,
     addConnection: PropTypes.func,
-    availableShapes: PropTypes.arrayOf(MapShape),
 }

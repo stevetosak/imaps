@@ -1,4 +1,4 @@
-package internettehnologii.imaps.backendRender.web.util;
+package internettehnologii.imaps.backendRender.web.util.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

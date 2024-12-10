@@ -2,19 +2,21 @@ package internettehnologii.imaps.backendRender.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
+import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
-import internettehnologii.imaps.backendRender.web.util.SaveMapDTO;
+import internettehnologii.imaps.backendRender.web.service.interfaces.RoomTypeService;
+import internettehnologii.imaps.backendRender.web.service.interfaces.UserService;
+import internettehnologii.imaps.backendRender.web.util.DTO.*;
 import internettehnologii.imaps.backendRender.web.util.Util;
 import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
-import internettehnologii.imaps.backendRender.web.util.FloorDTO;
-import internettehnologii.imaps.backendRender.web.util.MapDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,46 +26,87 @@ import java.util.Map;
 public class MapDrawController {
     private final MapService mapService;
     private final FloorService floorService;
+    private final RoomTypeService roomTypeService;
+    private final UserService userService;
 
 
     @Autowired
-    public MapDrawController(MapService mapService, FloorService floorService) {
+    public MapDrawController(MapService mapService, FloorService floorService, RoomTypeService roomTypeService, UserService userService) {
         this.mapService = mapService;
         this.floorService = floorService;
+        this.roomTypeService = roomTypeService;
+        this.userService = userService;
     }
 
     @GetMapping("/my-maps")
-    public List<IndoorMap> getMapsForUser(@RequestParam String username) {
-        return mapService.getAllMapsForUser(username);
+    public ResponseEntity<List<MapDTO>> getMapsForUser(@RequestParam String username) {
+        try {
+            List<IndoorMap> maps = mapService.getAllMapsForUser(username);
+            List<MapDTO> mapDTOS = maps.stream()
+                    .map(imap -> new MapDTO(imap.getName(),
+                            imap.getMapType(),
+                            imap.getCreatedAt(),
+                            imap.getModifiedAt(),
+                            imap.getStatus().name(),
+                            imap.getFavouriteCount()))
+                    .toList();
+
+            return ResponseEntity.ok().body(mapDTOS);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/favourites")
+    public ResponseEntity<List<MapDTO>> getFavouriteMapsForUser(@RequestParam String username) {
+
+        try{
+            IMapsUser user = userService.getUser(username);
+            List<MapDTO> mapDTOS = user.getFavoriteMaps().stream()
+                    .map(imap -> new MapDTO(imap.getName(),
+                            imap.getMapType(),
+                            imap.getCreatedAt(),
+                            imap.getModifiedAt(),
+                            imap.getStatus().name(),
+                            imap.getFavouriteCount()))
+                    .toList();
+            return ResponseEntity.ok().body(mapDTOS);
+
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @PutMapping("/my-maps/save")
     public ResponseEntity<FloorDTO> updateMapData
-            (@RequestBody SaveMapDTO mapDTO, @RequestParam String username) {
+            (@RequestBody SaveMapDTO saveMapDTO, @RequestParam String username) {
 
-        System.out.println("MAP DTO: " + mapDTO);
+        System.out.println("MAP DTO: " + saveMapDTO);
 
-        Map<String,Object> response = new HashMap<>();
         try {
 
             System.out.println("=================================");
-            System.out.println("MAPDTO: " + mapDTO);
+            System.out.println("MAPDTO: " + saveMapDTO);
             System.out.println("USERNAME:" + username);
-            IndoorMap map = mapService.getMapForUser(username, mapDTO.getMapName());
-            Floor f = floorService.getFloorByNum(mapDTO.getFloorNum(), map);
+            IndoorMap map = mapService.getMapForUser(username, saveMapDTO.getMapName());
+            Floor f = floorService.getFloorByNum(saveMapDTO.getFloorNum(), map);
 
 
             ObjectMapper objectMapper = new ObjectMapper();
-            String roomTypesJson = objectMapper.writeValueAsString(mapDTO.getRoomTypes());
-            JsonMapData jsonMapData = new JsonMapData(mapDTO.getShapes().toString(), roomTypesJson);
+            String roomTypesJson = objectMapper.writeValueAsString(saveMapDTO.getRoomTypes());
+            JsonMapData jsonMapData = new JsonMapData(saveMapDTO.getShapes().toString(), roomTypesJson);
 
             System.out.println("ROOM TYPES JSON : " + roomTypesJson);
             f.setMapData(jsonMapData);
             floorService.updateFloor(f);
 
+            map.setModifiedAt(LocalDateTime.now());
+
             System.out.println("UPDATED FLOOR " + f.getFloorNumber());
 
-            FloorDTO floorDTO = new FloorDTO(f.getFloorNumber(), mapDTO.getMapName(),f.getMapData().getShapeData());
+            FloorDTO floorDTO = new FloorDTO(f.getFloorNumber(), saveMapDTO.getMapName(),f.getMapData().getShapeData());
 
             return ResponseEntity.ok(floorDTO);
         } catch (Exception e) {
@@ -74,14 +117,20 @@ public class MapDrawController {
     }
 
     @PutMapping("/my-maps/create")
-    public ResponseEntity<Map<String,Object>> createMap(@RequestBody MapDTO mapData, @RequestParam String username) {
-        Map<String,Object> response = new HashMap<>();
+    public ResponseEntity<MapDTO> createMap(@RequestBody CreateMapDTO mapData, @RequestParam String username) {
         try{
-            mapService.createMap(mapData.getName(), username);
-            response.put("created",true);
-            return ResponseEntity.ok(response);
+            mapService.createMap(mapData.getName(), mapData.getMapType() , username);
+            IndoorMap map = mapService.getMapForUser(username,mapData.getName());
+            MapDTO mapDTO = new MapDTO(map.getName(),
+                    map.getMapType()
+                    ,map.getCreatedAt(),
+                    map.getModifiedAt(),
+                    map.getStatus().name(),
+                    map.getFavouriteCount());
+            return ResponseEntity.ok(mapDTO);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
@@ -90,9 +139,8 @@ public class MapDrawController {
     @GetMapping("/my-maps/load")
     public ResponseEntity<List<FloorDTO>> loadPersonalMap(@RequestParam String mapName, @RequestParam String username) {
         try{
-            // ovde logikava so servisive refaktor
             IndoorMap map = mapService.getMapForUser(username,mapName);
-            List<Floor> floors = floorService.getAllFloorsForMap(map.getName());
+            List<Floor> floors = map.getFloors();
             return ResponseEntity.ok().body(Util.convertToFloorDTO(floors));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -100,11 +148,36 @@ public class MapDrawController {
         }
     }
 
-    @GetMapping("/floors/load")
-    public ResponseEntity<List<Floor>> loadAllFloors(@RequestParam String mapName) {
+    @PostMapping("/room-types/add")
+    public ResponseEntity<Map<String,Object>> addRoomType(@RequestParam String roomTypeName,
+                                                          @RequestParam String username,
+                                                          @RequestParam String mapName) {
+        try {
+            IndoorMap map = mapService.getMapForUser(username,mapName);
+            roomTypeService.addRoomType(roomTypeName,map);
+            return ResponseEntity.ok(new HashMap<>());
+
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/room-types")
+    public ResponseEntity<List<RoomTypeDTO>> getRoomTypesForMap(@RequestParam String mapName, @RequestParam String username) {
+
+        IndoorMap map = mapService.getMapForUser(username,mapName);
+
+        List<RoomTypeDTO> roomTypeDTOS = map.getRoomTypes().stream().map(r -> new RoomTypeDTO(r.getName())).toList();
+        return ResponseEntity.ok(roomTypeDTOS);
+    }
+
+    @DeleteMapping("/floors/delete")
+    public ResponseEntity<Map<String,Object>> deleteFloor(@RequestParam String mapName,
+                                                          @RequestParam int floorNum) {
         try{
-            List<Floor> floors = floorService.getAllFloorsForMap(mapName);
-            return ResponseEntity.ok(floors);
+            floorService.deleteFloor(floorNum,mapName);
+            return ResponseEntity.ok(new HashMap<>());
         } catch (Exception e){
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -123,24 +196,7 @@ public class MapDrawController {
         }
     }
 
-    @GetMapping("/my-maps/display")
-    public ResponseEntity<List<IndoorMap>> loadPersonalMaps(@RequestParam String username) {
-        //user specific ne samo site so se false;
-        try {
-            List<IndoorMap> maps = mapService.getAllMapsForUser(username);
-            return ResponseEntity.ok().body(maps);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
 
-
-    /*
-    Ne trebit nigde da provervis za null,
-     deka sive repo vrakjaat optional,
-     to go provervis vo service, ako nemat frlas exception.
-     */
     @DeleteMapping("/my-maps/delete")
     public ResponseEntity<Map<String, Object>> deleteMap(
             @RequestParam String mapName,

@@ -1,12 +1,20 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../../components/AuthContext/AuthContext";
+import logo_icon from "../../../assets/logo_icon.png";
+//import { AuthContext } from "../../../components/AuthContext/AuthContext";
 import Logo from "../../../components/Logo/Logo.jsx";
 import Profile from "../../../components/Profile/Profile.jsx";
+import {useAppContext} from "../../../components/AppContext/AppContext.jsx";
 import "./Navbar.css";
 
 function Navbar() {
-    const { isAuthenticated } = useContext(AuthContext);
+  const [click, setClick] = useState(false);
+  const [button, setButton] = useState(true);
+
+  const handleClick = () => setClick(!click);
+  const closeMobileMenu = () => setClick(false);
+
+  const { isAuthenticated } = useAppContext();
 
     return (
         <nav className="modern-navbar">

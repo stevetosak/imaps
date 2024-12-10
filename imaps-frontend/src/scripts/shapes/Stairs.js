@@ -14,7 +14,7 @@ export default class Stairs extends MapNode{
                 y: attrs.position.y,
                 width: attrs.width * attrs.scaleX,
                 height: attrs.height * attrs.scaleY,
-                fill: "rgb(199,190,133)",
+                fill: "rgb(225,213,124)",
                 stroke: "rgb(16,15,15)",
                 strokeWidth: 1,
                 name: "mapObj",
@@ -34,9 +34,6 @@ export default class Stairs extends MapNode{
             description: "",
             selectedPins: []
         };
-
-
-
 
         this.id = id;
         this.eventName = "openStairsModalEvent";
@@ -69,10 +66,11 @@ export default class Stairs extends MapNode{
         this.setAttr("description", this.info.description);
         this.setAttr("floor_num",this.floorNum)
     }
-    connect(node) {
-        const draw = this.floorNum === node.floorNum;
-        super.connect(node,draw);
+    connect(node,toDraw = true) {
+        toDraw = this.floorNum === node.floorNum;
+        super.connect(node,toDraw);
     }
+
 }
 
 Stairs.prototype.className = "Stairs";

@@ -2,8 +2,7 @@ import config from "./netconfig.js";
 
 
 class HttpService {
-    constructor(URL = config.apiBaseUrl, auth = false) {
-      this.baseURL = URL;
+    constructor(auth = false) {
       this.auth = auth;
     }
 
@@ -32,7 +31,7 @@ class HttpService {
         options.body = JSON.stringify(data);
       }
   
-      const response = await fetch(`${this.baseURL}${endpoint}`, options);
+      const response = await fetch(`${endpoint}`, options);
       
       if (!response.ok) {
         switch (response.status) {

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./MapInfoModal.module.css";
+import {replace, useNavigate} from "react-router-dom";
 import edit_icon from "../../assets/edit_icon_black.png";
 
 export default function MapInfoModal({ isOpen, onClose, map, onDelete, onUpdate }) {
@@ -7,15 +8,16 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete, onUpdate 
     const [editedName, setEditedName] = useState(map?.mapName || "");
     const [editedGmapsUrl, setEditedGmapsUrl] = useState(map?.gmaps_url || "");
     const [editedStatus, setEditedStatus] = useState(map?.status || "PUBLIC");
+    const navigate = useNavigate();
 
     if (!isOpen || !map) return null;
 
     const handleView = () => {
-        window.location.href = `/myMaps/${map.mapName}/View`;
+        navigate(`/myMaps/${map.mapName}/View`)
     };
 
     const handleEdit = () => {
-        window.location.href = `/myMaps/${map.mapName}/Draw`;
+        navigate(`/myMaps/${map.mapName}/Draw`)
     };
 
     const handleDelete = () => {

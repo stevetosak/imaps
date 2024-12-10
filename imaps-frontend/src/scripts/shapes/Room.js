@@ -5,8 +5,8 @@ export default class Room extends MapShape {
   constructor(attrs,id){
 
       if(!attrs.fromLoad){
-          attrs.width *= 8;
-          attrs.height *= 4;
+          attrs.width *= 12;
+          attrs.height *= 8;
       }
 
       console.log(attrs.position,"hehe")
@@ -16,7 +16,7 @@ export default class Room extends MapShape {
         y: attrs.position.y,
         width: attrs.width * attrs.scaleX,
         height: attrs.height * attrs.scaleY,
-        fill: "rgba(54,177,243,0.91)",
+        fill: "rgb(86,168,253)",
         stroke: "grey",
         strokeWidth: 1,
         name: "mapObj",

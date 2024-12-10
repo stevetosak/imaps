@@ -1,9 +1,7 @@
 package internettehnologii.imaps.backendRender.web.service.impl;
 
+import internettehnologii.imaps.backendRender.web.entities.*;
 import internettehnologii.imaps.backendRender.web.exceptions.MapNameTakenException;
-import internettehnologii.imaps.backendRender.web.entities.Floor;
-import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
-import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.exceptions.MapNotFoundException;
 import internettehnologii.imaps.backendRender.web.repo.FloorRepository;
 import internettehnologii.imaps.backendRender.web.repo.MapRepository;
@@ -31,7 +29,7 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public void createMap(String mapName, String username) {
+    public void createMap(String mapName,String mapType, String username) {
 
         Optional<IMapsUser> user = userRepository.findUserByName(username);
 
@@ -66,11 +64,6 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public IndoorMap getMap(String mapName, String username) {
-        return mapRepository.findMapByName(mapName).orElseThrow(() -> new MapNotFoundException(mapName));
-    }
-
-    @Override
     public List<IndoorMap> getAllMapsForUser(String username) {
         IMapsUser user = userRepository.findUserByName(username).orElseThrow(() -> new UsernameNotFoundException(username));
         Optional<List<IndoorMap>> indoorMaps = mapRepository.findAllMapsForUser(user.getId());
@@ -89,6 +82,16 @@ public class MapServiceImpl implements MapService {
         IndoorMap map = mapRepository.findMapByName(mapName).orElseThrow(() -> new MapNotFoundException(mapName));
 
         return mapRepository.getMapForUser(user, map.getId()).orElseThrow(() -> new MapNotFoundException("No map found for user: " + username));
+    }
+
+    @Override
+    public IndoorMap getPublicMapByName(String mapName) {
+        return mapRepository.getIndoorMapByNameAndStatus(mapName, MAP_STATUS.PUBLIC).orElseThrow(() -> new MapNotFoundException(mapName));
+    }
+
+    @Override
+    public IndoorMap getMapByName(String mapName) {
+       return mapRepository.getIndoorMapByName(mapName).orElseThrow(() -> new MapNotFoundException(mapName));
     }
 
 

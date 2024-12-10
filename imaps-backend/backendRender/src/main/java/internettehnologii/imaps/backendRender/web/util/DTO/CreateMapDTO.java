@@ -1,4 +1,4 @@
-package internettehnologii.imaps.backendRender.web.util;
+package internettehnologii.imaps.backendRender.web.util.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class MapDTO {
+public class CreateMapDTO {
     private String name;
-    private String type;
-
+    private String mapType;
 }

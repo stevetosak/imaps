@@ -8,11 +8,8 @@ import java.util.List;
 public interface FloorService {
     void addFloor(int num, String mapName);
     void updateFloor(Floor floor);
-    void deleteFloor(Floor floor);
+    void deleteFloor(int floorNum, String mapName);
     List<Floor> getAllFloorsForMap(String mapName);
     Floor getFloorByNum(Integer floorNum, IndoorMap indoorMap);
-    Floor loadFirstAvailableFloor(String mapName);
     List<Floor> getAllPublicFloors(String mapName);
-    void save(int floorNum, IndoorMap map);
-
 }

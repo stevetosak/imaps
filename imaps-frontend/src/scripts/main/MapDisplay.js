@@ -4,6 +4,7 @@ import HttpService from "../net/HttpService.js";
 import {zoomStage} from "../util/zoomStage.js";
 import {addEventHandling} from "../util/addEventHandling.js";
 import triggerNavigate from "../util/triggerNavigate.js";
+import config from "../net/netconfig.js";
 
 export class MapDisplay {
     constructor(containerId, floorNum) {
@@ -29,13 +30,13 @@ export class MapDisplay {
         this.floorNum = floorNum;
 
         this.navArrow = new Konva.Arrow({
-            stroke: "#DC143C",
+            stroke: "#bb0000",
             strokeWidth: 3,
-            dash: [10, 7],
+            dash: [12, 7],
             lineCap: "round",
-            pointerLength: 4,
+            tension: 10,
+            pointerLength: 2,
             pointerWidth: 3,
-            fill: "red",
         });
 
         this.navArrow.cache();
@@ -77,42 +78,6 @@ export class MapDisplay {
     }
 
 
-    // ne se koristit ova pojke
-    /**
-     *
-     * @param mapName
-     * @param floorNum
-     * @param username
-     * @param isPrivate
-     * @returns {Promise<void>}
-     * @deprecated
-     */
-    async loadMap(mapName, floorNum, username, isPrivate) {
-        const httpService = new HttpService();
-        floorNum = floorNum == null ? 0 : floorNum;
-        let resp;
-        try {
-            if (!isPrivate) {
-                resp = await httpService.get(`/public/map-data?mapName=${mapName}&floorNum=${floorNum}`);
-            } else {
-                httpService.setAuthenticated();
-                resp = await httpService.get(`/protected/map-data?mapName=${mapName}&floorNum=${floorNum}&username=${username}`);
-            }
-
-            console.log(resp, "rsp view");
-            if (resp.mapData != null) {
-                this.deserializeMap(resp.mapData);
-                this.shapes.forEach((shape) => {
-                    this.mainLayer.add(shape);
-                });
-                this.displayRoomNames();
-                this.initializeRoomTypes();
-            }
-
-        } catch (e) {
-            throw new Error("Cant load map: " + e)
-        }
-    }
 
     loadMapN(floorData) {
         if (floorData == null || floorData === "") return;
@@ -132,19 +97,25 @@ export class MapDisplay {
 
 
     drawRouteNEW(nodes, offset = 0) {
+
         this.clearRoute();
         console.log("====PATH====");
         nodes.forEach((node) => console.log("NODE", node));
 
         let idx = offset;
         let buff = [nodes[idx].coordinates.x, nodes[idx].coordinates.y];
+
+
         ++idx;
 
         console.log("INIT BUFFER", buff);
         console.log("INIT IDX", idx);
 
         const drawNextSegment = () => {
-            if (idx >= nodes.length) return;
+
+            if (idx >= nodes.length){
+                return;
+            }
 
             const currentNode = nodes[idx - 1];
             const nextNode = nodes[idx];
@@ -155,12 +126,13 @@ export class MapDisplay {
                 return;
             }
 
+
             const startX = currentNode.coordinates.x;
             const startY = currentNode.coordinates.y;
             const endX = nextNode.coordinates.x;
             const endY = nextNode.coordinates.y;
 
-            const numSegments = 15;
+            const numSegments = 12;
 
             const deltaX = (endX - startX) / numSegments;
             const deltaY = (endY - startY) / numSegments;
@@ -171,7 +143,7 @@ export class MapDisplay {
 
                 buff.push(segmentX, segmentY);
 
-                let line = this.navArrow.clone({points: [...buff]});
+                let line = this.navArrow.clone({ points: [...buff] });
                 this.routeLayer.add(line);
                 this.routeLayer.draw();
 
@@ -195,6 +167,7 @@ export class MapDisplay {
     }
 
 
+
     initializeRoomTypes() {
         this.roomTypes = this.shapes
             .filter((shape) => shape.class === "Room" && shape.info.type !== "")
@@ -206,7 +179,7 @@ export class MapDisplay {
     }
 
 
-    getShapeByName(name) {
+    getShapeByName(name){
         return this.shapes.find(shape => shape.info.name === name)
     }
 

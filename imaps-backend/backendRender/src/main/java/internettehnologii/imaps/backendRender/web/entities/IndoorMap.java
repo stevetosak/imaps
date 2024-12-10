@@ -4,6 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter @Setter
@@ -31,25 +35,36 @@ public class IndoorMap {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
+    @Column(name = "map_type")
+    private String mapType;
+
     @Column(name = "image_url")
     private String imageUrl;
-
 
     @ManyToOne
     @JoinColumn(name = "usr_id",referencedColumnName = "id", nullable = false)
     private IMapsUser user;
+
+    @OneToMany(mappedBy = "indoorMap")
+    private List<RoomType> roomTypes = new ArrayList<>();
+    @OneToMany(mappedBy = "indoorMap")
+    private List<Floor> floors = new ArrayList<>();
+    @ManyToMany(mappedBy = "favoriteMaps")
+    private Set<IMapsUser> favoritedBy = new HashSet<>();
 
     @PrePersist
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();
         this.status = MAP_STATUS.PRIVATE;
     }
+
+    public int getFavouriteCount(){
+        return this.favoritedBy.size();
+    }
+
     @PreUpdate
     protected void onUpdate(){
         this.modifiedAt = LocalDateTime.now();
     }
-
-
-
 
 }

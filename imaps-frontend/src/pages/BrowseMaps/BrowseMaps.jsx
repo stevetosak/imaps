@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import HttpService from "../../scripts/net/HttpService.js";
 import Logo from "../../components/Logo/Logo.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
+import config from "../../scripts/net/netconfig.js";
 
 let loadedTiles = [];
 
@@ -47,19 +48,20 @@ export default function Maps() {
     const [searchTerm, setSearchTerm] = useState("");
     const [tiles, setTiles] = useState([]);
 
+export default function BrowseMaps() {
+  useEffect(() => {
     const loadPublicMaps = async () => {
-        const httpService = new HttpService();
-        const resp = await httpService.get("/public/maps/display");
-        console.log("RESPONSE MAPS PUBLIC", resp);
+      const httpService = new HttpService();
+      const resp = await httpService.get(config.view_maps.display);
+      console.log("RESPONSE MAPS PUBLIC", resp);
 
-        loadedTiles = resp.map((elem) => ({
-            text: elem.name,
-            cols: 1,
-            rows: 1,
-            isFavorite: false,
-        }));
+      const mapTiles = resp.map((elem) => ({
+        text: elem.mapName,
+        cols: 1,
+        rows: 1,
+      }));
 
-        sortTiles(loadedTiles); 
+        sortTiles(loadedTiles);
         setTiles([...loadedTiles]);
     };
 
@@ -85,7 +87,7 @@ export default function Maps() {
         const filteredTiles = loadedTiles.filter((tile) =>
             tile.text.toLowerCase().includes(value)
         );
-        sortTiles(filteredTiles); 
+        sortTiles(filteredTiles);
         setTiles(filteredTiles);
     };
 
