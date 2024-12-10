@@ -40,6 +40,8 @@ public class IndoorMap {
 
     @Column(name = "image_url")
     private String imageUrl;
+    @Column(name = "is_published")
+    private Boolean isPublished;
 
     @ManyToOne
     @JoinColumn(name = "usr_id",referencedColumnName = "id", nullable = false)
