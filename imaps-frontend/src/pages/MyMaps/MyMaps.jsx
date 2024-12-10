@@ -58,6 +58,20 @@ export default function MyMaps() {
         setIsCreateModalOpen(false);
     };
 
+    const handleUpdate = async (updatedMap) => {
+        // try {
+        //     await fetch(`/api/maps/${updatedMap.id}`, {
+        //         method: "PUT",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify(updatedMap),
+        //     });
+        //     console.log("Map updated successfully:", updatedMap);
+        // } catch (error) {
+        //     console.error("Error updating map:", error);
+        // }
+    };
+
+
     const deleteMap = (mapName) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
@@ -134,7 +148,7 @@ export default function MyMaps() {
     useEffect(() => {
          setPublicMaps(tiles.filter((tile) => tile.status === "PUBLIC"));
          setPrivateMaps(tiles.filter((tile) => tile.status === "PRIVATE"));
-         setPendingMaps(tiles.filter((tile) => tile.status === "PENDING"));
+         setPendingMaps(tiles.filter((tile) => tile.status === "INVALID"));
     }, [tiles,allTiles]);
 
 
@@ -202,6 +216,7 @@ export default function MyMaps() {
                 onClose={closeMapInfoModal}
                 map={selectedMap}
                 onDelete={deleteMap}
+                onUpdate={handleUpdate}
             />
 
             <MapDetailsModal

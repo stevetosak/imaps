@@ -244,22 +244,29 @@ const MapView = ({isPrivate}) => {
             <RoomInfoPanel isOpen={isPanelOpen} onClose={closePanel} floor={searchParams.get("floor")}
                            room={selectedRoom} handleDirectionsSubmit={handleDirectionsSubmit}/>
             <div className={styles.toolbar}>
-                <div className={styles.left}>
-                    <Logo></Logo>
-                    <h1>{mapName}</h1>
+                <div className={styles.toolbarContainer}>
+                    <div className={styles.logoContainer}>
+                        <Logo position="relative"/>
+                    </div>
+                    <h1 className={styles.mapTitle}>{mapName}</h1>
                     {mapLoaded && app && (
-                        <>
-                            <SearchBar map={app} handleDirectionsSubmit={handleDirectionsSubmit}
-                                       isPanelOpen={isPanelOpen} setSelectedRoom={setSelectedRoom}
-                                       availableShapes={shapes}/>
+                        <div className={styles.searchFilterContainer}>
+                            <SearchBar
+                                map={app}
+                                handleDirectionsSubmit={handleDirectionsSubmit}
+                                isPanelOpen={isPanelOpen}
+                                setSelectedRoom={setSelectedRoom}
+                                availableShapes={shapes}
+                            />
                             <FilterBar map={app} roomTypes={roomTypes}/>
-                        </>
+                        </div>
                     )}
-
-
+                    <div className={styles.profileContainer}>
+                        <Profile position="relative"/>
+                    </div>
                 </div>
-                <Profile/>
             </div>
+
             <div className={styles.floorSelectorContainer}>
                 <div className={styles.floorSelector}>
                     <img src={floorIcon} alt="Floor Icon" className={styles.floorIcon}/>
