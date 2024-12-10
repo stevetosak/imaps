@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import BrowseMaps from "./pages/BrowseMaps/BrowseMaps.jsx";
 import LoginPage from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
@@ -24,33 +24,33 @@ import {AdminPage} from "./pages/AdminPage/AdminPage.jsx";
 
 function App() {
 
-  return (
+    return (
 
-      <AppProvider>
-        <Router>
-          <Routes>
+        <AppProvider>
+            <Router>
+                <Routes>
 
-              <Route element={<ProtectedRoute />}>
-                <Route path="/myMaps/:mapName/Draw" element={<Draw />} />
-                <Route path="/myMaps" element={<MyMaps />} />
-                <Route path="/myMaps/:mapName/View" element={<MapView isPrivate={true} />} />
-                  <Route path="/admin" element={<AdminPage/>}></Route>
-              </Route>
-            <Route path="/" element={<IMaps />} />
-            <Route path="/Maps/:mapName/View" element={<MapView isPrivate={false}/>} />
-            <Route path="/Maps" element={<BrowseMaps />} />
-
-
-            <Route path="/Login" element={<LoginPage />} />
-            <Route path="/Signup" element={<Signup />} />
-
-            <Route path="*" element={<Error />} />
-          </Routes>
-        </Router>
-      </AppProvider>
+                    <Route element={<ProtectedRoute/>}>
+                        <Route path="/myMaps/:mapName/Draw" element={<Draw/>}/>
+                        <Route path="/myMaps" element={<MyMaps/>}/>
+                        <Route path="/myMaps/:mapName/View" element={<MapView isPrivate={true}/>}/>
+                        <Route path="/Admin" element={<AdminPage/>}/>
+                    </Route>
+                    <Route path="/" element={<IMaps/>}/>
+                    <Route path="/Maps/:mapName/View" element={<MapView isPrivate={false}/>}/>
+                    <Route path="/Maps" element={<BrowseMaps/>}/>
 
 
-  );
+                    <Route path="/Login" element={<LoginPage/>}/>
+                    <Route path="/Signup" element={<Signup/>}/>
+
+                    <Route path="*" element={<Error/>}/>
+                </Routes>
+            </Router>
+        </AppProvider>
+
+
+    );
 }
 
 export default App;
