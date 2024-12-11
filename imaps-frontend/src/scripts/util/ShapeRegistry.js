@@ -73,7 +73,7 @@ class ShapeRegistry {
             }
         } else {
            Object.keys(this.store.floors).forEach(floorNumber => {
-               const floor =  this.store.floors[floorNumber];
+               const floor = this.store.floors[floorNumber];
                if (Array.isArray(floor)) {
                    floor.forEach(shape => shape.destroy());
                    this.store.floors[floorNumber] = [];
@@ -130,9 +130,16 @@ class ShapeRegistry {
         if(node1.floorNum === node2.floorNum)
             node1.removeConnectionLine(node2);
 
+        //node1.removeConnection(node2);
+
         Object.values(this.store.floors).flat().filter(s => s.info.name === from || s.info.name === to)
             .forEach(s => {
-                s.info.selectedPins = s.info.selectedPins.filter(pin => pin !== from && pin !== to);
+                if(s.info.name  === from){
+                    s.info.selectedPins = s.info.selectedPins.filter(pin =>  pin !== to);
+                } else {
+                    s.info.selectedPins = s.info.selectedPins.filter(pin =>  pin !== from);
+                }
+
             });
         console.log("Remove");
     }

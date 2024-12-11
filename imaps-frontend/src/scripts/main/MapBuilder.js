@@ -542,15 +542,7 @@ export class MapBuilder {
         return this.getShapeInfoByType("Entrance");
     }
 
-    //vrakjat info
-    getConnections(includeStairs = false) {
-        const pins = this.getShapeInfoByType("InfoPin");
-        const entrances = this.getShapeInfoByType("Entrance");
-        const stairs = this.getShapeInfoByType("Stairs");
-        return [...pins, ...entrances];
-    }
 
-    //todo ova so info zemanje shapes vo dr klasas
 
     getShapeInfoByType(type) {
         return ShapeRegistry.getShapes(this.floorNum).filter((shape) => shape.className === type).map((shape) => shape.info);
@@ -644,19 +636,6 @@ export class MapBuilder {
                 // na destroy trebit events da sa trgnat
                 addEventHandling(loadedShape, this, "dblclick");
             });
-
-            //load room types
-            //vo baza trebit da sa cuvaat room types za sekoja mapa
-
-            // let roomTypesParsed = JSON.parse(data.roomTypes);
-            // console.log("TYPE OF PARSE " + typeof roomTypesParsed)
-            // JSON.parse(roomTypesParsed).forEach(type => {
-            //   this.roomTypes.push(type);
-            // })
-            //
-            // console.log("room types arr loaded: " + this.roomTypes)
-
-            // draw connections
             let nodes = ShapeRegistry.getShapes(this.floorNum).filter((shape) => shape.className === "InfoPin" || shape.className === "Entrance" || shape.className === "Stairs");
             nodes.forEach((pin) => {
                 let connectedPins = pin.info.selectedPins;

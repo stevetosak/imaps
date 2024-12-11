@@ -10,8 +10,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<IMapsUser, Long> {
 
-    // za da testiras queries, kaj so imat specijalen karakter primer @, moras vo navodnici da klajs.
-
     @Query(nativeQuery = true,
             value = "SELECT * FROM users u WHERE email= :usremail LIMIT 1")
     Optional<IMapsUser> findUserByEmail(String usremail);
@@ -26,5 +24,4 @@ public interface UserRepository extends JpaRepository<IMapsUser, Long> {
     @Query(nativeQuery = true,
     value = "SELECT * FROM users u WHERE u.id= ?1")
     Optional<IMapsUser> getUserById(Long usrid);
-
 }

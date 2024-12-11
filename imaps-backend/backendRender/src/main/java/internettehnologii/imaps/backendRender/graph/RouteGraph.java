@@ -24,6 +24,8 @@ public class RouteGraph {
                 MapNode connectedNode = nameToNodeMap.get(connectionName);
                 if (connectedNode != null) {
                     addEdge(mapNode, connectedNode);
+                }else {
+                    System.out.println("CANT ADD EDGE+========== " + mapNode.getName());
                 }
             }
         }
@@ -48,6 +50,8 @@ public class RouteGraph {
 
         if (sourceNode == null || targetNode == null) {
             System.out.println(this.toString());
+            System.out.println("SOURCE NODE FROM MAP " + sourceNode);
+            System.out.println("TARGET NODE FROM MAP " + targetNode);
             throw new IllegalArgumentException("Source or target node not found. SOURCE: " + source + " TARGET: " + target);
         }
 
@@ -137,6 +141,7 @@ public class RouteGraph {
             }
         }
         return null;
+        //throw new IllegalArgumentException("Cant find room connected to entrance: " + roomName);
     }
 
 
