@@ -3,6 +3,7 @@
   display: flex;
   justify-content: center;
   margin: 0 auto;
+  z-index: 105;
   max-width: 600px;
   width: 100%;
   padding: 10px;
@@ -35,24 +36,31 @@
 }
 
 .dropdown {
-  position: absolute;
+  position: absolute; /* Position absolute to detach from wrapper flow */
+  top: 100%; /* Place below the search bar */
+  left: 0;
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 5px;
-  width: calc(100% - 20px);
-  max-height: 150px;
+  width: 100%; /* Match the search bar width */
+  max-height: 200px;
   overflow-y: auto;
-  z-index: 100;
+  z-index: 9999; /* Highest level to ensure it's above everything */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-  .dropdownItem {
+
+.dropdownItem {
   padding: 10px;
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dropdownItem:hover {
-  background-color: #f0f0f0;
+  background-color: #007bff; /* Highlight color */
+  color: white; /* Ensure text is readable */
 }
+
 
 .buttons {
   display: flex;

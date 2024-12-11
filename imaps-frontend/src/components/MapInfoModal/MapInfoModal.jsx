@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import styles from "./MapInfoModal.module.css";
-import {replace, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import edit_icon from "../../assets/edit_icon_black.png";
 
-export default function MapInfoModal({ isOpen, onClose, map, onDelete, onUpdate }) {
+export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate, onPublish}) {
     const [isEditPopupOpen, setEditPopupOpen] = useState(false);
     const [editedName, setEditedName] = useState(map?.mapName || "");
     const [editedGmapsUrl, setEditedGmapsUrl] = useState(map?.gmaps_url || "");
-    const [editedStatus, setEditedStatus] = useState(map?.status || "PUBLIC");
     const navigate = useNavigate();
 
     if (!isOpen || !map) return null;
@@ -26,21 +25,6 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete, onUpdate 
             onClose();
         }
     };
-
-    const handleStatusChange = async (newStatus) => {
-        try {
-            const updatedMap = {
-                ...map,
-                status: newStatus,
-            };
-            await onUpdate(updatedMap);
-            setEditedStatus(newStatus);
-        } catch (error) {
-            console.error("Error updating status:", error);
-        }
-    };
-
-    const isInvalid = map.status === "INVALID";
 
     const openEditPopup = () => {
         setEditPopupOpen(true);
@@ -65,10 +49,19 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete, onUpdate 
         }
     };
 
+    const handlePublish = async () => {
+        try {
+            await onPublish(map.mapName);
+            alert("Map published successfully!");
+        } catch (error) {
+            console.error("Error publishing map:", error);
+        }
+    };
+
     return (
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                <img src={map.image_url} alt="Map Thumbnail" className={styles.mapImage} />
+                <img src={map.image_url} alt="Map Thumbnail" className={styles.mapImage}/>
                 <h2 className={styles.title}>
                     {map.mapName}
                     <img
@@ -78,41 +71,35 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete, onUpdate 
                         onClick={openEditPopup}
                     />
                 </h2>
-                <p><strong>Status:</strong> {isInvalid ? "Pending Approval" : (
-                    <select
-                        value={editedStatus}
-                        onChange={(e) => handleStatusChange(e.target.value)}
-                        className={styles.statusDropdown}
-                    >
-                        <option value="PUBLIC">Public</option>
-                        <option value="PRIVATE">Private</option>
-                    </select>
-                )}</p>
+                <p><strong>Status:</strong> {map.status}</p>
 
-                {!isInvalid && (
-                    <>
-                        <p><strong>Created At:</strong> {new Date(map.created_at).toLocaleString()}</p>
-                        <p><strong>Modified At:</strong> {new Date(map.modified_at).toLocaleString()}</p>
-                        <p><strong>Published At:</strong> {map.published_at ? new Date(map.published_at).toLocaleString() : "Not published yet"}</p>
-                        <p>
-                            <strong>Google Maps URL:</strong>
-                            <a href={map.gmaps_url} target="_blank" rel="noopener noreferrer">
-                                Open in Google Maps
-                            </a>
-                        </p>
-                    </>
-                )}
+                <p><strong>Created At:</strong> {new Date(map.created_at).toLocaleString()}</p>
+                <p><strong>Modified At:</strong> {new Date(map.modified_at).toLocaleString()}</p>
+                <p><strong>Published
+                    At:</strong> {map.published_at ? new Date(map.published_at).toLocaleString() : "Not published yet"}
+                </p>
+                <p>
+                    <strong>Google Maps URL:</strong>
+                    <a href={map.gmaps_url} target="_blank" rel="noopener noreferrer">
+                        Open in Google Maps
+                    </a>
+                </p>
 
                 <div className={styles.buttonContainer}>
-                    <button className={styles.viewButton} onClick={handleView} disabled={isInvalid}>
+                    <button className={styles.viewButton} onClick={handleView}>
                         View
                     </button>
-                    <button className={styles.editButton} onClick={handleEdit} disabled={isInvalid}>
+                    <button className={styles.editButton} onClick={handleEdit}>
                         Edit
                     </button>
                     <button className={styles.deleteButton} onClick={handleDelete}>
                         Delete
                     </button>
+                    {!map.is_published && (
+                        <button className={styles.publishButton} onClick={handlePublish}>
+                            Publish
+                        </button>
+                    )}
                 </div>
                 <button className={styles.closeButton} onClick={onClose}>
                     Close
