@@ -78,19 +78,31 @@ $bg-height: 50px;
 }
 
 .hero-container h1 {
-  color: #752b30;
-  font-size: 100px;
-  margin-top: -100px;
   font-family: exo, sans-serif;
-  text-transform: uppercase;
-  text-shadow: 1px 1px 0px #fefae0,
-  1px 10px 5px rgba(16, 16, 16, 0.5),
-  1px 15px 10px rgba(16, 16, 16, 0.4),
-  1px 20px 30px rgba(16, 16, 16, 0.3),
-  1px 25px 50px rgba(16, 16, 16, 0.2);
+
+
+  background: linear-gradient(
+                  90deg,
+                  #9a2020 0%,
+                  #3b3131 25%,
+                  #af2525 50%,
+                  #443a3a 75%,
+                  #8d1010 100%
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 3px 2px 10px rgba(0, 0, 0, 0.5);
+
+  font-size: 6em;
+
+
+
+
 }
 .hero-container h2{
   font-family: exo, sans-serif;
+  color: #1c1c1c;
 }
 
 .hero-container > p {

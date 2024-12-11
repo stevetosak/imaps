@@ -77,9 +77,9 @@ const MapView = ({isPrivate}) => {
                 let url;
                 if(isPrivate){
                     httpService.setAuthenticated();
-                    url = `${config.view_maps.load(true)}?mapName=${mapName}&floorNum=${floorNum}&username=${username}`
+                    url = `${config.view_maps.load(true)}?mapName=${mapName}&username=${username}`
                 } else {
-                    url = `${config.view_maps.load(false)}?mapName=${mapName}&floorNum=${floorNum}`
+                    url = `${config.view_maps.load(false)}?mapName=${mapName}`
                 }
 
                 return httpService.get(url);

@@ -147,9 +147,9 @@ export default function MyMaps() {
     };
 
     useEffect(() => {
-         setPublicMaps(tiles.filter((tile) => tile.status === "PUBLIC" && tile.is_published));
+         setPublicMaps(tiles.filter((tile) => tile.status === "PUBLIC"));
          setPrivateMaps(tiles.filter((tile) => tile.status === "PRIVATE"));
-         setPendingMaps(tiles.filter((tile) => (tile.status === "INVALID")));
+         setPendingMaps(tiles.filter((tile) => tile.status === "INVALID"));
     }, [tiles,allTiles]);
 
 

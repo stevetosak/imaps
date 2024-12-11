@@ -31,7 +31,7 @@
   font-weight: 700;
   color: #4a4a4a;
   margin: 0;
-  font-family: "Roboto", sans-serif;
+  font-family: "exo", sans-serif;
 }
 
 .navbar-right {
@@ -41,7 +41,7 @@
 }
 
 .navbar-btn {
-  padding: 0.4rem 1rem;
+  padding: 0.4rem 1.5rem;
   font-size: 0.9rem;
   border: 2px solid transparent;
   border-radius: 20px;
@@ -49,23 +49,25 @@
   color: #ffffff;
   font-weight: 500;
   transition: all 0.3s ease-in-out;
-  font-family: "Roboto", sans-serif;
+  font-family: "exo", sans-serif;
   cursor: pointer;
+  margin-left: 4em;
+  margin-right: 1em;
 }
 
 .navbar-login {
-  background-color: #6c757d;
-  border: 2px solid #6c757d;
+  background-color: #252627;
+  border: 2px solid #3f3232;
 }
 
 .navbar-login:hover {
   background-color: #ffffff;
-  color: #6c757d;
-  border: 2px solid #6c757d;
+  color: #212121;
+  border: 1px solid rgba(19, 18, 18, 0.82);
 }
 
 .navbar-signup {
-  background-color: #343a40;
+  background-color: #252627;
   color: #ffffff;
   border: 2px solid #343a40;
 }

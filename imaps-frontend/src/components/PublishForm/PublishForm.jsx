@@ -2,14 +2,14 @@ import React, {useEffect, useState} from 'react';
 import styles from './PublishForm.module.css';
 import log from "eslint-plugin-react/lib/util/log.js";
 
-const PublishForm = ({ isAdmin = false, formData, onSubmit, onCancel,onApprove,onDeny}) => {
+const PublishForm = ({ isAdmin = false, formData, onSubmit, onCancel,onApprove,onDeny,mapName}) => {
     const [state, setState] = useState(isAdmin ? 'viewing' : 'writing');
     const [form, setForm] = useState( formData || {
         id: -1,
         name: '',
-        lastName: '123',
+        lastName: '',
         mapName: '',
-        mapType: 'Hospital',
+        mapType: 'Other',
         googleMapsUrl: '',
     });
     const [errors, setErrors] = useState({});
@@ -22,16 +22,11 @@ const PublishForm = ({ isAdmin = false, formData, onSubmit, onCancel,onApprove,o
         setErrors((prev) => ({ ...prev, [name]: '' }));
     };
 
-    // useEffect(() => {
-    //     console.log("FORM DATA LOAD: " + formData)
-    //     setForm(formData)
-    // }, []);
-
 
 
     const validateForm = () => {
         const newErrors = {};
-        if (!form.mapName.trim()) newErrors.mapName = 'Map Name is required.';
+        // if (!form.mapName.trim()) newErrors.mapName = 'Map Name is required.';
         if (!form.name.trim()) newErrors.name = 'Name is required.';
         if (!form.lastName.trim()) newErrors.lastName = 'Last Name is required.';
         if (!form.googleMapsUrl.trim()) newErrors.googleMapsUrl = 'Google Maps URL is required.';
@@ -48,7 +43,7 @@ const PublishForm = ({ isAdmin = false, formData, onSubmit, onCancel,onApprove,o
         if (state === 'writing') {
             console.log("FORM DATA" + JSON.stringify(form))
             onSubmit(form);
-            setState('viewing');
+            //setState('viewing');
         }
     };
 
@@ -59,9 +54,8 @@ const PublishForm = ({ isAdmin = false, formData, onSubmit, onCancel,onApprove,o
                 {state === 'writing' ? (
                     <form>
                         <div>
-                            <label>Map Name:</label>
                             <input
-                                type="text"
+                                type="hidden"
                                 name="mapName"
                                 value={form.mapName}
                                 onChange={handleChange}

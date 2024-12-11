@@ -18,7 +18,7 @@ public class PublishRequest {
     private String gMapsUrl;
     @Column(name = "map_type")
     private String mapType;
-    private boolean resolved = false;
+    private boolean resolved;
 
     @ManyToOne
     @JoinColumn(name = "user_id",referencedColumnName = "id")
@@ -35,7 +35,23 @@ public class PublishRequest {
         this.mapType = mapType;
 
     }
-    public PublishRequest() {}
+    public PublishRequest() {
+        this.id = -1;
+        this.name = "";
+        this.lastName = "";
+        this.gMapsUrl = "";
+        this.mapType = "";
+        this.resolved = false;
+        this.map = new IndoorMap();
+    }
+
+    public PublishRequest(int id, String name, String lastName, String googleMapsUrl, String mapType) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.gMapsUrl = googleMapsUrl;
+        this.mapType = mapType;
+    }
 
     @Override
     public String toString() {

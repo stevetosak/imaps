@@ -11,7 +11,8 @@ const config = {
         add: `${API_PROTECTED}/my-maps/create`,
         load: `${API_PROTECTED}/my-maps/load`,
         delete: `${API_PROTECTED}/my-maps/delete`,
-        publish: `${API_PROTECTED}/publish/add`
+        publish: `${API_PROTECTED}/publish/add`,
+        publish_get: `${API_PROTECTED}/publish/get`,
     },
     room_types: {
         display: (auth) => {
