@@ -11,6 +11,7 @@ const config = {
         add: `${API_PROTECTED}/my-maps/create`,
         load: `${API_PROTECTED}/my-maps/load`,
         delete: `${API_PROTECTED}/my-maps/delete`,
+        publish: `${API_PROTECTED}/publish/add`
     },
     room_types: {
         display: (auth) => {
@@ -41,6 +42,12 @@ const config = {
         register: `${API_AUTH}/register`,
         verify: `${API_AUTH}/verify`
 
+    },
+    admin:{
+        display: `${API_BASE_URL}/admin`,
+        load_pr: `${API_BASE_URL}/admin/load-pr`,
+        approve_pr: `${API_BASE_URL}/admin/pr/approve`,
+        deny_pr: `${API_BASE_URL}/admin/pr/deny`
     }
 };
 

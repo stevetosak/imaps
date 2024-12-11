@@ -1,6 +1,7 @@
 package internettehnologii.imaps.backendRender.web.service.interfaces;
 
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
+import internettehnologii.imaps.backendRender.web.entities.MAP_STATUS;
 import internettehnologii.imaps.backendRender.web.entities.RoomType;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public interface MapService {
     IndoorMap getMapForUser(String username, String mapName);
     IndoorMap getPublicMapByName(String mapName);
     IndoorMap getMapByName(String mapName);
+    List<IndoorMap> findByStatus(MAP_STATUS status);
 }

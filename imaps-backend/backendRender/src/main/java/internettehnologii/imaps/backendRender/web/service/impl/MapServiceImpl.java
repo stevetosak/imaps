@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -81,6 +82,12 @@ public class MapServiceImpl implements MapService {
         IMapsUser user = userRepository.findUserByName(username).orElseThrow(() -> new UsernameNotFoundException(username));
         IndoorMap map = mapRepository.findMapByName(mapName).orElseThrow(() -> new MapNotFoundException(mapName));
 
+        boolean isAdmin = user.getRoles().stream().anyMatch(role -> Objects.equals(role.getName(), "ADMIN"));
+
+        if(isAdmin){
+            return map;
+        }
+
         return mapRepository.getMapForUser(user, map.getId()).orElseThrow(() -> new MapNotFoundException("No map found for user: " + username));
     }
 
@@ -92,6 +99,11 @@ public class MapServiceImpl implements MapService {
     @Override
     public IndoorMap getMapByName(String mapName) {
        return mapRepository.getIndoorMapByName(mapName).orElseThrow(() -> new MapNotFoundException(mapName));
+    }
+
+    @Override
+    public List<IndoorMap> findByStatus(MAP_STATUS status) {
+        return mapRepository.findAllByStatus(status).orElseGet(ArrayList::new);
     }
 
 

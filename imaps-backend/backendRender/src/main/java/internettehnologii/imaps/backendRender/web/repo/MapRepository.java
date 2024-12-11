@@ -21,7 +21,7 @@ public interface MapRepository extends JpaRepository<IndoorMap, Long> {
     Optional<IndoorMap> findMapByName(String name);
 
     @Query("FROM IndoorMap m WHERE m.status = ?1")
-    Optional<List<IndoorMap>> findAllByStatus(String status);
+    Optional<List<IndoorMap>> findAllByStatus(MAP_STATUS status);
 
     @Query("FROM IndoorMap m WHERE m.user.id = ?1")
     Optional<List<IndoorMap>> findAllMapsForUser(long userId);

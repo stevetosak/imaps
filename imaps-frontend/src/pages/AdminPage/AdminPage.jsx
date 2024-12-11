@@ -7,6 +7,7 @@ import card from "../../assets/card-map.png";
 import MapInfoModal from "../../components/MapInfoModal/MapInfoModal.jsx";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 import PublishForm from "../../components/PublishForm/PublishForm.jsx";
+import httpService from "../../scripts/net/HttpService.js";
 
 const renderTile = ({data, isDragging}, handleApprove, handleDeny, openMapInfoModal, openPublishForm) => (
     <div className={`${styles.tile} ${isDragging ? styles.dragging : ""}`} onClick={() => openMapInfoModal(data)}>
@@ -25,22 +26,22 @@ const renderTile = ({data, isDragging}, handleApprove, handleDeny, openMapInfoMo
                 className={styles.reasonInput}
                 onClick={(e) => e.stopPropagation()}
             />
-            <div className={styles.buttonsGroup}>
-                <button className={styles.approveButton} onClick={(e) => {
-                    e.stopPropagation();
-                    handleApprove(data.mapName);
-                }}>
-                    Approve
-                </button>
-                <button className={styles.denyButton} onClick={(e) => {
-                    e.stopPropagation();
-                    const reason = e.target.closest('div').previousSibling.value;
-                    handleDeny(data.mapName, reason);
-                }}>
-                    Deny
-                </button>
+            {/*<div className={styles.buttonsGroup}>*/}
+            {/*    <button className={styles.approveButton} onClick={(e) => {*/}
+            {/*        e.stopPropagation();*/}
+            {/*        handleApprove(data.mapName);*/}
+            {/*    }}>*/}
+            {/*        Approve*/}
+            {/*    </button>*/}
+            {/*    <button className={styles.denyButton} onClick={(e) => {*/}
+            {/*        e.stopPropagation();*/}
+            {/*        const reason = e.target.closest('div').previousSibling.value;*/}
+            {/*        handleDeny(data.mapName, reason);*/}
+            {/*    }}>*/}
+            {/*        Deny*/}
+            {/*    </button>*/}
 
-            </div>
+            {/*</div>*/}
         </div>
     </div>
 );
@@ -55,6 +56,8 @@ export default function AdminPage() {
     const [selectedMap, setSelectedMap] = useState(null);
     const [isMapInfoModalOpen, setIsMapInfoModalOpen] = useState(false);
     const [publishFormMap, setPublishFormMap] = useState(null);
+    const [publishRequests,setPublishRequests] = useState([]);
+    const [currentForm,setCurrentForm] = useState({});
     const {username} = useAppContext();
 
     useEffect(() => {
@@ -62,7 +65,7 @@ export default function AdminPage() {
             const httpService = new HttpService();
             httpService.setAuthenticated();
 
-            const respMaps = await httpService.get(`${config.my_maps.display}?username=${username}`);
+            const respMaps = await httpService.get(`${config.admin.display}`);
 
             const mapTiles = respMaps.map((elem) => ({
                 mapName: elem.mapName,
@@ -81,40 +84,51 @@ export default function AdminPage() {
         loadPendingMaps();
     }, [username]);
 
-    const handleApprove = async (mapName) => {
+    useEffect(() => {
+        const loadPublishRequests = async () => {
+            const httpService = new HttpService(true);
+            const respPr = await httpService.get(`${config.admin.load_pr}`)
+
+            setPublishRequests(respPr);
+        }
+
+        loadPublishRequests();
+    }, []);
+
+    const handleApprove = async (id) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
-        const url = `${config.admin_maps.approve}?mapName=${mapName}`;
+        const url = `${config.admin.approve_pr}?id=${id}`;
 
         try {
             await httpService.post(url);
-            setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
-            alert(`Map "${mapName}" approved.`);
+            setPendingMaps((prev) => prev.filter((map) => map.mapName !== id));
+            alert(`Publish Request "${id}" approved.`);
         } catch (error) {
-            console.error("Error approving map:", error);
-            alert("Failed to approve map.");
+            console.error("Error approving pr:", error);
+            alert("Failed to approve pr.");
         }
     };
 
-    const handleDeny = async (mapName, reason) => {
+    const handleDeny = async (id, reason) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
-        const url = `${config.admin_maps.deny}?mapName=${mapName}&reason=${encodeURIComponent(reason)}`;
+        const url = `${config.admin.deny_pr}?id=${id}&reason=${encodeURIComponent(reason)}`;
 
         try {
             await httpService.post(url);
-            setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
-            alert(`Map "${mapName}" denied.`);
+            //setPendingMaps((prev) => prev.filter((map) => map.mapName !== id));
+            alert(`Publish request "${id}" denied.`);
         } catch (error) {
-            console.error("Error denying map:", error);
-            alert("Failed to deny map.");
+            console.error("Error denying pr:", error);
+            alert("Failed to deny pr.");
         }
     };
 
     const handlePublishFormSubmit = async (formData) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
-        const url = `${config.admin_maps.publish}?mapName=${formData.mapName}`;
+        const url = `${config.admin.approve_pr}?mapName=${formData.mapName}`;
 
         try {
             await httpService.post(url, formData); // Assuming formData contains all required fields
@@ -138,8 +152,16 @@ export default function AdminPage() {
         setSelectedMap(null);
     };
 
-    const openPublishForm = (map) => {
-        setPublishFormMap(map);
+    const openPublishForm = (data) => {
+        console.log("DATA MAP NAME",data.mapName)
+        publishRequests.forEach(pr => {
+            console.log("PR: " + JSON.stringify(pr))
+        })
+
+        const pr = publishRequests.find(p => p.mapName === data.mapName);
+        console.log("FOUND PR: " + pr)
+        setCurrentForm(pr)
+        setPublishFormMap(data);
     };
 
     const closePublishForm = () => {
@@ -153,15 +175,11 @@ export default function AdminPage() {
             {publishFormMap && (
                 <PublishForm
                     isAdmin={true}
-                    formData={{
-                        mapName: publishFormMap.mapName,
-                        googleMapsUrl: publishFormMap.gmaps_url,
-                        mapType: "Other", // Placeholder, update dynamically if needed
-                        name: "Admin", // Placeholder, modify if necessary
-                        lastName: "", // Placeholder, modify if necessary
-                    }}
+                    formData={currentForm}
                     onSubmit={handlePublishFormSubmit}
                     onCancel={closePublishForm}
+                    onApprove={handleApprove}
+                    onDeny={handleDeny}
                 />
             )}
 

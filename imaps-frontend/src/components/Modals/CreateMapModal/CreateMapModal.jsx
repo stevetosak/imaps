@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./CreateMapModal.module.css";
 
-const MapDetailsModal = ({ isOpen, onClose,addMap}) => {
+const CreateMapModal = ({ isOpen, onClose,addMap}) => {
     const [mapName, setMapName] = useState("");
     const [mapType, setMapType] = useState("");
 
@@ -56,9 +56,9 @@ const MapDetailsModal = ({ isOpen, onClose,addMap}) => {
     );
 };
 
-MapDetailsModal.propTypes = {
+CreateMapModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
 };
 
-export default MapDetailsModal;
+export default CreateMapModal;
