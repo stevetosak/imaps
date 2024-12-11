@@ -3,17 +3,17 @@ package internettehnologii.imaps.backendRender.web.service.impl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -32,18 +32,32 @@ public class JWTService {
     }
 
 
-    public String generateToken(String username){
+    public String generateToken(UserDetails userDetails){
         Map<String,Object> claims = new HashMap<>();
+        String authorities = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+        claims.put("roles", authorities);
+        
         return Jwts
                 .builder()
                 .claims()
                 .add(claims)
-                .subject(username)
+                .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000)) // 1 sat traet token
                 .and()
                 .signWith(getKey())
                 .compact();
+    }
+
+    public Collection<GrantedAuthority> getAuthorities(String token){
+        Claims claims = extractAllClaims(token);
+        String roles = claims.get("roles", String.class);
+
+        return Arrays.stream(roles.split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     private SecretKey getKey(){

@@ -17,6 +17,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import {AppProvider} from "./components/AppContext/AppContext.jsx";
+import {AdminPage} from "./pages/AdminPage/AdminPage.jsx";
 
 
 
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/myMaps/:mapName/Draw" element={<Draw />} />
                 <Route path="/myMaps" element={<MyMaps />} />
                 <Route path="/myMaps/:mapName/View" element={<MapView isPrivate={true} />} />
+                  <Route path="/admin" element={<AdminPage/>}></Route>
               </Route>
             <Route path="/" element={<IMaps />} />
             <Route path="/Maps/:mapName/View" element={<MapView isPrivate={false}/>} />

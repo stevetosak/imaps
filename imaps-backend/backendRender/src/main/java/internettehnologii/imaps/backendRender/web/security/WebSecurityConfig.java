@@ -37,6 +37,8 @@ public class WebSecurityConfig {
                  .cors(Customizer.withDefaults())
                  .authorizeHttpRequests(request -> request.requestMatchers("/protected/**")
                          .authenticated()
+                         .requestMatchers("/api/auth/test_auth")
+                         .hasAnyAuthority("ROLE_ADMIN")
                          .anyRequest()
                          .permitAll())
                  .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
