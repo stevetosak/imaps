@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import ReactDOM from "react-dom";
 import searchIcon from "../../assets/search_icon.png";
 import routeIcon from "../../assets/route_icon.png";
 import closeIcon from "../../assets/close_icon.png";
 import styles from "./SearchBar.module.css";
-import ShapeQuery from "../../scripts/util/ShapeQuery.js";
 
-function SearchBar({map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom,availableShapes}) {
+function SearchBar({ map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom, availableShapes }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -13,40 +13,41 @@ function SearchBar({map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom,av
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [inputFieldType, setInputFieldType] = useState("");
+  const dropdownRef = useRef(null); // To hold the dropdown's position
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
 
-  // trebit ova da rabotat i za sive shapes. higlight trebit site da impl
   function searchRoom() {
-    let foundRoom = map.findRoomByName(from) // ova za sega vaka za da rabotat.
-    setSelectedRoom(foundRoom)
-    isPanelOpen(true)
+    let foundRoom = map.findRoomByName(from);
+    setSelectedRoom(foundRoom);
+    isPanelOpen(true);
   }
-
 
   const handleInputFocus = (field) => {
     if (availableOptions.length === 0 && map) {
-      setAvailableOptions(availableShapes.filter(sh => sh.className === 'RenderedRoom').map(shape => {
-        return shape.info.name;
-      }));
+      setAvailableOptions(
+          availableShapes
+              .filter((sh) => sh.className === "RenderedRoom")
+              .map((shape) => shape.info.name)
+      );
     }
     setDropdownVisible(true);
-    setInputFieldType(field); // Set the current input field being typed into
+    setInputFieldType(field);
   };
 
-  // Filter available options based on user input
   const handleInputChange = (setter) => (event) => {
     const value = event.target.value;
     setter(value);
     setDropdownVisible(true);
 
-    const filtered = availableOptions.filter((option) => option.toLowerCase().includes(value.toLowerCase()));
+    const filtered = availableOptions.filter((option) =>
+        option.toLowerCase().includes(value.toLowerCase())
+    );
     setFilteredOptions(filtered);
   };
 
-  // Handle option selection
   const handleOptionClick = (option) => {
     if (inputFieldType === "from") {
       setFrom(option);
@@ -56,90 +57,99 @@ function SearchBar({map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom,av
     setDropdownVisible(false);
   };
 
+  const renderDropdown = () => {
+    if (!dropdownVisible || filteredOptions.length === 0) return null;
+
+    const position = dropdownRef.current?.getBoundingClientRect() || { top: 0, left: 0, width: 0 };
+
+    return ReactDOM.createPortal(
+        <ul
+            className={styles.dropdown}
+            style={{
+              position: "absolute",
+              top: position.top + position.height,
+              left: position.left,
+              width: position.width,
+            }}
+        >
+          {filteredOptions.map((option, index) => (
+              <li
+                  key={index}
+                  className={styles.dropdownItem}
+                  onClick={() => handleOptionClick(option)}
+              >
+                {option}
+              </li>
+          ))}
+        </ul>,
+        document.body // Portal renders outside the parent hierarchy
+    );
+  };
+
   return (
-    <div className={styles.wrapper}>
-      {/* Regular search bar */}
-      {!isExpanded ? (
-        <div className={styles.searchBar}>
-          <input
-            type="search"
-            className={styles.inputField}
-            placeholder="Search location"
-            aria-label="Search"
-            onFocus={() => handleInputFocus("from")}
-            onChange={handleInputChange(setFrom)}
-            value={from}
-          />
-          {dropdownVisible && filteredOptions.length > 0 && inputFieldType === "from" && (
-            <ul className={styles.dropdown}>
-              {filteredOptions.map((option, index) => (
-                <li key={index} className={styles.dropdownItem} onClick={() => handleOptionClick(option)}>
-                  {option}
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className={styles.buttons}>
-            <button type="button" className={styles.iconButton} onClick={searchRoom}>
-              <img src={searchIcon} alt="Search Icon" />
-            </button>
-            <button type="button" className={styles.iconButton} onClick={toggleExpanded}>
-              <img src={routeIcon} alt="Route Icon" />
-            </button>
-          </div>
-        </div>
-      ) : (
-        /* Expanded view for directions */
-        <div className={styles.directionsContainer}>
-          <div className={styles.directionsInputs}>
-            <input
-              type="text"
-              placeholder="From"
-              aria-label="From"
-              value={from}
-              onFocus={() => handleInputFocus("from")}
-              onChange={handleInputChange(setFrom)}
-              className={styles.inputField}
-            />
-            {dropdownVisible && filteredOptions.length > 0 && inputFieldType === "from" && (
-              <ul className={styles.dropdown}>
-                {filteredOptions.map((option, index) => (
-                  <li key={index} className={styles.dropdownItem} onClick={() => handleOptionClick(option)}>
-                    {option}
-                  </li>
-                ))}
-              </ul>
-            )}
-            <input
-              type="text"
-              placeholder="To"
-              aria-label="To"
-              value={to}
-              onFocus={() => handleInputFocus("to")}
-              onChange={handleInputChange(setTo)}
-              className={styles.inputField}
-            />
-            {dropdownVisible && filteredOptions.length > 0 && inputFieldType === "to" && (
-              <ul className={styles.dropdown}>
-                {filteredOptions.map((option, index) => (
-                  <li key={index} className={styles.dropdownItem} onClick={() => handleOptionClick(option)}>
-                    {option}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <div className={styles.buttons}>
-            <button type="button" className={styles.iconButton} onClick={() => handleDirectionsSubmit(from, to)}>
-              <img src={searchIcon} alt="Submit Directions" />
-            </button>
-            <button type="button" className={styles.iconButton} onClick={toggleExpanded}>
-              <img src={closeIcon} alt="Close Icon" />
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+      <div className={styles.wrapper}>
+        {!isExpanded ? (
+            <div className={styles.searchBar}>
+              <input
+                  type="search"
+                  className={styles.inputField}
+                  placeholder="Search location"
+                  aria-label="Search"
+                  ref={dropdownRef} // Attach the input to calculate dropdown position
+                  onFocus={() => handleInputFocus("from")}
+                  onChange={handleInputChange(setFrom)}
+                  value={from}
+              />
+              {renderDropdown()}
+              <div className={styles.buttons}>
+                <button type="button" className={styles.iconButton} onClick={searchRoom}>
+                  <img src={searchIcon} alt="Search Icon" />
+                </button>
+                <button type="button" className={styles.iconButton} onClick={toggleExpanded}>
+                  <img src={routeIcon} alt="Route Icon" />
+                </button>
+              </div>
+            </div>
+        ) : (
+            <div className={styles.directionsContainer}>
+              <div className={styles.directionsInputs}>
+                <input
+                    type="text"
+                    placeholder="From"
+                    aria-label="From"
+                    value={from}
+                    onFocus={() => handleInputFocus("from")}
+                    onChange={handleInputChange(setFrom)}
+                    className={styles.inputField}
+                    ref={inputFieldType === "from" ? dropdownRef : null}
+                />
+                <input
+                    type="text"
+                    placeholder="To"
+                    aria-label="To"
+                    value={to}
+                    onFocus={() => handleInputFocus("to")}
+                    onChange={handleInputChange(setTo)}
+                    className={styles.inputField}
+                    ref={inputFieldType === "to" ? dropdownRef : null}
+                />
+                {renderDropdown()}
+              </div>
+              <div className={styles.buttons}>
+                <button
+                    type="button"
+                    className={styles.iconButton}
+                    onClick={() => handleDirectionsSubmit(from, to)}
+                >
+                  <img src={searchIcon} alt="Submit Directions" />
+                </button>
+                <button type="button" className={styles.iconButton} onClick={toggleExpanded}>
+                  <img src={closeIcon} alt="Close Icon" />
+                </button>
+              </div>
+            </div>
+        )}
+      </div>
   );
 }
 
