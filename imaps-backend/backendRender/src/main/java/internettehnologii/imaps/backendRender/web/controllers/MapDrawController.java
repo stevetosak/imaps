@@ -63,24 +63,21 @@ public class MapDrawController {
 
         System.out.println("FORM DATA: -------------------------------------------- " + formData);
         try{
-            PublishRequest pr =
-                    new PublishRequest(formData.getName(),formData.getLastName(),formData.getGoogleMapsUrl(),formData.getMapType());
-            IndoorMap map = mapService.getMapByName(formData.getMapName());
             IMapsUser user = userService.getUser(username);
 
-            pr.setMap(map);
-            pr.setUser(user);
-
-            System.out.println("PR: +++++++++++++++++ " + pr.toString());
-
-            publishRequestService.addPublishRequest(pr);
+            publishRequestService.addPublishRequest(formData,user);
 
             return ResponseEntity.ok(new HashMap<>());
 
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
+    }
+    @GetMapping("/publish/get")
+    public ResponseEntity<PublishMapDTO> getPublishRequestForMap(@RequestParam String mapName) {
+        PublishRequest pr = publishRequestService.getPublishRequestByMapName(mapName);
+        PublishMapDTO dto = new PublishMapDTO(pr.getId(),pr.getName(), pr.getLastName(), pr.getMap().getName(), pr.getMapType(), pr.getGMapsUrl());
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/favourites")

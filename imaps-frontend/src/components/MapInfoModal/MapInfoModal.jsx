@@ -14,7 +14,7 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,o
     const [editedGmapsUrl, setEditedGmapsUrl] = useState(map?.gmaps_url || "");
     const [publishFormOpen,setPublishFormOpen] = useState(false)
     const navigate = useNavigate();
-    const [editedStatus, setEditedStatus] = useState(map?.status || "PUBLIC");
+    const[loadedFormData,setLoadedFormData] = useState(null)
 
     const {username} = useAppContext();
 
@@ -52,7 +52,7 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,o
         };
 
         try {
-            await onUpdate(updatedMap);
+            //await onUpdate(updatedMap);
             setEditPopupOpen(false);
         } catch (error) {
             console.error("Error updating map:", error);
@@ -60,21 +60,24 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,o
     };
 
     const openPublishModal = async () => {
+        const httpService = new HttpService(true);
+        const respForm = await httpService.get(`${config.my_maps.publish_get}?mapName=${map.mapName}`)
+        setLoadedFormData(respForm);
         setPublishFormOpen(true)
     };
 
     const sendPublishRequest = async (formData) => {
         const httpService = new HttpService(true);
+        formData.mapName = map.mapName;
         await httpService.post(`${config.my_maps.publish}?username=${username}`,formData);
+        setPublishFormOpen(false)
     }
 
     return (
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                 {publishFormOpen && (
-                    <PublishForm onSubmit={sendPublishRequest} onCancel={() => setPublishFormOpen(false)}>
-
-                    </PublishForm>
+                    <PublishForm mapName={map.mapName} formData={loadedFormData} onSubmit={sendPublishRequest} onCancel={() => setPublishFormOpen(false)}/>
                 )}
 
                 <img src={map.image_url} alt="Map Thumbnail" className={styles.mapImage}/>

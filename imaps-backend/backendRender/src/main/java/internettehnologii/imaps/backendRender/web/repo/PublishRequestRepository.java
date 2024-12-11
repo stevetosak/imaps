@@ -11,5 +11,11 @@ import java.util.Optional;
 @Repository
 public interface PublishRequestRepository extends JpaRepository<PublishRequest, Integer> {
     @Query(value = "FROM PublishRequest p WHERE p.resolved = false")
-    Optional<PublishRequest> findAllNotResolved();
+    Optional<List<PublishRequest>> findAllNotResolved();
+
+    @Query(value = "FROM PublishRequest pr WHERE pr.map.name = ?1")
+    Optional<PublishRequest> findByMapName(String mapName);
+
+    boolean existsByMapName(String mapName);
+
 }

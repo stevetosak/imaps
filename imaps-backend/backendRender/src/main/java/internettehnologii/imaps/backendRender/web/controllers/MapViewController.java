@@ -28,7 +28,6 @@ import java.util.*;
 public class MapViewController {
 
     private RouteGraph graph;
-    private List<Floor> floors = new ArrayList<>();
 
     private final MapService mapService;
     private final FloorService floorService;
@@ -94,9 +93,10 @@ public class MapViewController {
 
 
     @GetMapping("/public/load-map")
-    public ResponseEntity<List<FloorDTO>> getMapData(@RequestParam String mapName, @RequestParam int floorNum) {
+    public ResponseEntity<List<FloorDTO>> getMapData(@RequestParam String mapName) {
         try {
             IndoorMap map = mapService.getPublicMapByName(mapName);
+            List<Floor> floors  = floorService.getAllFloorsForMap(mapName);
             this.graph = graphService.construct(floors);
             return ResponseEntity.ok(Util.convertToFloorDTO(map.getFloors())); // tuka re
         } catch (EmptyMapException e) {
@@ -107,10 +107,10 @@ public class MapViewController {
     }
 
     @GetMapping("/protected/load-map")
-    public ResponseEntity<List<FloorDTO>> getMapDataProtected(@RequestParam String mapName, @RequestParam String username, @RequestParam int floorNum) {
+    public ResponseEntity<List<FloorDTO>> getMapDataProtected(@RequestParam String mapName, @RequestParam String username) {
         try {
             mapService.getMapForUser(username, mapName);// namesto ova samo proverka dali postoet dadena mapa za user, za da ne morat za dzabe mapa promenliva da se cuvat
-            this.floors = floorService.getAllFloorsForMap(mapName);
+            List<Floor> floors  = floorService.getAllFloorsForMap(mapName);
             this.graph = graphService.construct(floors);
 
             return ResponseEntity.ok(Util.convertToFloorDTO(floors)); // tuka return site floors trebit

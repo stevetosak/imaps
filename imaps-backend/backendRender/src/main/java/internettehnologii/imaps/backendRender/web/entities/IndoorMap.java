@@ -18,7 +18,7 @@ public class IndoorMap {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "maps_id_seq")
     private Integer id;
 
-    private String name;
+    private String name = "";
 
     @Column(name = "gmaps_url")
     private String gmapsUrl;
