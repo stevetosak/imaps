@@ -6,6 +6,7 @@ import internettehnologii.imaps.backendRender.web.service.impl.JWTService;
 import internettehnologii.imaps.backendRender.web.service.impl.MapUserDetailsService;
 import internettehnologii.imaps.backendRender.web.service.impl.UserServiceImpl;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
+import internettehnologii.imaps.backendRender.web.util.DTO.UserAuthSuccessDTO;
 import internettehnologii.imaps.backendRender.web.util.DTO.UserLoginDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.RoleNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +34,7 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public IMapsUser register(@RequestBody IMapsUser user) {
+    public IMapsUser register(@RequestBody IMapsUser user) throws RoleNotFoundException {
         return userService.register(user);
     }
 
@@ -42,9 +44,10 @@ public class AuthController {
         Map<String, Object> response = new HashMap<>();
 
         try{
-            String token = userService.login(user);
-            response.put("token", token);
-            response.put("username", user.getUsername());
+            UserAuthSuccessDTO userAuthSuccessDTO = userService.login(user);
+            response.put("token", userAuthSuccessDTO.getToken());
+            response.put("username", userAuthSuccessDTO.getUsername());
+            response.put("roles", userAuthSuccessDTO.getRoles());
         } catch (Exception e){
             System.out.println(e.getMessage());
             response.put("error", e.getMessage());
@@ -77,8 +80,13 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
 
+    }
 
-
+    @GetMapping("/test_auth")
+    public ResponseEntity<Map<String,Object>> testAuth(){
+        Map<String, Object> response = new HashMap<>();
+        response.put("auth",true);
+        return ResponseEntity.ok(response);
     }
 
 }

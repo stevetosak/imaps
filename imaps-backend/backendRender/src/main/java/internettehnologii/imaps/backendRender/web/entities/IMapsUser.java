@@ -1,10 +1,12 @@
 package internettehnologii.imaps.backendRender.web.entities;
+import internettehnologii.imaps.backendRender.web.entities.RBA.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -36,6 +38,8 @@ public class IMapsUser {
     )
     private Set<IndoorMap> favoriteMaps;
 
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users",cascade = CascadeType.PERSIST)
+    private Set<Role> roles = new HashSet<>();
 
     public IMapsUser() {}
 

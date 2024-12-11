@@ -40,6 +40,7 @@ const LoginPage = () => {
                     localStorage.setItem("token", resp.token);
                     setUsername(resp.username);
                     setIsAuthenticated(true);
+                    console.log("ROLES",resp.roles)
                 } else {
                     setError("Invalid username or password.");
                 }
