@@ -32,7 +32,9 @@ export default class MapNode extends MapShape{
 
     connect(node,draw = true){
 
+
         if(!node.info.selectedPins.includes(this.info.name)){
+            console.log("vleze conn 2ds")
             node.info.selectedPins.push(this.info.name);
         }
 
@@ -55,10 +57,7 @@ export default class MapNode extends MapShape{
         };
 
         node.addLineReference(lineWrapperSend);
-        
 
-
-        //this.connectedNodes.push(node);
         this.layer.add(lineWrapper.line);
     }
     
@@ -72,17 +71,19 @@ export default class MapNode extends MapShape{
         this.connectionLines = this.connectionLines.filter(lineWrapper => lineWrapper.otherShape !== target);
     }
 
+    removeConnection(shape){
+        this.info.selectedPins = this.info.selectedPins.filter(sl => sl !== shape.info.name)
+    }
+
 
     removeConnectionLine(target){
-
         this.connectionLines.forEach(lineWrapper => {
             if (lineWrapper.otherShape === target){
                 lineWrapper.line.remove();
+                target.removeLineWrapper(this);
+                this.removeLineWrapper(target);
             }
         })
-
-        target.removeLineWrapper(this);
-        this.removeLineWrapper(target);
     }
 
 

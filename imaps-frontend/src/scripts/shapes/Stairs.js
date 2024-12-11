@@ -66,9 +66,9 @@ export default class Stairs extends MapNode{
         this.setAttr("description", this.info.description);
         this.setAttr("floor_num",this.floorNum)
     }
-    connect(node,toDraw = true) {
-        toDraw = this.floorNum === node.floorNum;
-        super.connect(node,toDraw);
+    connect(node,draw = true) {
+        let canDraw = this.floorNum === node.floorNum;
+        super.connect(node,canDraw);
     }
 
 }

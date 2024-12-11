@@ -43,7 +43,6 @@ export default class RenderedMapShape extends Konva.Shape {
 
     this.infoText.x(this.x() + rectWidth / 2);
     this.infoText.y(this.y() + rectHeight / 2);
-
     this.infoText.rotation(this.rotation());
   }
 

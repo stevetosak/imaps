@@ -11,5 +11,4 @@ public interface FloorService {
     void deleteFloor(int floorNum, String mapName);
     List<Floor> getAllFloorsForMap(String mapName);
     Floor getFloorByNum(Integer floorNum, IndoorMap indoorMap);
-    List<Floor> getAllPublicFloors(String mapName);
 }

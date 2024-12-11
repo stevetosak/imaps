@@ -80,7 +80,6 @@ export default class InfoPin extends MapNode {
 
   connect(node, draw = true) {
     if(this.floorNum !== node.floorNum) return;
-
     super.connect(node)
   }
 }

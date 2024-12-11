@@ -15,7 +15,7 @@ export default class MapShape extends Konva.Shape {
         this._info = {};
         this.eventName = "";
         this.infoText = null;
-        this.floorNum
+        this.floorNum;
 
         this.shadowForStrokeEnabled(false);
         this.on("mouseover", () => (document.body.style.cursor = "pointer"));
