@@ -96,9 +96,9 @@ public class MapViewController {
     @GetMapping("/public/load-map")
     public ResponseEntity<List<FloorDTO>> getMapData(@RequestParam String mapName, @RequestParam int floorNum) {
         try {
-            this.floors = floorService.getAllPublicFloors(mapName);
+            IndoorMap map = mapService.getPublicMapByName(mapName);
             this.graph = graphService.construct(floors);
-            return ResponseEntity.ok(Util.convertToFloorDTO(floors)); // tuka re
+            return ResponseEntity.ok(Util.convertToFloorDTO(map.getFloors())); // tuka re
         } catch (EmptyMapException e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
