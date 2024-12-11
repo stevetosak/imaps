@@ -1,6 +1,10 @@
 import React, {useState} from "react";
 import styles from "./MapInfoModal.module.css";
 import edit_icon from "../../assets/edit_icon_black.png";
+import PublishForm from "../PublishForm/PublishForm.jsx";
+import HttpService from "../../scripts/net/HttpService.js";
+import config from "../../scripts/net/netconfig.js";
+import {useAppContext} from "../AppContext/AppContext.jsx";
 import {replace, useNavigate} from "react-router-dom";
 
 export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,onPublish }) {
@@ -8,7 +12,11 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,o
     const [isEditPopupOpen, setEditPopupOpen] = useState(false);
     const [editedName, setEditedName] = useState(map?.mapName || "");
     const [editedGmapsUrl, setEditedGmapsUrl] = useState(map?.gmaps_url || "");
+    const [publishFormOpen,setPublishFormOpen] = useState(false)
+    const navigate = useNavigate();
     const [editedStatus, setEditedStatus] = useState(map?.status || "PUBLIC");
+
+    const {username} = useAppContext();
 
     if (!isOpen || !map) return null;
 
@@ -26,6 +34,7 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,o
             onClose();
         }
     };
+
 
     const openEditPopup = () => {
         setEditPopupOpen(true);
@@ -50,18 +59,24 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,o
         }
     };
 
-    const handlePublish = async () => {
-        try {
-            await onPublish(map.mapName);
-            alert("Map published successfully!");
-        } catch (error) {
-            console.error("Error publishing map:", error);
-        }
+    const openPublishModal = async () => {
+        setPublishFormOpen(true)
     };
+
+    const sendPublishRequest = async (formData) => {
+        const httpService = new HttpService(true);
+        await httpService.post(`${config.my_maps.publish}?username=${username}`,formData);
+    }
 
     return (
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                {publishFormOpen && (
+                    <PublishForm onSubmit={sendPublishRequest} onCancel={() => setPublishFormOpen(false)}>
+
+                    </PublishForm>
+                )}
+
                 <img src={map.image_url} alt="Map Thumbnail" className={styles.mapImage}/>
                 <h2 className={styles.title}>
                     {map.mapName}
@@ -97,7 +112,7 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,o
                         Delete
                     </button>
                     {!map.is_published && (
-                        <button className={styles.publishButton} onClick={handlePublish}>
+                        <button className={styles.publishButton} onClick={openPublishModal}>
                             Publish
                         </button>
                     )}

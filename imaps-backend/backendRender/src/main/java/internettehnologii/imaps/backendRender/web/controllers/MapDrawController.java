@@ -4,13 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
-import internettehnologii.imaps.backendRender.web.service.interfaces.RoomTypeService;
-import internettehnologii.imaps.backendRender.web.service.interfaces.UserService;
+import internettehnologii.imaps.backendRender.web.entities.PublishRequest;
+import internettehnologii.imaps.backendRender.web.service.interfaces.*;
 import internettehnologii.imaps.backendRender.web.util.DTO.*;
 import internettehnologii.imaps.backendRender.web.util.Util;
 import internettehnologii.imaps.backendRender.web.util.json.JsonMapData;
-import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
-import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +26,16 @@ public class MapDrawController {
     private final FloorService floorService;
     private final RoomTypeService roomTypeService;
     private final UserService userService;
+    private final PublishRequestService publishRequestService;
 
 
     @Autowired
-    public MapDrawController(MapService mapService, FloorService floorService, RoomTypeService roomTypeService, UserService userService) {
+    public MapDrawController(MapService mapService, FloorService floorService, RoomTypeService roomTypeService, UserService userService, PublishRequestService publishRequestService) {
         this.mapService = mapService;
         this.floorService = floorService;
         this.roomTypeService = roomTypeService;
         this.userService = userService;
+        this.publishRequestService = publishRequestService;
     }
 
     @GetMapping("/my-maps")
@@ -56,6 +56,31 @@ public class MapDrawController {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    @PostMapping("/publish/add")
+    public ResponseEntity<Map<String,Object>> sendPublishRequest(@RequestBody PublishMapDTO formData, @RequestParam String username) {
+
+        System.out.println("FORM DATA: -------------------------------------------- " + formData);
+        try{
+            PublishRequest pr =
+                    new PublishRequest(formData.getName(),formData.getLastName(),formData.getGoogleMapsUrl(),formData.getMapType());
+            IndoorMap map = mapService.getMapByName(formData.getMapName());
+            IMapsUser user = userService.getUser(username);
+
+            pr.setMap(map);
+            pr.setUser(user);
+
+            System.out.println("PR: +++++++++++++++++ " + pr.toString());
+
+            publishRequestService.addPublishRequest(pr);
+
+            return ResponseEntity.ok(new HashMap<>());
+
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
     }
 
     @GetMapping("/favourites")

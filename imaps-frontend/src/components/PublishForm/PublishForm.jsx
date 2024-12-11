@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './PublishForm.module.css';
+import log from "eslint-plugin-react/lib/util/log.js";
 
-const PublishForm = ({ isAdmin, formData, onSubmit, onCancel }) => {
+const PublishForm = ({ isAdmin = false, formData, onSubmit, onCancel,onApprove,onDeny}) => {
     const [state, setState] = useState(isAdmin ? 'viewing' : 'writing');
-    const [form, setForm] = useState(formData || {
-        mapName: '',
+    const [form, setForm] = useState( formData || {
+        id: -1,
         name: '',
-        lastName: '',
-        googleMapsUrl: '',
+        lastName: '123',
+        mapName: '',
         mapType: 'Hospital',
+        googleMapsUrl: '',
     });
     const [errors, setErrors] = useState({});
 
@@ -17,8 +19,15 @@ const PublishForm = ({ isAdmin, formData, onSubmit, onCancel }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
-        setErrors((prev) => ({ ...prev, [name]: '' })); // Clear field error when user types
+        setErrors((prev) => ({ ...prev, [name]: '' }));
     };
+
+    // useEffect(() => {
+    //     console.log("FORM DATA LOAD: " + formData)
+    //     setForm(formData)
+    // }, []);
+
+
 
     const validateForm = () => {
         const newErrors = {};
@@ -37,6 +46,7 @@ const PublishForm = ({ isAdmin, formData, onSubmit, onCancel }) => {
         }
 
         if (state === 'writing') {
+            console.log("FORM DATA" + JSON.stringify(form))
             onSubmit(form);
             setState('viewing');
         }
@@ -129,6 +139,19 @@ const PublishForm = ({ isAdmin, formData, onSubmit, onCancel }) => {
                         <button type="button" className={styles.cancelButton} onClick={onCancel}>
                             Cancel
                         </button>
+                            <button className={styles.approveButton} onClick={(e) => {
+                                e.stopPropagation();
+                                onApprove(form.id);
+                            }}>
+                                Approve
+                            </button>
+                            <button className={styles.denyButton} onClick={(e) => {
+                                e.stopPropagation();
+                                //const reason = e.target.closest('div').previousSibling.value;
+                                onDeny(form.id, "Deka taka sakam");
+                            }}>
+                                Deny
+                            </button>
                     </div>
                 )}
             </div>

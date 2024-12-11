@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import styles from "./CreateMaps.module.css";
 import {TilesContainer} from "react-tiles-dnd";
 import MapInfoModal from "../../components/MapInfoModal/MapInfoModal.jsx";
-import MapDetailsModal from "../../components/Modals/CreateMapModal/CreateMapModal.jsx";
+import CreateMapModal from "../../components/Modals/CreateMapModal/CreateMapModal.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
 import card from "../../assets/card-map.png";
 import Logo from "../../components/Logo/Logo.jsx";
@@ -220,7 +220,7 @@ export default function MyMaps() {
                 onUpdate={handleUpdate}
             />
 
-            <MapDetailsModal
+            <CreateMapModal
                 isOpen={isCreateModalOpen}
                 onClose={closeCreateModal}
                 addMap={addMap}
