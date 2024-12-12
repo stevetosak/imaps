@@ -7,9 +7,9 @@ import card from "../../assets/card-map.png";
 import MapInfoModal from "../../components/MapInfoModal/MapInfoModal.jsx";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 import PublishForm from "../../components/PublishForm/PublishForm.jsx";
-import httpService from "../../scripts/net/HttpService.js";
 import Logo from "../../components/Logo/Logo.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
+import Toast from "../../components/Toast/Toast.jsx";
 
 const renderTile = ({data, isDragging}, handleApprove, handleDeny, openMapInfoModal, openPublishForm) => (
     <div className={`${styles.tile} ${isDragging ? styles.dragging : ""}`} onClick={() => openMapInfoModal(data)}>
@@ -58,9 +58,12 @@ export default function AdminPage() {
     const [selectedMap, setSelectedMap] = useState(null);
     const [isMapInfoModalOpen, setIsMapInfoModalOpen] = useState(false);
     const [publishFormMap, setPublishFormMap] = useState(null);
-    const [publishRequests,setPublishRequests] = useState([]);
-    const [currentForm,setCurrentForm] = useState({});
+    const [publishRequests, setPublishRequests] = useState([]);
+    const [currentForm, setCurrentForm] = useState({});
     const {username} = useAppContext();
+
+    const [toastMessage, setToastMessage] = useState(null);
+    const [toastType, setToastType] = useState(1);
 
     useEffect(() => {
         const loadPendingMaps = async () => {
@@ -101,30 +104,37 @@ export default function AdminPage() {
         const httpService = new HttpService();
         httpService.setAuthenticated();
         const url = `${config.admin.approve_pr}?id=${id}`;
-
+        closePublishForm()
         try {
             await httpService.post(url);
             setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
-            alert(`Publish Request "${id}" approved.`);
-
+            showToast(`Publish Request "${id}" approved.`, 1)
         } catch (error) {
             console.error("Error approving pr:", error);
-            alert("Failed to approve pr.");
+            // alert("Failed to approve pr.");
+            showToast("Failed to approve pr.", 0)
         }
+    };
+
+    const showToast = (message, type = 1) => {
+        setToastMessage(message);
+        setToastType(type);
+        setTimeout(() => setToastMessage(null), 3000); // Automatically hide the toast after 3 seconds
     };
 
     const handleDeny = async (id, mapName,reason) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
         const url = `${config.admin.deny_pr}?id=${id}&reason=${encodeURIComponent(reason)}`;
-
+        closePublishForm()
         try {
             await httpService.post(url);
-            //setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
-            alert(`Publish request "${id}" denied.`);
+            setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
+            showToast(`Publish request ${id} denied.`, 1)
         } catch (error) {
             console.error("Error denying pr:", error);
             alert("Failed to deny pr.");
+            showToast("Failed to deny pr.", 0)
         }
     };
 
@@ -156,7 +166,7 @@ export default function AdminPage() {
     };
 
     const openPublishForm = (data) => {
-        console.log("DATA MAP NAME",data.mapName)
+        console.log("DATA MAP NAME", data.mapName)
         publishRequests.forEach(pr => {
             console.log("PR: " + JSON.stringify(pr))
         })
@@ -203,10 +213,13 @@ export default function AdminPage() {
                     isOpen={isMapInfoModalOpen}
                     onClose={closeMapInfoModal}
                     map={selectedMap}
-                    onUpdate={() => {}}
-                    onDelete={() => {}}
+                    onUpdate={() => {
+                    }}
+                    onDelete={() => {
+                    }}
                 />
             )}
+            {toastMessage && <Toast message={toastMessage} type={toastType} onClose={() => setToastMessage(null)}/>}
 
         </div>
     );
