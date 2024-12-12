@@ -10,6 +10,7 @@ import HttpService from "../../scripts/net/HttpService.js";
 import Logo from "../../components/Logo/Logo.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
 import config from "../../scripts/net/netconfig.js";
+import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 
 let loadedTiles = [];
 
@@ -26,10 +27,7 @@ const renderTile = ({data, isDragging, toggleFavorite}) => (
                 </div>
             </div>
         </Link>
-        <div
-            className={styles.favorite}
-            onClick={() => toggleFavorite(data.text)}
-        >
+        <div className={styles.favorite} onClick={() => toggleFavorite(data.text, data.isFavorite)}>
             <img
                 src={data.isFavorite ? star_filled_icon : star_icon}
                 alt="Favorite Icon"
@@ -44,41 +42,68 @@ const tileSize = (tile) => ({
     rowSpan: tile.rows,
 });
 
-
 export default function BrowseMaps() {
     const [searchTerm, setSearchTerm] = useState("");
     const [tiles, setTiles] = useState([]);
+    const {username} = useAppContext();
 
     useEffect(() => {
-        const loadPublicMaps = async () => {
+        const loadMaps = async () => {
             const httpService = new HttpService();
-            const resp = await httpService.get(config.view_maps.display);
-            console.log("RESPONSE MAPS PUBLIC", resp);
 
-            const mapTiles = resp.map((elem) => ({
+            // Load favorite maps
+            const favResp = await httpService.get(`${config.favourites.display}?username=${username}`);
+            console.log("RESPONSE FAVORITE MAPS", favResp);
+
+            const favMapTiles = favResp.map((elem) => ({
                 text: elem.mapName,
                 cols: 1,
                 rows: 1,
-                isFavorite: false,
+                isFavorite: true,
             }));
 
+            // Load all maps
+            const allResp = await httpService.get(config.view_maps.display);
+            console.log("RESPONSE MAPS PUBLIC", allResp);
+
+            const nonFavMapTiles = allResp
+                .filter((elem) => !favMapTiles.some((fav) => fav.text === elem.mapName))
+                .map((elem) => ({
+                    text: elem.mapName,
+                    cols: 1,
+                    rows: 1,
+                    isFavorite: false,
+                }));
+
+            const mapTiles = [...favMapTiles, ...nonFavMapTiles];
+
+            loadedTiles = [...mapTiles];
             sortTiles(mapTiles);
             setTiles(mapTiles);
         };
-        loadPublicMaps();
+        loadMaps();
+    }, [username]);
 
-    }, [])
+    const toggleFavorite = async (tileName, isFavorite) => {
 
+        const httpService = new HttpService();
+        const url = isFavorite
+            ? `${config.favourites.delete}?username=${username}&mapName=${encodeURIComponent(tileName)}`
+            : `${config.favourites.add}?username=${username}&mapName=${encodeURIComponent(tileName)}`;
 
-    const toggleFavorite = (tileName) => {
-        loadedTiles = loadedTiles.map((tile) =>
-            tile.text === tileName
-                ? {...tile, isFavorite: !tile.isFavorite}
-                : tile
+        console.log("Request URL:", url);
+
+        const response = await httpService.post(url);
+        console.log("Response received:", response);
+
+        const updatedTiles = tiles.map((tile) =>
+            tile.text === tileName ? {...tile, isFavorite: !tile.isFavorite} : tile
         );
 
-        sortTiles(loadedTiles);
-        setTiles([...loadedTiles]);
+        loadedTiles = [...updatedTiles];
+        sortTiles(updatedTiles);
+        setTiles(updatedTiles);
+
     };
 
     const handleSearchChange = (e) => {
@@ -98,7 +123,6 @@ export default function BrowseMaps() {
             return a.isFavorite ? -1 : 1;
         });
     };
-
 
     return (
         <div className={styles.container}>

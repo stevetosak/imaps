@@ -31,7 +31,8 @@ const config = {
         load: (auth) => {
             return auth ? `${API_PROTECTED}/load-map` : `${API_PUBLIC}/load-map`
         },
-        navigate: `${API_PUBLIC}/navigate`
+        navigate: `${API_PUBLIC}/navigate`,
+        add_favourite: `${API_PROTECTED}/favourites/add`,
     },
     favourites: {
         display: `${API_PROTECTED}/favourites`,
