@@ -7,7 +7,7 @@ import HttpService from "../../scripts/net/HttpService.js";
 import config from "../../scripts/net/netconfig.js";
 import {useAppContext} from "../AppContext/AppContext.jsx";
 
-export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate}) {
+export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate, onPublish}) {
     const [isEditPopupOpen, setEditPopupOpen] = useState(false);
     const [editedName, setEditedName] = useState(map?.mapName || "");
     const [editedGmapsUrl, setEditedGmapsUrl] = useState(map?.gmaps_url || "");
@@ -71,6 +71,7 @@ export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate})
         console.log("FORMDATA: "+JSON.stringify(formData))
         await httpService.post(`${config.my_maps.publish}?username=${username}`,formData);
         setPublishFormOpen(false)
+        onPublish();
     }
 
     return (
