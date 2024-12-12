@@ -22,6 +22,7 @@ public class GraphServiceImpl implements GraphService {
                 graph.load(nodes);
             } catch (Exception e) {
                 System.out.println("Nodes for floor " + floor.getFloorNumber() + " could not be parsed. " + e.getMessage());
+                e.printStackTrace();
             }
         });
 

@@ -63,9 +63,6 @@ public class FloorServiceImpl implements FloorService {
 
     @Override
     public Floor getFloorByNum(Integer floorNum, IndoorMap indoorMap) throws InvalidParametersException {
-//        return floorRepository.findFloorByFloorNumber(floorNum, indoorMap).orElseThrow(
-//                () -> new InvalidParametersException("Could not find floor.\n floorNum: " + floorNum + "\n indoorMap: " + indoorMap)
-//        );
 
         return indoorMap
                 .getFloors()
@@ -75,18 +72,5 @@ public class FloorServiceImpl implements FloorService {
                 .orElseThrow(() -> new InvalidParametersException("Could not find floor.\n floorNum: " + floorNum + "\n indoorMap: " + indoorMap));
     }
 
-    @Override
-    public List<Floor> getAllPublicFloors(String mapName) throws EmptyMapException {
-
-        Optional<IndoorMap> map = mapRepository.findMapByName(mapName);
-
-        if(map.isPresent()) {
-            return floorRepository.getAllPublicFloorsForMap(map.get()).orElseThrow(
-                    () ->  new EmptyMapException("Map: " + map.get().getName() + " has no public floors"));
-        }
-
-        throw new MapNotFoundException("Map: " + mapName + " does not exist" );
-
-    }
 
 }

@@ -192,11 +192,10 @@ export class MapDisplay {
         this.toggleSearch = !this.toggleSearch;
     }
 
-    findRoomByName(roomName) {
+    //ova e loso ne trebit vaka
+    highlightShape(roomName) {
         let foundShape = this.shapes.filter((shape) => shape.info.name === roomName)[0];
-        console.log(foundShape, "111111111111111")
         foundShape.highlight();
-        return foundShape;
     }
 
     getMainEntrance() {

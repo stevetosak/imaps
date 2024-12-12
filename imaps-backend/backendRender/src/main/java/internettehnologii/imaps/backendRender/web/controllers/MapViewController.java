@@ -109,11 +109,11 @@ public class MapViewController {
     @GetMapping("/protected/load-map")
     public ResponseEntity<List<FloorDTO>> getMapDataProtected(@RequestParam String mapName, @RequestParam String username) {
         try {
-            mapService.getMapForUser(username, mapName);// namesto ova samo proverka dali postoet dadena mapa za user, za da ne morat za dzabe mapa promenliva da se cuvat
+            IndoorMap map = mapService.getMapForUser(username, mapName);// namesto ova samo proverka dali postoet dadena mapa za user, za da ne morat za dzabe mapa promenliva da se cuvat
             List<Floor> floors  = floorService.getAllFloorsForMap(mapName);
             this.graph = graphService.construct(floors);
 
-            return ResponseEntity.ok(Util.convertToFloorDTO(floors)); // tuka return site floors trebit
+            return ResponseEntity.ok(Util.convertToFloorDTO(map.getFloors())); // tuka return site floors trebit
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());

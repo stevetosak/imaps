@@ -38,7 +38,7 @@ public class IMapsUser {
     )
     private Set<IndoorMap> favoriteMaps;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users",cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "users",cascade = CascadeType.PERSIST)
     private Set<Role> roles = new HashSet<>();
 
     public IMapsUser() {}

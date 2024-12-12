@@ -218,6 +218,7 @@ const MapView = ({isPrivate}) => {
         console.log("FLOOR NUM:", floorNum, "CHFLOOR:",chFloor)
         app.clearRoute()
         app.loadMapN(chFloor.mapData)
+        app.floorNum = floorNum;
 
 
         console.log(`Floor changed to: ${floorNum}`);
@@ -254,9 +255,10 @@ const MapView = ({isPrivate}) => {
                             <SearchBar
                                 map={app}
                                 handleDirectionsSubmit={handleDirectionsSubmit}
-                                isPanelOpen={isPanelOpen}
+                                setIsPanelOpen={setIsPanelOpen}
                                 setSelectedRoom={setSelectedRoom}
                                 availableShapes={shapes}
+                                handleFloorChange={handleFloorChange}
                             />
                             <FilterBar map={app} roomTypes={roomTypes}/>
                         </div>

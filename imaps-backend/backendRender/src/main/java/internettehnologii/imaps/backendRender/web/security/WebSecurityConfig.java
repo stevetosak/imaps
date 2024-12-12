@@ -35,10 +35,11 @@ public class WebSecurityConfig {
          http
                  .csrf(AbstractHttpConfigurer::disable)
                  .cors(Customizer.withDefaults())
-                 .authorizeHttpRequests(request -> request.requestMatchers("/protected/**")
-                         .authenticated()
-                         .requestMatchers("/api/auth/test_auth")
-                         .hasAnyAuthority("ROLE_ADMIN")
+                 .authorizeHttpRequests(request ->
+                         request.requestMatchers("/protected/**")
+                         .hasRole("USER")
+                         .requestMatchers("/api/admin/**")
+                         .hasRole("ADMIN")
                          .anyRequest()
                          .permitAll())
                  .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

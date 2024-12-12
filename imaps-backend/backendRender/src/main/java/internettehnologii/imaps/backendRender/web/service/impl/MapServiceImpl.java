@@ -73,7 +73,7 @@ public class MapServiceImpl implements MapService {
 
     @Override
     public List<IndoorMap> getPublicMaps() {
-        Optional<List<IndoorMap>> maps = mapRepository.findAllPublicMaps();
+        Optional<List<IndoorMap>> maps = mapRepository.findAllByStatus(MAP_STATUS.PUBLIC);
         return maps.orElseGet(ArrayList::new);
     }
 

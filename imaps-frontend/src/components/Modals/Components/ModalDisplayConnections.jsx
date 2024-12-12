@@ -1,7 +1,12 @@
 import styles from "../EntranceModal/EntranceModal.module.css";
-import React from "react";
+import React, {useEffect} from "react";
 
 export default function ModalDisplayConnections({connections,removePinFromList}){
+
+    useEffect(() => {
+        console.log("CONNNECTIONS: " + connections);
+    }, []);
+
     return (
         <>
             <h3>Connections:</h3>

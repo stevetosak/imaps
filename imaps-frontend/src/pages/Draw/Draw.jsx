@@ -16,6 +16,7 @@ import {FloorSelector} from "./FloorSelector.jsx";
 import {useRoomTypesLoader} from "./Hooks/useRoomTypesLoader.js";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 import config from "../../scripts/net/netconfig.js";
+import ShapeRegistry from "../../scripts/util/ShapeRegistry.js";
 
 function Draw() {
   const { mapName } = useParams();
@@ -68,6 +69,12 @@ function Draw() {
       console.error("Error deleting floor:", error);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      ShapeRegistry.clear();
+    }
+  }, []);
 
 
   const handleSaveClick = async () => {
