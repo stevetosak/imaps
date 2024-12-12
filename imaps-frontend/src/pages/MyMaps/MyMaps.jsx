@@ -222,6 +222,8 @@ export default function MyMaps() {
                 onUpdate={handleUpdate}
                 onPublish={() => {
                     showToast(`Map ${selectedMap.mapName} published successfully!`);
+                    setPrivateMaps((prevMaps) => prevMaps.filter(m => m.mapName !== selectedMap.mapName))
+                    setPendingMaps((prevMaps) => [...prevMaps,allTiles.find(m => m.mapName = selectedMap.mapName)])
                     closeMapInfoModal()
                 }}
             />
