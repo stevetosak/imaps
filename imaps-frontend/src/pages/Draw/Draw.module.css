@@ -21,7 +21,7 @@ body {
 
 .title {
   text-align: center;
-  font-size: 3em;
+  font-size: 2.5em;
   font-weight: 700;
   text-transform: uppercase;
   color: #333333;
@@ -31,6 +31,9 @@ body {
 }
 
 .titleLink {
+  text-decoration: none;
+}
+.titleLink:hover{
   text-decoration: none;
 }
 

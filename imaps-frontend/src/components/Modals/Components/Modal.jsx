@@ -70,7 +70,7 @@ export default function Modal({ children, title, isOpen, toggleModal }) {
                     className={styles.draggableHeader}
                     onMouseDown={handleMouseDown}
                 >
-                  <h2>{title}</h2>
+                  <h2 className={styles.title}>{title}</h2>
                 </div>
                 <form className={styles.form}>
                   {children}
