@@ -103,6 +103,7 @@ export class MapDisplay {
         nodes.forEach((node) => console.log("NODE", node));
 
         let idx = offset;
+        //TUKA
         let buff = [nodes[idx].coordinates.x, nodes[idx].coordinates.y];
 
 

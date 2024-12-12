@@ -8,6 +8,8 @@ import MapInfoModal from "../../components/MapInfoModal/MapInfoModal.jsx";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 import PublishForm from "../../components/PublishForm/PublishForm.jsx";
 import httpService from "../../scripts/net/HttpService.js";
+import Logo from "../../components/Logo/Logo.jsx";
+import Profile from "../../components/Profile/Profile.jsx";
 
 const renderTile = ({data, isDragging}, handleApprove, handleDeny, openMapInfoModal, openPublishForm) => (
     <div className={`${styles.tile} ${isDragging ? styles.dragging : ""}`} onClick={() => openMapInfoModal(data)}>
@@ -20,12 +22,12 @@ const renderTile = ({data, isDragging}, handleApprove, handleDeny, openMapInfoMo
             View Form
         </button>
         <div className={styles.buttonContainer}>
-            <input
-                type="text"
-                placeholder="Reason"
-                className={styles.reasonInput}
-                onClick={(e) => e.stopPropagation()}
-            />
+            {/*<input*/}
+            {/*    type="text"*/}
+            {/*    placeholder="Reason"*/}
+            {/*    className={styles.reasonInput}*/}
+            {/*    onClick={(e) => e.stopPropagation()}*/}
+            {/*/>*/}
             {/*<div className={styles.buttonsGroup}>*/}
             {/*    <button className={styles.approveButton} onClick={(e) => {*/}
             {/*        e.stopPropagation();*/}
@@ -117,7 +119,7 @@ export default function AdminPage() {
 
         try {
             await httpService.post(url);
-            //setPendingMaps((prev) => prev.filter((map) => map.mapName !== id));
+            //setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
             alert(`Publish request "${id}" denied.`);
         } catch (error) {
             console.error("Error denying pr:", error);
@@ -170,6 +172,8 @@ export default function AdminPage() {
 
     return (
         <div className={styles.container}>
+            <Logo></Logo>
+            <Profile></Profile>
             <h1>Pending Maps for Approval</h1>
 
             {publishFormMap && (
@@ -190,7 +194,7 @@ export default function AdminPage() {
                     renderTile={(tileProps) => renderTile(tileProps, handleApprove, handleDeny, openMapInfoModal, openPublishForm)}
                     tileSize={tileSize}
                     forceTileWidth={200}
-                    forceTileHeight={350}
+                    forceTileHeight={250}
                 />
             </div>
             {isMapInfoModalOpen && (
