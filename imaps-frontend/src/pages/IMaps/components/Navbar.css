@@ -1,6 +1,18 @@
 .modern-navbar {
-  background-color: #ffffff;
-  color: #333333;
+  /*background-color: #ffffff;*/
+  /*background: linear-gradient(*/
+  /*        90deg,*/
+  /*        #fafafa 0%,*/
+  /*        #c07e7e 25%,*/
+  /*        #af2525 50%,*/
+  /*        #443a3a 75%,*/
+  /*        #8d1010 100%*/
+  /*);*/
+  /*background: linear-gradient(to right, #ffffff, #c12c2c);*/
+  /*background: linear-gradient(90deg, #3b3131, #ffffff);*/
+  background: linear-gradient(90deg, #9b1818, #efefef);
+  color: #ffffff;
+  /*color: #333333;*/
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,6 +22,7 @@
   top: 0;
   z-index: 1000;
   border-radius: 8px;
+  margin: 5px;
 }
 
 .navbar-container {
@@ -29,7 +42,7 @@
 .navbar-title {
   font-size: 1.6rem;
   font-weight: 700;
-  color: #4a4a4a;
+  color: #ffffff;
   margin: 0;
   font-family: "exo", sans-serif;
 }

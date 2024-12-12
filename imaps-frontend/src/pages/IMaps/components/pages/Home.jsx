@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "../Button.jsx";
 import Cards from "../Cards.jsx";
 import Footer from "../Footer.jsx";
+import sl from "../../../../assets/bg-home-light-gray.png"
 
 function Home() {
   return (
