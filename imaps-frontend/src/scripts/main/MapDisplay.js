@@ -139,7 +139,6 @@ export class MapDisplay {
                 return;
             }
 
-
             const startX = currentNode.coordinates.x;
             const startY = currentNode.coordinates.y;
             const endX = nextNode.coordinates.x;
