@@ -5,6 +5,7 @@ import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.PublishRequestService;
 import internettehnologii.imaps.backendRender.web.util.DTO.MapDTO;
 import internettehnologii.imaps.backendRender.web.util.DTO.PublishMapDTO;
+import internettehnologii.imaps.backendRender.web.util.Util;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,14 +31,7 @@ public class AdminController {
     @GetMapping
     public ResponseEntity<List<MapDTO>> getPendingMapRequests() {
         try {
-            List<MapDTO> maps = mapService.findByStatus(MAP_STATUS.INVALID).stream()
-                    .map(imap -> new MapDTO(imap.getName(),
-                            imap.getMapType(),
-                            imap.getCreatedAt(),
-                            imap.getModifiedAt(),
-                            imap.getStatus().name(),
-                            imap.getFavouriteCount()))
-                    .toList();
+            List<MapDTO> maps = Util.convertToMapDTO(mapService.findByStatus(MAP_STATUS.INVALID));
             return ResponseEntity.ok(maps);
         } catch (Exception e) {
             e.printStackTrace();

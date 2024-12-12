@@ -47,14 +47,7 @@ public class MapViewController {
     public ResponseEntity<List<MapDTO>> loadPublicMaps() {
         try {
             List<IndoorMap> maps = mapService.getPublicMaps();
-            List<MapDTO> mapDTOS = maps.stream()
-                    .map(imap -> new MapDTO(imap.getName(),
-                            imap.getMapType(),
-                            imap.getCreatedAt(),
-                            imap.getModifiedAt(),
-                            imap.getStatus().name(),
-                            imap.getFavouriteCount()))
-                    .toList();
+            List<MapDTO> mapDTOS = Util.convertToMapDTO(maps);
             return ResponseEntity.ok(mapDTOS);
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -7,25 +7,25 @@ public class RouteGraph {
     private final Map<String, MapNode> nameToNodeMap = new HashMap<>();
 
 
-    public void load(List<MapNode> nodes){
+    public void loadNodeNames(List<MapNode> nodes){
         for (MapNode node : nodes) {
             nameToNodeMap.put(node.getName(), node);
         }
 
-
-        System.out.println("NAME NODE MAP:");
         for(Map.Entry<String,MapNode> entries : nameToNodeMap.entrySet()) {
             System.out.println(entries.getKey() + " " + entries.getValue());
         }
+    }
 
-        for (MapNode mapNode : nodes) {
+    public void loadEdges(){
+        for (MapNode mapNode : nameToNodeMap.values()) {
             for (String connectionName : mapNode.getConnectionNames()) {
                 System.out.println("CONN: " + mapNode.getName() + " " + connectionName);
                 MapNode connectedNode = nameToNodeMap.get(connectionName);
                 if (connectedNode != null) {
                     addEdge(mapNode, connectedNode);
                 }else {
-                    System.out.println("CANT ADD EDGE+========== " + mapNode.getName());
+                    System.out.println("CANT ADD EDGE ========== " + "FROM: " + mapNode.getName() + " TO: " + connectionName);
                 }
             }
         }

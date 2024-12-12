@@ -16,6 +16,11 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,o
     const navigate = useNavigate();
     const[loadedFormData,setLoadedFormData] = useState(null)
 
+
+    useEffect(() => {
+        console.log("GMAPS: " + JSON.stringify(map))
+    }, []);
+
     const {username} = useAppContext();
 
     if (!isOpen || !map) return null;
@@ -101,7 +106,7 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,o
                 </p>
                 <p>
                     <strong>Google Maps URL:</strong>
-                    <a href={map.gmaps_url} target="_blank" rel="noopener noreferrer">
+                    <a href={map.gMapsUrl}  rel="noopener noreferrer">
                         Open in Google Maps
                     </a>
                 </p>
