@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PublishRequestService {
     void addPublishRequest(PublishMapDTO publishRequestDTO, IMapsUser user);
-    void deletePublishRequest(PublishRequest publishRequest);
+    void denyPublishRequest(int id) throws Exception;
     List<PublishRequest> getAllPublishRequests();
     void save(PublishRequest publishRequest);
     void approvePublishRequest(int id) throws Exception;
