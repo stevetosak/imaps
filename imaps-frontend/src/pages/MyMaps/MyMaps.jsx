@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import styles from "./CreateMaps.module.css";
 import {TilesContainer} from "react-tiles-dnd";
 import MapInfoModal from "../../components/MapInfoModal/MapInfoModal.jsx";
@@ -9,6 +9,7 @@ import Logo from "../../components/Logo/Logo.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 import config from "../../scripts/net/netconfig.js";
+import Toast from "../../components/Toast/Toast.jsx";
 
 const renderTile = ({data, isDragging}, openMapInfo) => (
     <div style={{padding: "1rem", width: "100%"}}>
@@ -35,10 +36,11 @@ export default function MyMaps() {
     const [selectedMap, setSelectedMap] = useState(null);
     const [isMapInfoModalOpen, setIsMapInfoModalOpen] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
-    const[publicMaps,setPublicMaps] = useState([]);
-    const[privateMaps,setPrivateMaps] = useState([])
-    const[pendingMaps,setPendingMaps] = useState([])
+    const [publicMaps, setPublicMaps] = useState([]);
+    const [privateMaps, setPrivateMaps] = useState([]);
+    const [pendingMaps, setPendingMaps] = useState([]);
+    const [toastMessage, setToastMessage] = useState(null);
+    const [toastType, setToastType] = useState(1);
 
     const openMapInfoModal = (map) => {
         setSelectedMap(map);
@@ -58,19 +60,16 @@ export default function MyMaps() {
         setIsCreateModalOpen(false);
     };
 
-    const handleUpdate = async (updatedMap) => {
-        // try {
-        //     await fetch(`/api/maps/${updatedMap.id}`, {
-        //         method: "PUT",
-        //         headers: { "Content-Type": "application/json" },
-        //         body: JSON.stringify(updatedMap),
-        //     });
-        //     console.log("Map updated successfully:", updatedMap);
-        // } catch (error) {
-        //     console.error("Error updating map:", error);
-        // }
+    const showToast = (message, type = 1) => {
+        setToastMessage(message);
+        setToastType(type);
+        setTimeout(() => setToastMessage(null), 3000); // Automatically hide the toast after 3 seconds
     };
 
+
+    const handleUpdate = async (updatedMap) => {
+        // Placeholder for map update logic
+    };
 
     const deleteMap = (mapName) => {
         const httpService = new HttpService();
@@ -79,13 +78,15 @@ export default function MyMaps() {
 
         httpService
             .delete(url)
-            .then((response) => {
+            .then(() => {
                 setTiles((prevTiles) => prevTiles.filter((tile) => tile.mapName !== mapName));
                 setAllTiles((prevTiles) => prevTiles.filter((tile) => tile.mapName !== mapName));
+                showToast("Map deleted", 1)
             })
             .catch((error) => {
                 const errorMessage = error.response?.data?.error || error.message || "Unknown error";
-                alert(`Error deleting the map: ${errorMessage}`);
+                // alert(`Error deleting the map: ${errorMessage}`);
+                showToast(`Error deleting the map: ${errorMessage}`, 0)
             });
     };
 
@@ -96,7 +97,6 @@ export default function MyMaps() {
         httpService
             .put(`${config.my_maps.add}?username=${username}`, mapDetails)
             .then((respMap) => {
-                console.log("RESP NEW MAP: " + respMap)
                 const mapTile = {
                     mapName: respMap.mapName,
                     cols: 1,
@@ -110,10 +110,16 @@ export default function MyMaps() {
                     is_published: respMap.is_published,
                 };
 
-                setAllTiles((prevTiles) => [...prevTiles,mapTile])
-                setTiles((prevTiles) => [...prevTiles,mapTile])
+                setAllTiles((prevTiles) => [...prevTiles, mapTile]);
+                setTiles((prevTiles) => [...prevTiles, mapTile]);
+                showToast("Map added successfully!");
+
+
+            })
+            .catch((error) => {
+                showToast("Map name already taken", 0)
             });
-    }
+    };
 
     useEffect(() => {
         const loadMaps = async () => {
@@ -132,7 +138,7 @@ export default function MyMaps() {
                 published_at: elem.published_at,
                 gmaps_url: elem.gmaps_url,
                 image_url: card,
-                numFavourites: elem.numFavourites
+                numFavourites: elem.numFavourites,
             }));
 
             setTiles(mapTiles);
@@ -141,18 +147,16 @@ export default function MyMaps() {
         loadMaps();
     }, [username]);
 
+    useEffect(() => {
+        setPublicMaps(tiles.filter((tile) => tile.status === "PUBLIC"));
+        setPrivateMaps(tiles.filter((tile) => tile.status === "PRIVATE"));
+        setPendingMaps(tiles.filter((tile) => tile.status === "INVALID"));
+    }, [tiles]);
+
     const handleSearch = (e) => {
         const query = e.target.value.toLowerCase();
         setTiles(allTiles.filter((tile) => tile.mapName.toLowerCase().includes(query)));
     };
-
-    useEffect(() => {
-         setPublicMaps(tiles.filter((tile) => tile.status === "PUBLIC"));
-         setPrivateMaps(tiles.filter((tile) => tile.status === "PRIVATE"));
-         setPendingMaps(tiles.filter((tile) => tile.status === "INVALID"));
-    }, [tiles,allTiles]);
-
-
 
     return (
         <div className={styles.container}>
@@ -167,11 +171,7 @@ export default function MyMaps() {
             </div>
 
             <div className={styles.searchBar}>
-                <input
-                    type="text"
-                    placeholder="Search for maps..."
-                    onChange={handleSearch}
-                />
+                <input type="text" placeholder="Search for maps..." onChange={handleSearch}/>
             </div>
 
             <div className={styles.mapsContainer}>
@@ -218,6 +218,10 @@ export default function MyMaps() {
                 map={selectedMap}
                 onDelete={deleteMap}
                 onUpdate={handleUpdate}
+                onPublish={() => {
+                    showToast(`Map ${selectedMap.mapName} published successfully!`);
+                    closeMapInfoModal()
+                }}
             />
 
             <CreateMapModal
@@ -225,6 +229,8 @@ export default function MyMaps() {
                 onClose={closeCreateModal}
                 addMap={addMap}
             />
+
+            {toastMessage && <Toast message={toastMessage} type={toastType} onClose={() => setToastMessage(null)}/>}
         </div>
     );
 }

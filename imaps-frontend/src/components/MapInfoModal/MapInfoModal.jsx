@@ -72,6 +72,7 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,o
         console.log("FORMDATA: "+JSON.stringify(formData))
         await httpService.post(`${config.my_maps.publish}?username=${username}`,formData);
         setPublishFormOpen(false)
+        onPublish();
     }
 
     return (
