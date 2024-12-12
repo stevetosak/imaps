@@ -97,22 +97,23 @@ export default function AdminPage() {
         loadPublishRequests();
     }, []);
 
-    const handleApprove = async (id) => {
+    const handleApprove = async (id,mapName) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
         const url = `${config.admin.approve_pr}?id=${id}`;
 
         try {
             await httpService.post(url);
-            setPendingMaps((prev) => prev.filter((map) => map.mapName !== id));
+            setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
             alert(`Publish Request "${id}" approved.`);
+
         } catch (error) {
             console.error("Error approving pr:", error);
             alert("Failed to approve pr.");
         }
     };
 
-    const handleDeny = async (id, reason) => {
+    const handleDeny = async (id, mapName,reason) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
         const url = `${config.admin.deny_pr}?id=${id}&reason=${encodeURIComponent(reason)}`;

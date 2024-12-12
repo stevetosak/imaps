@@ -135,13 +135,13 @@ const PublishForm = ({ isAdmin = false, formData, onSubmit, onCancel, onApprove,
                                 </button>
                                 <button
                                     className={styles.approveButton}
-                                    onClick={() => onApprove(form.id)}
+                                    onClick={() => onApprove(form.id,form.mapName)}
                                 >
                                     Approve
                                 </button>
                                 <button
                                     className={styles.denyButton}
-                                    onClick={() => onDeny(form.id, 'Reason')}
+                                    onClick={() => onDeny(form.id,form.mapName,"Reason")}
                                 >
                                     Deny
                                 </button>
