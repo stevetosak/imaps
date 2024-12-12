@@ -112,6 +112,9 @@ class ShapeRegistry {
         const node2 = Object.values(this.store.floors).flat()
             .find(shape => shape instanceof MapNode && shape.info.name === node2Name);
 
+        console.log("NODE1: " + JSON.stringify(node1))
+        console.log("NODE2: " + JSON.stringify(node2));
+
         if (node1 && node2) {
             node1.connect(node2);
             console.log("N1",node1.info.selectedPins,"N2",node2.info.selectedPins)
