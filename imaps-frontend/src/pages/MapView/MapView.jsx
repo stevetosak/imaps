@@ -26,7 +26,7 @@ const MapView = ({isPrivate}) => {
     const navigate = useNavigate();
     const [shapes, setShapes] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
-    const [mainEntrance,setMainEntrance] = useState({});
+    const [mainEntrance, setMainEntrance] = useState({});
 
     const defaultNavObj = {
         enabled: false,
@@ -36,13 +36,13 @@ const MapView = ({isPrivate}) => {
     }
 
     const [navNext, setNavNext] = useState(defaultNavObj)
-    const [roomTypes,setRoomTypes] = useState([]);
+    const [roomTypes, setRoomTypes] = useState([]);
 
     useEffect(() => {
         const loadRoomTypes = async () => {
             const httpService = new HttpService();
             let roomTypes;
-            if(isPrivate){
+            if (isPrivate) {
                 roomTypes = await httpService.get(`${config.room_types.display(true)}?mapName=${mapName}&username=${username}`)
             } else {
                 roomTypes = await httpService.get(`${config.room_types.display(false)}?mapName=${mapName}`)
@@ -59,7 +59,7 @@ const MapView = ({isPrivate}) => {
 
     useEffect(() => {
         if (!searchParams.has("floor")) {
-            setSearchParams({floor: "0"},{replace: true});
+            setSearchParams({floor: "0"}, {replace: true});
         }
     }, [setSearchParams, searchParams]);
 
@@ -75,7 +75,7 @@ const MapView = ({isPrivate}) => {
 
             try {
                 let url;
-                if(isPrivate){
+                if (isPrivate) {
                     httpService.setAuthenticated();
                     url = `${config.view_maps.load(true)}?mapName=${mapName}&username=${username}`
                 } else {
@@ -138,42 +138,38 @@ const MapView = ({isPrivate}) => {
         window.addEventListener("openRoomInfoPanel", openRoomInfoPanel);
 
         return () => window.removeEventListener("openRoomInfoPanel", openRoomInfoPanel);
-    },[])
+    }, [])
 
     const handleDirectionsSubmit = (fromSearch = null, toSearch = null) => {
 
         if (fromSearch === null && toSearch === null) {
             return;
         }
-
         if (fromSearch === null || fromSearch === "") {
             fromSearch = mainEntrance.info.name;
         }
-
         let shapeFrom = shapes.find(sh => sh.info.name === fromSearch)
 
-        console.log("SGAPE FLOORNUM: " + shapeFrom.floorNum,"APP FLOOR NUM " + app.floorNum)
 
         if (shapeFrom.floorNum != searchParams.get("floor")) {
             handleFloorChange(shapeFrom.floorNum);
         }
 
-       const httpService = new HttpService();
+        const httpService = new HttpService();
 
-        if(isPrivate){
-            httpService.setAuthenticated();
-        }
-
+        if (isPrivate) httpService.setAuthenticated();
 
         const fromEncoded = encodeURIComponent(fromSearch).trimEnd()
         const toEncoded = encodeURIComponent(toSearch).trimEnd()
 
-       httpService.get(`${config.view_maps.navigate}?from=${fromEncoded}&to=${toEncoded}`).then(path => {
-           app.drawRouteNEW(path);
-       }).catch(reason => {
-           console.log("err",reason)
-       })
+        httpService.get(`${config.view_maps.navigate}?from=${fromEncoded}&to=${toEncoded}`).then(path => {
+            app.drawRouteNEW(path);
+        }).catch(reason => {
+            console.log("err", reason)
+        })
     };
+
+    
 
     const multiFloorNavigate = () => {
         if (navNext && app) {
@@ -212,10 +208,10 @@ const MapView = ({isPrivate}) => {
     }, [app, mapLoaded]);
 
     const handleFloorChange = (floorNum) => {
-        setSearchParams({floor: floorNum},{replace:true});
+        setSearchParams({floor: floorNum}, {replace: true});
         const chFloor = floors.find(floor => floor.num === floorNum)
 
-        console.log("FLOOR NUM:", floorNum, "CHFLOOR:",chFloor)
+        console.log("FLOOR NUM:", floorNum, "CHFLOOR:", chFloor)
         app.clearRoute()
         app.loadMapN(chFloor.mapData)
         app.floorNum = floorNum;
