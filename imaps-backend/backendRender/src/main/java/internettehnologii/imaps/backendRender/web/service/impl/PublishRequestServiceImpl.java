@@ -30,32 +30,41 @@ public class PublishRequestServiceImpl implements PublishRequestService {
     }
 
     @Override
-    public void addPublishRequest(PublishMapDTO formData,IMapsUser user) {
+    public void addPublishRequest(PublishMapDTO formData, IMapsUser user) {
         Optional<PublishRequest> prOptional = publishRequestRepository.findById(formData.getId());
         PublishRequest pr;
-
-        if(prOptional.isPresent()) {
+        IndoorMap map = mapService.getMapByName(formData.getMapName());
+        if (prOptional.isPresent()) {
             pr = prOptional.get();
             pr.setName(formData.getName());
             pr.setLastName(formData.getLastName());
             pr.setGMapsUrl(formData.getGoogleMapsUrl());
             pr.setMapType(formData.getMapType());
-        } else{
-            pr = new PublishRequest(formData.getName(),formData.getLastName(),formData.getGoogleMapsUrl(),formData.getMapType());
-            IndoorMap map = mapService.getMapByName(formData.getMapName());
+            map.setStatus(MAP_STATUS.INVALID);
+        } else {
+            pr = new PublishRequest(formData.getName(), formData.getLastName(), formData.getGoogleMapsUrl(), formData.getMapType());
+
             pr.setMap(map);
             pr.setUser(user);
             map.setStatus(MAP_STATUS.INVALID);
-            this.mapRepository.save(map);
-        }
 
+        }
+        this.mapRepository.save(map);
         this.publishRequestRepository.save(pr);
 
     }
 
     @Override
-    public void deletePublishRequest(PublishRequest publishRequest) {
-        this.publishRequestRepository.delete(publishRequest);
+    public void denyPublishRequest(int id) throws Exception {
+        PublishRequest pr = this.publishRequestRepository.findById(id).orElseThrow(Exception::new);
+
+        pr.setResolved(true);
+        IndoorMap map = pr.getMap();
+        map.setStatus(MAP_STATUS.PRIVATE);
+        map.setIsPublished(false);
+
+        this.publishRequestRepository.save(pr);
+        this.mapRepository.save(map);
     }
 
     @Override
@@ -99,7 +108,7 @@ public class PublishRequestServiceImpl implements PublishRequestService {
 
     @Override
     public void editPublishRequest(PublishRequest publishRequest) {
-        if(!publishRequestRepository.existsById(publishRequest.getId()))  return;
+        if (!publishRequestRepository.existsById(publishRequest.getId())) return;
 
         publishRequestRepository.save(publishRequest);
     }

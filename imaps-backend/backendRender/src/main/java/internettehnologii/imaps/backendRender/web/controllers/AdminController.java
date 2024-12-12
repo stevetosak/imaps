@@ -1,9 +1,6 @@
 package internettehnologii.imaps.backendRender.web.controllers;
 
-import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.entities.MAP_STATUS;
-import internettehnologii.imaps.backendRender.web.entities.PublishRequest;
-import internettehnologii.imaps.backendRender.web.repo.MapRepository;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.PublishRequestService;
 import internettehnologii.imaps.backendRender.web.util.DTO.MapDTO;
@@ -73,6 +70,15 @@ public class AdminController {
     public ResponseEntity<Map<String,Object>> approvePR(@RequestParam("id") Integer id) {
         try{
             publishRequestService.approvePublishRequest(id);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(new HashMap<>());
+    }
+    @PostMapping("/pr/deny")
+    public ResponseEntity<Map<String,Object>> denyPR(@RequestParam("id") Integer id) {
+        try{
+            publishRequestService.denyPublishRequest(id);
         } catch (Exception e){
             e.printStackTrace();
         }
