@@ -8,12 +8,12 @@ import internettehnologii.imaps.backendRender.graph.exceptions.MapParseException
 import java.util.*;
 
 public class MapNodeParser {
+
+
     public List<MapNode> parseAndCreate(String mapJson) throws Exception {
         final List<MapNode> mapNodes = new ArrayList<>();
 
-        //System.out.println("======= MAP JSON ====== " + mapJson);
-
-        if(mapJson == null || mapJson.isEmpty() || mapJson.equals("[]")) {
+        if (mapJson == null || mapJson.isEmpty() || mapJson.equals("[]")) {
             throw new MapParseException("Cannot parse empty map");
         }
 
@@ -21,40 +21,26 @@ public class MapNodeParser {
         List<Shape> shapes = objectMapper.readValue(mapJson, objectMapper.getTypeFactory().constructCollectionType(List.class, Shape.class));
 
         shapes.forEach(shape -> {
-            System.out.println(shape.toString() + " -----------sgap");
             try {
                 String type = shape.getClassName();
-
-                // Wall i room ne se bitni za navigacija
                 if (Objects.equals(type, "Wall") || Objects.equals(type, "Room")) return;
-
                 MapNode mapNode = createMapNode(shape);
-
                 @SuppressWarnings("unchecked")
                 List<String> connectedPins = (List<String>) shape.getAttrs().get("connected_pins");
-
-
                 if (connectedPins != null) {
                     for (String pin : connectedPins) {
                         System.out.println("Connected node (markup) : " + pin + " to: " + shape.getAttrs().get("obj_name"));
                         mapNode.addConnectionName(pin);
                     }
-
                 }
-
                 mapNodes.add(mapNode);
-
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
-
         mapNodes.forEach(node -> System.out.println("Added node: ----> " + node.toString()));
-
         return mapNodes;
-
     }
-
 
 
     private static MapNode createMapNode(Shape shape) {
@@ -66,7 +52,7 @@ public class MapNodeParser {
         Coordinates<Double, Double> coordinates = new Coordinates<>(x, y);
         int floorNumber = (int) shape.getAttrs().get("floor_num");
 
-        MapNode mapNode = new MapNode(name, description, coordinates,shape.getClassName(),floorNumber);
+        MapNode mapNode = new MapNode(name, description, coordinates, shape.getClassName(), floorNumber);
         if (connectedRoom != null) {
             mapNode.setConnectedRoom(connectedRoom);
         }
