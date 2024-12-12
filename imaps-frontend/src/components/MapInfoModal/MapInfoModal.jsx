@@ -7,7 +7,7 @@ import HttpService from "../../scripts/net/HttpService.js";
 import config from "../../scripts/net/netconfig.js";
 import {useAppContext} from "../AppContext/AppContext.jsx";
 
-export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate, onPublish}) {
+export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate, onPublish, published=false}) {
     const [isEditPopupOpen, setEditPopupOpen] = useState(false);
     const [editedName, setEditedName] = useState(map?.mapName || "");
     const [editedGmapsUrl, setEditedGmapsUrl] = useState(map?.gmaps_url || "");
@@ -76,7 +76,7 @@ export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate, 
         console.log("FORMDATA: "+JSON.stringify(formData))
         await httpService.post(`${config.my_maps.publish}?username=${username}`,formData);
         setPublishFormOpen(false)
-        onPublish();
+        onPublish()
     }
 
     return (
@@ -120,7 +120,7 @@ export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate, 
                     <button className={styles.deleteButton} onClick={handleDelete}>
                         Delete
                     </button>
-                    {!map.is_published && (
+                    {!map.is_published && !published && (
                         <button className={styles.publishButton} onClick={openPublishModal}>
                             Publish
                         </button>

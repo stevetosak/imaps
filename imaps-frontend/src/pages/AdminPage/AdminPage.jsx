@@ -195,6 +195,7 @@ export default function AdminPage() {
                     onCancel={closePublishForm}
                     onApprove={handleApprove}
                     onDeny={handleDeny}
+
                 />
             )}
 
@@ -217,6 +218,7 @@ export default function AdminPage() {
                     }}
                     onDelete={() => {
                     }}
+                    published={true}
                 />
             )}
             {toastMessage && <Toast message={toastMessage} type={toastType} onClose={() => setToastMessage(null)}/>}
