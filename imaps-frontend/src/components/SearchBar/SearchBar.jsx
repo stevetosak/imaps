@@ -5,7 +5,7 @@ import routeIcon from "../../assets/route_icon.png";
 import closeIcon from "../../assets/close_icon.png";
 import styles from "./SearchBar.module.css";
 
-function SearchBar({ map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom, availableShapes }) {
+function SearchBar({ map, handleDirectionsSubmit, setIsPanelOpen, setSelectedRoom, availableShapes,handleFloorChange }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -13,16 +13,24 @@ function SearchBar({ map, handleDirectionsSubmit, isPanelOpen, setSelectedRoom, 
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [inputFieldType, setInputFieldType] = useState("");
-  const dropdownRef = useRef(null); // To hold the dropdown's position
+  const dropdownRef = useRef(null);
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
 
   function searchRoom() {
-    let foundRoom = map.findRoomByName(from);
+    let foundRoom = availableShapes.find(sh => sh.info.name === from)
+    console.log("map fnum",map.floorNum)
+    if(foundRoom.floorNum !== map.floorNum){
+      handleFloorChange(foundRoom.floorNum);
+    }
+
+
+    console.log("FOUND ROOM: " + foundRoom)
+    map.highlightShape(from);
     setSelectedRoom(foundRoom);
-    isPanelOpen(true);
+    setIsPanelOpen(true);
   }
 
   const handleInputFocus = (field) => {
