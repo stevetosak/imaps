@@ -100,14 +100,14 @@ export default function AdminPage() {
         loadPublishRequests();
     }, []);
 
-    const handleApprove = async (id) => {
+    const handleApprove = async (id,mapName) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
         const url = `${config.admin.approve_pr}?id=${id}`;
         closePublishForm()
         try {
             await httpService.post(url);
-            // setPendingMaps((prev) => prev.filter((map) => map.mapName !== id));
+            setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
             showToast(`Publish Request "${id}" approved.`, 1)
         } catch (error) {
             console.error("Error approving pr:", error);
@@ -122,15 +122,14 @@ export default function AdminPage() {
         setTimeout(() => setToastMessage(null), 3000); // Automatically hide the toast after 3 seconds
     };
 
-    const handleDeny = async (id, reason) => {
+    const handleDeny = async (id, mapName,reason) => {
         const httpService = new HttpService();
         httpService.setAuthenticated();
         const url = `${config.admin.deny_pr}?id=${id}&reason=${encodeURIComponent(reason)}`;
         closePublishForm()
         try {
             await httpService.post(url);
-            //setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
-            // alert(`Publish request "${id}" denied.`);
+            setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
             showToast(`Publish request ${id} denied.`, 1)
         } catch (error) {
             console.error("Error denying pr:", error);

@@ -42,15 +42,7 @@ public class MapDrawController {
     public ResponseEntity<List<MapDTO>> getMapsForUser(@RequestParam String username) {
         try {
             List<IndoorMap> maps = mapService.getAllMapsForUser(username);
-            List<MapDTO> mapDTOS = maps.stream()
-                    .map(imap -> new MapDTO(imap.getName(),
-                            imap.getMapType(),
-                            imap.getCreatedAt(),
-                            imap.getModifiedAt(),
-                            imap.getStatus().name(),
-                            imap.getFavouriteCount()))
-                    .toList();
-
+            List<MapDTO> mapDTOS = Util.convertToMapDTO(maps);
             return ResponseEntity.ok().body(mapDTOS);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -85,14 +77,7 @@ public class MapDrawController {
 
         try{
             IMapsUser user = userService.getUser(username);
-            List<MapDTO> mapDTOS = user.getFavoriteMaps().stream()
-                    .map(imap -> new MapDTO(imap.getName(),
-                            imap.getMapType(),
-                            imap.getCreatedAt(),
-                            imap.getModifiedAt(),
-                            imap.getStatus().name(),
-                            imap.getFavouriteCount()))
-                    .toList();
+            List<MapDTO> mapDTOS = Util.convertToMapDTO(user.getFavoriteMaps());
             return ResponseEntity.ok().body(mapDTOS);
 
         } catch (Exception e){
@@ -148,7 +133,8 @@ public class MapDrawController {
                     ,map.getCreatedAt(),
                     map.getModifiedAt(),
                     map.getStatus().name(),
-                    map.getFavouriteCount());
+                    map.getFavouriteCount(),
+                    map.getGmapsUrl());
             return ResponseEntity.ok(mapDTO);
         } catch (Exception e) {
             System.out.println(e.getMessage());

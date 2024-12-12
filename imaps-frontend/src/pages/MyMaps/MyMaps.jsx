@@ -9,6 +9,7 @@ import Logo from "../../components/Logo/Logo.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 import config from "../../scripts/net/netconfig.js";
+import {element} from "prop-types";
 import Toast from "../../components/Toast/Toast.jsx";
 
 const renderTile = ({data, isDragging}, openMapInfo) => (
@@ -97,6 +98,7 @@ export default function MyMaps() {
         httpService
             .put(`${config.my_maps.add}?username=${username}`, mapDetails)
             .then((respMap) => {
+                console.log("RESP NEW MAP: " + respMap)
                 const mapTile = {
                     mapName: respMap.mapName,
                     cols: 1,
@@ -136,10 +138,11 @@ export default function MyMaps() {
                 created_at: elem.createdAt,
                 modified_at: elem.modifiedAt,
                 published_at: elem.published_at,
-                gmaps_url: elem.gmaps_url,
+                gmaps_url: elem.gMapsUrl,
                 image_url: card,
                 numFavourites: elem.numFavourites,
             }));
+
 
             setTiles(mapTiles);
             setAllTiles(mapTiles);
@@ -220,6 +223,8 @@ export default function MyMaps() {
                 onUpdate={handleUpdate}
                 onPublish={() => {
                     showToast(`Map ${selectedMap.mapName} published successfully!`);
+                    setPrivateMaps((prevMaps) => prevMaps.filter(m => m.mapName !== selectedMap.mapName))
+                    setPendingMaps((prevMaps) => [...prevMaps,allTiles.find(m => m.mapName = selectedMap.mapName)])
                     closeMapInfoModal()
                 }}
             />

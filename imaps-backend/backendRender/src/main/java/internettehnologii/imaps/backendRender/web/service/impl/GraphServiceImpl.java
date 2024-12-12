@@ -19,12 +19,14 @@ public class GraphServiceImpl implements GraphService {
         floors.forEach(floor -> {
             try {
                 List<MapNode> nodes = parser.parseAndCreate(floor.getMapData().getShapeData());
-                graph.load(nodes);
+                graph.loadNodeNames(nodes);
             } catch (Exception e) {
                 System.out.println("Nodes for floor " + floor.getFloorNumber() + " could not be parsed. " + e.getMessage());
                 e.printStackTrace();
             }
         });
+
+        graph.loadEdges();
 
         return graph;
     }
