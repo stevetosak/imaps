@@ -9,6 +9,7 @@ import Logo from "../../components/Logo/Logo.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 import config from "../../scripts/net/netconfig.js";
+import {element} from "prop-types";
 
 const renderTile = ({data, isDragging}, openMapInfo) => (
     <div style={{padding: "1rem", width: "100%"}}>
@@ -130,10 +131,11 @@ export default function MyMaps() {
                 created_at: elem.createdAt,
                 modified_at: elem.modifiedAt,
                 published_at: elem.published_at,
-                gmaps_url: elem.gmaps_url,
+                gmaps_url: elem.gMapsUrl,
                 image_url: card,
                 numFavourites: elem.numFavourites
             }));
+
 
             setTiles(mapTiles);
             setAllTiles(mapTiles);

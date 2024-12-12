@@ -21,7 +21,7 @@ public class IndoorMap {
     private String name = "";
 
     @Column(name = "gmaps_url")
-    private String gmapsUrl;
+    private String gmapsUrl = "";
 
     @Enumerated(EnumType.STRING)
     private MAP_STATUS status;

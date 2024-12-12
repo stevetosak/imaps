@@ -19,5 +19,6 @@ public class MapDTO {
     private LocalDateTime modifiedAt;
     private String mapStatus;
     private int numFavourites;
+    private String gMapsUrl;
 
 }

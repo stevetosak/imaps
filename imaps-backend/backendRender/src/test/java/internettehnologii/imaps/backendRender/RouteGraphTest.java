@@ -24,7 +24,7 @@ class RouteGraphTest {
 
         List<MapNode> nodes = Arrays.asList(nodeA, nodeB, nodeC,nodeD);
         routeGraph = new RouteGraph();
-        routeGraph.load(nodes);
+        routeGraph.loadNodeNames(nodes);
     }
 
     @Test

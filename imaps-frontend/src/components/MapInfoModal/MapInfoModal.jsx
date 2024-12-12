@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styles from "./MapInfoModal.module.css";
 import {json, useNavigate} from "react-router-dom";
 import edit_icon from "../../assets/edit_icon_black.png";
@@ -14,6 +14,11 @@ export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate})
     const [publishFormOpen,setPublishFormOpen] = useState(false)
     const navigate = useNavigate();
     const[loadedFormData,setLoadedFormData] = useState(null)
+
+
+    useEffect(() => {
+        console.log("GMAPS: " + JSON.stringify(map))
+    }, []);
 
     const {username} = useAppContext();
 
@@ -99,7 +104,7 @@ export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate})
                 </p>
                 <p>
                     <strong>Google Maps URL:</strong>
-                    <a href={map.gmaps_url} target="_blank" rel="noopener noreferrer">
+                    <a href={map.gMapsUrl}  rel="noopener noreferrer">
                         Open in Google Maps
                     </a>
                 </p>
