@@ -119,7 +119,7 @@ export default function AdminPage() {
 
         try {
             await httpService.post(url);
-            //setPendingMaps((prev) => prev.filter((map) => map.mapName !== id));
+            //setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
             alert(`Publish request "${id}" denied.`);
         } catch (error) {
             console.error("Error denying pr:", error);
