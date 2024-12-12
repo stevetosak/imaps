@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styles from "./MapInfoModal.module.css";
 import edit_icon from "../../assets/edit_icon_black.png";
 import PublishForm from "../PublishForm/PublishForm.jsx";
@@ -72,7 +72,7 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,o
         console.log("FORMDATA: "+JSON.stringify(formData))
         await httpService.post(`${config.my_maps.publish}?username=${username}`,formData);
         setPublishFormOpen(false)
-        onPublish();
+        onPublish()
     }
 
     return (
@@ -116,7 +116,7 @@ export default function MapInfoModal({ isOpen, onClose, map, onDelete,onUpdate,o
                     <button className={styles.deleteButton} onClick={handleDelete}>
                         Delete
                     </button>
-                    {!map.is_published && (
+                    {!map.is_published && !published && (
                         <button className={styles.publishButton} onClick={openPublishModal}>
                             Publish
                         </button>
