@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import styles from "./MapInfoModal.module.css";
-import {useNavigate} from "react-router-dom";
+import {json, useNavigate} from "react-router-dom";
 import edit_icon from "../../assets/edit_icon_black.png";
 import PublishForm from "../PublishForm/PublishForm.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
@@ -68,6 +68,7 @@ export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate})
     const sendPublishRequest = async (formData) => {
         const httpService = new HttpService(true);
         formData.mapName = map.mapName;
+        console.log("FORMDATA: "+JSON.stringify(formData))
         await httpService.post(`${config.my_maps.publish}?username=${username}`,formData);
         setPublishFormOpen(false)
     }
