@@ -13,6 +13,7 @@ import config from "../../scripts/net/netconfig.js";
 import parseMapData from "../../scripts/util/parseMapData.js";
 import ShapeRegistry from "../../scripts/util/ShapeRegistry.js";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
+import Report from "../../components/Report/Report.jsx";
 import {Button} from "../IMaps/components/Button.jsx";
 
 const MapView = ({isPrivate}) => {
