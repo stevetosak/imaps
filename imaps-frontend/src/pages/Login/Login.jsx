@@ -6,6 +6,8 @@ import Logo from "../../components/Logo/Logo.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 import config from "../../scripts/net/netconfig.js";
+import facebook_icon from "../../assets/facebook_icon.png";
+import gmail_icon from "../../assets/gmail_icon.png";
 
 const LoginPage = () => {
     const [formUsername, setFormUsername] = useState("");
@@ -25,10 +27,8 @@ const LoginPage = () => {
 
     const handleLogin = async () => {
         const httpService = new HttpService();
-        return httpService.post(config.auth.login, payload)
-
+        return httpService.post(config.auth.login, payload);
     };
-
 
     const login = async (e) => {
         e.preventDefault();
@@ -36,44 +36,28 @@ const LoginPage = () => {
         handleLogin()
             .then(resp => {
                 if (resp.token) {
-                    navigate(targetPath)
+                    navigate(targetPath);
                     localStorage.setItem("token", resp.token);
                     setUsername(resp.username);
                     setIsAuthenticated(true);
-                    console.log("ROLES",resp.roles)
+                    console.log("ROLES", resp.roles);
                 } else {
                     setError("Invalid username or password.");
                 }
             }).catch(reason => {
             console.error("Login failed", reason);
-            setError("Login failed. Please try again.")
-        })
+            setError("Login failed. Please try again.");
+        });
+    };
 
-        // fetch("http://localhost:8080/api/auth/login", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify(payload),
-        // })
-        //   .then((response) => {
-        //     if (!response.ok) {
-        //       throw new Error("Login failed: resp = " + response.statusText);
-        //     }
-        //     return response.json();
-        //   })
-        //   .then((data) => {
-        //     if (data.token) {
-        //       navigate(targetPath);
-        //       handleLogin(data);
-        //     } else {
-        //       setError("Invalid username or password.");
-        //     }
-        //   })
-        //   .catch((error) => {
-        //     console.error("Login failed", error);
-        //     setError("Login failed. Please try again.");
-        //   });
+    const continueWithGoogle = () => {
+        console.log("Continue with Google");
+        // Add logic for Google authentication here
+    };
+
+    const continueWithFacebook = () => {
+        console.log("Continue with Facebook");
+        // Add logic for Facebook authentication here
     };
 
     return (
@@ -110,6 +94,17 @@ const LoginPage = () => {
                     {error && <p className={styles.error}>{error}</p>}
                     <button type="submit">Submit</button>
                 </form>
+                <div className={styles.or}>OR</div>
+                <div className={styles.socialButtons}>
+                    <button className={styles.socialButton} onClick={continueWithGoogle}>
+                        <img src={gmail_icon} alt="Google Icon" className={styles.socialIcon} />
+                        Continue with Google
+                    </button>
+                    <button className={styles.socialButton} onClick={continueWithFacebook}>
+                        <img src={facebook_icon} alt="Facebook Icon" className={styles.socialIcon} />
+                        Continue with Facebook
+                    </button>
+                </div>
                 <p>
                     Don't have an account? <Link to="/Signup"> Sign Up </Link>
                 </p>
