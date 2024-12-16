@@ -13,6 +13,7 @@ import config from "../../scripts/net/netconfig.js";
 import parseMapData from "../../scripts/util/parseMapData.js";
 import ShapeRegistry from "../../scripts/util/ShapeRegistry.js";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
+import Report from "../../components/Report/Report.jsx";
 
 const MapView = ({isPrivate}) => {
     const {mapName} = useParams();
@@ -259,6 +260,7 @@ const MapView = ({isPrivate}) => {
                             <FilterBar map={app} roomTypes={roomTypes}/>
                         </div>
                     )}
+                    {username && <Report/>}
                     <div className={styles.profileContainer}>
                         <Profile position="relative"/>
                     </div>
