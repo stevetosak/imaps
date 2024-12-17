@@ -1,5 +1,7 @@
 import React, {useContext, useState} from "react";
 import { Link } from "react-router-dom";
+import logo_icon from "../../../assets/logo_icon.png";
+//import { AuthContext } from "../../../components/AuthContext/AuthContext";
 import Logo from "../../../components/Logo/Logo.jsx";
 import Profile from "../../../components/Profile/Profile.jsx";
 import {useAppContext} from "../../../components/AppContext/AppContext.jsx";

@@ -9,8 +9,8 @@ import Logo from "../../components/Logo/Logo.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 import config from "../../scripts/net/netconfig.js";
-import Toast from "../../components/Toast/Toast.jsx";
 import {element} from "prop-types";
+import Toast from "../../components/Toast/Toast.jsx";
 
 const renderTile = ({data, isDragging}, openMapInfo) => (
     <div style={{padding: "1rem", width: "100%"}}>
@@ -98,6 +98,7 @@ export default function MyMaps() {
         httpService
             .put(`${config.my_maps.add}?username=${username}`, mapDetails)
             .then((respMap) => {
+                console.log("RESP NEW MAP: " + respMap)
                 const mapTile = {
                     mapName: respMap.mapName,
                     cols: 1,

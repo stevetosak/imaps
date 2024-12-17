@@ -53,7 +53,7 @@ const tileSize = (tile) => ({
     rowSpan: tile.rows,
 });
 
-export function AdminPage() {
+export default function AdminPage() {
     const [pendingMaps, setPendingMaps] = useState([]);
     const [selectedMap, setSelectedMap] = useState(null);
     const [isMapInfoModalOpen, setIsMapInfoModalOpen] = useState(false);
@@ -129,8 +129,7 @@ export function AdminPage() {
         closePublishForm()
         try {
             await httpService.post(url);
-            //setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
-            // alert(`Publish request "${id}" denied.`);
+            setPendingMaps((prev) => prev.filter((map) => map.mapName !== mapName));
             showToast(`Publish request ${id} denied.`, 1)
         } catch (error) {
             console.error("Error denying pr:", error);

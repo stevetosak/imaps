@@ -161,7 +161,7 @@ export class MapDisplay {
 
                 buff.push(segmentX, segmentY);
 
-                let line = this.navArrow.clone({points: [...buff]});
+                let line = this.navArrow.clone({ points: [...buff] });
                 this.routeLayer.add(line);
                 this.routeLayer.draw();
 
