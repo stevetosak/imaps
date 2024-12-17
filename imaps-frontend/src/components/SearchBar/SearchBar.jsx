@@ -5,7 +5,14 @@ import routeIcon from "../../assets/route_icon.png";
 import closeIcon from "../../assets/close_icon.png";
 import styles from "./SearchBar.module.css";
 
-function SearchBar({ map, handleDirectionsSubmit, setIsPanelOpen, setSelectedRoom, availableShapes,handleFloorChange }) {
+function SearchBar({
+                     map,
+                     handleDirectionsSubmit,
+                     setIsPanelOpen,
+                     setSelectedRoom,
+                     availableShapes,
+                     handleFloorChange,
+                   }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -13,27 +20,42 @@ function SearchBar({ map, handleDirectionsSubmit, setIsPanelOpen, setSelectedRoo
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [inputFieldType, setInputFieldType] = useState("");
-  const dropdownRef = useRef(null);
 
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
+  const wrapperRef = useRef(null);
+  const dropdownContainerRef = useRef(null);
+  const activeInputRef = useRef(null); // Track the currently focused input field
+
+  const toggleExpanded = () => setIsExpanded(!isExpanded);
+
+  const handleClickOutside = (event) => {
+    if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target) &&
+        dropdownContainerRef.current &&
+        !dropdownContainerRef.current.contains(event.target)
+    ) {
+      setDropdownVisible(false);
+    }
   };
 
-  function searchRoom() {
-    let foundRoom = availableShapes.find(sh => sh.info.name === from)
-    console.log("map fnum",map.floorNum)
-    if(foundRoom.floorNum !== map.floorNum){
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const searchRoom = () => {
+    const foundRoom = availableShapes.find((sh) => sh.info.name === from);
+    if (foundRoom && foundRoom.floorNum !== map.floorNum) {
       handleFloorChange(foundRoom.floorNum);
     }
-
-
-    console.log("FOUND ROOM: " + foundRoom)
     map.highlightShape(from);
     setSelectedRoom(foundRoom);
     setIsPanelOpen(true);
-  }
+  };
 
-  const handleInputFocus = (field) => {
+  const handleInputFocus = (field, inputRef) => {
     if (availableOptions.length === 0 && map) {
       setAvailableOptions(
           availableShapes
@@ -41,8 +63,9 @@ function SearchBar({ map, handleDirectionsSubmit, setIsPanelOpen, setSelectedRoo
               .map((shape) => shape.info.name)
       );
     }
-    setDropdownVisible(true);
     setInputFieldType(field);
+    setDropdownVisible(true);
+    activeInputRef.current = inputRef; // Set the active input ref
   };
 
   const handleInputChange = (setter) => (event) => {
@@ -68,15 +91,20 @@ function SearchBar({ map, handleDirectionsSubmit, setIsPanelOpen, setSelectedRoo
   const renderDropdown = () => {
     if (!dropdownVisible || filteredOptions.length === 0) return null;
 
-    const position = dropdownRef.current?.getBoundingClientRect() || { top: 0, left: 0, width: 0 };
+    const position = activeInputRef.current?.getBoundingClientRect() || {
+      top: 0,
+      left: 0,
+      width: 0,
+    };
 
     return ReactDOM.createPortal(
         <ul
+            ref={dropdownContainerRef}
             className={styles.dropdown}
             style={{
               position: "absolute",
-              top: position.top + position.height,
-              left: position.left,
+              top: position.top + position.height + window.scrollY,
+              left: position.left + window.scrollX,
               width: position.width,
             }}
         >
@@ -90,12 +118,12 @@ function SearchBar({ map, handleDirectionsSubmit, setIsPanelOpen, setSelectedRoo
               </li>
           ))}
         </ul>,
-        document.body // Portal renders outside the parent hierarchy
+        document.body
     );
   };
 
   return (
-      <div className={styles.wrapper}>
+      <div className={styles.wrapper} ref={wrapperRef}>
         {!isExpanded ? (
             <div className={styles.searchBar}>
               <input
@@ -103,17 +131,24 @@ function SearchBar({ map, handleDirectionsSubmit, setIsPanelOpen, setSelectedRoo
                   className={styles.inputField}
                   placeholder="Search location"
                   aria-label="Search"
-                  ref={dropdownRef} // Attach the input to calculate dropdown position
-                  onFocus={() => handleInputFocus("from")}
+                  onFocus={(e) => handleInputFocus("from", e.target)}
                   onChange={handleInputChange(setFrom)}
                   value={from}
               />
               {renderDropdown()}
               <div className={styles.buttons}>
-                <button type="button" className={styles.iconButton} onClick={searchRoom}>
+                <button
+                    type="button"
+                    className={styles.iconButton}
+                    onClick={searchRoom}
+                >
                   <img src={searchIcon} alt="Search Icon" />
                 </button>
-                <button type="button" className={styles.iconButton} onClick={toggleExpanded}>
+                <button
+                    type="button"
+                    className={styles.iconButton}
+                    onClick={toggleExpanded}
+                >
                   <img src={routeIcon} alt="Route Icon" />
                 </button>
               </div>
@@ -126,20 +161,18 @@ function SearchBar({ map, handleDirectionsSubmit, setIsPanelOpen, setSelectedRoo
                     placeholder="From"
                     aria-label="From"
                     value={from}
-                    onFocus={() => handleInputFocus("from")}
+                    onFocus={(e) => handleInputFocus("from", e.target)}
                     onChange={handleInputChange(setFrom)}
                     className={styles.inputField}
-                    ref={inputFieldType === "from" ? dropdownRef : null}
                 />
                 <input
                     type="text"
                     placeholder="To"
                     aria-label="To"
                     value={to}
-                    onFocus={() => handleInputFocus("to")}
+                    onFocus={(e) => handleInputFocus("to", e.target)}
                     onChange={handleInputChange(setTo)}
                     className={styles.inputField}
-                    ref={inputFieldType === "to" ? dropdownRef : null}
                 />
                 {renderDropdown()}
               </div>
@@ -151,7 +184,11 @@ function SearchBar({ map, handleDirectionsSubmit, setIsPanelOpen, setSelectedRoo
                 >
                   <img src={searchIcon} alt="Submit Directions" />
                 </button>
-                <button type="button" className={styles.iconButton} onClick={toggleExpanded}>
+                <button
+                    type="button"
+                    className={styles.iconButton}
+                    onClick={toggleExpanded}
+                >
                   <img src={closeIcon} alt="Close Icon" />
                 </button>
               </div>
