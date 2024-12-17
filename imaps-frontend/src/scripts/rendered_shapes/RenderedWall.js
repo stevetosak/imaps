@@ -6,8 +6,8 @@ export default class RenderedWall extends RenderedMapShape{
         super({
             x: attrs.x,
             y: attrs.y,
-            width: attrs.width * scaleX,
-            height: attrs.height * scaleY,
+            width: attrs.width,
+            height: attrs.height,
             fill: '#4B4B4B',
             stroke: 'black',
             strokeWidth: 1,

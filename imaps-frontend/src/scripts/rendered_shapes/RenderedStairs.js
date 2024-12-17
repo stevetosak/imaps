@@ -7,8 +7,8 @@ export default class RenderedStairs extends RenderedMapShape{
         super({
             x: attrs.x,
             y: attrs.y,
-            width: attrs.width * scaleX,
-            height: attrs.height * scaleY,
+            width: attrs.width ,
+            height: attrs.height,
             fill: "rgb(199,190,133)",
             stroke: "rgb(16,15,15)",
             strokeWidth: 1,

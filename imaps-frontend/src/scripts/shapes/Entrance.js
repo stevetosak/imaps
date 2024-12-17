@@ -13,8 +13,8 @@ export default class Entrance extends MapNode {
             {
                 x: attrs.position.x,
                 y: attrs.position.y,
-                width: attrs.width,
-                height: attrs.height,
+                width: attrs.width * attrs.scaleX,
+                height: attrs.height * attrs.scaleY,
                 fill: "rgb(126,238,167)",
                 stroke: "#252627",
                 strokeWidth: 1,

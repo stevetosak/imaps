@@ -13,6 +13,7 @@ import config from "../../scripts/net/netconfig.js";
 import parseMapData from "../../scripts/util/parseMapData.js";
 import ShapeRegistry from "../../scripts/util/ShapeRegistry.js";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
+import {Button} from "../IMaps/components/Button.jsx";
 
 const MapView = ({isPrivate}) => {
     const {mapName} = useParams();
@@ -27,6 +28,7 @@ const MapView = ({isPrivate}) => {
     const [shapes, setShapes] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
     const [mainEntrance, setMainEntrance] = useState({});
+    const [canDisplayNavDownload,setCanDisplayNavDownload] = useState(false);
 
     const defaultNavObj = {
         enabled: false,
@@ -114,6 +116,8 @@ const MapView = ({isPrivate}) => {
 
                 setFloors(respFloors);
 
+                console.log("FLOOR DATA: " + tlFloor?.mapData)
+
                 appInstance.loadMapN(tlFloor?.mapData)
                 setApp(appInstance);
                 setMapLoaded(true);
@@ -184,6 +188,18 @@ const MapView = ({isPrivate}) => {
         }
     }
 
+    useEffect(() => {
+        const handleNavigateEnd = (event) => {
+            console.log("DETAIL END",event.detail)
+            setCanDisplayNavDownload(true);
+        }
+
+        window.addEventListener("navend",handleNavigateEnd)
+        return () => {
+            window.removeEventListener("navend",handleNavigateEnd)
+        }
+    }, [app]);
+
 
     useEffect(() => {
 
@@ -215,7 +231,6 @@ const MapView = ({isPrivate}) => {
         app.clearRoute()
         app.loadMapN(chFloor.mapData)
         app.floorNum = floorNum;
-
 
         console.log(`Floor changed to: ${floorNum}`);
     };
@@ -259,11 +274,19 @@ const MapView = ({isPrivate}) => {
                             <FilterBar map={app} roomTypes={roomTypes}/>
                         </div>
                     )}
+                    {canDisplayNavDownload &&
+                        (<div className={styles.downloadRouteButton}>
+                        <button onClick={() => {
+                            app.getRouteImages()
+                            setCanDisplayNavDownload(false)
+                        }}> Download Route</button>
+                    </div>) }
                     <div className={styles.profileContainer}>
                         <Profile position="relative"/>
                     </div>
                 </div>
             </div>
+            <div id="temp"></div>
 
             <div className={styles.floorSelectorContainer}>
                 <div className={styles.floorSelector}>
@@ -281,6 +304,7 @@ const MapView = ({isPrivate}) => {
                     </select>
                 </div>
             </div>
+
 
         </div>
     );

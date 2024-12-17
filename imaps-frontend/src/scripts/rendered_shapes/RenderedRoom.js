@@ -6,8 +6,8 @@ export default class RenderedRoom extends RenderedMapShape {
     super({
       x: attrs.x,
       y: attrs.y,
-      width: attrs.width * scaleX,
-      height: attrs.height * scaleY,
+      width: attrs.width,
+      height: attrs.height,
       fill: "#A2D9FF",
       stroke: "black",
       strokeWidth: 1,

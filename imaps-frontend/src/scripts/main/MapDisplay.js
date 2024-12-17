@@ -6,6 +6,7 @@ import {addEventHandling} from "../util/addEventHandling.js";
 import ShapeRegistry from "../util/ShapeRegistry.js";
 import triggerNavigate from "../util/triggerNavigate.js";
 import config from "../net/netconfig.js";
+import {dispatchCustomEvent} from "../util/dispatchCustomEvent.js";
 
 export class MapDisplay {
     constructor(containerId, floorNum) {
@@ -37,6 +38,9 @@ export class MapDisplay {
         this.stage.add(this.mainLayer);
         this.stage.add(this.routeLayer);
         this.stage.add(this.textLayer);
+
+
+        this.cachedCanvases = [];
 
         this.floorNum = floorNum;
 
@@ -74,6 +78,7 @@ export class MapDisplay {
         let dsrData = JSON.parse(data);
         dsrData.forEach((shape) => {
             if (shape.className !== "InfoPin") {
+                console.log("SHAPE ATTRS CREATE: " + JSON.stringify(shape.attrs));
                 const renderedShape = Factory.createRenderedShape(shape.className, shape.attrs);
                 addEventHandling(renderedShape, this, "click");
                 this.shapes.push(renderedShape);
@@ -88,8 +93,6 @@ export class MapDisplay {
         });
 
     }
-
-
 
     loadMapN(floorData) {
         if (floorData == null || floorData === "") return;
@@ -108,6 +111,7 @@ export class MapDisplay {
     }
 
 
+
     drawRouteNEW(nodes, offset = 0) {
 
         this.clearRoute();
@@ -117,7 +121,6 @@ export class MapDisplay {
         let idx = offset;
         let buff = [nodes[idx].coordinates.x, nodes[idx].coordinates.y];
 
-
         ++idx;
 
         console.log("INIT BUFFER", buff);
@@ -126,6 +129,9 @@ export class MapDisplay {
         const drawNextSegment = () => {
 
             if (idx >= nodes.length){
+                let stageJson = this.stage.toJSON();
+                this.cachedCanvases.push(stageJson);
+                dispatchCustomEvent("navend",this.downloadURI)
                 return;
             }
 
@@ -133,6 +139,8 @@ export class MapDisplay {
             const nextNode = nodes[idx];
 
             if (nextNode.floorNumber !== currentNode.floorNumber) {
+                let stageJson = this.stage.toJSON();
+                this.cachedCanvases.push(stageJson);
                 triggerNavigate(nodes, idx, nextNode.floorNumber, nextNode);
                 return;
             }
@@ -168,7 +176,7 @@ export class MapDisplay {
                 if (segmentIdx > numSegments) {
                     clearInterval(interval);
                     idx++;
-                    setTimeout(drawNextSegment, 150);
+                    setTimeout(drawNextSegment, 75);
                 }
             }, 50);
         };
@@ -176,28 +184,14 @@ export class MapDisplay {
         drawNextSegment();
     }
 
-
     initializeRoomTypes() {
         this.roomTypes = this.shapes
             .filter((shape) => shape.class === "Room" && shape.info.type !== "")
             .map((shape) => shape.info.type);
     }
 
-    getRoomTypes() {
-        return this.roomTypes;
-    }
-
-
-    getShapeByName(name) {
-        return this.shapes.find(shape => shape.info.name === name)
-    }
-
     getShapeByType(type) {
         return this.shapes.filter((shape) => shape.class === type)
-    }
-
-    toggleSearchRoom() {
-        this.toggleSearch = !this.toggleSearch;
     }
 
     //ova e loso ne trebit vaka
@@ -206,8 +200,23 @@ export class MapDisplay {
         foundShape.highlight();
     }
 
-    getMainEntrance() {
-        return this.shapes.filter(shape => shape.class === "Entrance").filter(el => el.info.isMainEntrance === true)[0];
+     downloadURI(uri, name) {
+        let link = document.createElement('a');
+        link.download = name;
+        link.href = uri;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    getRouteImages(){
+        let i = 1;
+        this.cachedCanvases.forEach(stage => {
+            let parsed = JSON.parse(stage)
+            let dsrStage = Konva.Node.create(parsed,document.createElement("div"))
+            let canvasImageURI = dsrStage.toDataURL({pixelRatio : 1})
+            this.downloadURI(canvasImageURI,`Route${i++}`);
+        })
     }
 
     setFilter(filter) {
