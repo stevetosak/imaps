@@ -19,6 +19,7 @@ import {Button} from "../IMaps/components/Button.jsx";
 const MapView = ({isPrivate}) => {
     const {mapName} = useParams();
     const {username} = useAppContext();
+    const {isAuthenticated} = useAppContext();
 
     const [mapLoaded, setMapLoaded] = useState(false);
     const [app, setApp] = useState(null);
@@ -272,16 +273,18 @@ const MapView = ({isPrivate}) => {
                                 availableShapes={shapes}
                                 handleFloorChange={handleFloorChange}
                             />
+                            {canDisplayNavDownload &&
+                                (<div className={styles.downloadRouteButton}>
+                                    <button onClick={() => {
+                                        app.getRouteImages()
+                                        setCanDisplayNavDownload(false)
+                                    }}> Download Route</button>
+                                </div>) }
                             <FilterBar map={app} roomTypes={roomTypes}/>
                         </div>
                     )}
-                    {canDisplayNavDownload &&
-                        (<div className={styles.downloadRouteButton}>
-                        <button onClick={() => {
-                            app.getRouteImages()
-                            setCanDisplayNavDownload(false)
-                        }}> Download Route</button>
-                    </div>) }
+
+                    {isAuthenticated && <Report></Report>}
                     <div className={styles.profileContainer}>
                         <Profile position="relative"/>
                     </div>

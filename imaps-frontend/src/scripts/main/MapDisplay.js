@@ -6,6 +6,8 @@ import {addEventHandling} from "../util/addEventHandling.js";
 import triggerNavigate from "../util/triggerNavigate.js";
 import config from "../net/netconfig.js";
 import {dispatchCustomEvent} from "../util/dispatchCustomEvent.js";
+import { jsPDF } from "jspdf";
+
 
 export class MapDisplay {
     constructor(containerId, floorNum) {
@@ -197,17 +199,61 @@ export class MapDisplay {
         document.body.removeChild(link);
     }
 
-    getRouteImages(){
-        let i = 1;
-        this.cachedCanvases.forEach(stage => {
-            let parsed = JSON.parse(stage)
-            let dsrStage = Konva.Node.create(parsed,document.createElement("div"))
-            let canvasImageURI = dsrStage.toDataURL({pixelRatio : 1})
-            this.downloadURI(canvasImageURI,`Route${i++}`);
-        })
-    }
+    // import { jsPDF } from "jspdf";
 
-    setFilter(filter) {
+getRouteImages(mapDetails = {mapName : "mapName", floor : -99, from : "from", to : "to"}) {
+
+    const pdf = new jsPDF("p", "mm", "a4"); // A4 portrait mode
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 10;
+    let yOffset = margin;
+    let stepCounter = 1;
+
+    this.cachedCanvases.forEach((stage, index) => {
+
+        let text = `Step: ${index+1}`
+        pdf.text(text, margin, yOffset + 5);
+
+        let parsed = JSON.parse(stage);
+        let dsrStage = Konva.Node.create(parsed, document.createElement("div"));
+
+
+        let canvasImageURI = dsrStage.toDataURL();
+        this.downloadURI(canvasImageURI, "t")
+
+
+        const originalWidth = dsrStage.width();
+        const originalHeight = dsrStage.height();
+
+
+        const maxWidth = pageWidth - 2 * margin;
+        const maxHeight = pageHeight - 2 * margin;
+        let imgWidth = maxWidth;
+        let imgHeight = (originalHeight * maxWidth) / originalWidth;
+
+        if (imgHeight > maxHeight) {
+            imgHeight = maxHeight;
+            imgWidth = (originalWidth * maxHeight) / originalHeight;
+        }
+
+
+        if (yOffset + imgHeight > pageHeight - margin) {
+            pdf.addPage();
+            yOffset = margin;
+        }
+
+
+        pdf.addImage(canvasImageURI, "PNG", margin, yOffset, imgWidth, imgHeight);
+
+        yOffset += imgHeight + 10;
+    });
+
+    pdf.save(`${mapDetails.mapName}Route.pdf`);
+}
+
+
+setFilter(filter) {
         let rooms = this.getShapeByType("Room")
         if (filter === "All") {
             rooms.forEach((shape) => {
