@@ -53,7 +53,7 @@ const tileSize = (tile) => ({
     rowSpan: tile.rows,
 });
 
-export default function AdminPage() {
+export function AdminPage() {
     const [pendingMaps, setPendingMaps] = useState([]);
     const [selectedMap, setSelectedMap] = useState(null);
     const [isMapInfoModalOpen, setIsMapInfoModalOpen] = useState(false);
@@ -226,11 +226,4 @@ export default function AdminPage() {
 
         </div>
     );
-}
-
-export const AdminPage = () => {
-    useEffect(() => {
-        const httpService = new HttpService(true);
-        httpService.get("http://localhost:8080/api/auth/test_auth").then(r => console.log("RESP TEST: " + JSON.stringify(r))).catch(reason => console.log("ERR",reason))
-    }, []);
 }
