@@ -44,6 +44,12 @@ export default class Factory {
   static createRenderedShape(shapeType,attrs){
     let scaleX = (attrs.scaleX ? parseFloat(attrs.scaleX) : 1);
     let scaleY =  (attrs.scaleY ? parseFloat(attrs.scaleY) : 1);
+
+    attrs.width *= scaleX;
+    attrs.height *= scaleY
+
+    console.log("SCALEX " + scaleX)
+    console.log("SCALEY " + scaleY)
     switch (shapeType) {
       case "Entrance":
         return new RenderedEntrance(attrs,scaleX,scaleY);

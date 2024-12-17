@@ -7,8 +7,8 @@ export default class RenderedEntrance extends RenderedMapShape {
     super({
       x: attrs.x,
       y: attrs.y,
-      width: attrs.width * scaleX,
-      height: attrs.height * scaleY,
+      width: attrs.width,
+      height: attrs.height,
       fill: "#7fef83",
       stroke: "black",
       strokeWidth: 1,
