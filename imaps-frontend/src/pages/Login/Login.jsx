@@ -7,7 +7,7 @@ import HttpService from "../../scripts/net/HttpService.js";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 import config from "../../scripts/net/netconfig.js";
 import facebook_icon from "../../assets/facebook_icon.png";
-import gmail_icon from "../../assets/gmail_icon.png";
+import github_icon from "../../assets/github_icon.png";
 
 const LoginPage = () => {
     const [formUsername, setFormUsername] = useState("");
@@ -50,9 +50,8 @@ const LoginPage = () => {
         });
     };
 
-    const continueWithGoogle = () => {
-        console.log("Continue with Google");
-        // Add logic for Google authentication here
+    const continueWithGitHub = () => {
+        console.log("Continue with GitHub");
     };
 
     const continueWithFacebook = () => {
@@ -96,9 +95,9 @@ const LoginPage = () => {
                 </form>
                 <div className={styles.or}>OR</div>
                 <div className={styles.socialButtons}>
-                    <button className={styles.socialButton} onClick={continueWithGoogle}>
-                        <img src={gmail_icon} alt="Google Icon" className={styles.socialIcon} />
-                        Continue with Google
+                    <button className={styles.socialButton} onClick={continueWithGitHub}>
+                        <img src={github_icon} alt="GitHub Icon" className={styles.socialIcon} />
+                        Continue with GitHub
                     </button>
                     <button className={styles.socialButton} onClick={continueWithFacebook}>
                         <img src={facebook_icon} alt="Facebook Icon" className={styles.socialIcon} />

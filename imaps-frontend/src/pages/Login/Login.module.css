@@ -19,6 +19,7 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  padding: 1rem;
 }
 
 .wrapper p {
@@ -28,8 +29,10 @@
 
 .form {
   padding: 1.5rem;
-  -ms-flex-preferred-size: 100vw;
   flex-basis: 100vw;
+  display: flex;
+  flex-direction: column; /* Stack form elements vertically */
+  align-items: center; /* Center form elements horizontally */
 }
 
 .form .heading {
@@ -53,42 +56,38 @@
 .form input {
   height: 40px;
   width: 100%;
+  max-width: 250px; /* Limit max width for larger devices */
   padding: 15px;
   background-color: #f1f9ff;
   border: 2px solid #bce0fd;
   border-radius: 8px;
-  max-width: 250px;
-
+  box-sizing: border-box;
 }
 
 .form button {
   height: 40px;
   width: 100%;
+  max-width: 250px; /* Limit max width for larger devices */
+  margin-top: 1.5rem;
   background-color: #258de6;
   color: white;
   text-transform: uppercase;
   letter-spacing: 1px;
   border: none;
-  display: block;
-  margin: 0 auto;
   font-weight: bold;
-  margin-top: 1.5rem;
   border-radius: 8px;
-  max-width: 250px;
-
 }
-
-
 
 .socialButtons {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Stack social buttons vertically */
+  align-items: center; /* Center them horizontally */
 }
 
 .socialButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-flex; /* Align text and image inline */
+  align-items: center; /* Vertically center content */
+  justify-content: flex-start; /* Align items to the left */
   padding: 10px 15px;
   border: none;
   border-radius: 8px;
@@ -96,6 +95,15 @@
   font-size: 0.8rem;
   font-weight: bold;
   transition: background-color 0.2s, transform 0.2s;
+  width: 100%;
+  max-width: 250px; /* Limit max width */
+}
+
+.socialButton img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  vertical-align: middle;
 }
 
 .socialButton:hover {
@@ -106,19 +114,13 @@
   transform: scale(0.98);
 }
 
-.socialButton img {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
-
 .socialButton:nth-child(1) {
-  background-color: #db4437; /* Google red */
+  background-color: #333; /* GitHub button */
   color: white;
 }
 
 .socialButton:nth-child(2) {
-  background-color: #4267B2; /* Facebook blue */
+  background-color: #4267B2; /* Facebook button */
   color: white;
 }
 
@@ -145,8 +147,8 @@
     max-width: 1100px;
   }
   .form {
-    -ms-flex-preferred-size: auto;
     flex-basis: auto;
+    align-items: center; /* Center form in larger screens */
   }
   .form input {
     width: 250px;
@@ -158,15 +160,28 @@
 }
 
 @media (max-width: 680px) {
-  .illustration {
-    display: none;
+  .wrapper {
+    flex-direction: column; /* Stack form and illustration vertically */
+    align-items: center; /* Center content horizontally */
+    padding: 1rem;
   }
-}
 
-.signUp .illustration {
-  order: 2;
-  justify-self: flex-end;
-  margin-left: 2rem;
+  .illustration {
+    display: none; /* Hide the illustration on mobile */
+  }
+
+  .form {
+    flex-basis: auto;
+    width: 100%; /* Full width for mobile */
+    align-items: center; /* Center form elements horizontally */
+  }
+
+  .form input,
+  .form button,
+  .socialButton {
+    width: 100%; /* Full width for mobile */
+    max-width: 300px; /* Optional: Limit max width */
+  }
 }
 
 button:hover {
