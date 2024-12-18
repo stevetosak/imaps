@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import styles from "./MapInfoModal.module.css";
-import {json, useNavigate} from "react-router-dom";
 import edit_icon from "../../assets/edit_icon_black.png";
 import PublishForm from "../PublishForm/PublishForm.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
 import config from "../../scripts/net/netconfig.js";
 import {useAppContext} from "../AppContext/AppContext.jsx";
+import {replace, useNavigate} from "react-router-dom";
 
 export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate, onPublish, published=false}) {
     const [isEditPopupOpen, setEditPopupOpen] = useState(false);
