@@ -32,6 +32,7 @@ export default function StairsModal({map}){
         setConnections(roomObj.info.selectedPins || []);
         setIsOpen(true);
         console.log(roomObj.info.selectedPins, "Loaded pins on modal open");
+        event.detail.map.detachKeyPressEventListeners();
     },"openStairsModalEvent")
 
 

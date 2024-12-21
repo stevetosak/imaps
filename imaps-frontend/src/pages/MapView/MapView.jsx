@@ -31,6 +31,8 @@ const MapView = ({isPrivate}) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [mainEntrance, setMainEntrance] = useState({});
     const [canDisplayNavDownload,setCanDisplayNavDownload] = useState(false);
+    const [from,setFrom] = useState("");
+    const [to,setTo] = useState("");
 
     const defaultNavObj = {
         enabled: false,
@@ -168,8 +170,13 @@ const MapView = ({isPrivate}) => {
         const fromEncoded = encodeURIComponent(fromSearch).trimEnd()
         const toEncoded = encodeURIComponent(toSearch).trimEnd()
 
+        setFrom(fromSearch);
+        setTo(toSearch);
+
         httpService.get(`${config.view_maps.navigate}?from=${fromEncoded}&to=${toEncoded}`).then(path => {
             app.drawRouteNEW(path);
+
+
         }).catch(reason => {
             console.log("err", reason)
         })
@@ -276,7 +283,11 @@ const MapView = ({isPrivate}) => {
                             {canDisplayNavDownload &&
                                 (<div className={styles.downloadRouteButton}>
                                     <button onClick={() => {
-                                        app.getRouteImages()
+                                        app.getRouteImages({
+                                            mapName: mapName,
+                                            from: from,
+                                            to: to
+                                        })
                                         setCanDisplayNavDownload(false)
                                     }}> Download Route</button>
                                 </div>) }

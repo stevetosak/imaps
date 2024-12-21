@@ -25,11 +25,11 @@ export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate, 
     if (!isOpen || !map) return null;
 
     const handleView = () => {
-        navigate(`/myMaps/${map.mapName}/View`)
+        navigate(`/myMaps/View/${map.mapName}`)
     };
 
     const handleEdit = () => {
-        navigate(`/myMaps/${map.mapName}/Draw`)
+        navigate(`/myMaps/Draw/${map.mapName}`)
     };
 
     const handleDelete = () => {

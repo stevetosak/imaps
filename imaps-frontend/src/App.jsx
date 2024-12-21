@@ -29,13 +29,13 @@ function App() {
                 <Routes>
 
                     <Route element={<ProtectedRoute/>}>
-                        <Route path="/myMaps/:mapName/Draw" element={<Draw/>}/>
+                        <Route path="/myMaps/Draw/:mapName" element={<Draw/>}/>
                         <Route path="/myMaps" element={<MyMaps/>}/>
-                        <Route path="/myMaps/:mapName/View" element={<MapView isPrivate={true}/>}/>
+                        <Route path="/myMaps/View/:mapName" element={<MapView isPrivate={true}/>}/>
                         <Route path="/Admin" element={<AdminPage/>}/>
                     </Route>
                     <Route path="/" element={<IMaps/>}/>
-                    <Route path="/Maps/:mapName/View" element={<MapView isPrivate={false}/>}/>
+                    <Route path="/Maps/View/:mapName" element={<MapView isPrivate={false}/>}/>
                     <Route path="/Maps" element={<BrowseMaps/>}/>
 
 

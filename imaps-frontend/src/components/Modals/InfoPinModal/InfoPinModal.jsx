@@ -36,6 +36,7 @@ export default function InfoPinModal({map}) {
         })
         setConnections(shape.info.selectedPins || []);
         setIsOpen(true);
+        event.detail.map.detachKeyPressEventListeners();
 
         console.log(shape.info.selectedPins, "Loaded pins on modal open");
     },"openPinModalEvent")

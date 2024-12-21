@@ -131,8 +131,9 @@ export class MapDisplay {
         const drawNextSegment = () => {
 
             if (idx >= nodes.length){
-                let stageJson = this.stage.toJSON();
-                this.cachedCanvases.push(stageJson);
+                console.log("FLOOR NUM DISPLAY: " + this.floorNum)
+                let stageInfo = {stage:this.stage.clone(),floor:this.floorNum};
+                this.cachedCanvases.push(stageInfo);
                 dispatchCustomEvent("navend",this.downloadURI)
                 return;
             }
@@ -141,8 +142,8 @@ export class MapDisplay {
             const nextNode = nodes[idx];
 
             if (nextNode.floorNumber !== currentNode.floorNumber) {
-                let stageJson = this.stage.toJSON();
-                this.cachedCanvases.push(stageJson);
+                let stageInfo = {stage:this.stage.clone(),floor:this.floorNum};
+                this.cachedCanvases.push(stageInfo);
                 triggerNavigate(nodes, idx, nextNode.floorNumber, nextNode);
                 return;
             }
@@ -178,9 +179,9 @@ export class MapDisplay {
                 if (segmentIdx > numSegments) {
                     clearInterval(interval);
                     idx++;
-                    setTimeout(drawNextSegment, 75);
+                    setTimeout(drawNextSegment, 50);
                 }
-            }, 50);
+            }, 20);
         };
 
         drawNextSegment();
@@ -211,18 +212,22 @@ export class MapDisplay {
         document.body.removeChild(link);
     }
 
-    // import { jsPDF } from "jspdf";
 
-    getRouteImages(mapDetails = { mapName: "mapName", floor: -99, from: "from", to: "to" }) {
-        const outputWidth = 500;
-        const outputHeight = 500;
+    getRouteImages(mapDetails = { mapName: "mapName", from: "from", to: "to" }) {
 
-        const imagesData = []; // Array to store image URIs
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 10;
+        let yOffset = margin;
 
-        // Step 1: Generate Images and Collect Data URIs
-        this.cachedCanvases.forEach((stage, index) => {
-            let parsed = JSON.parse(stage);
-            let dsrStage = Konva.Node.create(parsed, document.createElement("div"));
+        const imagesData = [];
+
+        let minWidth = 800;
+
+        this.cachedCanvases.forEach((canvas, index) => {
+            console.log("CANVASL " + JSON.stringify(canvas.stage))
+            let dsrStage = Konva.Node.create(canvas.stage, document.createElement("div"));
 
             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
 
@@ -245,46 +250,37 @@ export class MapDisplay {
             const virtualWidth = maxX - minX + padding;
             const virtualHeight = maxY - minY + padding;
 
-            const scaleDownFactor = Math.min(outputWidth / virtualWidth, outputHeight / virtualHeight);
+            const scaleDownFactor = Math.min(pageWidth / virtualWidth, pageHeight / virtualHeight);
 
             dsrStage.size({ width: virtualWidth, height: virtualHeight });
             dsrStage.position({ x: -minX, y: -minY });
             dsrStage.batchDraw();
 
-            // Generate Image Data URI
             let canvasImageURI = dsrStage.toDataURL({
                 pixelRatio: 1
             });
 
-            imagesData.push(canvasImageURI); // Store image URI
+            imagesData.push(canvasImageURI);
             console.log(`Generated Image ${index + 1}`);
         });
 
-        // Step 2: Create PDF using the Generated Images
-        const pdf = new jsPDF("p", "mm", "a4"); // A4 portrait mode
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-        const margin = 10;
-        let yOffset = margin;
+
 
         imagesData.forEach((imageURI, index) => {
-            const text = `Step: ${index + 1}`;
+            const text = `Floor: ${this.cachedCanvases[index].floor}`;
             pdf.text(text, margin, yOffset + 5);
 
             const img = new Image();
             img.src = imageURI;
 
-            const originalWidth = outputWidth;
-            const originalHeight = outputHeight;
-
             const maxWidth = pageWidth - 2 * margin;
             const maxHeight = pageHeight - 2 * margin;
             let imgWidth = maxWidth;
-            let imgHeight = (originalHeight * maxWidth) / originalWidth;
+            let imgHeight = maxHeight / 2
 
             if (imgHeight > maxHeight) {
                 imgHeight = maxHeight;
-                imgWidth = (originalWidth * maxHeight) / originalHeight;
+                imgWidth = (pageWidth * maxHeight) / pageHeight;
             }
 
             if (yOffset + imgHeight > pageHeight - margin) {
@@ -296,8 +292,7 @@ export class MapDisplay {
             yOffset += imgHeight + 10;
         });
 
-        // Save the final PDF
-        pdf.save(`${mapDetails.mapName}Route.pdf`);
+        pdf.save(`${mapDetails.mapName}-${mapDetails.from}-->${mapDetails.to}.route.pdf`);
     }
 
 

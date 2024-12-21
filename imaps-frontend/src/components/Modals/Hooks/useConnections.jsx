@@ -4,7 +4,6 @@ export default function useConnections(map,shapeInfo,setShapeInfo){
     const [connections,setConnections] = useState([])
 
     const addConnection = () => {
-        console.log("TOSKA",shapeInfo)
         if (!shapeInfo.selectedPin || connections.includes(shapeInfo.selectedPin)) return;
 
         setConnections((prevConn) => {

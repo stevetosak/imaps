@@ -13,6 +13,7 @@ export default function useModalState(map) {
             map.updateRoomNames();
             triggerMapSave();
             console.log("SHAPE BEF CLOSE:",shape.info)
+            map.attachKeyPressEventListeners();
         }
         setIsOpen(!isOpen);
     };

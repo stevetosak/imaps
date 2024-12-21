@@ -30,7 +30,7 @@ export default function RoomTypeModal({map,roomTypes,addRoomTypeDB}) {
         <div className={styles.modal}>
           <div onClick={toggleModal} className={styles.overlay}></div>
           <div className={styles.modalContent}>
-            <h2>Manage Room Types</h2>
+            <h2 style={{color: 'white'}}>Manage Room Types</h2>
 
             <form className={styles.form}>
               <div className={styles.formGroup}>

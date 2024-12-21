@@ -55,6 +55,7 @@ const RoomInfoPanel = ({isOpen, onClose, floor, room, handleDirectionsSubmit}) =
                 <img src={navigate_icon} alt="Navigate Icon" className={styles.navigateIcon} />
                 Navigate
               </button>
+              <p style={{fontSize: '0.8em'}}><i>From Main Entrance</i></p>
             </>
         ) : (
             <p>Select a room to see details.</p>

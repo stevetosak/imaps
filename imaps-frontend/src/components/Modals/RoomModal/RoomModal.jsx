@@ -19,6 +19,7 @@ export default function RoomModal({map,roomTypes}) {
         setShape(shape);
         setShapeInfo(shape.info);
         setIsOpen(true);
+        event.detail.map.detachKeyPressEventListeners();
 
     },"openRoomModalEvent")
 

@@ -35,6 +35,8 @@ export class MapBuilder {
         this.textLayer = new Konva.Layer();
         this.gridLayer.listening(false);
 
+        this.isDrawEventBound = false;
+
 
         this.othStairs = [];
 
@@ -95,10 +97,10 @@ export class MapBuilder {
 
     setupEventListeners() {
         document.getElementById("shapeOptions").addEventListener("click", this.selectShape.bind(this));
-        window.addEventListener("keydown", this.handleExitSelection.bind(this));
-        window.addEventListener("keydown", this.handleDelete.bind(this));
-        window.addEventListener("keydown", this.rotateShapesBy90Deg.bind(this));
-        window.addEventListener("keydown", this.toggleEfficientDrawingMode.bind(this));
+        // window.addEventListener("keydown", this.handleExitSelection.bind(this));
+        // window.addEventListener("keydown", this.handleDelete.bind(this));
+        // window.addEventListener("keydown", this.rotateShapesBy90Deg.bind(this));
+        // window.addEventListener("keydown", this.toggleEfficientDrawingMode.bind(this));
         window.addEventListener("resize", this.handleResize.bind(this));
 
         this.boundEscapeEventListener = this.handleExitSelection.bind(this);
@@ -106,7 +108,7 @@ export class MapBuilder {
         this.boundRotateShapeEventListener = this.rotateShapesBy90Deg.bind(this)
         this.boundEfficientDrawingModeEventListener = this.toggleEfficientDrawingMode.bind(this);
 
-        //this.attachKeyPressEventListeners();
+        this.attachKeyPressEventListeners();
 
         this.stage.on("mousedown touchstart", this.handleMouseDown.bind(this));
         this.stage.on("mousemove touchmove", this.handleMouseMove.bind(this));
@@ -118,6 +120,7 @@ export class MapBuilder {
     }
 
     detachKeyPressEventListeners() {
+        console.log("DETACH")
         window.removeEventListener("keydown", this.boundEscapeEventListener);
         window.removeEventListener("keydown", this.boundDeleteEventListener);
         window.removeEventListener("keydown", this.boundRotateShapeEventListener);
@@ -125,6 +128,7 @@ export class MapBuilder {
     }
 
     attachKeyPressEventListeners() {
+        console.log("ATTACH")
         window.addEventListener("keydown", this.boundEscapeEventListener);
         window.addEventListener("keydown", this.boundDeleteEventListener);
         window.addEventListener("keydown", this.boundRotateShapeEventListener);
@@ -268,7 +272,6 @@ export class MapBuilder {
         };
         let infoPin = Factory.createShape("InfoPin", attrs);
         addEventHandling(infoPin, this, "dblclick");
-        //this.shapes.push(infoPin);
         ShapeRegistry.add(infoPin)
         this.mainLayer.add(infoPin);
         infoPin.displayName(this.textLayer);
@@ -306,13 +309,12 @@ export class MapBuilder {
         };
 
         const placedObj = Factory.createShape(this.hoverObj.type, attrs);
+
         if (!placedObj) return;
 
         console.info("ATTRS FNUM",attrs.floorNum)
 
         this.mainLayer.add(placedObj);
-        //this.shapes.push(placedObj);
-        console.log("VO PLACED SHAEPS WALL ZITI SE: " + placedObj.className);
         ShapeRegistry.add(placedObj);
         addEventHandling(placedObj, this, "dblclick");
         this.mainLayer.draw();
@@ -327,14 +329,19 @@ export class MapBuilder {
         if (!this.efficientDrawingMode) {
             this.stopDrawing();
         }
+        this.mainTransformer.nodes([])
     }
 
     stopDrawing() {
-        this.mainTransformer.nodes([]);
-        if (this.hoverObj != null) this.hoverObj.remove();
-        this.dragLayer.removeChildren();
-        this.stage.off("mousemove", this.boundMouseMoveHandler);
-        this.stage.off("click", this.boundPlaceShapeHandler);
+        if(this.isDrawEventBound){
+            this.mainTransformer.nodes([]);
+            if (this.hoverObj != null) this.hoverObj.remove();
+            this.dragLayer.removeChildren();
+            this.stage.off("mousemove", this.boundMouseMoveHandler);
+            this.stage.off("click", this.boundPlaceShapeHandler);
+            this.isDrawEventBound = false;
+        }
+
     }
 
     mouseMoveHandler() {
@@ -364,8 +371,11 @@ export class MapBuilder {
         this.hoverObj.visible(false);
         this.dragLayer.add(this.hoverObj);
         this.dragLayer.moveToTop();
+
+
         this.boundMouseMoveHandler = this.mouseMoveHandler.bind(this);
         this.boundPlaceShapeHandler = this.placeShape.bind(this);
+        this.isDrawEventBound = true;
 
         this.stage.on("mousemove", this.boundMouseMoveHandler);
         this.stage.on("click", this.boundPlaceShapeHandler);
@@ -373,9 +383,9 @@ export class MapBuilder {
 
     selectShape(e) {
         if (e.target.tagName === "LI") {
+          this.stopDrawing()
             const shapeType = e.target.getAttribute("data-info");
             this.startDrawing(shapeType);
-            this.mainTransformer.nodes([]);
         }
     }
 
@@ -463,10 +473,6 @@ export class MapBuilder {
     }
 
     saveShapeDetails() {
-        // this.shapes.forEach(shape => {
-        //     shape.saveShapeDetails();
-        //     console.log(shape.info);
-        // });
         ShapeRegistry.saveDetails();
         console.log("thisflornum",this.floorNum)
         return  {
@@ -477,33 +483,28 @@ export class MapBuilder {
         }
     }
 
-    getPayload(){
-        this.saveShapeDetails();
-        return {
-            shapes: ShapeRegistry.getShapes(this.floorNum),
-            roomTypes: JSON.stringify(this.roomTypes),
-            mapName: this.mapName,
-            floorNum: this.floorNum
-        }
-    }
 
 
     handleStageClick(e) {
         if (this.selectionRectangle.visible()) {
+            console.log("STAGECLICK1")
             return;
         }
 
         if (e.target === this.stage) {
+            console.log("STAGECLICK2")
             this.mainTransformer.nodes([]);
             return;
         }
 
         if (!e.target.hasName("mapObj")) {
+            console.log("STAGECLICK3")
             return;
         }
 
         const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
         const isSelected = this.mainTransformer.nodes().indexOf(e.target) >= 0;
+
 
         if (!metaPressed && !isSelected) {
             this.mainTransformer.nodes([e.target]);
@@ -526,17 +527,6 @@ export class MapBuilder {
         this.roomTypes = this.roomTypes.filter(type => type !== targetType);
     }
 
-    getRoomTypes() {
-        return this.roomTypes;
-    }
-
-    getRooms() {
-        return this.getShapeInfoByType("Room");
-    }
-
-    getPins() {
-        return this.getShapeInfoByType("InfoPin");
-    }
 
     getEntrances() {
         return this.getShapeInfoByType("Entrance");
@@ -570,18 +560,6 @@ export class MapBuilder {
 
     }
 
-    isMainEntranceSelected() {
-        console.log(this.getEntrances().forEach((en) => console.log(en.isMainEntrance, "asdsad")));
-
-        let hasMainEntrance = false;
-
-        this.getEntrances().forEach((entrance) => {
-            if (entrance.isMainEntrance === true) hasMainEntrance = true;
-        });
-
-        return hasMainEntrance;
-
-    }
 
     clearMap() {
         this.mainLayer.removeChildren();

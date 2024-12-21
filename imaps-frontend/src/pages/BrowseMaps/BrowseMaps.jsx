@@ -16,7 +16,7 @@ let loadedTiles = [];
 
 const renderTile = ({ data, isDragging, toggleFavorite }) => (
     <div style={{ padding: "1rem", width: "100%", position: "relative" }}>
-        <Link to={`/Maps/${data.text}/View`} className={styles.linkStyle}>
+        <Link to={`/Maps/View/${data.text}`} className={styles.linkStyle}>
             <div
                 className={`${styles.tile} ${isDragging ? styles.dragging : ""}`}
                 style={{ width: "100%", height: "100%" }}

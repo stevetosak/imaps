@@ -41,6 +41,7 @@ export default function EntranceModal({map}) {
         const connections = shape.info.selectedPins || [];
         setConnections(connections);
         setIsOpen(true);
+        event.detail.map.detachKeyPressEventListeners();
         console.log(connections, "Loaded pins on modal open");
     },"openEntranceModalEvent")
 
