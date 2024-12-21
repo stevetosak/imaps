@@ -157,8 +157,8 @@ export default function BrowseMaps() {
                 data={tiles}
                 renderTile={(props) => renderTile({ ...props, toggleFavorite })}
                 tileSize={tileSize}
-                forceTileWidth={150}
-                forceTileHeight={170}
+                forceTileWidth={170}
+                forceTileHeight={200}
             />
         </div>
     );

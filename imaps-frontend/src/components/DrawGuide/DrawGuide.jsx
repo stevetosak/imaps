@@ -17,8 +17,8 @@ export default function DrawGuide() {
         <div className={styles.modal}>
           <div onClick={toggleModal} className={styles.overlay}></div>
           <div className={styles.modalContent}>
-            <h2>How to Use the Map Builder</h2>
-            <p>Welcome to the Map Builder! Here you can create an indoor map, render it and enjoy!:</p>
+            <h2 className={styles.title}>How to Use the Map Builder</h2>
+            <p className={styles.paragraph}>Welcome to the Map Builder! Here you can create an indoor map, render it and enjoy!:</p>
             <br></br>
             <ul>
               <h3>Shapes and Placement</h3>
@@ -34,7 +34,7 @@ export default function DrawGuide() {
               <li>To explore map building in detail you can check our own wiki page. TODO</li>
             </ul>
             <br></br>
-            <p>After completing your map, click the render button and go to the View page to see your full featured map!</p>
+            <p className={styles.paragraph}>After completing your map, click the render button and go to the View page to see your full featured map!</p>
 
             <button className={styles.closeModal} onClick={toggleModal}>
               CLOSE
