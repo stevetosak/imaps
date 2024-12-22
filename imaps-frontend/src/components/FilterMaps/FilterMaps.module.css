@@ -17,14 +17,15 @@
   white-space: nowrap; /* Prevents buttons from wrapping */
   padding: 0px 0; /* Adds some space around the buttons */
   width: 100%;
+  overflow-y: hidden;
 }
 
 .buttonValue {
-  border: 2px solid #6759ff;
+  border: 2px solid rgb(37,111,123);
   padding: 0.5em 1.5em;
   border-radius: 3em;
   background-color: transparent;
-  color: #6759ff;
+  color: rgb(37,111,123);
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
   white-space: nowrap; /* Ensures the text does not wrap */
@@ -32,12 +33,12 @@
 
 .buttonValue:hover,
 .buttonValue:focus {
-  background-color: #6759ff;
+  background-color: rgb(33, 98, 108);
   color: #ffffff;
 }
 
 .active {
-  background-color: #6759ff;
+  background-color: rgb(37,111,123);
   color: #ffffff;
 }
 
@@ -46,6 +47,6 @@
 }
 
 .scrollableContainer::-webkit-scrollbar-thumb {
-  background-color: #6759ff;
+  background-color: rgb(37,111,123);
   border-radius: 3px;
 }
