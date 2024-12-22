@@ -1,25 +1,25 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./CreateMaps.module.css";
-import {TilesContainer} from "react-tiles-dnd";
+import { TilesContainer } from "react-tiles-dnd";
 import MapInfoModal from "../../components/MapInfoModal/MapInfoModal.jsx";
 import CreateMapModal from "../../components/Modals/CreateMapModal/CreateMapModal.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
 import card from "../../assets/card-map.png";
 import Logo from "../../components/Logo/Logo.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
-import {useAppContext} from "../../components/AppContext/AppContext.jsx";
+import { useAppContext } from "../../components/AppContext/AppContext.jsx";
 import config from "../../scripts/net/netconfig.js";
-import {element} from "prop-types";
 import Toast from "../../components/Toast/Toast.jsx";
+import plus_icon from "../../assets/plus_icon.png";
 
-const renderTile = ({data, isDragging}, openMapInfo) => (
-    <div style={{padding: "1rem", width: "100%"}}>
+const renderTile = ({ data, isDragging }, openMapInfo) => (
+    <div style={{ padding: "1rem", width: "100%" }}>
         <div
             className={`${styles.tile} ${isDragging ? styles.dragging : ""}`}
-            style={{width: "100%", height: "100%"}}
+            style={{ width: "100%", height: "100%" }}
             onClick={() => openMapInfo(data)}
         >
-            <img src={card} className={styles.imgStyle} alt="Map Thumbnail"/>
+            <img src={card} className={styles.imgStyle} alt="Map Thumbnail" />
             <div className={styles.mapTitle}>{data.mapName}</div>
         </div>
     </div>
@@ -33,7 +33,7 @@ const tileSize = (tile) => ({
 export default function MyMaps() {
     const [tiles, setTiles] = useState([]);
     const [allTiles, setAllTiles] = useState([]);
-    const {username} = useAppContext();
+    const { username } = useAppContext();
     const [selectedMap, setSelectedMap] = useState(null);
     const [isMapInfoModalOpen, setIsMapInfoModalOpen] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -45,7 +45,6 @@ export default function MyMaps() {
 
     const openMapInfoModal = (map) => {
         setSelectedMap(map);
-        console.log("MAP LOAD MD",map)
         setIsMapInfoModalOpen(true);
     };
 
@@ -65,9 +64,8 @@ export default function MyMaps() {
     const showToast = (message, type = 1) => {
         setToastMessage(message);
         setToastType(type);
-        setTimeout(() => setToastMessage(null), 3000); // Automatically hide the toast after 3 seconds
+        setTimeout(() => setToastMessage(null), 3000);
     };
-
 
     const handleUpdate = async (updatedMap) => {
         // Placeholder for map update logic
@@ -83,12 +81,11 @@ export default function MyMaps() {
             .then(() => {
                 setTiles((prevTiles) => prevTiles.filter((tile) => tile.mapName !== mapName));
                 setAllTiles((prevTiles) => prevTiles.filter((tile) => tile.mapName !== mapName));
-                showToast("Map deleted", 1)
+                showToast("Map deleted", 1);
             })
             .catch((error) => {
                 const errorMessage = error.response?.data?.error || error.message || "Unknown error";
-                // alert(`Error deleting the map: ${errorMessage}`);
-                showToast(`Error deleting the map: ${errorMessage}`, 0)
+                showToast(`Error deleting the map: ${errorMessage}`, 0);
             });
     };
 
@@ -99,7 +96,6 @@ export default function MyMaps() {
         httpService
             .put(`${config.my_maps.add}?username=${username}`, mapDetails)
             .then((respMap) => {
-                console.log("RESP NEW MAP: " + respMap)
                 const mapTile = {
                     mapName: respMap.mapName,
                     cols: 1,
@@ -116,11 +112,9 @@ export default function MyMaps() {
                 setAllTiles((prevTiles) => [...prevTiles, mapTile]);
                 setTiles((prevTiles) => [...prevTiles, mapTile]);
                 showToast("Map added successfully!");
-
-
             })
             .catch((error) => {
-                showToast("Map name already taken", 0)
+                showToast("Map name already taken", 0);
             });
     };
 
@@ -129,9 +123,9 @@ export default function MyMaps() {
             const httpService = new HttpService();
             httpService.setAuthenticated();
 
-            const respMaps = await httpService.get(`${config.my_maps.display}?username=${username}`);
-
-            console.log("MAP DTO LOAD1",JSON.stringify(respMaps[0]));
+            const respMaps = await httpService.get(
+                `${config.my_maps.display}?username=${username}`
+            );
 
             const mapTiles = respMaps.map((elem) => ({
                 mapName: elem.mapName,
@@ -145,7 +139,6 @@ export default function MyMaps() {
                 image_url: card,
                 numFavourites: elem.numFavourites,
             }));
-
 
             setTiles(mapTiles);
             setAllTiles(mapTiles);
@@ -166,24 +159,22 @@ export default function MyMaps() {
 
     return (
         <div className={styles.container}>
-            <Logo/>
-            <Profile/>
+            <Logo />
+            <Profile />
             <h1>Your Maps</h1>
 
-            <div className={styles.actionButtons}>
-                <button className={styles.createMapsButton} onClick={openCreateModal}>
-                    Create Map
-                </button>
-            </div>
-
             <div className={styles.searchBar}>
-                <input type="text" placeholder="Search for maps..." onChange={handleSearch}/>
+                <input
+                    type="text"
+                    placeholder="Search for maps..."
+                    onChange={handleSearch}
+                />
             </div>
 
             <div className={styles.mapsContainer}>
                 <div className={styles.mapColumn}>
                     <h3 className={styles.categories}>Public Maps:</h3>
-                    <hr/>
+                    <hr />
                     <TilesContainer
                         data={publicMaps}
                         renderTile={(tileProps) => renderTile(tileProps, openMapInfoModal)}
@@ -195,7 +186,7 @@ export default function MyMaps() {
 
                 <div className={styles.mapColumn}>
                     <h3 className={styles.categories}>Private Maps:</h3>
-                    <hr/>
+                    <hr />
                     <TilesContainer
                         data={privateMaps}
                         renderTile={(tileProps) => renderTile(tileProps, openMapInfoModal)}
@@ -203,11 +194,14 @@ export default function MyMaps() {
                         forceTileWidth={150}
                         forceTileHeight={170}
                     />
+                    <button className={styles.plusButton} onClick={openCreateModal}>
+                        <img src={plus_icon} alt="Add Map" />
+                    </button>
                 </div>
 
                 <div className={styles.mapColumn}>
                     <h3 className={styles.categories}>Pending Approval:</h3>
-                    <hr/>
+                    <hr />
                     <TilesContainer
                         data={pendingMaps}
                         renderTile={(tileProps) => renderTile(tileProps, openMapInfoModal)}
@@ -251,7 +245,13 @@ export default function MyMaps() {
                 addMap={addMap}
             />
 
-            {toastMessage && <Toast message={toastMessage} type={toastType} onClose={() => setToastMessage(null)}/>}
+            {toastMessage && (
+                <Toast
+                    message={toastMessage}
+                    type={toastType}
+                    onClose={() => setToastMessage(null)}
+                />
+            )}
         </div>
     );
 }

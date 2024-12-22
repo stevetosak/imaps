@@ -179,9 +179,9 @@ export class MapDisplay {
                 if (segmentIdx > numSegments) {
                     clearInterval(interval);
                     idx++;
-                    setTimeout(drawNextSegment, 50);
+                    setTimeout(drawNextSegment, 70);
                 }
-            }, 20);
+            }, 30);
         };
 
         drawNextSegment();
