@@ -31,7 +31,7 @@ public class AdminController {
     @GetMapping
     public ResponseEntity<List<MapDTO>> getPendingMapRequests() {
         try {
-            List<MapDTO> maps = Util.convertToMapDTO(mapService.findByStatus(MAP_STATUS.INVALID));
+            List<MapDTO> maps = Util.convertToMapDTO(mapService.findByStatus(MAP_STATUS.PENDING));
             return ResponseEntity.ok(maps);
         } catch (Exception e) {
             e.printStackTrace();

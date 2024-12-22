@@ -51,15 +51,15 @@ public class MapDrawController {
     }
 
     @PostMapping("/publish/add")
-    public ResponseEntity<Map<String,Object>> sendPublishRequest(@RequestBody PublishMapDTO formData, @RequestParam String username) {
+    public ResponseEntity<MapDTO> sendPublishRequest(@RequestBody PublishMapDTO formData, @RequestParam String username) {
 
         System.out.println("FORM DATA: -------------------------------------------- " + formData);
         try{
             IMapsUser user = userService.getUser(username);
 
-            publishRequestService.addPublishRequest(formData,user);
+            MapDTO updatedMap = publishRequestService.addPublishRequest(formData,user);
 
-            return ResponseEntity.ok(new HashMap<>());
+            return ResponseEntity.ok(updatedMap);
 
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -129,8 +129,8 @@ public class MapDrawController {
             mapService.createMap(mapData.getName(), mapData.getMapType() , username);
             IndoorMap map = mapService.getMapForUser(username,mapData.getName());
             MapDTO mapDTO = new MapDTO(map.getName(),
-                    map.getMapType()
-                    ,map.getCreatedAt(),
+                    map.getMapType(),
+                    map.getCreatedAt(),
                     map.getModifiedAt(),
                     map.getStatus().name(),
                     map.getFavouriteCount(),

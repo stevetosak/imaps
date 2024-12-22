@@ -18,7 +18,7 @@ export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate, 
 
     useEffect(() => {
         console.log("GMAPS: " + JSON.stringify(map))
-    }, []);
+    }, [map]);
 
     const {username} = useAppContext();
 
@@ -66,6 +66,7 @@ export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate, 
     const openPublishModal = async () => {
         const httpService = new HttpService(true);
         const respForm = await httpService.get(`${config.my_maps.publish_get}?mapName=${map.mapName}`)
+        console.log("MAP DTO",JSON.stringify(map))
         setLoadedFormData(respForm);
         setPublishFormOpen(true)
     };
@@ -73,10 +74,10 @@ export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate, 
     const sendPublishRequest = async (formData) => {
         const httpService = new HttpService(true);
         formData.mapName = map.mapName;
-        console.log("FORMDATA: "+JSON.stringify(formData))
-        await httpService.post(`${config.my_maps.publish}?username=${username}`,formData);
+        const updatedMap = await httpService.post(`${config.my_maps.publish}?username=${username}`,formData);
+        console.log("UPDATED MAP")
         setPublishFormOpen(false)
-        onPublish()
+        onPublish(updatedMap)
     }
 
     return (
@@ -105,7 +106,7 @@ export default function MapInfoModal({isOpen, onClose, map, onDelete, onUpdate, 
                 </p>
                 <p>
                     <strong>Google Maps URL:</strong>
-                    <a href={map.gMapsUrl}  rel="noopener noreferrer">
+                    <a href={`${map.gmaps_url}`}  rel="noopener noreferrer">
                         Open in Google Maps
                     </a>
                 </p>

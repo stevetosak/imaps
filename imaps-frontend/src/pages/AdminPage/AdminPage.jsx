@@ -81,7 +81,7 @@ export default function AdminPage() {
                 modified_at: elem.modifiedAt,
                 gmaps_url: elem.gmaps_url,
                 image_url: card,
-            })).filter((tile) => tile.status === "INVALID");
+            })).filter((tile) => tile.status === "PENDING");
 
             setPendingMaps(mapTiles);
         };
@@ -144,7 +144,7 @@ export default function AdminPage() {
         const url = `${config.admin.approve_pr}?mapName=${formData.mapName}`;
 
         try {
-            await httpService.post(url, formData); // Assuming formData contains all required fields
+            await httpService.post(url, formData);
             setPendingMaps((prev) => prev.filter((map) => map.mapName !== formData.mapName));
             alert(`Map "${formData.mapName}" published successfully.`);
             closePublishForm();

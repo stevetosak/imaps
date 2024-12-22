@@ -1,4 +1,5 @@
 package internettehnologii.imaps.backendRender.web.entities;
+import internettehnologii.imaps.backendRender.web.util.DTO.MapDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -67,6 +68,17 @@ public class IndoorMap {
     @PreUpdate
     protected void onUpdate(){
         this.modifiedAt = LocalDateTime.now();
+    }
+
+
+    public MapDTO toMapDTO(){
+        return  new MapDTO(getName(),
+                getMapType(),
+                getCreatedAt(),
+                getModifiedAt(),
+                getStatus().name(),
+                getFavouriteCount(),
+                getGmapsUrl());
     }
 
 }

@@ -45,6 +45,7 @@ export default function MyMaps() {
 
     const openMapInfoModal = (map) => {
         setSelectedMap(map);
+        console.log("MAP LOAD MD",map)
         setIsMapInfoModalOpen(true);
     };
 
@@ -107,7 +108,7 @@ export default function MyMaps() {
                     created_at: respMap.createdAt,
                     modified_at: respMap.modifiedAt,
                     published_at: respMap.published_at,
-                    gmaps_url: respMap.gmaps_url,
+                    gmaps_url: respMap.gmapsUrl,
                     image_url: card,
                     is_published: respMap.is_published,
                 };
@@ -130,6 +131,8 @@ export default function MyMaps() {
 
             const respMaps = await httpService.get(`${config.my_maps.display}?username=${username}`);
 
+            console.log("MAP DTO LOAD1",JSON.stringify(respMaps[0]));
+
             const mapTiles = respMaps.map((elem) => ({
                 mapName: elem.mapName,
                 cols: 1,
@@ -138,7 +141,7 @@ export default function MyMaps() {
                 created_at: elem.createdAt,
                 modified_at: elem.modifiedAt,
                 published_at: elem.published_at,
-                gmaps_url: elem.gMapsUrl,
+                gmaps_url: elem.gmapsUrl,
                 image_url: card,
                 numFavourites: elem.numFavourites,
             }));
@@ -153,7 +156,7 @@ export default function MyMaps() {
     useEffect(() => {
         setPublicMaps(tiles.filter((tile) => tile.status === "PUBLIC"));
         setPrivateMaps(tiles.filter((tile) => tile.status === "PRIVATE"));
-        setPendingMaps(tiles.filter((tile) => tile.status === "INVALID"));
+        setPendingMaps(tiles.filter((tile) => tile.status === "PENDING"));
     }, [tiles]);
 
     const handleSearch = (e) => {
@@ -221,10 +224,23 @@ export default function MyMaps() {
                 map={selectedMap}
                 onDelete={deleteMap}
                 onUpdate={handleUpdate}
-                onPublish={() => {
+                onPublish={(updatedMap = null) => {
+
+                    const updatedTile = {
+                        mapName: updatedMap.mapName,
+                        cols: 1,
+                        rows: 1,
+                        status: updatedMap.mapStatus,
+                        created_at: updatedMap.createdAt,
+                        modified_at: updatedMap.modifiedAt,
+                        published_at: updatedMap.published_at,
+                        gmaps_url: updatedMap.gMapsUrl,
+                        image_url: card,
+                        numFavourites: updatedMap.numFavourites,
+                    }
                     showToast(`Map ${selectedMap.mapName} published successfully!`);
                     setPrivateMaps((prevMaps) => prevMaps.filter(m => m.mapName !== selectedMap.mapName))
-                    setPendingMaps((prevMaps) => [...prevMaps,allTiles.find(m => m.mapName = selectedMap.mapName)])
+                    setPendingMaps((prevMaps) => [...prevMaps,updatedTile])
                     closeMapInfoModal()
                 }}
             />

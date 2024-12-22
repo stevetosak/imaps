@@ -9,6 +9,7 @@ import internettehnologii.imaps.backendRender.web.repo.PublishRequestRepository;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.PublishRequestService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.UserService;
+import internettehnologii.imaps.backendRender.web.util.DTO.MapDTO;
 import internettehnologii.imaps.backendRender.web.util.DTO.PublishMapDTO;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class PublishRequestServiceImpl implements PublishRequestService {
     }
 
     @Override
-    public void addPublishRequest(PublishMapDTO formData, IMapsUser user) {
+    public MapDTO addPublishRequest(PublishMapDTO formData, IMapsUser user) {
         Optional<PublishRequest> prOptional = publishRequestRepository.findById(formData.getId());
         PublishRequest pr;
         IndoorMap map = mapService.getMapByName(formData.getMapName());
@@ -40,17 +41,18 @@ public class PublishRequestServiceImpl implements PublishRequestService {
             pr.setLastName(formData.getLastName());
             pr.setGMapsUrl(formData.getGoogleMapsUrl());
             pr.setMapType(formData.getMapType());
-            map.setStatus(MAP_STATUS.INVALID);
+            map.setStatus(MAP_STATUS.PENDING);
         } else {
             pr = new PublishRequest(formData.getName(), formData.getLastName(), formData.getGoogleMapsUrl(), formData.getMapType());
 
             pr.setMap(map);
             pr.setUser(user);
-            map.setStatus(MAP_STATUS.INVALID);
+            map.setStatus(MAP_STATUS.PENDING);
 
         }
         this.mapRepository.save(map);
         this.publishRequestRepository.save(pr);
+        return map.toMapDTO();
 
     }
 
