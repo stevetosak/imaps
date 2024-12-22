@@ -18,10 +18,12 @@ h1 {
 .searchBar {
   margin-bottom: 30px;
   text-align: center;
+  margin-top: 5em;
 }
 
 .searchBar input {
-  width: 300px;
+  /*width: 300px;*/
+  width: 33vw;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -33,6 +35,10 @@ h1 {
 .searchBar input:focus {
   border-color: #1e90ff;
   box-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+}
+
+.filterBar{
+  margin-left: 6vw;
 }
 
 /* Tile Styles */
