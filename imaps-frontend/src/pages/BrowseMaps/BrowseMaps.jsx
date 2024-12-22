@@ -185,7 +185,7 @@ export default function BrowseMaps() {
             <div className={styles.filterBar}>
             <FilterMaps mapTypes={mapFilters} setFilter={onFilter}></FilterMaps>
             </div>
-
+            {filter !== "all" && tiles.length === 0 && <p>No maps of type {filter} found</p>}
             <TilesContainer
                 data={tiles}
                 renderTile={(props) => renderTile({...props, toggleFavorite})}
