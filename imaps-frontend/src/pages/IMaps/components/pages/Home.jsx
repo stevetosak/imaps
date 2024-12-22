@@ -13,14 +13,14 @@ function Home() {
         <h1>Map Your World</h1>
         <h2 className="description">Create and explore detailed indoor maps.</h2>
         <div className="hero-btns">
-          <Link to="/myMaps">
-            <Button className="btns" buttonSize="btn--large">
-              Create Maps
+          <Link to="/Maps">
+            <Button buttonSize="btn--large" >
+              Browse Maps <i className="far fa-play-circle" />
             </Button>
           </Link>
-          <Link to="/Maps">
-            <Button className="btns" buttonSize="btn--large">
-              Browse Maps <i className="far fa-play-circle" />
+          <Link to="/myMaps">
+            <Button buttonSize="btn--large" buttonStyle="btn--outline">
+              Create Maps
             </Button>
           </Link>
         </div>

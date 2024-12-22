@@ -153,6 +153,41 @@ h1 {
   background: #46be2f;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f8f9fa; /* Light grey background for a clean look */
+  border-bottom: 1px solid #ddd; /* Subtle separation from the rest of the page */
+  padding: 10px 20px; /* Add some space around the content */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for subtle elevation */
+}
+
+.header .logo-wrapper,
+.header .profile-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.header h1 {
+  font-size: 1.5rem; /* Slightly larger font size */
+  color: #333; /* Dark grey for a professional tone */
+  margin: 0 auto; /* Center-align the title */
+  font-weight: 600; /* Semi-bold text for emphasis */
+  text-align: center;
+  flex-grow: 1; /* Allow it to take space in the middle */
+}
+
+.logo-wrapper {
+  margin-right: auto; /* Push logo to the far left */
+}
+
+.profile-wrapper {
+  margin-left: auto; /* Push profile to the far right */
+}
+
+
+
 
 @media (max-width: 768px) {
   .mapsContainer {
