@@ -8,7 +8,7 @@
 - **Modular Design**: Easily update and customize maps for different institutions.
 
 ## Technology Stack
-- **Front-end**: React + KonvaJs
+- **Front-end**: React + [Konva.js](https://github.com/konvajs/konva)
 - **Back-end**: Spring Boot
 - **Database**: PostgreSQL
 
