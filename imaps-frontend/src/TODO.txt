@@ -1,19 +1,4 @@
-PRIORITY HIGH
-
-- Id fix na shapes vo Draw
-
-PRIORITY MEDIUM
-
-- Detach event na draw (keys: e, r)
-- Text na shape vo Draw da e top layer
-
-PRIORITY LOW
-
-- Admin Page
-
-
-- KO KE SMENIS IME VO MODAL,TREBIT VO GRAFOT DA SA UPDATE TOJ ENTRY // got
-- VO room da sa cuvat entrances, za ko ke mrdas room isto entrance da sa mrdnit
-
-
-bug: selectiras eden shape pa drug, pa celo vreme sa klavat posle shape
+-IDs za shape posebno od iminja
+- Refactor style na my maps i browse, da ne e tolku prazno od okolu
+- Admin link da izlegvit za admin users
+- Google maps url da sa pokazvit vo browse na mapite

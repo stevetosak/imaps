@@ -16,4 +16,5 @@ public interface PublishRequestService {
     void rejectPublishRequest(PublishRequest publishRequest);
     PublishRequest getPublishRequestByMapName(String mapName);
     void editPublishRequest(PublishRequest publishRequest);
+    void sendMailToAdmins(IMapsUser user,PublishRequest pr);
 }

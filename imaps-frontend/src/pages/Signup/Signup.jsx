@@ -114,16 +114,11 @@ export default function Signup() {
               />
             </div>
             <button type="submit">Submit</button>
-
-            {/* Display message with appropriate styling */}
             {message && (
                 <p className={messageType === "success" ? styles.successMessage : styles.errorMessage}>
                   {message}
                 </p>
             )}
-            <h2 align="center" className={styles.or}>
-              OR
-            </h2>
           </form>
           <p>
             Have an account? <Link to="/Login"> Login </Link>

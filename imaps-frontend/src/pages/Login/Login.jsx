@@ -6,8 +6,8 @@ import Logo from "../../components/Logo/Logo.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
 import config, {API_BASE_URL} from "../../scripts/net/netconfig.js";
-import facebook_icon from "../../assets/facebook_icon.png";
-import github_icon from "../../assets/github_icon.png";
+import google_icon from "../../assets/Logo-google-icon-PNG.png"
+import github_icon from "../../assets/github-mark-white.png";
 import { v4 as uuidv4 } from 'uuid';
 
 const LoginPage = () => {
@@ -104,13 +104,13 @@ const LoginPage = () => {
                 </form>
                 <div className={styles.or}>OR</div>
                 <div className={styles.socialButtons}>
-                    <button className={styles.socialButton} onClick={continueWithGitHub}>
-                        <img src={github_icon} alt="GitHub Icon" className={styles.socialIcon} />
-                        Continue with GitHub
-                    </button>
                     <button className={styles.socialButton} onClick={continueWithFacebook}>
-                        <img src={facebook_icon} alt="Facebook Icon" className={styles.socialIcon} />
-                        Continue with Facebook
+                        <img src={google_icon} alt="Facebook Icon" className={styles.socialIcon}/>
+                        Sign In With Google
+                    </button>
+                    <button className={styles.socialButton} onClick={continueWithGitHub}>
+                        <img src={github_icon} alt="GitHub Icon" className={styles.socialIcon}/>
+                        Sign In With GitHub
                     </button>
                 </div>
                 <p>

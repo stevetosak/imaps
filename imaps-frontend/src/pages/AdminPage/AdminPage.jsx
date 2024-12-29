@@ -186,6 +186,7 @@ export default function AdminPage() {
             <Logo></Logo>
             <Profile></Profile>
             <h1>Pending Maps for Approval</h1>
+            <hr/>
 
             {publishFormMap && (
                 <PublishForm
@@ -209,6 +210,7 @@ export default function AdminPage() {
                     forceTileHeight={250}
                 />
             </div>
+            <hr/>
             {isMapInfoModalOpen && (
                 <MapInfoModal
                     isOpen={isMapInfoModalOpen}

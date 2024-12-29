@@ -21,7 +21,7 @@ public interface FloorRepository extends JpaRepository<Floor, Integer> {
 
     @Query("SELECT COUNT(f) > 0 FROM Floor f WHERE f.floorNumber = ?1 AND f.indoorMap = ?2")
     boolean existsFloorForMap(Integer floorNumber, IndoorMap indoorMap);
-
     void deleteFloorByFloorNumberAndIndoorMap(Integer floorNumber,IndoorMap indoorMap);
+
     Optional<Floor> findFloorByFloorNumberAndIndoorMap(Integer floorNumber,IndoorMap indoorMap);
 }

@@ -44,7 +44,7 @@ public class GitHubAuthController {
 
 
     @GetMapping("/state")
-    public ResponseEntity<String> redirectToGitHub(HttpSession session) {
+    public ResponseEntity<String> redirectToGitHub() {
         String uuid = UUID.randomUUID().toString();
         stateStore.storeState(uuid);
         return ResponseEntity.ok(uuid);

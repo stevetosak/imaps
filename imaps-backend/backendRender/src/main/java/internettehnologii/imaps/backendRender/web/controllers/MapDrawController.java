@@ -90,13 +90,8 @@ public class MapDrawController {
     public ResponseEntity<FloorDTO> updateMapData
             (@RequestBody SaveMapDTO saveMapDTO, @RequestParam String username) {
 
-        System.out.println("MAP DTO: " + saveMapDTO);
 
         try {
-
-            System.out.println("=================================");
-            System.out.println("MAPDTO: " + saveMapDTO);
-            System.out.println("USERNAME:" + username);
             IndoorMap map = mapService.getMapForUser(username, saveMapDTO.getMapName());
             Floor f = floorService.getFloorByNum(saveMapDTO.getFloorNum(), map);
 

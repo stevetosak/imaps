@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -26,4 +27,7 @@ public interface UserRepository extends JpaRepository<IMapsUser, Long> {
     Optional<IMapsUser> getUserById(Long usrid);
     @Query(value = "FROM IMapsUser u WHERE u.oAuthId = ?1")
     Optional<IMapsUser> getUserByOAuthId(String oauthid);
+    @Query(nativeQuery = true,
+            value = "SELECT u.* FROM users u LEFT JOIN users_roles ur on u.id = ur.user_id where ur.role_id = 3;")
+    Optional<List<IMapsUser>> getAllAdmins();
 }
