@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<IMapsUser, Long> {
     @Query(nativeQuery = true,
     value = "SELECT * FROM users u WHERE u.id= ?1")
     Optional<IMapsUser> getUserById(Long usrid);
+    @Query(value = "FROM IMapsUser u WHERE u.oAuthId = ?1")
+    Optional<IMapsUser> getUserByOAuthId(String oauthid);
 }

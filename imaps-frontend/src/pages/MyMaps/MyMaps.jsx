@@ -94,7 +94,7 @@ export default function MyMaps() {
         httpService.setAuthenticated();
 
         httpService
-            .put(`${config.my_maps.add}?username=${username}`, mapDetails)
+            .put(`${config.my_maps.add}?username=${encodeURI(username)}`, mapDetails)
             .then((respMap) => {
                 const mapTile = {
                     mapName: respMap.mapName,
@@ -124,7 +124,7 @@ export default function MyMaps() {
             httpService.setAuthenticated();
 
             const respMaps = await httpService.get(
-                `${config.my_maps.display}?username=${username}`
+                `${config.my_maps.display}?username=${encodeURI(username)}`
             );
 
             const mapTiles = respMaps.map((elem) => ({

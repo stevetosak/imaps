@@ -36,12 +36,11 @@ public class WebSecurityConfig {
                  .csrf(AbstractHttpConfigurer::disable)
                  .cors(Customizer.withDefaults())
                  .authorizeHttpRequests(request ->
-                         request.requestMatchers("/protected/**")
-                         .hasRole("USER")
-                         .requestMatchers("/api/admin/**")
-                         .hasRole("ADMIN")
-                         .anyRequest()
-                         .permitAll())
+                         request
+                                 .requestMatchers("/protected/**").hasRole("USER")
+                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                 .anyRequest().permitAll())
+
                  .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                  .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

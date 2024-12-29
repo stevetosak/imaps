@@ -6,7 +6,6 @@ import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
 import internettehnologii.imaps.backendRender.web.exceptions.EmptyMapException;
-import internettehnologii.imaps.backendRender.web.exceptions.FloorNotFoundException;
 import internettehnologii.imaps.backendRender.web.service.interfaces.GraphService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
@@ -119,7 +118,7 @@ public class MapViewController {
         try{
             IndoorMap map = mapService.getMapByName(mapName);
             IMapsUser user = userService.getUser(username);
-            userService.addToFavorites(user, map);
+            userService.addFavoriteMap(user, map);
             return ResponseEntity.ok(new HashMap<>());
         } catch (Exception e){
             e.printStackTrace();
@@ -131,7 +130,7 @@ public class MapViewController {
         try{
             IndoorMap map = mapService.getMapByName(mapName);
             IMapsUser user = userService.getUser(username);
-            userService.removeFromFavorites(user, map);
+            userService.removeFavoriteMap(user, map);
             return ResponseEntity.ok(new HashMap<>());
         } catch (Exception e){
             e.printStackTrace();

@@ -18,6 +18,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import {AppProvider} from "./components/AppContext/AppContext.jsx";
 import AdminPage from "./pages/AdminPage/AdminPage.jsx";
+import {AuthCallback} from "./pages/AuthCallback.jsx";
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
                     <Route path="/" element={<IMaps/>}/>
                     <Route path="/Maps/View/:mapName" element={<MapView isPrivate={false}/>}/>
                     <Route path="/Maps" element={<BrowseMaps/>}/>
+                    <Route path="/auth-callback" element={<AuthCallback/>}/>
 
 
                     <Route path="/Login" element={<LoginPage/>}/>

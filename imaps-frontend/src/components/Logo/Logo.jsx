@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import logoImage from "../../assets/logo_icon.png";
+import novo_logo from "../../assets/novo_logo_nobg_cropped.png";
 import styles from "./Logo.module.css";
 
 function Logo({ position = "fixed" }) {
@@ -15,7 +15,7 @@ function Logo({ position = "fixed" }) {
       className={position === "fixed" ? styles.fixedLogoContainer : styles.inlineLogoContainer}
       onClick={handleClick}
     >
-      <img src={logoImage} alt="Logo" className={styles.logoImage} />
+      <img src={novo_logo} alt="Logo" className={styles.logoImage} />
     </div>
   );
 }

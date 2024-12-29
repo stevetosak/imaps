@@ -20,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.RoleNotFoundException;
@@ -30,7 +31,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserRepository userRepository;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private JWTService jwtService;
 
@@ -55,7 +58,7 @@ public class UserServiceImpl implements UserService {
             throw new UsernameTakenException("User with name: " + u.getUsername() + " already exists");
         });
 
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         Role userRole = roleRepository.findByName("USER").orElseThrow(RoleNotFoundException::new);
 
@@ -83,13 +86,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addToFavorites(IMapsUser user, IndoorMap map) {
+    public void addFavoriteMap(IMapsUser user, IndoorMap map) {
         user.getFavoriteMaps().add(map);
         userRepository.save(user);
     }
 
     @Override
-    public void removeFromFavorites(IMapsUser user, IndoorMap map) {
+    public void removeFavoriteMap(IMapsUser user, IndoorMap map) {
         boolean removed = user.getFavoriteMaps().remove(map);
         if(!removed) throw new MapNotFoundException("Map not found. " + map.getName());
 
@@ -101,7 +104,6 @@ public class UserServiceImpl implements UserService {
     public IMapsUser getUser(String usrnameOrEmail) {
         return userRepository.getIMapsUserByUsernameOrEmail(usrnameOrEmail).orElseThrow(() -> new UserNotFoundException("User " + usrnameOrEmail + " not found"));
     }
-
 
 
 }

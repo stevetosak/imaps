@@ -5,9 +5,10 @@ import illustration from "../../assets/illustration_img.png";
 import Logo from "../../components/Logo/Logo.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
-import config from "../../scripts/net/netconfig.js";
+import config, {API_BASE_URL} from "../../scripts/net/netconfig.js";
 import facebook_icon from "../../assets/facebook_icon.png";
 import github_icon from "../../assets/github_icon.png";
+import { v4 as uuidv4 } from 'uuid';
 
 const LoginPage = () => {
     const [formUsername, setFormUsername] = useState("");
@@ -50,13 +51,21 @@ const LoginPage = () => {
         });
     };
 
-    const continueWithGitHub = () => {
-        console.log("Continue with GitHub");
+    const continueWithGitHub = async () => {
+        const httpService = new HttpService();
+        httpService.setResponseType('text');
+        const state = await httpService.get(config.auth.oauth.github.state)
+        const clientId = 'Iv23liqzhX5wMYNDHtnz';
+        const redirectUri = encodeURI(`${API_BASE_URL}/oauth/callback`);
+
+        const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${encodeURI(clientId)}&redirect_uri=${redirectUri}&state=${encodeURI(state)}&scope=user:email`;
+
+        window.location.href = githubAuthUrl;
+
     };
 
     const continueWithFacebook = () => {
         console.log("Continue with Facebook");
-        // Add logic for Facebook authentication here
     };
 
     return (
