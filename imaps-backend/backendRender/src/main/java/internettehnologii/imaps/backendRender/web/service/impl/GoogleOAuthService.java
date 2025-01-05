@@ -2,13 +2,13 @@ package internettehnologii.imaps.backendRender.web.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import internettehnologii.imaps.backendRender.web.controllers.InvalidStateException;
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
 import internettehnologii.imaps.backendRender.web.entities.RBA.Role;
 import internettehnologii.imaps.backendRender.web.repo.RoleRepository;
 import internettehnologii.imaps.backendRender.web.repo.UserRepository;
 import internettehnologii.imaps.backendRender.web.service.interfaces.OAuthService;
 import internettehnologii.imaps.backendRender.web.util.DTO.GitHubUserInfo;
+import internettehnologii.imaps.backendRender.web.util.DTO.GoogleUserInfo;
 import internettehnologii.imaps.backendRender.web.util.DTO.UserAuthSuccessDTO;
 import internettehnologii.imaps.backendRender.web.util.OAuthProviders;
 import internettehnologii.imaps.backendRender.web.util.UserPrincipal;
@@ -16,34 +16,32 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.RoleNotFoundException;
 import java.util.Optional;
 
-@Service("githubOAuth")
-public class GitHubOAuthService implements OAuthService {
+@Service("googleOAuth")
+public class GoogleOAuthService implements OAuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final RoleRepository roleRepository;
 
-    public GitHubOAuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTService jwtService, RoleRepository roleRepository) {
+    public GoogleOAuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTService jwtService, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.roleRepository = roleRepository;
     }
 
-
     @Override
     @Transactional
     public UserAuthSuccessDTO login(String userInfo, String accessToken) {
         ObjectMapper mapper = new ObjectMapper();
-        GitHubUserInfo oAuthUserInfo;
+        GoogleUserInfo oAuthUserInfo;
 
         try {
-            oAuthUserInfo = mapper.readValue(userInfo, GitHubUserInfo.class);
+            oAuthUserInfo = mapper.readValue(userInfo, GoogleUserInfo.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to parse GitHub user info.", e);
+            throw new RuntimeException("Failed to parse Google user info.", e);
         }
 
         Optional<IMapsUser> userOpt = userRepository.getUserByOAuthId(oAuthUserInfo.getId());
@@ -60,12 +58,12 @@ public class GitHubOAuthService implements OAuthService {
         );
     }
 
-    private IMapsUser createNewUser(GitHubUserInfo oAuthUserInfo) {
+    private IMapsUser createNewUser(GoogleUserInfo oAuthUserInfo) {
         IMapsUser newUser = new IMapsUser();
 
         newUser.setEmail(oAuthUserInfo.getEmail());
         newUser.setOAuthId(oAuthUserInfo.getId());
-        newUser.setOAuthProvider(OAuthProviders.GITHUB.name());
+        newUser.setOAuthProvider(OAuthProviders.GOOGLE.name());
         newUser.setUsername(generateUniqueUsername(oAuthUserInfo));
 
         Role userRole = roleRepository.findByName("USER")
@@ -77,11 +75,10 @@ public class GitHubOAuthService implements OAuthService {
         return newUser;
     }
 
-    private String generateUniqueUsername(GitHubUserInfo oAuthUserInfo) {
-        String login = oAuthUserInfo.getLogin();
+    private String generateUniqueUsername(GoogleUserInfo oAuthUserInfo) {
+        String username = oAuthUserInfo.getName();
         String idSubstring = oAuthUserInfo.getId()
-                .substring(login.length() - 3, login.length() - 1);
-        return login + idSubstring;
+                .substring(username.length() - 3, username.length() - 1);
+        return username + idSubstring;
     }
-
 }

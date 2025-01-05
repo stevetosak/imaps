@@ -19,9 +19,5 @@ public class BackendRenderApplication {
 	public PasswordEncoder passwordEncoder(){
 		return new BCryptPasswordEncoder(12);
 	}
-//	@Bean
-//	public JavaMailSender getJavaMailSender() {
-//		return new JavaMailSenderImpl();
-//	}
 
 }
