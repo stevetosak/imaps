@@ -130,7 +130,7 @@ public class OAuthController {
     }
 
     private String fetchUserInfo(String accessToken,String provider){
-        String url = Objects.equals(provider, OAuthProviders.GOOGLE.name()) ? oAuthConfig.getGOOGLE_USER_URL() : oAuthConfig.getGITHUB_TOKEN_URL();
+        String url = Objects.equals(provider, OAuthProviders.GOOGLE.name()) ? oAuthConfig.getGOOGLE_USER_URL() : oAuthConfig.getGITHUB_USER_URL();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
