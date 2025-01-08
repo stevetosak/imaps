@@ -10,6 +10,7 @@ import PublishForm from "../../components/PublishForm/PublishForm.jsx";
 import Logo from "../../components/Logo/Logo.jsx";
 import Profile from "../../components/Profile/Profile.jsx";
 import Toast from "../../components/Toast/Toast.jsx";
+import ListReports from "../../components/ListReports/ListReports.jsx";
 
 const renderTile = ({data, isDragging}, handleApprove, handleDeny, openMapInfoModal, openPublishForm) => (
     <div className={`${styles.tile} ${isDragging ? styles.dragging : ""}`} onClick={() => openMapInfoModal(data)}>
@@ -224,7 +225,8 @@ export default function AdminPage() {
                 />
             )}
             {toastMessage && <Toast message={toastMessage} type={toastType} onClose={() => setToastMessage(null)}/>}
-
+        <hr/>
+            <ListReports></ListReports>
         </div>
     );
 }

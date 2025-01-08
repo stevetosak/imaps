@@ -56,7 +56,8 @@ const config = {
         display: `${API_BASE_URL}/admin`,
         load_pr: `${API_BASE_URL}/admin/load-pr`,
         approve_pr: `${API_BASE_URL}/admin/pr/approve`,
-        deny_pr: `${API_BASE_URL}/admin/pr/deny`
+        deny_pr: `${API_BASE_URL}/admin/pr/deny`,
+        load_reports: `${API_BASE_URL}/admin/load-reports`
     }
 };
 

@@ -10,4 +10,5 @@ public class ReportDTO {
     String mapName;
     String subject;
     String content;
+    String date;
 }

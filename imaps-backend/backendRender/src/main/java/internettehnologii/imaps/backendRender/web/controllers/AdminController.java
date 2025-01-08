@@ -3,8 +3,10 @@ package internettehnologii.imaps.backendRender.web.controllers;
 import internettehnologii.imaps.backendRender.web.entities.MAP_STATUS;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.PublishRequestService;
+import internettehnologii.imaps.backendRender.web.service.interfaces.ReportService;
 import internettehnologii.imaps.backendRender.web.util.DTO.MapDTO;
 import internettehnologii.imaps.backendRender.web.util.DTO.PublishMapDTO;
+import internettehnologii.imaps.backendRender.web.util.DTO.ReportDTO;
 import internettehnologii.imaps.backendRender.web.util.Util;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,10 +24,12 @@ import java.util.Map;
 public class AdminController {
     private final MapService mapService;
     private final PublishRequestService publishRequestService;
+    private final ReportService reportService;
 
-    public AdminController(MapService mapService, PublishRequestService publishRequestService) {
+    public AdminController(MapService mapService, PublishRequestService publishRequestService, ReportService reportService) {
         this.mapService = mapService;
         this.publishRequestService = publishRequestService;
+        this.reportService = reportService;
     }
 
     @GetMapping
@@ -77,5 +81,25 @@ public class AdminController {
             e.printStackTrace();
         }
         return ResponseEntity.ok(new HashMap<>());
+    }
+    @GetMapping("/load-reports")
+    public ResponseEntity<List<ReportDTO>> getReports() {
+        try {
+            List<ReportDTO> reportDTOS = reportService.getReports()
+                    .stream()
+                    .map(report ->
+                new ReportDTO(
+                        report.getUser().getUsername(),
+                        report.getMap().getName(),
+                        report.getSubject(),
+                        report.getContent(),
+                        report.getCreatedAt().toString()
+                        )
+            ).toList();
+            return ResponseEntity.ok(reportDTOS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
