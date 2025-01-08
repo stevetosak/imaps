@@ -28,6 +28,6 @@ public interface UserRepository extends JpaRepository<IMapsUser, Long> {
     @Query(value = "FROM IMapsUser u WHERE u.oAuthId = ?1")
     Optional<IMapsUser> getUserByOAuthId(String oauthid);
     @Query(nativeQuery = true,
-            value = "SELECT u.* FROM users u LEFT JOIN users_roles ur on u.id = ur.user_id where ur.role_id = 3;")
+            value = "SELECT u.* FROM users u LEFT JOIN users_roles ur on u.id = ur.user_id where ur.role_id = 2;")
     Optional<List<IMapsUser>> getAllAdmins();
 }
