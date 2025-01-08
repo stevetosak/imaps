@@ -6,11 +6,15 @@ import internettehnologii.imaps.backendRender.web.entities.MAP_STATUS;
 import internettehnologii.imaps.backendRender.web.entities.PublishRequest;
 import internettehnologii.imaps.backendRender.web.repo.MapRepository;
 import internettehnologii.imaps.backendRender.web.repo.PublishRequestRepository;
+import internettehnologii.imaps.backendRender.web.repo.UserRepository;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.PublishRequestService;
 import internettehnologii.imaps.backendRender.web.service.interfaces.UserService;
 import internettehnologii.imaps.backendRender.web.util.DTO.MapDTO;
 import internettehnologii.imaps.backendRender.web.util.DTO.PublishMapDTO;
+import jakarta.transaction.Transactional;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,15 +26,20 @@ public class PublishRequestServiceImpl implements PublishRequestService {
     private final MapRepository mapRepository;
     private final MapService mapService;
     private final UserService userService;
+    private final JavaMailSender mailSender;
+    private final UserRepository userRepository;
 
-    public PublishRequestServiceImpl(PublishRequestRepository publishRequestRepository, MapRepository mapRepository, MapService mapService, UserService userService) {
+    public PublishRequestServiceImpl(PublishRequestRepository publishRequestRepository, MapRepository mapRepository, MapService mapService, UserService userService, JavaMailSender mailSender, UserRepository userRepository) {
         this.publishRequestRepository = publishRequestRepository;
         this.mapRepository = mapRepository;
         this.mapService = mapService;
         this.userService = userService;
+        this.mailSender = mailSender;
+        this.userRepository = userRepository;
     }
 
     @Override
+    @Transactional
     public MapDTO addPublishRequest(PublishMapDTO formData, IMapsUser user) {
         Optional<PublishRequest> prOptional = publishRequestRepository.findById(formData.getId());
         PublishRequest pr;
@@ -44,7 +53,6 @@ public class PublishRequestServiceImpl implements PublishRequestService {
             map.setStatus(MAP_STATUS.PENDING);
         } else {
             pr = new PublishRequest(formData.getName(), formData.getLastName(), formData.getGoogleMapsUrl(), formData.getMapType());
-
             pr.setMap(map);
             pr.setUser(user);
             map.setStatus(MAP_STATUS.PENDING);
@@ -52,6 +60,7 @@ public class PublishRequestServiceImpl implements PublishRequestService {
         }
         this.mapRepository.save(map);
         this.publishRequestRepository.save(pr);
+        sendMailToAdmins(user,pr);
         return map.toMapDTO();
 
     }
@@ -78,8 +87,41 @@ public class PublishRequestServiceImpl implements PublishRequestService {
     public void save(PublishRequest publishRequest) {
 
     }
+    @Override
+    public void sendMailToAdmins(IMapsUser user, PublishRequest pr){
+        System.out.println("test");
+        SimpleMailMessage message = new SimpleMailMessage();
+        Optional<List<IMapsUser>> adminsOpt = userRepository.getAllAdmins();
+        adminsOpt.ifPresent(admins -> {
+            admins.forEach(admin -> {
+                message.setTo(admin.getEmail());
+                message.setSubject("New Publish Request");
+                String body = String.format(
+                        """
+                                Publish Request Details:
+                                \tRequest Id: %s
+                                \tMap Id: %s
+                                \tMap Name: %s
+                                
+                                User Details:
+                                \tId: %s
+                                \tUsername: %s
+                                \tEmail: %s
+                                \tFirst Name: %s
+                                \t Last Name: %s
+                                """,
+                        pr.getId(), pr.getMap().getId(),
+                        pr.getMap().getName(),
+                        user.getId(),user.getUsername(),user.getEmail(),
+                        pr.getName(),pr.getLastName());
 
-    // todo mail pustanje
+                message.setText(body);
+                mailSender.send(message);
+            });
+        });
+
+    }
+
 
     @Override
     public void approvePublishRequest(int id) throws Exception {
@@ -94,6 +136,13 @@ public class PublishRequestServiceImpl implements PublishRequestService {
 
         this.publishRequestRepository.save(pr);
         this.mapRepository.save(map);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(pr.getMap().getUser().getEmail());
+        message.setSubject("Approved Publish Request");
+        message.setText(String.format("Your publish request for map: %s has been approved!\nYour map is now public. That means that anyone can view and use your map.\nThank you for building!",pr.getMap().getName()));
+        mailSender.send(message);
+
     }
 
     @Override

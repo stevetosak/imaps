@@ -12,33 +12,34 @@
 }
 
 .wrapper {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
+  justify-content: flex-end; /* Move content towards the right */
+  align-items: center; /* Center content vertically */
   height: 100vh;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  padding: 1rem;
+  margin-left: 30%;
+  padding: 2rem;
 }
 
-.wrapper p {
-  font-size: 0.85rem;
-  margin-top: 1rem;
-}
+
 
 .form {
-  padding: 1.5rem;
-  flex-basis: 100vw;
+  padding: 2rem;
   display: flex;
   flex-direction: column; /* Stack form elements vertically */
   align-items: center; /* Center form elements horizontally */
+  justify-content: center; /* Vertically center the form */
+  background-color: #fff;
+  border-radius: 8px; /* Rounded corners for the form */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow to form */
+  width: 100%;
+  max-width: 400px; /* Restrict the form width for better appearance */
 }
 
 .form .heading {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
   text-align: center;
+  margin-bottom: 1.5rem; /* Spacing between heading and form */
 }
 
 .or {
@@ -51,23 +52,26 @@
 .form label {
   display: block;
   margin: 1.25rem 0 1rem 0;
+  font-size: 0.95rem;
+  color: #333;
 }
 
 .form input {
   height: 40px;
   width: 100%;
-  max-width: 250px; /* Limit max width for larger devices */
+  max-width: 350px; /* Slightly larger max-width */
   padding: 15px;
   background-color: #f1f9ff;
   border: 2px solid #bce0fd;
   border-radius: 8px;
   box-sizing: border-box;
+  font-size: 1rem; /* Make input text a bit larger */
 }
 
 .form button {
   height: 40px;
   width: 100%;
-  max-width: 250px; /* Limit max width for larger devices */
+  max-width: 350px;
   margin-top: 1.5rem;
   background-color: #258de6;
   color: white;
@@ -76,6 +80,7 @@
   border: none;
   font-weight: bold;
   border-radius: 8px;
+  font-size: 1rem; /* Increase font size for better readability */
 }
 
 .socialButtons {
@@ -96,7 +101,7 @@
   font-weight: bold;
   transition: background-color 0.2s, transform 0.2s;
   width: 100%;
-  max-width: 250px; /* Limit max width */
+  max-width: 350px; /* Limit max width */
 }
 
 .socialButton img {
@@ -114,47 +119,50 @@
   transform: scale(0.98);
 }
 
-.socialButton:nth-child(1) {
+.socialButton:nth-child(2) {
   background-color: #333; /* GitHub button */
   color: white;
 }
 
-.socialButton:nth-child(2) {
-  background-color: #4267B2; /* Facebook button */
-  color: white;
+.socialButton:nth-child(1) {
+  background-color: #ffffff; /* Google button */
+  color: #000000;
+  box-shadow: 1px 2px #2f2525;
 }
 
 @media (min-width: 542px) {
   body {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
     justify-content: center;
   }
+
   .wrapper {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     height: 100vh;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
-    -ms-flex-pack: distribute;
-    justify-content: space-around;
-    padding: 1.5rem;
+    justify-content: flex-end; /* Keep the form to the right */
+    padding: 2rem;
     max-width: 1100px;
   }
+
   .form {
     flex-basis: auto;
     align-items: center; /* Center form in larger screens */
+    width: 100%;
+    max-width: 400px; /* Keep form max width consistent */
   }
+
   .form input {
-    width: 250px;
+    width: 100%; /* Ensures the input expands fully */
+    max-width: 350px;
   }
+
+  .illustration{
+    margin-right: 40%;
+  }
+
   .illustration img {
-    max-width: 80%;
+    max-width: 100%;
     height: auto;
   }
 }
@@ -171,7 +179,6 @@
   }
 
   .form {
-    flex-basis: auto;
     width: 100%; /* Full width for mobile */
     align-items: center; /* Center form elements horizontally */
   }

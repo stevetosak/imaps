@@ -49,7 +49,11 @@ $bg-height: 50px;
   height: 100vh;
   width: 100vw;
   /* img size is 50x50 */
-  background: url($bg-url) repeat 0 0;
+  /* Set a base background color */
+  background: #87898d url($bg-url) repeat 0 0;
+  background-blend-mode: overlay;
+
+  /* Apply hue rotation to the image */
 
   -webkit-animation: bg-scrolling-reverse .92s infinite; /* Safari 4+ */
   -moz-animation:    bg-scrolling-reverse .92s infinite; /* Fx 5+ */

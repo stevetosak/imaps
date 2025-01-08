@@ -4,11 +4,22 @@ import config from "./netconfig.js";
 class HttpService {
     constructor(auth = false) {
       this.auth = auth;
+      this.responseType = 'json';
     }
 
     setAuthenticated(){
         this.auth = true;
     }
+    setResponseType(type){
+        if(type === 'text'){
+            this.responseType = 'text';
+        } else if (type === 'json'){
+            this.responseType = 'json'
+        } else {
+            console.error('unsupported response type in http service')
+        }
+    }
+
 
     async request(method, endpoint, data = null) {
       const options = {
@@ -52,8 +63,14 @@ class HttpService {
       }
 
       console.log("HTTPSERVICE: RESPONSE:",response);
-  
-      return response.json();
+
+      if(this.responseType === 'json'){
+          return response.json();
+      } else if (this.responseType === 'text'){
+          return response.text()
+      } else{
+          console.error('bad resp type')
+      }
     }
   
     get(endpoint) {

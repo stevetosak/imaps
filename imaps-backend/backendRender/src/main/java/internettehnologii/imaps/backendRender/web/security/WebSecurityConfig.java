@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -27,8 +28,14 @@ public class WebSecurityConfig {
     @Autowired
     private MapUserDetailsService userDetailsService;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     private JwtFilter jwtFilter;
+
+    public WebSecurityConfig(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,12 +43,11 @@ public class WebSecurityConfig {
                  .csrf(AbstractHttpConfigurer::disable)
                  .cors(Customizer.withDefaults())
                  .authorizeHttpRequests(request ->
-                         request.requestMatchers("/protected/**")
-                         .hasRole("USER")
-                         .requestMatchers("/api/admin/**")
-                         .hasRole("ADMIN")
-                         .anyRequest()
-                         .permitAll())
+                         request
+                                 .requestMatchers("/protected/**").hasRole("USER")
+                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                 .anyRequest().permitAll())
+
                  .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                  .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -68,7 +74,7 @@ public class WebSecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         return daoAuthenticationProvider;
     }

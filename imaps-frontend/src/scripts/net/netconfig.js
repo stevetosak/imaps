@@ -42,7 +42,13 @@ const config = {
     auth:{
         login: `${API_AUTH}/login`,
         register: `${API_AUTH}/register`,
-        verify: `${API_AUTH}/verify`
+        verify: `${API_AUTH}/verify`,
+        oauth: {
+            github: {
+                state: `${API_BASE_URL}/oauth/state`,
+                redirectUri : `${API_BASE_URL}/oauth/callback`
+            }
+        }
 
     },
     admin:{

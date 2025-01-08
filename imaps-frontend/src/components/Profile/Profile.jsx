@@ -28,8 +28,9 @@ function Profile({ position = "fixed" }) {
             document.removeEventListener("click", handleClickOutside);
         };
     }, []);
-
     const handleMenuClick = (menu) => {
+
+        console.log("click profile")
         if (menu === "My Maps") {
             navigate("/MyMaps");
         } else if (menu === "Logout") {
@@ -42,7 +43,10 @@ function Profile({ position = "fixed" }) {
     return (
         <div className={position === "fixed" ? styles.fixedProfileContainer : styles.inlineProfileContainer}>
             <div className={styles.profileWrapper}>
-                <div className={styles.profileIconContainer} onClick={() => setOpen(!open)}>
+                <div className={styles.profileIconContainer} onClick={() => {
+                    setOpen(!open)
+                    console.log("open",open)
+                }}>
                     <img src={profile} alt="profile" className={styles.profileImage} ref={imgRef} />
                 </div>
                 {open && (

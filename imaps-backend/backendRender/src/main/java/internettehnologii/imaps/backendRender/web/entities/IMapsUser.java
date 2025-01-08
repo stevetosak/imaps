@@ -29,6 +29,14 @@ public class IMapsUser {
 
     @Column(name = "profile_image_url")
     private String profileImageUrl;
+    @Column(name = "oauth_provider")
+    private String OAuthProvider;
+    @Column(name = "oauth_id")
+    private String oAuthId;
+    @Column(name = "access_token")
+    private String accessToken;
+    @Column(name = "refresh_token")
+    private String refreshToken;
 
     @ManyToMany
     @JoinTable(

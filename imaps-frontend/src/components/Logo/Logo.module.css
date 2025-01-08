@@ -7,9 +7,10 @@
 }
 
 .logoImage {
-  width: 50px; /* Adjust the size as needed */
+  width: 80px;
   height: auto;
   transition: opacity 0.2s ease;
+  border-radius: 20px;
 }
 
 .logoImage:hover {
@@ -27,12 +28,6 @@
 .inlineLogoContainer {
   display: inline-block; /* Allows the logo to be placed inline within other elements */
   cursor: pointer;
-}
-
-.logoImage {
-  width: 50px; /* Adjust size as needed */
-  height: auto;
-  transition: opacity 0.2s ease;
 }
 
 .logoImage:hover {

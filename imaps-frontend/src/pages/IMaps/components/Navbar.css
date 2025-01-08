@@ -1,16 +1,5 @@
 .modern-navbar {
-  /*background-color: #ffffff;*/
-  /*background: linear-gradient(*/
-  /*        90deg,*/
-  /*        #fafafa 0%,*/
-  /*        #c07e7e 25%,*/
-  /*        #af2525 50%,*/
-  /*        #443a3a 75%,*/
-  /*        #8d1010 100%*/
-  /*);*/
-  /*background: linear-gradient(to right, #ffffff, #c12c2c);*/
-  /*background: linear-gradient(90deg, #3b3131, #ffffff);*/
-  background: linear-gradient(90deg, #9b1818, #efefef);
+  background: linear-gradient(90deg, #ffffff, #fffefe);
   color: #ffffff;
   /*color: #333333;*/
   display: flex;
@@ -23,6 +12,8 @@
   z-index: 1000;
   border-radius: 8px;
   margin: 5px;
+  height: 70px;
+  overflow: hidden;
 }
 
 .navbar-container {

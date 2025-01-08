@@ -5,9 +5,10 @@ import illustration from "../../assets/illustration_img.png";
 import Logo from "../../components/Logo/Logo.jsx";
 import HttpService from "../../scripts/net/HttpService.js";
 import {useAppContext} from "../../components/AppContext/AppContext.jsx";
-import config from "../../scripts/net/netconfig.js";
-import facebook_icon from "../../assets/facebook_icon.png";
-import github_icon from "../../assets/github_icon.png";
+import config, {API_BASE_URL} from "../../scripts/net/netconfig.js";
+import google_icon from "../../assets/Logo-google-icon-PNG.png"
+import github_icon from "../../assets/github-mark-white.png";
+import { v4 as uuidv4 } from 'uuid';
 
 const LoginPage = () => {
     const [formUsername, setFormUsername] = useState("");
@@ -50,13 +51,31 @@ const LoginPage = () => {
         });
     };
 
-    const continueWithGitHub = () => {
-        console.log("Continue with GitHub");
+    const continueWithGitHub = async () => {
+        const httpService = new HttpService();
+        httpService.setResponseType('text');
+        const state = await httpService.get(config.auth.oauth.github.state)
+        const clientId = 'Iv23liqzhX5wMYNDHtnz';
+        const redirectUri = encodeURI(`${API_BASE_URL}/oauth/callback/github`);
+
+        const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${encodeURI(clientId)}&redirect_uri=${redirectUri}&state=${encodeURI(state)}&scope=user:email`;
+
+        window.location.href = githubAuthUrl;
+
     };
 
-    const continueWithFacebook = () => {
-        console.log("Continue with Facebook");
-        // Add logic for Facebook authentication here
+    const continueWithGoogle = async () => {
+        console.log("Continue with Google");
+        const httpService = new HttpService();
+        httpService.setResponseType('text');
+        const state = await httpService.get(config.auth.oauth.github.state)
+        const clientId = '1024418489231-ml40ukvqcg9ad1h5ejor5dm6ipt6p8fo.apps.googleusercontent.com';
+        const redirectUri = encodeURI(`${API_BASE_URL}/oauth/callback/google`);
+
+        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}&response_type=code&scope=${encodeURIComponent("openid profile email")}`;
+
+
+        window.location.href = googleAuthUrl
     };
 
     return (
@@ -95,13 +114,13 @@ const LoginPage = () => {
                 </form>
                 <div className={styles.or}>OR</div>
                 <div className={styles.socialButtons}>
-                    <button className={styles.socialButton} onClick={continueWithGitHub}>
-                        <img src={github_icon} alt="GitHub Icon" className={styles.socialIcon} />
-                        Continue with GitHub
+                    <button className={styles.socialButton} onClick={continueWithGoogle}>
+                        <img src={google_icon} alt="Facebook Icon" className={styles.socialIcon}/>
+                        Sign In With Google
                     </button>
-                    <button className={styles.socialButton} onClick={continueWithFacebook}>
-                        <img src={facebook_icon} alt="Facebook Icon" className={styles.socialIcon} />
-                        Continue with Facebook
+                    <button className={styles.socialButton} onClick={continueWithGitHub}>
+                        <img src={github_icon} alt="GitHub Icon" className={styles.socialIcon}/>
+                        Sign In With GitHub
                     </button>
                 </div>
                 <p>

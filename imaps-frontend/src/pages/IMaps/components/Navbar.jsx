@@ -9,10 +9,6 @@ import "./Navbar.css";
 
 function Navbar() {
   const [click, setClick] = useState(false);
-  const [button, setButton] = useState(true);
-
-  const handleClick = () => setClick(!click);
-  const closeMobileMenu = () => setClick(false);
 
   const { isAuthenticated } = useAppContext();
 
@@ -22,7 +18,6 @@ function Navbar() {
                 {/* Left Section - Logo and Title */}
                 <div className="navbar-left">
                     <Logo position="relative"/>
-                    <h1 className="navbar-title">iMaps</h1>
                 </div>
 
                 {/* Right Section - Login/Signup or Profile */}
