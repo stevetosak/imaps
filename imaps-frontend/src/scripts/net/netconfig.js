@@ -33,6 +33,7 @@ const config = {
         },
         navigate: `${API_PUBLIC}/navigate`,
         add_favourite: `${API_PROTECTED}/favourites/add`,
+        add_report: `${API_PROTECTED}/reports/create`,
     },
     favourites: {
         display: `${API_PROTECTED}/favourites`,

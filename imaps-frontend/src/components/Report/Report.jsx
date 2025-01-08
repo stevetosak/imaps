@@ -1,23 +1,36 @@
 import React, { useState } from "react";
 import styles from "./Report.module.css";
 import report_icon from "../../assets/report_icon.png";
+import {useAppContext} from "../AppContext/AppContext.jsx";
+import HttpService from "../../scripts/net/HttpService.js";
+import config from "../../scripts/net/netconfig.js";
 
-const Report = () => {
+const Report = ({mapName}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [topic, setTopic] = useState("");
     const [description, setDescription] = useState("");
+    const {username} = useAppContext();
 
-    const handleSubmit = () => {
-        if (topic.trim() && description.trim()) {
-            console.log("Sending email to map creator", { topic, description });
-            alert("Report submitted successfully!");
-            setIsModalOpen(false);
-            setTopic("");
-            setDescription("");
-        } else {
+    const handleSubmit = async () => {
+        if (!topic.trim() || !description.trim()) {
             alert("Please fill in both fields.");
+            return;
         }
-    };
+
+        let httpService = new HttpService(true);
+        let payload = {
+            username: username,
+            mapName: mapName,
+            subject: topic,
+            content: description,
+        }
+
+        let response = await httpService.post(config.view_maps.add_report, payload);
+        setTopic("")
+        setDescription("")
+        setIsModalOpen(false)
+    }
+
 
     const handleOutsideClick = (e) => {
         if (e.target.classList.contains(styles.modalBackground)) {

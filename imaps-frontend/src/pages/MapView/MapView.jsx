@@ -295,7 +295,7 @@ const MapView = ({isPrivate}) => {
                         </div>
                     )}
 
-                    {/*{isAuthenticated && <Report></Report>}*/}
+                    {isAuthenticated && <Report mapName = {mapName}></Report>}
                     <div className={styles.profileContainer}>
                         <Profile position="relative"/>
                     </div>
