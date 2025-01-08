@@ -153,7 +153,7 @@ export class MapDisplay {
             const endX = nextNode.coordinates.x;
             const endY = nextNode.coordinates.y;
 
-            const numSegments = 12;
+            const numSegments = 10;
 
             const deltaX = (endX - startX) / numSegments;
             const deltaY = (endY - startY) / numSegments;
@@ -179,7 +179,7 @@ export class MapDisplay {
                 if (segmentIdx > numSegments) {
                     clearInterval(interval);
                     idx++;
-                    setTimeout(drawNextSegment, 70);
+                    setTimeout(drawNextSegment, 60);
                 }
             }, 30);
         };
