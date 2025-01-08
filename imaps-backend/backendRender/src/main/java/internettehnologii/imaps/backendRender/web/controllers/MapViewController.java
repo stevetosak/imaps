@@ -5,13 +5,12 @@ import internettehnologii.imaps.backendRender.graph.RouteGraph;
 import internettehnologii.imaps.backendRender.web.entities.Floor;
 import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
 import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
+import internettehnologii.imaps.backendRender.web.entities.Report;
 import internettehnologii.imaps.backendRender.web.exceptions.EmptyMapException;
-import internettehnologii.imaps.backendRender.web.service.interfaces.GraphService;
-import internettehnologii.imaps.backendRender.web.service.interfaces.FloorService;
-import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
-import internettehnologii.imaps.backendRender.web.service.interfaces.UserService;
+import internettehnologii.imaps.backendRender.web.service.interfaces.*;
 import internettehnologii.imaps.backendRender.web.util.DTO.FloorDTO;
 import internettehnologii.imaps.backendRender.web.util.DTO.MapDTO;
+import internettehnologii.imaps.backendRender.web.util.DTO.ReportDTO;
 import internettehnologii.imaps.backendRender.web.util.DTO.RoomTypeDTO;
 import internettehnologii.imaps.backendRender.web.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +31,15 @@ public class MapViewController {
     private final FloorService floorService;
     private final GraphService graphService;
     private final UserService userService;
+    private final ReportService reportService;
 
     @Autowired
-    public MapViewController(MapService mapService, FloorService floorService, GraphService graphService, UserService userService) {
+    public MapViewController(MapService mapService, FloorService floorService, GraphService graphService, UserService userService, ReportService reportService) {
         this.mapService = mapService;
         this.floorService = floorService;
         this.graphService = graphService;
         this.userService = userService;
+        this.reportService = reportService;
     }
 
 
@@ -137,6 +138,23 @@ public class MapViewController {
             return ResponseEntity.status(404).body(new HashMap<>());
         }
     }
+    @PostMapping("/protected/reports/create")
+    public ResponseEntity<Map<String, Object>> createReport(
+            @RequestBody ReportDTO reportBody) {
+        try {
+            IMapsUser user = userService.getUser(reportBody.getUsername());
 
+            IndoorMap map = mapService.getMapByName(reportBody.getMapName());
+
+            Report report = new Report(user, map, reportBody.getSubject(), reportBody.getContent());
+            reportService.saveReport(report);
+
+            Map<String, Object> response = new HashMap<>();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(404).body(new HashMap<>());
+        }
+    }
 
 }
