@@ -66,7 +66,7 @@ public class PublishRequestServiceImpl implements PublishRequestService {
     }
 
     @Override
-    public void denyPublishRequest(int id) throws Exception {
+    public void denyPublishRequest(int id,String reason) throws Exception {
         PublishRequest pr = this.publishRequestRepository.findById(id).orElseThrow(Exception::new);
 
         pr.setResolved(true);
@@ -76,6 +76,14 @@ public class PublishRequestServiceImpl implements PublishRequestService {
 
         this.publishRequestRepository.save(pr);
         this.mapRepository.save(map);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setTo(pr.getMap().getUser().getEmail());
+        message.setSubject("Denied Publish Request");
+        message.setText(String.format("Your publish request for map: %s has been denied." +
+                "\nReason:\n%s",pr.getMap().getName(),reason));
+        mailSender.send(message);
     }
 
     @Override

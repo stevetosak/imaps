@@ -15,7 +15,6 @@ const ListReports = () => {
 
                 const respReports = await httpService.get(config.admin.load_reports);
 
-                // Sort reports by date (newest first)
                 const sortedReports = respReports.sort(
                     (a, b) => new Date(b.date) - new Date(a.date)
                 );

@@ -74,9 +74,9 @@ public class AdminController {
         return ResponseEntity.ok(new HashMap<>());
     }
     @PostMapping("/pr/deny")
-    public ResponseEntity<Map<String,Object>> denyPR(@RequestParam("id") Integer id) {
+    public ResponseEntity<Map<String,Object>> denyPR(@RequestParam("id") Integer id,@RequestParam String reason) {
         try{
-            publishRequestService.denyPublishRequest(id);
+            publishRequestService.denyPublishRequest(id,reason);
         } catch (Exception e){
             e.printStackTrace();
         }

@@ -10,6 +10,22 @@
     z-index: 999; /* Behind the modal */
 }
 
+.denyReason {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    border-radius: 20px;
+}
+.denyReasonTextArea{
+    padding-bottom: 4rem;
+}
+
+.denySubmitButton {
+    color: white;
+    margin-right: 10px;
+}
+
+
 /* Modal styles */
 .modal {
     position: fixed;

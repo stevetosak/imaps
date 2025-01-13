@@ -14,6 +14,8 @@ const PublishForm = ({ isAdmin = false, formData, onSubmit, onCancel, onApprove,
         }
     );
     const [errors, setErrors] = useState({});
+    const [denyReason, setDenyReason] = useState('');
+    const [isDenying, setIsDenying] = useState(false);
 
     const mapTypeOptions = ['Hospital', 'Faculty', 'House', 'Other'];
 
@@ -41,6 +43,15 @@ const PublishForm = ({ isAdmin = false, formData, onSubmit, onCancel, onApprove,
         if (state === 'writing') {
             onSubmit(form);
         }
+    };
+
+    const handleDeny = () => {
+        if (!denyReason.trim()) {
+            alert('Please provide a reason for denial.');
+            return;
+        }
+        onDeny(form.id, form.mapName, denyReason);
+        setIsDenying(false);
     };
 
     return (
@@ -129,23 +140,43 @@ const PublishForm = ({ isAdmin = false, formData, onSubmit, onCancel, onApprove,
                             <div className={styles.buttonGroup}>
                                 <button
                                     className={styles.cancelButton}
-                                    onClick={onCancel}
+                                    onClick={() => {
+                                        setIsDenying(false);
+                                        onCancel();
+                                    }}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     className={styles.approveButton}
-                                    onClick={() => onApprove(form.id,form.mapName)}
+                                    onClick={() => onApprove(form.id, form.mapName)}
                                 >
                                     Approve
                                 </button>
                                 <button
                                     className={styles.denyButton}
-                                    onClick={() => onDeny(form.id,form.mapName,"Reason")}
+                                    onClick={() => setIsDenying(true)}
                                 >
                                     Deny
                                 </button>
                             </div>
+                            {isDenying && (
+                                <div className={styles.denyReason}>
+                                    <textarea className={styles.denyReasonTextArea}
+                                        placeholder="Enter reason for denial..."
+                                        value={denyReason}
+                                        onChange={(e) => setDenyReason(e.target.value)}
+                                    />
+                                    <div className={styles.buttonGroup}>
+                                        <button
+                                            className={styles.denySubmitButton}
+                                            onClick={handleDeny}
+                                        >
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

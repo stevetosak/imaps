@@ -26,6 +26,7 @@ const Report = ({mapName}) => {
         }
 
         let response = await httpService.post(config.view_maps.add_report, payload);
+
         setTopic("")
         setDescription("")
         setIsModalOpen(false)

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PublishRequestService {
     MapDTO addPublishRequest(PublishMapDTO publishRequestDTO, IMapsUser user);
-    void denyPublishRequest(int id) throws Exception;
+    void denyPublishRequest(int id,String reason) throws Exception;
     List<PublishRequest> getAllPublishRequests();
     void save(PublishRequest publishRequest);
     void approvePublishRequest(int id) throws Exception;
