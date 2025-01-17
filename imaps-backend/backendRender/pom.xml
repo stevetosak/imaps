@@ -9,11 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>internettehnologii.imaps</groupId>
-	<artifactId>backendRender</artifactId>
+	<artifactId>imaps-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
-	<name>backendRender</name>
-	<description>Backend api for rendering an indoor map</description>
+	<packaging>jar</packaging>
+	<name>imaps-backend</name>
+	<description>Backend api for rendering indoor maps</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -155,9 +155,10 @@
 			<version>3.23.1</version>
 			<scope>test</scope>
 		</dependency>
-
-
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 
 	</dependencies>
 

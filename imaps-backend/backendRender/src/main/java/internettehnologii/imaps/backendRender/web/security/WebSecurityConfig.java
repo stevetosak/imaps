@@ -4,6 +4,7 @@ import internettehnologii.imaps.backendRender.web.service.impl.MapUserDetailsSer
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -41,7 +42,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
          http
                  .csrf(AbstractHttpConfigurer::disable)
-                 .cors(Customizer.withDefaults())
+                 .cors(cors -> cors.configurationSource(corsConfigurationSourceProd()))
                  .authorizeHttpRequests(request ->
                          request
                                  .requestMatchers("/protected/**").hasRole("USER")
@@ -56,9 +57,10 @@ public class WebSecurityConfig {
 
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    @Profile("dev")
+    public CorsConfigurationSource corsConfigurationSourceDev() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:5173/");
+        configuration.addAllowedOrigin("http://localhost:5173");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedHeader("*");
@@ -69,6 +71,25 @@ public class WebSecurityConfig {
 
         return source;
     }
+
+    @Bean
+    @Profile("prod")
+    public CorsConfigurationSource corsConfigurationSourceProd() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost");
+        configuration.addAllowedOrigin("http://imaps.mk");
+        configuration.addAllowedOrigin("http://www.imaps.mk");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+
+
 
 
     @Bean

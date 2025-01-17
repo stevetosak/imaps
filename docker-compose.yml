@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  imaps-backend:
+    build:
+      context: imaps-backend/backendRender/
+    env_file:
+      - imaps-backend/backendRender/.env
+    ports:
+      - '8080:8080'
+    networks:
+      - imaps-net
+      
+  imaps-frontend:
+    build:
+      context: imaps-frontend/
+    ports:
+      - '80:80'
+    networks:
+      - imaps-net
+    depends_on:
+      - imaps-backend
+      
+networks:
+  imaps-net:
+    driver: bridge
+

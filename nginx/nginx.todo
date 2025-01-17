@@ -1,0 +1,30 @@
+events {}
+
+http {
+    server {
+        listen 80;
+
+   
+     
+       #samo ova mi trebit
+        location /api/ {
+            # Restrict access to API
+            set $deny_api 1;
+
+            if ($http_origin ~* ^http://frontend(:[0-9]+)?$) {
+                set $deny_api 0;
+            }
+
+            if ($deny_api) {
+                return 403;
+            }
+
+            proxy_pass http://backend:8080;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+    }
+}

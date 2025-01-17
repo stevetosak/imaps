@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import illustration from "../../assets/illustration_img.png";
 import styles from "./Signup.module.css";
 import Logo from "../../components/Logo/Logo";
+import netconfig from "../../scripts/net/netconfig.js";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -30,7 +31,7 @@ export default function Signup() {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/register", {
+      const response = await fetch(netconfig.auth.register, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
