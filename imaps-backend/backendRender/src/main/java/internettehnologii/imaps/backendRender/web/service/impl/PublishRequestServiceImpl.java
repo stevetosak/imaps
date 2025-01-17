@@ -26,15 +26,14 @@ public class PublishRequestServiceImpl implements PublishRequestService {
     private final MapRepository mapRepository;
     private final MapService mapService;
     private final UserService userService;
-    private final JavaMailSender mailSender;
+    //private final JavaMailSender mailSender;
     private final UserRepository userRepository;
 
-    public PublishRequestServiceImpl(PublishRequestRepository publishRequestRepository, MapRepository mapRepository, MapService mapService, UserService userService, JavaMailSender mailSender, UserRepository userRepository) {
+    public PublishRequestServiceImpl(PublishRequestRepository publishRequestRepository, MapRepository mapRepository, MapService mapService, UserService userService, UserRepository userRepository) {
         this.publishRequestRepository = publishRequestRepository;
         this.mapRepository = mapRepository;
         this.mapService = mapService;
         this.userService = userService;
-        this.mailSender = mailSender;
         this.userRepository = userRepository;
     }
 
@@ -77,13 +76,13 @@ public class PublishRequestServiceImpl implements PublishRequestService {
         this.publishRequestRepository.save(pr);
         this.mapRepository.save(map);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-
-        message.setTo(pr.getMap().getUser().getEmail());
-        message.setSubject("Denied Publish Request");
-        message.setText(String.format("Your publish request for map: %s has been denied." +
-                "\nReason:\n%s",pr.getMap().getName(),reason));
-        mailSender.send(message);
+//        SimpleMailMessage message = new SimpleMailMessage();
+//
+//        message.setTo(pr.getMap().getUser().getEmail());
+//        message.setSubject("Denied Publish Request");
+//        message.setText(String.format("Your publish request for map: %s has been denied." +
+//                "\nReason:\n%s",pr.getMap().getName(),reason));
+//        mailSender.send(message);
     }
 
     @Override
@@ -97,36 +96,36 @@ public class PublishRequestServiceImpl implements PublishRequestService {
     }
     @Override
     public void sendMailToAdmins(IMapsUser user, PublishRequest pr){
-        System.out.println("test");
-        SimpleMailMessage message = new SimpleMailMessage();
-        Optional<List<IMapsUser>> adminsOpt = userRepository.getAllAdmins();
-        adminsOpt.ifPresent(admins -> {
-            admins.forEach(admin -> {
-                message.setTo(admin.getEmail());
-                message.setSubject("New Publish Request");
-                String body = String.format(
-                        """
-                                Publish Request Details:
-                                \tRequest Id: %s
-                                \tMap Id: %s
-                                \tMap Name: %s
-                                
-                                User Details:
-                                \tId: %s
-                                \tUsername: %s
-                                \tEmail: %s
-                                \tFirst Name: %s
-                                \t Last Name: %s
-                                """,
-                        pr.getId(), pr.getMap().getId(),
-                        pr.getMap().getName(),
-                        user.getId(),user.getUsername(),user.getEmail(),
-                        pr.getName(),pr.getLastName());
-
-                message.setText(body);
-                mailSender.send(message);
-            });
-        });
+//        System.out.println("test");
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        Optional<List<IMapsUser>> adminsOpt = userRepository.getAllAdmins();
+//        adminsOpt.ifPresent(admins -> {
+//            admins.forEach(admin -> {
+//                message.setTo(admin.getEmail());
+//                message.setSubject("New Publish Request");
+//                String body = String.format(
+//                        """
+//                                Publish Request Details:
+//                                \tRequest Id: %s
+//                                \tMap Id: %s
+//                                \tMap Name: %s
+//
+//                                User Details:
+//                                \tId: %s
+//                                \tUsername: %s
+//                                \tEmail: %s
+//                                \tFirst Name: %s
+//                                \t Last Name: %s
+//                                """,
+//                        pr.getId(), pr.getMap().getId(),
+//                        pr.getMap().getName(),
+//                        user.getId(),user.getUsername(),user.getEmail(),
+//                        pr.getName(),pr.getLastName());
+//
+//                message.setText(body);
+//                mailSender.send(message);
+//            });
+//        });
 
     }
 
@@ -145,11 +144,11 @@ public class PublishRequestServiceImpl implements PublishRequestService {
         this.publishRequestRepository.save(pr);
         this.mapRepository.save(map);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(pr.getMap().getUser().getEmail());
-        message.setSubject("Approved Publish Request");
-        message.setText(String.format("Your publish request for map: %s has been approved!\nYour map is now public. That means that anyone can view and use your map.\nThank you for building!",pr.getMap().getName()));
-        mailSender.send(message);
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setTo(pr.getMap().getUser().getEmail());
+//        message.setSubject("Approved Publish Request");
+//        message.setText(String.format("Your publish request for map: %s has been approved!\nYour map is now public. That means that anyone can view and use your map.\nThank you for building!",pr.getMap().getName()));
+//        mailSender.send(message);
 
     }
 

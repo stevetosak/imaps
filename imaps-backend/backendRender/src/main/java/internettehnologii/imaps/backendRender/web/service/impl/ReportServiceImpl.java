@@ -31,7 +31,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void saveReport(Report report) {
         reportRepository.save(report);
-        sendMailToAdmins(report);
+        //sendMailToAdmins(report);
     }
 
     @Override
