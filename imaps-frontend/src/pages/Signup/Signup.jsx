@@ -17,7 +17,6 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if passwords match
     if (password !== confirmPassword) {
       setMessageType("error");
       setMessage("Passwords do not match.");
@@ -43,10 +42,9 @@ export default function Signup() {
         setMessageType("success");
         setMessage("User registered successfully!");
 
-        // Wait 3 seconds and then redirect to login page
         setTimeout(() => {
           navigate("/login");
-        }, 3000);
+        }, 1000);
       } else if (response.status === 409) {
         setMessageType("error");
         setMessage("Email is already taken.");
