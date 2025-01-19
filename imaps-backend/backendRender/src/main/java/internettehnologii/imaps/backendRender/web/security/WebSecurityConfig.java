@@ -77,8 +77,8 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSourceProd() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost");
-        configuration.addAllowedOrigin("http://imaps.mk");
-        configuration.addAllowedOrigin("http://www.imaps.mk");
+        configuration.addAllowedOrigin("https://imaps.mk");
+        configuration.addAllowedOrigin("https://www.imaps.mk");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);

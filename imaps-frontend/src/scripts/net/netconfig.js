@@ -1,4 +1,4 @@
-export const API_BASE_URL = "http://www.imaps.mk/api";
+export const API_BASE_URL = "https://imaps.mk/api";
 export const API_PROTECTED = `${API_BASE_URL}/protected`
 export const API_PUBLIC = `${API_BASE_URL}/public`
 export const API_AUTH = `${API_BASE_URL}/auth`

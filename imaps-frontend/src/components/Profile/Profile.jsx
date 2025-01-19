@@ -36,6 +36,8 @@ function Profile({ position = "fixed" }) {
         } else if (menu === "Logout") {
             localStorage.removeItem("token");
             window.location.reload();
+        } else if (menu === "Login"){
+            navigate("/Login")
         }
         setOpen(false);
     };
@@ -55,8 +57,8 @@ function Profile({ position = "fixed" }) {
                         <ul className={styles.menuList}>
                             {menus.map((menu) =>
                                 menu === "Login" ? (
-                                    <li key={menu} className={styles.menuItem}>
-                                        <Link to="/login" className={styles.linkStyle}>{menu}</Link>
+                                    <li key={menu} className={styles.menuItem} onClick={() => handleMenuClick(menu)}>
+                                        {menu}
                                     </li>
                                 ) : (
                                     <li key={menu} onClick={() => handleMenuClick(menu)} className={styles.menuItem}>

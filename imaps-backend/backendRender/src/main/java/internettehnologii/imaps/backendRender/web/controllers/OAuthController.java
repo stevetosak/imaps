@@ -68,7 +68,7 @@ public class OAuthController {
         String encodedToken = URLEncoder.encode(userAuthSuccessDTO.getToken(), StandardCharsets.UTF_8);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("http://imaps.mk/auth-callback?token=" + encodedToken + "&username=" + encodedUsrname));
+        headers.setLocation(URI.create("https://imaps.mk/auth-callback?token=" + encodedToken + "&username=" + encodedUsrname));
         headers.add("Set-Cookie", "Authorization=Bearer " + userAuthSuccessDTO + "; HttpOnly; Path=/; SameSite=Strict");
 
         return new ResponseEntity<>(userAuthSuccessDTO,headers, HttpStatus.FOUND);
@@ -88,7 +88,7 @@ public class OAuthController {
         String encodedToken = URLEncoder.encode(userAuthSuccessDTO.getToken(), StandardCharsets.UTF_8);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("http://imaps.mk/auth-callback?token=" + encodedToken + "&username=" + encodedUsrname));
+        headers.setLocation(URI.create("https://imaps.mk/auth-callback?token=" + encodedToken + "&username=" + encodedUsrname));
         headers.add("Set-Cookie", "Authorization=Bearer " + userAuthSuccessDTO + "; HttpOnly; Path=/; SameSite=Strict");
         return new ResponseEntity<>(userAuthSuccessDTO,headers, HttpStatus.FOUND);
     }
