@@ -52,7 +52,7 @@ export default function EntranceModal({map}) {
             <ModalNameField shapeInfo={shapeInfo} updateModalData={updateModalData}/>
             <ModalSelectRoom shapeInfo={shapeInfo} availableRooms={ShapeQuery.findAllByTypeAndFloor(shape?.floorNum,"Room")} updateModalData={updateModalData}/>
             <ModalSelectConnections2
-                availableShapes={ShapeQuery.findAllByType("InfoPin","Entrance")} // najubo ke e entrance samo so room da mozit
+                availableShapes={ShapeQuery.findAllByTypeAndFloor(map?.floorNum,"Entrance","InfoPin")} // najubo ke e entrance samo so room da mozit
                 addConnection={addConnection}
                 updateModalData={updateModalData}
                 shapeInfo={shapeInfo}

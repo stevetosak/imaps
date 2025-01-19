@@ -12,7 +12,6 @@ export default function useModalState(map) {
             shape.setInfo(shapeInfo);
             map.updateRoomNames();
             triggerMapSave();
-            console.log("SHAPE BEF CLOSE:",shape.info)
             map.attachKeyPressEventListeners();
         }
         setIsOpen(!isOpen);

@@ -7,7 +7,7 @@ import internettehnologii.imaps.backendRender.web.entities.RoomType;
 import java.util.List;
 
 public interface MapService {
-    void createMap(String mapName, String mapType, String username);
+    void createMap(String mapName, String username);
     void updateMap(IndoorMap indoorMap);
     void deleteMap(IndoorMap indoorMap);
     List<IndoorMap> getAllMapsForUser(String username);

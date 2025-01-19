@@ -30,7 +30,7 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public void createMap(String mapName,String mapType, String username) {
+    public void createMap(String mapName, String username) {
 
         Optional<IMapsUser> user = userRepository.findUserByName(username);
 

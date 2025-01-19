@@ -121,7 +121,7 @@ public class MapDrawController {
     @PutMapping("/my-maps/create")
     public ResponseEntity<MapDTO> createMap(@RequestBody CreateMapDTO mapData, @RequestParam String username) {
         try{
-            mapService.createMap(mapData.getName(), mapData.getMapType() , username);
+            mapService.createMap(mapData.getName(),username);
             IndoorMap map = mapService.getMapForUser(username,mapData.getName());
             MapDTO mapDTO = new MapDTO(map.getName(),
                     map.getMapType(),
@@ -133,7 +133,6 @@ public class MapDrawController {
             return ResponseEntity.ok(mapDTO);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
