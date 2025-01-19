@@ -1,0 +1,42 @@
+.terms-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+
+.terms-container h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.terms-container h2 {
+    font-size: 1.5rem;
+    margin-top: 20px;
+    color: #007BFF;
+}
+
+.terms-container p {
+    margin: 10px 0;
+}
+
+.terms-container ul {
+    margin: 10px 20px;
+    padding-left: 20px;
+    list-style: disc;
+}
+
+.terms-container a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.terms-container a:hover {
+    text-decoration: underline;
+}

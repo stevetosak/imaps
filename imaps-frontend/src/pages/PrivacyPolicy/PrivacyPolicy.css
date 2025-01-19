@@ -1,0 +1,39 @@
+.privacy-policy-container {
+    max-width: 800px; /* Set a max width for the content */
+    margin: 50px auto; /* Center the container with top/bottom margin */
+    padding: 20px; /* Add some padding for inner spacing */
+    background-color: #f9f9f9; /* Light background for contrast */
+    border: 1px solid #ddd; /* Subtle border for structure */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a shadow for depth */
+}
+
+.privacy-policy-container h1,
+.privacy-policy-container h2 {
+    color: #333; /* Darker color for headings */
+    margin-bottom: 20px; /* Add spacing below headings */
+}
+
+.privacy-policy-container p {
+    color: #555; /* Slightly lighter color for paragraph text */
+    line-height: 1.6; /* Increase line height for readability */
+    margin-bottom: 15px; /* Add spacing below paragraphs */
+}
+
+.privacy-policy-container ul {
+    margin-left: 20px; /* Indent lists */
+    margin-bottom: 20px; /* Space below lists */
+}
+
+.privacy-policy-container ul li {
+    margin-bottom: 10px; /* Add spacing between list items */
+}
+
+.privacy-policy-container a {
+    color: #007bff; /* Link color */
+    text-decoration: none; /* Remove underline by default */
+}
+
+.privacy-policy-container a:hover {
+    text-decoration: underline; /* Add underline on hover */
+}

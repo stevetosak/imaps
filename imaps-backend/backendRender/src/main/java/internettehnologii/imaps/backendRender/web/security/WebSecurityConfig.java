@@ -4,6 +4,7 @@ import internettehnologii.imaps.backendRender.web.service.impl.MapUserDetailsSer
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -33,16 +34,18 @@ public class WebSecurityConfig {
 
     @Autowired
     private JwtFilter jwtFilter;
+    private final CorsConfigurationImpl corsConfiguration;
 
-    public WebSecurityConfig(PasswordEncoder passwordEncoder) {
+    public WebSecurityConfig(PasswordEncoder passwordEncoder, CorsConfigurationImpl corsConfiguration) {
         this.passwordEncoder = passwordEncoder;
+        this.corsConfiguration = corsConfiguration;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
          http
                  .csrf(AbstractHttpConfigurer::disable)
-                 .cors(cors -> cors.configurationSource(corsConfigurationSourceProd()))
+                 .cors(cors -> cors.configurationSource(corsConfiguration.corsConfigurationSourceDev()))
                  .authorizeHttpRequests(request ->
                          request
                                  .requestMatchers("/protected/**").hasRole("USER")
@@ -53,40 +56,6 @@ public class WebSecurityConfig {
                  .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-
-    @Bean
-    @Profile("dev")
-    public CorsConfigurationSource corsConfigurationSourceDev() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:5173");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
-    }
-
-    @Bean
-    @Profile("prod")
-    public CorsConfigurationSource corsConfigurationSourceProd() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost");
-        configuration.addAllowedOrigin("https://imaps.mk");
-        configuration.addAllowedOrigin("https://www.imaps.mk");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
     }
 
 
