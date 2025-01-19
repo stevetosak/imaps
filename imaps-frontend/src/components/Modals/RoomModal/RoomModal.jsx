@@ -6,6 +6,7 @@ import Modal from "../Components/Modal.jsx";
 import ModalRoomTypes from "../Components/ModalRoomTypes.jsx";
 import useModalState from "../Hooks/useModalState.jsx";
 import {useModalEvent} from "../Hooks/useModalEvent.jsx";
+import ModalUploadRoomImage from "../Components/ModalUploadRoomImage.jsx";
 
 export default function RoomModal({map,roomTypes}) {
     const {
@@ -30,6 +31,7 @@ export default function RoomModal({map,roomTypes}) {
             <ModalNameField shapeInfo={shapeInfo} updateModalData={updateModalData}/>
             <ModalRoomTypes updateModalData={updateModalData} shapeInfo={shapeInfo} roomTypes={roomTypes}/>
             <ModalDescriptionField shapeInfo={shapeInfo} updateModalData={updateModalData}/>
+            <ModalUploadRoomImage></ModalUploadRoomImage>
             <ModalSaveButton saveDetails={saveDetails}/>
         </Modal>
     );

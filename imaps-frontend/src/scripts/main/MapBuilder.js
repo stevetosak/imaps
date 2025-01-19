@@ -20,7 +20,6 @@ export class MapBuilder {
         });
 
         // TODO AKO DRAGNIT NEKOJ OD POCETOK NA STAGE POZICIIVE KE SA ZEZNAT
-        // TODO jwt vo cookie
         // TODO placed shape i mouseMoveHandler da ne callback ( da ne vrakjat funkcija)
         // TODO text na top layer sekogas
 
@@ -318,11 +317,11 @@ export class MapBuilder {
         ShapeRegistry.add(placedObj);
         addEventHandling(placedObj, this, "dblclick");
         this.mainLayer.draw();
-
         // site ovie func da se vo edna funkcija vo shape.
 
         placedObj.displayName(this.textLayer);
         placedObj.snapToGrid();
+        placedObj.onPlace();
 
         triggerMapSave();
 
@@ -386,6 +385,7 @@ export class MapBuilder {
           this.stopDrawing()
             const shapeType = e.target.getAttribute("data-info");
             this.startDrawing(shapeType);
+            this.mainTransformer.nodes([])
         }
     }
 
@@ -528,24 +528,9 @@ export class MapBuilder {
     }
 
 
-    getEntrances() {
-        return this.getShapeInfoByType("Entrance");
-    }
-
-
-
-    getShapeInfoByType(type) {
-        return ShapeRegistry.getShapes(this.floorNum).filter((shape) => shape.className === type).map((shape) => shape.info);
-    }
-
-
     drawConnection(node1Name, node2Name) {
 
         ShapeRegistry.drawConnection(node1Name,node2Name);
-    }
-
-    getNodeByName(name) {
-        return ShapeRegistry.getShapes(this.floorNum).filter(shape => shape instanceof MapNode && shape.info.name === name)[0];
     }
 
     removeConnection(from, to) {
@@ -630,7 +615,12 @@ export class MapBuilder {
         this.mainLayer.add(this.mainTransformer);
         this.mainLayer.add(this.selectionRectangle);
 
-        ShapeRegistry.getShapes(this.floorNum).forEach((shape) => shape.displayName(this.textLayer));
+        ShapeRegistry.getShapes(this.floorNum).forEach((shape) => {
+            shape.displayName(this.textLayer);
+            if(shape.className === "Entrance"){
+                shape.setHighlight();
+            }
+        });
     }
 
 }

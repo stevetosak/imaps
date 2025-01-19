@@ -62,7 +62,7 @@ export default class MapShape extends Konva.Shape {
             y: this.y() + this.textOffsetY,
             text: this._info.name,
             fontSize: 12,
-            fontFamily: 'Verdana',
+            fontFamily: 'Exo',
             fill: 'white',
         });
     }
@@ -130,6 +130,10 @@ export default class MapShape extends Konva.Shape {
 
     saveShapeDetails() {
         console.log("This shape does not contain information");
+    }
+
+    onPlace(){
+        //this.snapToGrid();
     }
 
 

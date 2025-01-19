@@ -9,7 +9,6 @@ const CreateMapModal = ({ isOpen, onClose,addMap}) => {
     const handleSubmit = (e) => {
         const mapDetails = {
             name: mapName,
-            type: mapType,
         };
 
         addMap(mapDetails);
@@ -30,15 +29,6 @@ const CreateMapModal = ({ isOpen, onClose,addMap}) => {
                             type="text"
                             value={mapName}
                             onChange={(e) => setMapName(e.target.value)}
-                            required
-                        />
-                    </label>
-                    <label>
-                        Map Type:
-                        <input
-                            type="text"
-                            value={mapType}
-                            onChange={(e) => setMapType(e.target.value)}
                             required
                         />
                     </label>

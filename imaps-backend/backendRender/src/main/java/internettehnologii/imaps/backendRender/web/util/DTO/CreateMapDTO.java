@@ -9,5 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreateMapDTO {
     private String name;
-    private String mapType;
+    public CreateMapDTO() {}
 }

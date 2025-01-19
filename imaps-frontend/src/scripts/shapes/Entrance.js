@@ -1,6 +1,9 @@
 import {_registerNode} from "konva/lib/Global";
 import MapNode from "../base/MapNode.js";
 import {node} from "prop-types";
+import ShapeRegistry from "../util/ShapeRegistry.js";
+import ShapeQuery from "../util/ShapeQuery.js";
+import Konva from "konva";
 
 export default class Entrance extends MapNode {
 
@@ -45,20 +48,22 @@ export default class Entrance extends MapNode {
 
         this.initText();
         this.moveToTop();
+
+        console.log("room CONNECT: " + attrs.connected_room,this.info.connectedRoom + "CON")
+        console.log("entrance: " + this.info.name)
     }
 
     loadInfo(attrs) {
-        this.info.name = attrs.obj_name;
-        this.info.connectedRoom = attrs.connected_room;
-        this.info.description = attrs.description;
-        this.info.isMainEntrance = attrs.is_main_entrance;
-        this.info.selectedPins = attrs.connected_pins;
-        this.floorNum = attrs.floor_num;
+        this.info.name = attrs.obj_name ?? `Entrance${this.id} [${this.floorNum}F]`;
+        this.info.connectedRoom = attrs.connected_room ?? ``;
+        this.info.description = attrs.description ?? ``;
+        this.info.isMainEntrance = attrs.is_main_entrance ?? false;
+        this.info.selectedPins = attrs.connected_pins ?? [];
     }
+
 
     saveShapeDetails() {
         console.info("fnum entrance",this.attrs.floorNum)
-
         this.setAttr("connected_pins", this.info.selectedPins);
         this.setAttr("obj_name", this.info.name);
         this.setAttr("description", this.info.description);
@@ -74,15 +79,29 @@ export default class Entrance extends MapNode {
     }
 
     setInfo(infoObj) {
-        console.log("SA VIKNA SETINFO")
         this.info = infoObj;
+        this.setHighlight();
+    }
+
+    setHighlight(){
+        console.log("info room: " + this.info.connectedRoom)
         if(this.info.connectedRoom == null || this.info.connectedRoom === "" ){
+            console.log("vleze if")
             this.strokeWidth(2);
-            this.stroke("#a10114")
+            this.stroke("#8a000d")
         }else{
             this.strokeWidth(1)
             this.stroke("black")
         }
+    }
+
+    onPlace() {
+        ShapeQuery.findAllByTypeAndFloor(this.floorNum,"Room")
+            .forEach(room => {
+                if(Konva.Util.haveIntersection(room.getClientRect(),this.getClientRect())){
+                    this.info.connectedRoom = room.info.name;
+                }
+            })
     }
 }
 
