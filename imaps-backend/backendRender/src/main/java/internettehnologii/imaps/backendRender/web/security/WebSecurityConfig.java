@@ -45,7 +45,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
          http
                  .csrf(AbstractHttpConfigurer::disable)
-                 .cors(cors -> cors.configurationSource(corsConfiguration.corsConfigurationSourceDev()))
+                 .cors(cors -> cors.configurationSource(corsConfiguration.corsConfigurationSourceProd()))
                  .authorizeHttpRequests(request ->
                          request
                                  .requestMatchers("/protected/**").hasRole("USER")

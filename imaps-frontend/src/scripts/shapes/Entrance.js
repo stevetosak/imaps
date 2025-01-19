@@ -96,6 +96,7 @@ export default class Entrance extends MapNode {
     }
 
     onPlace() {
+        this.setHighlight()
         ShapeQuery.findAllByTypeAndFloor(this.floorNum,"Room")
             .forEach(room => {
                 if(Konva.Util.haveIntersection(room.getClientRect(),this.getClientRect())){
