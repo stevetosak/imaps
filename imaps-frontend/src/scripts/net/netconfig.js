@@ -1,4 +1,4 @@
-export const API_BASE_URL = "http://170.187.185.224/api";
+export const API_BASE_URL = "http://localhost:8080/api";
 export const API_PROTECTED = `${API_BASE_URL}/protected`
 export const API_PUBLIC = `${API_BASE_URL}/public`
 export const API_AUTH = `${API_BASE_URL}/auth`

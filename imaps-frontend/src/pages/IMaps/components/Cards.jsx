@@ -18,13 +18,13 @@ function Cards() {
               src={img9}
               text="Create intricate floor plans for your building with precision and ease."
               label="Create"
-              path="/services"
+              path="#"
             />
             <CardItem
               src={img2}
               text="Explore and navigate through complex building layouts seamlessly."
               label="Explore"
-              path="/services"
+              path="#"
             />
           </ul>
           <ul className="cards__items">
@@ -32,19 +32,19 @@ function Cards() {
               src={img3}
               text="Add custom icons, labels, and markers to personalize your indoor maps."
               label="Customize"
-              path="/services"
+              path="#"
             />
             <CardItem
               src={img4}
               text="Ensure accessibility by mapping out routes and facilities for all users."
               label="Accessibility"
-              path="/products"
+              path="#"
             />
             <CardItem
               src={img8}
               text="Share your maps with others and collaborate in real-time for efficient space planning."
               label="Collaboration"
-              path="/sign-up"
+              path="#"
             />
           </ul>
         </div>
