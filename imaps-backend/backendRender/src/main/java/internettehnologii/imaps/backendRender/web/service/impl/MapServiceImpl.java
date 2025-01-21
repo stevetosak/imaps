@@ -1,12 +1,18 @@
 package internettehnologii.imaps.backendRender.web.service.impl;
 
-import internettehnologii.imaps.backendRender.web.entities.*;
+import internettehnologii.imaps.backendRender.web.entities.Floor;
+import internettehnologii.imaps.backendRender.web.entities.IMapsUser;
+import internettehnologii.imaps.backendRender.web.entities.IndoorMap;
+import internettehnologii.imaps.backendRender.web.entities.MAP_STATUS;
 import internettehnologii.imaps.backendRender.web.exceptions.MapNameTakenException;
 import internettehnologii.imaps.backendRender.web.exceptions.MapNotFoundException;
 import internettehnologii.imaps.backendRender.web.repo.FloorRepository;
 import internettehnologii.imaps.backendRender.web.repo.MapRepository;
 import internettehnologii.imaps.backendRender.web.repo.UserRepository;
 import internettehnologii.imaps.backendRender.web.service.interfaces.MapService;
+import internettehnologii.imaps.backendRender.web.util.DTO.EditMapDTO;
+import internettehnologii.imaps.backendRender.web.util.DTO.MapDTO;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -37,7 +43,7 @@ public class MapServiceImpl implements MapService {
         if (mapRepository.existsByName(mapName))
             throw new MapNameTakenException("Map with name " + mapName + " already exists");
 
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException("User " + username + " not found");
         }
 
@@ -57,6 +63,21 @@ public class MapServiceImpl implements MapService {
     @Override
     public void updateMap(IndoorMap indoorMap) {
         mapRepository.save(indoorMap);
+    }
+
+    @Transactional
+    @Override
+    public MapDTO updateMapInfo(EditMapDTO editMapDTO) {
+        IndoorMap indoorMap = mapRepository.getIndoorMapByName(editMapDTO.getInitialName()).orElseThrow(() -> new MapNotFoundException("Map with name " + editMapDTO.getInitialName() + " not found"));
+        if (mapRepository.existsByName(editMapDTO.getName()) && !Objects.equals(editMapDTO.getInitialName(), editMapDTO.getName())) {
+            throw new MapNameTakenException("Map with name " + editMapDTO.getName() + " already exists");
+        }
+
+        indoorMap.setName(editMapDTO.getName());
+        indoorMap.setGmapsUrl(editMapDTO.getGmapsUrl());
+//        indoorMap.setMapType(editMapDTO.getType()); //TODO
+        mapRepository.save(indoorMap);
+        return indoorMap.toMapDTO();
     }
 
     @Override
@@ -84,7 +105,7 @@ public class MapServiceImpl implements MapService {
 
         boolean isAdmin = user.getRoles().stream().anyMatch(role -> Objects.equals(role.getName(), "ADMIN"));
 
-        if(isAdmin){
+        if (isAdmin) {
             return map;
         }
 
@@ -98,7 +119,7 @@ public class MapServiceImpl implements MapService {
 
     @Override
     public IndoorMap getMapByName(String mapName) {
-       return mapRepository.getIndoorMapByName(mapName).orElseThrow(() -> new MapNotFoundException(mapName));
+        return mapRepository.getIndoorMapByName(mapName).orElseThrow(() -> new MapNotFoundException(mapName));
     }
 
     @Override

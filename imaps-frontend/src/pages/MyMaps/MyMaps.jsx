@@ -68,7 +68,19 @@ export default function MyMaps() {
     };
 
     const handleUpdate = async (updatedMap) => {
-        // Placeholder for map update logic
+        try {
+            let httpService = new HttpService(true);
+            const response = await httpService.post(
+                config.my_maps.edit_map_info,
+                updatedMap
+            );
+            closeMapInfoModal()
+            window.location.reload();
+
+        } catch (error) {
+            showToast("Map Name already taken", 0)
+            closeMapInfoModal()
+        }
     };
 
     const deleteMap = (mapName) => {
@@ -107,6 +119,7 @@ export default function MyMaps() {
                     gmaps_url: respMap.gmapsUrl,
                     image_url: card,
                     is_published: respMap.is_published,
+                    mapType: respMap.mapType
                 };
 
                 setAllTiles((prevTiles) => [...prevTiles, mapTile]);

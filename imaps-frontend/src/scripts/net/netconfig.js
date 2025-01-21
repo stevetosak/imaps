@@ -13,6 +13,7 @@ const config = {
         delete: `${API_PROTECTED}/my-maps/delete`,
         publish: `${API_PROTECTED}/publish/add`,
         publish_get: `${API_PROTECTED}/publish/get`,
+        edit_map_info: `${API_PROTECTED}/my-maps/edit`,
     },
     room_types: {
         display: (auth) => {
