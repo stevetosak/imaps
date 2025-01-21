@@ -1,5 +1,8 @@
-# IMaps
+> [!NOTE]
+> IMaps has been deployed! Try it out --> https://imaps.mk
 
+
+# IMaps
 **iMaps is a web application for creating,exploring and navigating indoor maps. Designed for large institutions, it provides users with an interactive map experience to find rooms and navigate efficiently.**
 
 ## Key Features
