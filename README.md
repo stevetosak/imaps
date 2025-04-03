@@ -1,5 +1,5 @@
 > [!NOTE]
-> IMaps has been deployed! Try it out --> https://imaps.mk
+> IMaps has been deployed! Try it out -> https://imaps.mk (The site not well suited for mobile yet.)
 
 
 # IMaps
